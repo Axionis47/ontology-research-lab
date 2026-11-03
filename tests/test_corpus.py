@@ -14,22 +14,22 @@ import pytest
 from oak.corpus import fetch_usgs, load_local_corpus, normalize_snapshot
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_MANIFEST = ROOT / "docs/paper/source/manifest.json"
+SOURCE_MANIFEST = ROOT / "tests/fixtures/ontology/manifest.json"
 
 
 def test_supplied_json_preserves_genuine_source_manifest() -> None:
-    snapshot = load_local_corpus(SOURCE_MANIFEST, source_id="oak:paper-source-manifest")
+    snapshot = load_local_corpus(SOURCE_MANIFEST, source_id="oak:ontology-fixture-manifest")
     documents = normalize_snapshot(snapshot)
     assert snapshot["status"] == "ready"
     assert base64.b64decode(snapshot["raw_payload_base64"]) == SOURCE_MANIFEST.read_bytes()
     assert len(documents) == 1
     assert documents[0]["record"] == json.loads(SOURCE_MANIFEST.read_text())
-    assert documents[0]["source_id"] == "oak:paper-source-manifest"
+    assert documents[0]["source_id"] == "oak:ontology-fixture-manifest"
     assert documents[0]["snapshot_id"] == snapshot["snapshot_id"]
 
 
-def test_supplied_text_retains_real_paper_extraction() -> None:
-    source = ROOT / "docs/paper/extracted/paper-pdf.txt"
+def test_supplied_text_retains_real_project_readme() -> None:
+    source = ROOT / "README.md"
     snapshot = load_local_corpus(source)
     documents = normalize_snapshot(snapshot)
     assert len(documents) == 1
@@ -38,7 +38,7 @@ def test_supplied_text_retains_real_paper_extraction() -> None:
 
 
 def test_csv_and_jsonl_preserve_actual_source_records(tmp_path: Path) -> None:
-    records = json.loads(SOURCE_MANIFEST.read_text())["files"]
+    records = list(json.loads(SOURCE_MANIFEST.read_text())["files"].values())
     csv_path = tmp_path / "source-files.csv"
     with csv_path.open("w", newline="") as target:
         writer = csv.DictWriter(target, fieldnames=list(records[0]))

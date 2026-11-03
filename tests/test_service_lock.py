@@ -34,10 +34,10 @@ print(json.dumps(rows))
 def test_run_history_returns_while_job_lock_is_held(tmp_path: Path, lock_owner: str) -> None:
     """A caller's held submission lock and another process's lock must not block history."""
     service = Service(tmp_path)
-    snapshot = load_local_corpus(ROOT / "docs/paper/source/manifest.json")
+    snapshot = load_local_corpus(ROOT / "tests/fixtures/ontology/manifest.json")
     task_id = service.create_task(
-        "Real paper source audit",
-        "Inspect the provenance of the retained paper sources.",
+        "Real ontology source audit",
+        "Inspect the provenance of the retained W3C ontology fixtures.",
         snapshot,
         ["Which source files were retained?"],
     )

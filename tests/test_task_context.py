@@ -53,7 +53,7 @@ def test_empty_observations_and_only_selected_query_enter_context(surface: TaskS
 
 def test_supplied_project_document_is_preserved(surface: TaskSurface) -> None:
     """A real document can accompany a request without inventing observations."""
-    source = PROJECT / "docs/runtime-method.md"
+    source = PROJECT / "README.md"
     configured = surface.model_dump(mode="json")
     document = {"source_ref": str(source), "content": source.read_text()}
     configured["queries"][0]["supplied_documents"] = [document]
@@ -144,7 +144,7 @@ def test_history_must_resolve_and_cannot_cross_final_boundary(
             surface, surface.queries[0], [], history=[invalid], resolve_history=store.get
         )
     actual_document = store.put(
-        "source_document", {"text": (PROJECT / "docs/runtime-method.md").read_text()}
+        "source_document", {"text": (PROJECT / "README.md").read_text()}
     )
     with pytest.raises(ValueError, match="episode manifest"):
         build_runtime_context(

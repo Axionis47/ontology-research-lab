@@ -134,9 +134,8 @@ def check_hermit() -> dict[str, str]:
     }
 
 
-def check_paper_sources() -> list[dict[str, Any]]:
+def check_paper_sources(source_directory: Path) -> list[dict[str, Any]]:
     """Verify the retained PDF and HTML against their source capture manifest."""
-    source_directory = PROJECT / "docs" / "paper" / "source"
     manifest = json.loads((source_directory / "manifest.json").read_text())
     evidence = []
     for source in manifest["files"]:
@@ -152,14 +151,18 @@ def main() -> None:
     """Run independent setup checks and write an auditable receipt, including failures."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=Path(".local/verification/environment.json"))
+    parser.add_argument(
+        "--paper-sources", type=Path, help="Optional local directory containing the paper manifest"
+    )
     args = parser.parse_args()
     checks: list[tuple[str, Callable[[], Any]]] = [
         ("python", check_python),
         ("dependencies", check_dependencies),
         ("sqlite_checkpointer_setup", check_sqlite_checkpointer),
         ("java_and_hermit_startup", check_hermit),
-        ("paper_source_integrity", check_paper_sources),
     ]
+    if args.paper_sources is not None:
+        checks.append(("paper_source_integrity", lambda: check_paper_sources(args.paper_sources)))
     report: dict[str, Any] = {
         "report_version": 1,
         "kind": "environment_readiness",
@@ -183,6 +186,8 @@ def main() -> None:
             "benchmark performance and adapter regressions",
         ],
     }
+    if args.paper_sources is None:
+        report["not_verified"].append("Local paper source integrity (--paper-sources not supplied)")
     for name, check in checks:
         started = time.monotonic()
         entry = {"name": name}

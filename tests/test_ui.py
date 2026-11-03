@@ -46,13 +46,13 @@ def test_empty_workspace_has_no_substitute_results(tmp_path: Path) -> None:
 
 
 def test_real_task_render_and_rerun_do_not_launch_jobs(tmp_path: Path) -> None:
-    snapshot = load_local_corpus(ROOT / "docs/paper/source/manifest.json")
+    snapshot = load_local_corpus(ROOT / "tests/fixtures/ontology/manifest.json")
     with isolated_workspace(tmp_path) as service:
         task_id = service.create_task(
-            "Paper source audit",
-            "Explain the provenance of the retained OaK source files.",
+            "Ontology source audit",
+            "Explain the provenance of the retained W3C ontology fixtures.",
             snapshot,
-            ["Which source files were retained for the paper?"],
+            ["Which W3C source files were retained?"],
         )
         app = AppTest.from_file(str(UI), default_timeout=30).run()
         assert not app.exception
@@ -79,15 +79,15 @@ def test_real_task_render_and_rerun_do_not_launch_jobs(tmp_path: Path) -> None:
 
 def test_real_corpus_bundle_is_visible(tmp_path: Path) -> None:
     sources = combine_corpus(
-        load_local_corpus(ROOT / "docs/paper/source/manifest.json"),
-        load_local_corpus(ROOT / "docs/paper/extracted/paper-pdf.txt"),
+        load_local_corpus(ROOT / "tests/fixtures/ontology/manifest.json"),
+        load_local_corpus(ROOT / "README.md"),
     )
     with isolated_workspace(tmp_path) as service:
         service.create_task(
-            "Paper evidence audit",
-            "Explain the retained paper and its source provenance.",
+            "Project evidence audit",
+            "Explain the retained project README and fixture source provenance.",
             sources,
-            ["How does the paper define the ontology kernel?"],
+            ["Which sources support the project and its ontology fixtures?"],
         )
         app = AppTest.from_file(str(UI), default_timeout=30).run()
         assert not app.exception

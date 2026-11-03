@@ -14,7 +14,7 @@
   "task_origin": "OaK-authored real-service pilot requests, not an official benchmark or recorded user requests.",
   "value_semantics": "Displayed whole-degree daily highs, including the current local forecast date. No forecast values are supplied as task inputs.",
   "preflight_receipt": {
-    "path": "docs/verification/weather-mcp-preflight.json",
+    "path": "tests/fixtures/weather/mcp-preflight.json",
     "sha256": "c082fcbe438f5062c5349182ffc34734b5247f693087429ab60fc981894ba717"
   },
   "installed_entry_sha256": "edfbab55827e2a6ecc9c7b1b9d8c50fd162b65dda1a42ff204d197ab524c0fce",

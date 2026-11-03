@@ -1,49 +1,43 @@
 # OaK
 
-A local ontology auditor implementing the construction and frozen execution loop from [Toward Effective and Reliable LLM Agents via Dynamic Ontology](https://arxiv.org/abs/2608.22974v1).
+A task-conditioned ontology engine implementing construction and frozen execution from [Toward Effective and Reliable LLM Agents via Dynamic Ontology](https://arxiv.org/abs/2608.22974v1), with a live MCP extension.
 
-Create a task from genuine evidence, inspect its schema, knowledge graph and functions, ask questions, and propose a revision in plain text. The app retains intermediate artifacts, actual HermiT results, model receipts, tool calls, candidate differences, and old-task replay evidence.
+Start with task requests, a starter prompt, and real MCP capabilities. Collect actual episodes, construct a schema and executable functions, validate through OWL/HermiT, and acquire fresh evidence during frozen inference. Corpus tasks and the local schema/graph/function inspector are also supported. The project refines external artifacts, not model weights.
 
 ## Run locally
 
-After the pinned setup in [docs/stack.md](docs/stack.md):
+Use uv 0.12.0 and Node.js. The current Java installer is pinned for macOS ARM64.
 
 ```sh
 npm ci --ignore-scripts
 uv sync --locked
-uv run oak serve
+uv run --locked python scripts/setup_java.py
+uv run --locked python scripts/verify_environment.py
+uv run --locked oak serve
 ```
 
-Open [the local auditor](http://127.0.0.1:8501). Gemini CLI uses the configured GCP project and application-default credentials. It runs with native tool execution disabled. The model, prices, limits, and $40 shared application budget are pinned in `config/runtime.json`. See [Gemini setup and usage accounting](docs/gemini.md).
+Open [the local auditor](http://127.0.0.1:8501). Model execution requires a configured GCP project and application-default credentials. Gemini CLI runs with native tool execution disabled. Model configuration and spending limits are in `config/runtime.json`; credentials and run artifacts stay local.
 
-The four views are Ask, Audit, Revise, and History. New evidence is acquired explicitly. A suggestion creates a candidate; promotion checks construction evidence and actual replay of previous calls. Failed and interrupted runs retain their evidence and can resume.
-
-## Verification status
-
-The real seven-event USGS pilot completed construction, frozen answering, a depth/minimum-magnitude revision, old-call replay, and promotion. Its initial function gap is retained as an insufficient-evidence result. The revised maximum-depth answer matched the real source value of 70 km. Adding a second real snapshot expanded the corpus to 15 events; all five prior trajectories replayed on their original corpus and a fresh count answer matched 15.
-
-The official ToolQA Coffee pilot uses all 5,746 corpus rows and separate construction, development, and held-out queries. The real frozen kernel scored 3/3 development and 3/3 untouched held-out questions with the official ToolQA metric, after construction reached 3/3. Small pilot outcomes do not establish broad accuracy or reproduce the paper's reported scores.
+The four views are Ask, Audit, Revise, and History. Suggestions create candidates with actual validation and replay evidence. MCP onboarding, construction, and inference use the CLI:
 
 ```sh
-uv run pytest
-uv run mkdocs serve
+uv run --locked oak --help
+npm install --prefix .local/weather-mcp --ignore-scripts --no-audit --no-fund @dangahagan/weather-mcp@1.35.7
+uv run --locked python scripts/verify_mcp_slice.py preflight
 ```
 
-The final suite passed all 50 checks with live API tests enabled. Tests exercise real libraries, genuine public records, actual HermiT, and saved real model trajectories. Live network checks are opt-in with `OAK_LIVE_TESTS=1`; no mock services or fabricated model responses are used. LangSmith cloud tracing is optional and has not been verified here.
+The preflight performs real discovery and acquisition without a model call. `config/weather-surface.json` defines the small authored pilot; weather-specific evaluation stays in its task adapter. Generic runtime code lives in `src/oak/bootstrap.py`, `src/oak/mcp_bridge.py`, and `src/oak/task_context.py`.
 
-The real adapter test also passed: Gemini proposed a function rename, six old trajectories replayed successfully, and fresh depth answers remained 99 km. The browser test submitted and resumed the same real background job. See [acceptance evidence](docs/verification/acceptance.md).
+## Verification
 
-## Documentation
+```sh
+uv run --locked python -c "from oak.tasks.coffee import ensure_coffee_data; ensure_coffee_data()"
+uv run --locked pytest
+uv run --locked ruff check src scripts tests
+```
 
-- [Runtime method, deviations, and limits](docs/runtime-method.md)
-- [Corpus acquisition and provenance](docs/corpus.md)
-- [Ontology semantics](docs/ontology-semantics.md)
-- [Generated functions](docs/functions.md)
-- [Constrained adapters and regression coverage](docs/regression.md)
-- [Frontend workflow](docs/ui.md)
-- [Official Coffee protocol](docs/coffee-protocol.md)
-- [Generated runtime API reference](docs/reference/runtime.md)
-- [Paper extraction](docs/paper/extracted/paper-text.md) and [refined specification](docs/paper/method-spec.md)
-- [Progress and next actions](docs/work-plan.md)
+The first command downloads the checksum-pinned public Coffee dataset without a model call. Tests use real libraries, retained source fixtures, actual HermiT, and saved real trajectories when available. Live USGS checks require `OAK_LIVE_TESTS=1`; live weather MCP checks require `OAK_LIVE_MCP_TESTS=1`. Checks requiring prior local agent runs are explicitly skipped in a fresh checkout.
 
-The 18 Agent Skills for Context Engineering are installed project-locally under `.agents/skills`, with their pinned revision and license retained. The project builds task schemas and functions; it does not train model weights.
+The MCP pilot passed two development checks and one untouched held-out request with a frozen candidate. An earlier candidate's wrong-location answer was independently rejected. These small results do not establish broad workflow correctness. Semantic retrieval, automatic task-score refinement, canonical graph identities, and complete task-obligation enforcement remain unfinished. LangSmith cloud tracing has not been verified.
+
+Detailed research notes, documentation, agent configuration, and runtime artifacts are maintained locally and excluded from the repository. Required test fixtures and source integrity pins remain versioned.

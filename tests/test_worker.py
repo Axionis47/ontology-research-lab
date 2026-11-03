@@ -20,9 +20,9 @@ ROOT = Path(__file__).resolve().parents[1]
 def saved_request(tmp_path: Path):
     service = Service(tmp_path)
     task_id = service.create_task(
-        "Paper source provenance",
+        "Ontology source provenance",
         "Inspect actual retained source evidence.",
-        load_local_corpus(ROOT / "docs/paper/source/manifest.json"),
+        load_local_corpus(ROOT / "tests/fixtures/ontology/manifest.json"),
         ["Which source files were retained?"],
     )
     # Persist a real but invalid regression request. There is deliberately no

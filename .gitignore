@@ -13,11 +13,13 @@ node_modules/
 .tools/
 .local/
 site/
-# Preserve reviewed evidence in docs/verification; local runs stay under .local.
 
-# Machine-local tool configuration and dependency-generated skill links.
+# Local documentation, agent instructions, and tool configuration.
+/docs/
+/.agents/
+/AGENTS.md
+/mkdocs.yml
 /.claude/
-/.agents/skills/developing-with-streamlit
 
 # Reproducible Python packaging and coverage outputs.
 /build/
