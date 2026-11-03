@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import json
 import os
+import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
 
+import pytest
 from streamlit.testing.v1 import AppTest
 
 from oak.corpus import load_local_corpus
@@ -91,3 +94,74 @@ def test_real_corpus_bundle_is_visible(tmp_path: Path) -> None:
         assert any("2 saved evidence sources" in item.value for item in app.caption)
         assert len([item for item in app.success if item.value == "Evidence captured."]) == 2
         assert service.budget()["calls"] == 0
+
+
+def test_actual_pilot_answer_precedes_history_and_resolves_citations(tmp_path: Path) -> None:
+    """Render a completed real model run, without generating or substituting any answer."""
+    manifest_path = ROOT / ".local/pilots/usgs.json"
+    if not manifest_path.exists():
+        pytest.skip("Run the genuine USGS acceptance pilot before saved-answer rendering checks")
+    manifest = json.loads(manifest_path.read_text())
+    with sqlite3.connect(f"file:{ROOT / '.local/catalog.sqlite'}?mode=ro", uri=True) as original:
+        with sqlite3.connect(tmp_path / "catalog.sqlite") as snapshot:
+            original.backup(snapshot)
+    # Refer to actual immutable evidence. This check never changes or replaces
+    # an artifact and never invokes a model or presses a job-submission button.
+    (tmp_path / "artifacts").symlink_to(ROOT / ".local/artifacts", target_is_directory=True)
+    with isolated_workspace(tmp_path) as service:
+        completed = []
+        for run in service.runs(manifest["task_id"]):
+            if run["kind"] == "ask" and run["status"] == "completed":
+                actual = service.artifact(run["result_id"])
+                if actual.get("status") == "answered" and actual.get("citations"):
+                    completed.append((run, actual))
+        assert completed, "The real pilot must have a completed, cited answer before this check"
+        run, actual = completed[0]
+        before = service.budget()["calls"]
+        app = AppTest.from_string(
+            "from oak.ui import _run_detail\n"
+            "from oak.service import Service\n"
+            f"service = Service({str(tmp_path)!r})\n"
+            f"run = next(row for row in service.runs({manifest['task_id']!r}) "
+            f"if row['id'] == {run['id']!r})\n"
+            "_run_detail(service, run, 'actual_answer')\n",
+            default_timeout=30,
+        ).run()
+        assert not app.exception
+        assert any(item.value == actual["answer"] for item in app.markdown)
+        elements = list(app.main)
+        answer_position = next(
+            index
+            for index, item in enumerate(elements)
+            if item.type == "subheader" and item.value == "Answer"
+        )
+        timeline_position = next(
+            index
+            for index, item in enumerate(elements)
+            if item.type == "expander" and item.label == "Run timeline and saved steps"
+        )
+        assert answer_position < timeline_position
+        timeline = next(
+            item for item in app.expander if item.label == "Run timeline and saved steps"
+        )
+        assert timeline.proto.expanded is False
+        observation = next(
+            item for item in actual["observations"] if item["id"] == actual["citations"][0]
+        )
+        assert any(observation["function"] in item.value for item in app.markdown)
+        assert any(json.loads(item.value) == observation["args"] for item in app.json)
+        execution = service.artifact(observation["artifact_id"])
+        dependencies = execution["dependencies"]
+        sources = dependencies.get("sources") or [
+            {"document_id": identifier} for identifier in dependencies["source_ids"]
+        ]
+        source_ids = {source["document_id"] for source in sources[:100]}
+        visible_ids = {
+            identity
+            for table in app.dataframe
+            if "document_id" in table.value.columns
+            for identity in table.value["document_id"]
+        }
+        assert source_ids <= visible_ids
+        assert any(f"of {len(sources)} recorded sources" in item.value for item in app.caption)
+        assert service.budget()["calls"] == before

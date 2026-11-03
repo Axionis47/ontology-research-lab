@@ -10,7 +10,7 @@ app = typer.Typer(no_args_is_help=True)
 
 
 @app.command()
-def worker(run_id: str, root: Path = Path(".local")):
+def worker(run_id: str = typer.Option(..., "--run-id"), root: Path = Path(".local")):
     """Execute or resume an already saved job."""
     Service(root).run_worker(run_id)
 

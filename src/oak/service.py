@@ -138,8 +138,14 @@ class Service:
 
     def runs(self, task_id: str) -> list[dict]:
         with (self.root / "jobs.lock").open("a") as lock:
-            fcntl.flock(lock, fcntl.LOCK_EX)
-            self._reconcile_jobs(task_id)
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                # Job submitters may already hold this lock. Reading history must
+                # neither deadlock their caller nor block the live interface.
+                pass
+            else:
+                self._reconcile_jobs(task_id)
         return self.store.rows(
             "SELECT * FROM runs WHERE task_id=? ORDER BY created_at DESC", (task_id,)
         )
@@ -257,7 +263,14 @@ class Service:
                 )
                 continue
             try:
-                os.kill(int(path.read_text()), 0)
+                pid = int(path.read_text())
+                try:
+                    exited, _ = os.waitpid(pid, os.WNOHANG)
+                except ChildProcessError:
+                    exited = 0
+                if exited == pid:
+                    raise ProcessLookupError("Worker exited")
+                os.kill(pid, 0)
             except ProcessLookupError:
                 self.store.set_run(
                     row["id"], "interrupted", error="Worker process exited before saving a result"

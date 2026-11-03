@@ -11,6 +11,7 @@ import hashlib
 import json
 import os
 from datetime import UTC, datetime, timedelta
+from difflib import unified_diff
 from pathlib import Path
 from typing import Any
 
@@ -202,22 +203,98 @@ def _run_detail(service: Service, run: dict[str, Any], key: str) -> None:
     st.caption(f"Run {run['id']} · Started {run.get('created_at', 'not recorded')}")
     if run.get("error"):
         st.error(_text(run["error"]))
+    if run.get("status") in {"failed", "interrupted"}:
+        st.caption(
+            "Resume keeps this request and its saved checkpoints. Unknown usage stays reserved."
+        )
+        if st.button("Resume saved run", key=f"{key}_resume"):
+            try:
+                service.resume_job(run["id"])
+                st.rerun()
+            except Exception as error:
+                st.error(str(error))
+    result = service.artifact(run["result_id"]) if run.get("result_id") else None
+    if isinstance(result, dict) and "answer" in result:
+        st.subheader("Answer")
+        st.write(result["answer"])
+        st.caption(f"Answer status: {result.get('status', 'not recorded')}")
+        if result.get("query"):
+            st.caption(f"Question: {result['query']}")
+        if result.get("citations"):
+            observations = {
+                observation["id"]: observation
+                for observation in result.get("observations", result.get("trajectory", []))
+            }
+            with st.expander("Supporting evidence"):
+                for index, citation in enumerate(result["citations"]):
+                    observation = observations.get(citation)
+                    if observation is None:
+                        st.warning(f"Saved citation {citation} has no matching observation.")
+                        continue
+                    execution = observation
+                    if observation.get("artifact_id"):
+                        try:
+                            saved_execution = service.artifact(observation["artifact_id"])
+                            if isinstance(saved_execution, dict):
+                                execution = saved_execution
+                        except (OSError, ValueError) as error:
+                            st.error(f"Could not load the saved execution evidence: {error}")
+                    st.write(f"**Function:** {observation.get('function', 'not recorded')}")
+                    st.caption(f"{citation} · {observation.get('status', 'not recorded')}")
+                    left, right = st.columns(2)
+                    with left:
+                        st.write("Arguments")
+                        st.json(observation.get("args", {}))
+                    with right:
+                        st.write("Observed value")
+                        st.write(observation.get("value"))
+                    dependencies = execution.get("dependencies", {})
+                    sources = dependencies.get("sources") or [
+                        {"document_id": identifier}
+                        for identifier in dependencies.get("source_ids", [])
+                    ]
+                    if sources:
+                        st.write("Recorded source documents")
+                        if dependencies.get("coverage") == "entire_graph_conservative":
+                            st.caption(
+                                "This function records the complete graph as its dependency "
+                                "coverage. These sources may exceed what the answer needed."
+                            )
+                        st.dataframe(sources[:100], hide_index=True, width="stretch")
+                        st.caption(
+                            f"Showing {min(100, len(sources))} of {len(sources)} recorded sources. "
+                            "The saved execution download includes every source."
+                        )
+                    else:
+                        st.caption("No source document identifiers were recorded for this call.")
+                    _json_download(
+                        execution, "execution-evidence", f"{key}_citation_{index}_download"
+                    )
+        with st.expander("Complete saved result"):
+            st.json(result)
+            _json_download(result, "run-result", f"{key}_result_download")
+    elif result is not None:
+        with st.expander("Complete saved result"):
+            st.json(result)
+            _json_download(result, "run-result", f"{key}_result_download")
     events = service.events(run["id"])
     if events:
-        st.dataframe(
-            [
-                {
-                    field: _text(event.get(field, ""))
-                    for field in ("time", "stage", "status", "summary")
-                }
-                for event in events
-            ],
-            hide_index=True,
-            width="stretch",
-        )
-        artifact_events = [event for event in events if event.get("artifact_id")]
-        if artifact_events:
-            with st.expander("Inspect a saved step"):
+        with st.expander(
+            "Run timeline and saved steps", expanded=run.get("status") in ACTIVE_STATUSES
+        ):
+            st.dataframe(
+                [
+                    {
+                        field: _text(event.get(field, ""))
+                        for field in ("time", "stage", "status", "summary")
+                    }
+                    for event in events
+                ],
+                hide_index=True,
+                width="stretch",
+            )
+            artifact_events = [event for event in events if event.get("artifact_id")]
+            if artifact_events:
                 selected = st.selectbox(
                     "Step",
                     range(len(artifact_events)),
@@ -232,18 +309,6 @@ def _run_detail(service: Service, run: dict[str, Any], key: str) -> None:
                 _json_download(artifact, "saved-step", f"{key}_step_download")
     elif run.get("status") in ACTIVE_STATUSES:
         st.info("Waiting for the first recorded step.")
-    if run.get("result_id"):
-        result = service.artifact(run["result_id"])
-        if isinstance(result, dict) and "answer" in result:
-            st.subheader("Answer")
-            st.write(result["answer"])
-            st.caption(f"Answer status: {result.get('status', 'not recorded')}")
-            if result.get("citations"):
-                with st.expander("Supporting evidence", expanded=True):
-                    st.json(result["citations"])
-        with st.expander("Complete saved result"):
-            st.json(result)
-            _json_download(result, "run-result", f"{key}_result_download")
 
 
 @st.fragment(run_every="2s")
@@ -255,8 +320,8 @@ def _live_run(service: Service, task_id: str, run_id: str) -> None:
         return
     budget = service.budget()
     st.caption(
-        f"Current estimated spend ${budget['estimated_usd']:.2f} · "
-        f"Reserved ${budget['reserved_usd']:.2f} · Calls {budget['calls']}"
+        f"Current estimated spend USD {budget['estimated_usd']:.2f} · "
+        f"Reserved USD {budget['reserved_usd']:.2f} · Calls {budget['calls']}"
     )
     _run_detail(service, run, f"live_{run_id}")
     if run.get("status") not in ACTIVE_STATUSES:
@@ -280,6 +345,38 @@ def _audit(service: Service, task: dict[str, Any]) -> None:
     )
     revision = service.revision(task["id"], selected)
     st.caption(f"Revision {selected} · Parent {revision.get('parent') or 'none'}")
+    if revision.get("parent"):
+        parent = service.revision(task["id"], revision["parent"])
+        with st.expander("Changes from parent"):
+            st.write(revision.get("suggestion") or "No suggestion text recorded for this revision.")
+            st.caption(f"Previous scope: {parent['scope']}")
+            st.caption(f"Current scope: {revision['scope']}")
+            st.write(
+                "Evidence changed"
+                if parent["corpus_id"] != revision["corpus_id"]
+                else "Same evidence snapshot"
+            )
+            before = {node["id"]: node for node in parent["graph"]["nodes"]}
+            after = {node["id"]: node for node in revision["graph"]["nodes"]}
+            st.caption(
+                f"Graph records: {len(after.keys() - before.keys())} added, "
+                f"{len(before.keys() - after.keys())} removed, "
+                f"{sum(before[key] != after[key] for key in before.keys() & after.keys())} changed."
+            )
+            for field in ("schema", "functions"):
+                difference = "\n".join(
+                    unified_diff(
+                        json.dumps(parent[field], indent=2, sort_keys=True).splitlines(),
+                        json.dumps(revision[field], indent=2, sort_keys=True).splitlines(),
+                        fromfile=f"parent/{field}",
+                        tofile=f"candidate/{field}",
+                        lineterm="",
+                    )
+                )
+                if difference:
+                    st.code(difference, language="diff")
+                else:
+                    st.caption(f"{field.capitalize()}: unchanged")
     schema = revision.get("schema", {})
     graph = revision.get("graph", {})
     functions = revision.get("functions", [])
@@ -381,8 +478,8 @@ def main() -> None:
         budget = service.budget()
         st.metric("Estimated spend", f"${budget['estimated_usd']:.2f}")
         st.caption(
-            f"Limit ${budget['limit_usd']:.2f} · Reserved ${budget['reserved_usd']:.2f} · "
-            f"Remaining ${budget['remaining_usd']:.2f} · Calls {budget['calls']}"
+            f"Limit USD {budget['limit_usd']:.2f} · Reserved USD {budget['reserved_usd']:.2f} · "
+            f"Remaining USD {budget['remaining_usd']:.2f} · Calls {budget['calls']}"
         )
         st.caption("Cost estimates, not a provider invoice.")
     _create_task(service)

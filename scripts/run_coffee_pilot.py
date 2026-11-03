@@ -260,19 +260,14 @@ def evaluate_phase(
                 reference=labels[qid],
                 score=score_answer(actual["answer"], labels[qid]),
             )
-            service.store.event(
-                item["run_id"],
-                "benchmark_score",
-                "completed",
-                f"{phase} official score recorded",
-                item,
-            )
             write_json(path, report)
             print(
                 json.dumps({"qid": qid, "score": item["score"], "result_id": row["result_id"]}),
                 flush=True,
             )
         report["status"] = "completed"
+        if "error" in report:
+            report.setdefault("prior_errors", []).append(report.pop("error"))
     except BaseException as error:
         report.update(status="incomplete", error=f"{type(error).__name__}: {error}")
         raise
@@ -287,8 +282,7 @@ def evaluate_phase(
             scored_queries=len(measured),
             correct=sum(measured),
             answered_queries=sum(
-                result.get("answer_status") == "answered"
-                for result in report["results"].values()
+                result.get("answer_status") == "answered" for result in report["results"].values()
             ),
             insufficient_evidence_queries=sum(
                 result.get("answer_status") == "insufficient_evidence"
@@ -302,6 +296,21 @@ def evaluate_phase(
         )
         report["artifact_id"] = service.store.put("benchmark_report", report)
         write_json(path, report)
+        for item in report["results"].values():
+            if item.get("score") is not None:
+                service.store.event(
+                    item["run_id"],
+                    "benchmark_score",
+                    "completed",
+                    f"{phase} official score: {'correct' if item['score'] else 'incorrect'}",
+                    {
+                        **item,
+                        "phase": phase,
+                        "metric": protocol["metric"],
+                        "report_artifact_id": report["artifact_id"],
+                        "reference_usage": "Evaluator only; never supplied to the answer model",
+                    },
+                )
     return report
 
 

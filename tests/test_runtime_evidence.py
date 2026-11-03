@@ -108,13 +108,16 @@ def test_service_replays_original_construction_calls_without_model_use(evidence)
 
 
 def test_actual_promoted_revision_cannot_be_promoted_again(evidence) -> None:
-    service, manifest, _, candidate = evidence
-    assert service.task(manifest["task_id"])["active_revision"] == candidate["id"]
-    check = service.promotion_check(manifest["task_id"], candidate["id"])
+    service, manifest, _, _ = evidence
+    task_id = manifest["task_id"]
+    active_id = service.task(task_id)["active_revision"]
+    active = service.revision(task_id, active_id)
+    assert active["id"] == active_id
+    check = service.promotion_check(task_id, active_id)
     assert check["allowed"] is False
     assert "already active" in check["reason"]
     with pytest.raises(ValueError, match="already active"):
-        service.promote(manifest["task_id"], candidate["id"])
+        service.promote(task_id, active_id)
 
 
 def test_actual_saved_evidence_allows_promotion_and_retains_parent(evidence) -> None:

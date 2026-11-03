@@ -6,6 +6,7 @@ import hashlib
 import json
 import re
 import sqlite3
+import subprocess
 import uuid
 from contextlib import contextmanager
 from datetime import UTC, datetime
@@ -21,6 +22,34 @@ def canonical(value: Any) -> bytes:
     return json.dumps(
         value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False
     ).encode()
+
+
+def implementation_receipt() -> dict:
+    """Pin executable source and dependency locks without copying credentials or data."""
+    project = Path(__file__).resolve().parents[2]
+    paths = sorted((project / "src/oak").rglob("*.py"))
+    paths += [project / name for name in ("uv.lock", "package-lock.json", "config/runtime.json")]
+    hashes = {
+        str(path.relative_to(project)): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in paths
+        if path.is_file()
+    }
+    try:
+        commit = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=project,
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=10,
+        ).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        commit = None
+    return {
+        "git_commit": commit,
+        "source_and_lock_sha256": hashes,
+        "meaning": "Files present when the run was created; hashes identify uncommitted changes too",
+    }
 
 
 class Store:
@@ -103,6 +132,7 @@ class Store:
 
     def create_run(self, task_id: str, kind: str, inputs: dict) -> str:
         identity = uuid.uuid4().hex
+        inputs = {**inputs, "implementation": implementation_receipt()}
         input_id = self.put("run_input", inputs)
         with self.connect() as connection:
             connection.execute(
