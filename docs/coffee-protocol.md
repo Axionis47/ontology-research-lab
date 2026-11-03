@@ -1,6 +1,6 @@
 # Genuine ToolQA Coffee pilot
 
-Status: real data adapter and metric validation. This is not an OaK agent score.
+Status: real data adapter, metric validation, and full-corpus extraction transcription audit. This is not an OaK agent score.
 
 The adapter imports no ontology or domain reasoning implementation. It supplies a task description, queries, the genuine accompanying corpus, split metadata, and official scoring. The shared engine must construct its own S/F and build G from these records.
 
@@ -78,3 +78,15 @@ Construction and evaluation execute the actual service worker synchronously, ret
 Completed predictions are scored once using the official metric. An actual `insufficient_evidence` response retains that status and its exact answer string is scored; it is not replaced with a fabricated response or omitted from the denominator. Infrastructure failures leave the report incomplete. After inspecting a failed run, `--resume` resumes its saved workflow. Completed wrong predictions are never rerun by the script to improve the score.
 
 Preparation was executed against the full authentic corpus and verified to create a 5,746-row task. This preparation evidence is not a model accuracy result. Paid-phase accuracy and cost must be reported from their saved run artifacts after completion.
+
+## Full-corpus extraction evidence
+
+Run `3e01ffff6cec418cb0548a68bdabab11` extracted all 5,746 source records through 111 real model requests. Every normalized record matched the original CSV, and all 40,222 directly comparable extracted field values matched the source. There were no missing or ignored documents. Every extracted entity used the model-generated `CoffeeMarketDay` type. This establishes transcription and citation coverage, separately from ontology consistency or downstream task accuracy.
+
+The full audit is saved in `.local/prefetch/3e01ffff6cec418cb0548a68bdabab11/full-source-audit.json`, with immutable artifact ID `e2e1394eee846b17213f6f995579cf00f7c9d46e4956616910f16d741f8992db`. It records every chunk's receipt and comparisons. Extraction's recorded model-usage estimate was $1.82473425, excluding other construction and inference stages.
+
+`scripts/prefetch_extraction.py` can warm exact model requests for an already running extraction. Its default dry run reconstructs saved requests from the actual checkpoint, verifies request hashes and runtime identity, and checks completed output against source records. Explicit `--run` uses the real Gemini adapter and its shared request locks; the original worker performs graph assembly and validation. The observed run had exactly one successful paid receipt per chunk. No replacement response, extracted program, reduced corpus, or manually authored entity was supplied.
+
+## Completed model-backed pilot
+
+The frozen kernel scored 3/3 construction, 3/3 development, and 3/3 untouched held-out questions using the official metric. Initial construction answers contained extra prose and scored 0/3 despite correct numeric tool results. A formatting repair reached 3/3 while retaining the unchanged validated graph and function catalog. No held-out question or reference was used for that repair. These nine selected questions establish a small functional pilot, not the paper’s aggregate results. Exact run, revision, metric, and report identities are retained in [acceptance evidence](verification/acceptance.json).

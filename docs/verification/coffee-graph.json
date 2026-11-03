@@ -1,0 +1,157 @@
+{
+  "generated_at": "2026-11-03T08:09:50.276819+00:00",
+  "status": "passed",
+  "run_id": "3e01ffff6cec418cb0548a68bdabab11",
+  "run_status_at_check": "completed",
+  "evidence_type": "independent_full_source_graph_comparison",
+  "mapping": {
+    "Date": "Date",
+    "Open": "Open",
+    "High": "High",
+    "Low": "Low",
+    "Close": "Close",
+    "Volume": "Volume",
+    "Currency": "Currency"
+  },
+  "mapping_role": "Task-specific evaluator only; never an extractor or runtime function",
+  "evaluator_sha256": "dd5fdf26ce1599bd90556785482702cc4d2e231bcbe88d3a4227c5c55dc49c47",
+  "model_calls": 0,
+  "benchmark_answer_labels_read": false,
+  "artifacts": {
+    "schema": "e3b4d813783ee3e43c67345ab0f20ad63dd4dee47003d4aaaf9364bcce9bc8e0",
+    "graph": "e1d486fa3ecc1892d3ef1280d1e794a6f462ae5ca375d8fc1eea26ce0d0bc936",
+    "corpus": "2ba7ae0768e7373869e2a889ff698b8f3bc9e0ad6cd96acfb676d6196220031e",
+    "run_input": "d671a39527da581fedb7e254d3bdf95407deadb2526cf8930bd712557a2cd670",
+    "functions": "86c9c7365c22a1eaf468a957a68339c002bd3c438d8889087da3eeb1b34e827a",
+    "function_probes": "c9f6d469f8e5fe6597a8a4a04ff29ecedf06784db56736df158ce6a26740d9ed"
+  },
+  "official_source": {
+    "csv_sha256": "d84f454477cc9175b17713cb330356fd177f644fcc7b0b602e0ce976aab5007d",
+    "csv_bytes": 254031,
+    "rows": 5746,
+    "source_lock_sha256": "0d8dbdb3fef7b360987293163d9c0762f06f47d595ca01a5fcb9c34ab3eec57e",
+    "repository_commit": "acf55534d6dcd81df84df7b5d01ebdd14508367a"
+  },
+  "counts": {
+    "graph_records": 5746,
+    "unique_dates": 5746,
+    "documents": 5746,
+    "source_attributions": 5746,
+    "field_checks": {
+      "Date": 5746,
+      "Open": 5746,
+      "High": 5746,
+      "Low": 5746,
+      "Close": 5746,
+      "Volume": 5746,
+      "Currency": 5746
+    },
+    "total_field_checks": 40222,
+    "entity_types": {
+      "CoffeeMarketDay": 5746
+    }
+  },
+  "issue_counts": {},
+  "issue_examples": [],
+  "functions": {
+    "status": "execution_probes_recorded",
+    "names": [
+      "get_coffee_market_record_by_date",
+      "get_coffee_price_range_by_date"
+    ],
+    "output_schemas": {
+      "get_coffee_market_record_by_date": {
+        "additionalProperties": false,
+        "properties": {
+          "records": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "records"
+        ],
+        "type": "object"
+      },
+      "get_coffee_price_range_by_date": {
+        "additionalProperties": false,
+        "properties": {
+          "range": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "range"
+        ],
+        "type": "object"
+      }
+    },
+    "probe_count": 2,
+    "probe_correctness": "Execution receipts alone do not prove answer correctness",
+    "independent_check": {
+      "status": "passed",
+      "checks": [
+        {
+          "function": "get_coffee_market_record_by_date",
+          "args": {
+            "date": "2015-07-06"
+          },
+          "status": "passed",
+          "matches_original_execution": true,
+          "source_comparison": {
+            "entity_count": 1,
+            "field_matches": {
+              "Date": true,
+              "Open": true,
+              "High": true,
+              "Low": true,
+              "Close": true,
+              "Volume": true,
+              "Currency": true
+            }
+          },
+          "dependencies": {
+            "graph_sha256": "9de9f594ee82b05f9d433ab4ce7618694fdbc25fd269608db80ab778197cdc86",
+            "schema_sha256": "d91f3c653ca7b900a913f6e068f8fc2b0c5f6be562312e981236fb63f11cc42f",
+            "function_sha256": "834c3180c8ade030a9e36d63f0bb5dd67b44702428b0fe51aac86a9bb90a7035",
+            "coverage": "entire_graph_conservative"
+          },
+          "executed_steps": 1
+        },
+        {
+          "function": "get_coffee_price_range_by_date",
+          "args": {
+            "date": "2015-07-06"
+          },
+          "status": "passed",
+          "matches_original_execution": true,
+          "source_comparison": {
+            "expected_high_minus_low": "2.15",
+            "actual": 2.15
+          },
+          "dependencies": {
+            "graph_sha256": "9de9f594ee82b05f9d433ab4ce7618694fdbc25fd269608db80ab778197cdc86",
+            "schema_sha256": "d91f3c653ca7b900a913f6e068f8fc2b0c5f6be562312e981236fb63f11cc42f",
+            "function_sha256": "bb2fc184169a708b07bda31940d27bcbd5ddc65d52fb59b78d802c82792479ef",
+            "coverage": "entire_graph_conservative"
+          },
+          "executed_steps": 2
+        }
+      ],
+      "coverage": "Recorded generated probes only; no benchmark score claimed",
+      "unsupported_or_unprobed_functions": [],
+      "volume_units": "No unit conversion is evaluated or supplied"
+    }
+  },
+  "semantics": {
+    "numeric_comparison": "Decimal(str(actual)) equals Decimal(original_csv_text)",
+    "Volume": "Source numeric values verified; CSV supplies no unit definition. Contracts, lots, kilograms, and unit conversions remain unverified.",
+    "record_count": "Count of supplied daily rows, not volume or individual transactions"
+  },
+  "limitations": [
+    "Validates source preservation, not unseen agent planning or official benchmark accuracy",
+    "Does not validate unsupported units or interpretations beyond the source table"
+  ]
+}

@@ -21,7 +21,7 @@ The engine must work across task domains. Coffee is a first validation surface; 
 - Fixed the stack around LangGraph, LangChain, and LangSmith, with Pydantic, NetworkX, Owlready2/HermiT, SQLModel/SQLite, Streamlit, and MkDocs/mkdocstrings. Responsibilities and intermediate-output contracts are in docs/stack.md.
 - Pinned Python 3.12.13, uv 0.12.0, exact direct dependencies and a transitive uv.lock. Installed and checksum-verified local Temurin JRE 21.0.13+9.
 - Added reproducible Java setup and environment-verification scripts. The verifier records actual library versions/imports, reopened SQLite checkpoint tables, JVM/HermiT startup, and source hashes in docs/verification/setup.json.
-- Added a documentation site and API pages generated from actual setup code. Runtime stages and their reports remain to be implemented.
+- Added a documentation site and API pages generated from actual setup code. Runtime stages and their reports were completed in the later capability milestone below.
 - Checked the user's reusable-kernel interpretation against raw paper Sections 3.1 to 3.3. Recorded the fixed O versus generated S/F distinction, dynamic ReAct calls, per-query G, task-adapter boundary, and decision/evaluation policy in docs/design.md.
 
 ## Meaningful implementation milestones
@@ -40,13 +40,19 @@ Each milestone should end in a reviewable commit with actual verification eviden
 
 ## Current implementation milestone
 
-The real corpus connectors, official Coffee loader/scorer, ontology grammar and OWL/HermiT validation, generic operators, bounded function language, artifact store, LangGraph construction loop, frozen ReAct runner, and minimal Streamlit interface are implemented. Runtime acceptance checks are in progress. The interface has Ask, Audit, Revise, and History views.
+The real corpus connectors, official Coffee loader/scorer, ontology grammar and OWL/HermiT validation, generic operators, bounded function language, artifact store, LangGraph construction loop, frozen ReAct runner, and minimal Streamlit interface are implemented. The bounded runtime acceptance checks are complete. The interface has Ask, Audit, Revise, and History views.
 
 Gemini CLI 0.66.0 successfully reached Vertex AI through the user's existing gcloud project and application-default credentials. A real tiny generation completed with 5,435 input and 6 output tokens and zero native tool calls. No API key is needed. The user authorized a total $40 limit, with careful small checks before longer runs. The CLI runs in an isolated empty directory with hooks and extensions disabled and native tool execution denied. See the model adapter and actual saved preflight evidence.
 
 Actual component checks: 26 passed, two live API tests excluded from the default invocation. Earlier live USGS acquisition and truncation checks passed. Genuine Coffee data and scorer checks passed. Real HermiT accepted the consistent W3C ontology and detected the contradictory cases. Three genuine Service/Streamlit AppTest cases passed without mocks. The first real USGS loop subsequently completed: initial count/max construction scored 2/2, a fresh minimum query exposed a missing function with an honest insufficient-evidence response, a revision added minimum/depth, old construction calls replayed, and promotion passed. A fresh depth answer independently matched 70 km. The failed query remains evidence, not a success.
 
-Current bounded work: test appending a second actual USGS corpus and replay original task corpora, then independently score fresh expanded-corpus answers. The Coffee construction is running with all 5,746 corpus records, preserving construction/development/held-out boundaries. Its first extracted chunks are under grounding review before concurrent exact-request prefetch. Record actual token costs and failures. Verify the interface against those populated artifacts, generate documentation, and commit reviewable capability groups.
+Completed acceptance: the added USGS snapshot expanded the corpus from 7 to 15 events; five prior trajectories replayed on original evidence and a fresh count matched 15. A separate real Gemini-proposed rename adapter preserved six trajectories and a fresh 99 km depth answer. Actual transport failures exercised checkpoint resume and exact response reuse, with unknown usage reservations retained.
+
+Coffee completed on all 5,746 official corpus records. An independent check matched all 40,222 field values and every source attribution. After a formatting repair, construction scored 3/3; development scored 3/3; final untouched held-out evaluation scored 3/3. The formatting repair reused unchanged graph/functions. These are small pilot results, not the paper's aggregate benchmark scores.
+
+The actual browser submitted a background question, exposed a worker CLI option mismatch, and resumed the same saved request after the fix. The app displayed the correct 99 km answer with its real function result and source records. History-lock and worker-lifecycle regressions have real process tests. Final verification passed 50 tests including live API checks, Ruff, strict documentation generation, and diff checks. See verification/acceptance.md and its source JSON for exact reports, identifiers, costs, and limits.
+
+No further paid run is needed for this milestone. Continue from saved artifacts if the user requests additional tasks or broader evaluation. Preserve the total $40 ledger and never discard unknown-usage reservations to create artificial headroom.
 
 ## Known boundaries
 
@@ -54,7 +60,7 @@ Current bounded work: test appending a second actual USGS corpus and replay orig
 - Replay is evidence for recorded calls, not proof of fresh agent success. Changed corpora must preserve original task evidence for regression comparisons.
 - The adapter supports bounded equivalent interface renaming, not arbitrary semantic migrations.
 - LangSmith cloud tracing is not configured or tested. Local traces and artifacts are authoritative for this pilot.
-- Do not report a benchmark score, completed revision loop, or working model-backed UI until its real acceptance checks finish.
+- The final pilot establishes the listed real capabilities only. Broader task accuracy, arbitrary schema migration, and a multi-user deployment are outside the verified scope.
 
 ## How to resume
 

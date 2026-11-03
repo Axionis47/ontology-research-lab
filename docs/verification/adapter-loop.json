@@ -1,0 +1,640 @@
+{
+  "verification": "actual_model_proposed_rename_adapter",
+  "task_id": "92a95ecf291d41d9887cdaa1be74fe67",
+  "started_at": "2026-11-03T07:55:06.779579+00:00",
+  "status": "passed",
+  "runs": [
+    {
+      "run_id": "11c73b60970d417c9356d555ef87a5f4",
+      "kind": "ask",
+      "phase": "before_ask"
+    },
+    {
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "kind": "revise",
+      "phase": "rename_revision"
+    },
+    {
+      "run_id": "9c0b07095bb44a9b8698ad816e49b8e1",
+      "kind": "ask",
+      "phase": "after_ask"
+    }
+  ],
+  "budget_bound_usd": 1.5,
+  "requested_rename": {
+    "old": "get_max_earthquake_depth_km",
+    "new": "maximum_depth_km"
+  },
+  "independent_expected_values_sent_to_models": false,
+  "parent_revision": "1b2639a99f26dceb97407032540d78f68685aa2c5583410c74c4cab8d20f721d",
+  "corpus_id": "44fb1ec891dd8cf9eb5b4ae7df94219d3f0cc057932306a843581a0ab1167726",
+  "parent_kernel_sha256": "19a15e7f6bfc54db541b0f6cb672ab25e9f0e5d0e0b3a924a3759a04573042f8",
+  "original_queries": [
+    "How many earthquakes are in this supplied corpus? Return only the number.",
+    "What is the maximum earthquake magnitude in this supplied corpus? Return only the number.",
+    "What is the maximum earthquake depth in kilometres in this supplied corpus? Return only the number.",
+    "What is the minimum earthquake magnitude in this supplied corpus? Return only the number."
+  ],
+  "updated_at": "2026-11-03T08:01:53.716091+00:00",
+  "independent_evaluation": {
+    "event_count": 15,
+    "maximum_depth_km": "99",
+    "method": "Maximum coordinates[2] over retained original USGS GeoJSON features"
+  },
+  "before_answer": {
+    "answer": "99",
+    "expected_from_raw_geojson": "99",
+    "status": "answered",
+    "kernel_revision": "1b2639a99f26dceb97407032540d78f68685aa2c5583410c74c4cab8d20f721d",
+    "called_functions": [
+      "get_max_earthquake_depth_km"
+    ],
+    "passed": true,
+    "result_artifact": "9c8d5d295687ab1e0e6f1fe7bc83d9c490c61e5454fe1c05cff661e4d435b3f4"
+  },
+  "campaign_budget": {
+    "limit_usd": 1.5,
+    "estimated_usd": 0.075132,
+    "unknown_or_pending_reserved_usd": 0.50643,
+    "model_calls": 23
+  },
+  "model_calls": [
+    {
+      "id": "180bd77b1bc444b5aa174f683412c980",
+      "run_id": "11c73b60970d417c9356d555ef87a5f4",
+      "status": "settled",
+      "reserved": 0.50217,
+      "estimated": 0.0012045,
+      "evidence_id": "a703775fc60c653548e2cae99a77012cd221eee7fac415807d79691a9bba5402"
+    },
+    {
+      "id": "f81bb7f9cebc46dea9f6862521893466",
+      "run_id": "11c73b60970d417c9356d555ef87a5f4",
+      "status": "settled",
+      "reserved": 0.525975,
+      "estimated": 0.002862,
+      "evidence_id": "16e9cf0499137c9a1ee7b4ff3fea8ed5a373ff2b373fbad1787c65594bb0e1c6"
+    },
+    {
+      "id": "0d0c2785b5204915879f2e7238473ae2",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.5219625,
+      "estimated": 0.00301575,
+      "evidence_id": "8a96a46b0dfce6dfd65f5799d04320f17f15f2aa871fb1a9fdd593ecbc37cf41"
+    },
+    {
+      "id": "8e1ba6711eaa41c093b455caeae4ede6",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.57225,
+      "estimated": 0.008043,
+      "evidence_id": "7217d29ca06ad560afeeb43752eccece1f9c730fbcc32c625eb6f724ac920639"
+    },
+    {
+      "id": "9f687782c9f1477280b5b3bb6d9e3343",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.59427,
+      "estimated": 0.0190335,
+      "evidence_id": "9146db0d8222bc74ac35533c3f1c9eafbfdb5338207fcae1234c93853b5bed1a"
+    },
+    {
+      "id": "f911a67ab6a345b4ba9194023cc7fc58",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.5199225,
+      "estimated": 0.005799,
+      "evidence_id": "b0bb309ea3d0026c3f999a3a9ce18f37074f0b10d857def8903d25b6e8b899f7"
+    },
+    {
+      "id": "facc4a339b244c9a9108c99f7442d726",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.59415,
+      "estimated": 0.00611025,
+      "evidence_id": "916c83516f8b7cb6f7e947744f23288ffc6793a4476b0429aa8206dbc3e88e0f"
+    },
+    {
+      "id": "eccffad82ad84ab5b53b84f304d63029",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.50631,
+      "estimated": 0.00126375,
+      "evidence_id": "3021b559dbe3fd0ae716e0ed1b637ea9c3f0ddf04d1a0297196b985ba2f67960"
+    },
+    {
+      "id": "a876a4f227154c58a41509879fb6fb94",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.53004,
+      "estimated": 0.002958,
+      "evidence_id": "08005f8d89cffb42aecc639585c112e2727550c0fd5c6e553e21e4bb878d54fd"
+    },
+    {
+      "id": "3d7aa11125d2411c9ed6f0640cd631b0",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.50643,
+      "estimated": 0.001281,
+      "evidence_id": "4dfd96e07fc23e0d82585a1ee375ef2f9003d2ce0613e924642500291e92c620"
+    },
+    {
+      "id": "ff450e31f6624ca0a611330abefe2aca",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.53025,
+      "estimated": 0.00296175,
+      "evidence_id": "008c392a9af434fdde56963d6d1f75b315fb2301711cecadb3191a85090e5b15"
+    },
+    {
+      "id": "9bf3007c628f49e488ae9db14bce5aac",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.506505,
+      "estimated": 0.0012705,
+      "evidence_id": "03f883dda559cff189b9dfa96af49be596ad10d6e79b75d3d06939c26445bfa6"
+    },
+    {
+      "id": "061212d0a7284af886583ff9a54a3335",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.5302275,
+      "estimated": 0.00295725,
+      "evidence_id": "87051a94dc2a3f3872a560a45bdddc33973336b4006baa17abc7ad255a991eef"
+    },
+    {
+      "id": "efba62f31c674ec79e6f38157ef7b5e1",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "unknown",
+      "reserved": 0.50643,
+      "estimated": 0.0,
+      "evidence_id": "39f1e0e2efbc2a1e4d49815b3da5a1876a9fe33748e623a3e05a5b802b555190"
+    },
+    {
+      "id": "ceecf941520946a598b70f8fe1730885",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.510735,
+      "estimated": 0.0017565,
+      "evidence_id": "30a42273f401977318a83f674fcba8cb5a213c57ad7d5adf061ce8e86b9b0040"
+    },
+    {
+      "id": "5b4cbae22d654aa9bc1fa623d17fdcf4",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.510945,
+      "estimated": 0.00155325,
+      "evidence_id": "1d4d9ef030ef25adb43ceec30545753336f40fa30648b0184be305f5dfcb9e27"
+    },
+    {
+      "id": "4a2e229c652d44aeb8a0b6e4ce9329a8",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.5109225,
+      "estimated": 0.00156225,
+      "evidence_id": "febf7bf3dc0830a2d48aa729a46bd7a8bcd3e0cebcb8676049bc7095da932bce"
+    },
+    {
+      "id": "1a61150ff6ba4ffa89bf85c30fe9e7b3",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.50643,
+      "estimated": 0.00128025,
+      "evidence_id": "9b146e0a8c6e6ca49739d004c9cd413f09f1fde24b858fc04e0d0fe67ee1a95e"
+    },
+    {
+      "id": "db305709059e4e579e5deaa54c9a073f",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.51093,
+      "estimated": 0.0015555,
+      "evidence_id": "787a23cd703240d41567f103b79c28b1eac2dae8ab277ea5d3bd5dba17d35339"
+    },
+    {
+      "id": "81567cd9d056426d8f6c6bc47e569e16",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.5362425,
+      "estimated": 0.002649,
+      "evidence_id": "5714b3cba622d226f5e96ca269b78f435c97aa4e0b53b4fa1be9645b7c0f453a"
+    },
+    {
+      "id": "c7e7c88f679d47a3a85ce8703d00a554",
+      "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+      "status": "settled",
+      "reserved": 0.5551275,
+      "estimated": 0.003075,
+      "evidence_id": "d702977b327de9ab58b978eced30b02f49763c7326ea68169864c38d75e655c4"
+    },
+    {
+      "id": "0eda612a68814886be78437f3cb60430",
+      "run_id": "9c0b07095bb44a9b8698ad816e49b8e1",
+      "status": "settled",
+      "reserved": 0.50199,
+      "estimated": 0.0011745,
+      "evidence_id": "c8eaa6ed48a682d2e50d17704ec0028db069bc3a33069f3fc442a99c71a3d530"
+    },
+    {
+      "id": "604ce9085e484d7587c91540f59489aa",
+      "run_id": "9c0b07095bb44a9b8698ad816e49b8e1",
+      "status": "settled",
+      "reserved": 0.5064075,
+      "estimated": 0.0017655,
+      "evidence_id": "fe0abc41999f21f58f9580b743a6dd2f2bd963d0c824b2636d8520987667f3a6"
+    }
+  ],
+  "shared_store_budget": {
+    "limit_usd": 40.0,
+    "estimated_usd": 2.14256625,
+    "reserved_usd": 1.65597,
+    "remaining_usd": 36.20146375,
+    "calls": 193
+  },
+  "partial_candidate_artifacts": {
+    "schema": {
+      "stage": "schema",
+      "status": "completed",
+      "artifact_id": "f2b43eaacdd595e139455315082df7eaa1ab87250c6b0caec5cfc7a25a2e0ca5"
+    },
+    "ontology_validation": {
+      "stage": "ontology_validation",
+      "status": "passed",
+      "artifact_id": "e97452f2512f9fe5fec7fa7142f26bc7e311f36cc0a86833949e1d855862588e"
+    },
+    "graph": {
+      "stage": "graph",
+      "status": "completed",
+      "artifact_id": "656eb46827c04383bb91c21a4fd0e692cd05348e03c25af107237702870bda5a"
+    },
+    "functions": {
+      "stage": "functions",
+      "status": "completed",
+      "artifact_id": "9790556e5113d667f5bedeb3136596db766b6595ecf94a4d9ca084145c3a655f"
+    }
+  },
+  "partial_rename_evidence": {
+    "function_names": [
+      "count_earthquakes",
+      "get_max_earthquake_magnitude",
+      "get_min_earthquake_magnitude",
+      "maximum_depth_km"
+    ],
+    "old_absent": true,
+    "new_present": true,
+    "other_functions_exactly_preserved": true,
+    "renamed_body_exactly_preserved": true
+  },
+  "active_revision_after_failure": "1b2639a99f26dceb97407032540d78f68685aa2c5583410c74c4cab8d20f721d",
+  "provider_failure": {
+    "evidence_artifact": "42bb93aa0eb0e223cd0b7096ceb3c89ef77534a6c8255d96ab426aba5c234aed",
+    "call_id": "efba62f31c674ec79e6f38157ef7b5e1",
+    "stage": "evaluation.r0.q3.step0",
+    "message": "TypeError: fetch failed sending request",
+    "usage_reported": false
+  },
+  "adapter_proposal_completed": true,
+  "promoted": true,
+  "explicit_resume": {
+    "run_id": "3a37ef24534f4f70b991c24cc7b140c7",
+    "consumed": true,
+    "events_after_id": 674,
+    "reason": "One authorized resume after transient fetch failure; prior unknown reservation retained",
+    "unknown_call_id_retained": "efba62f31c674ec79e6f38157ef7b5e1",
+    "started_at": "2026-11-03T08:01:18.346479+00:00",
+    "cache_hits": [
+      {
+        "stage": "evaluation.r0.q0.step0",
+        "artifact_id": "de45537749e2be5c59af76b44c2cd529afd227c175cf135f7ca1dd03ac3301bb",
+        "receipt": {
+          "evidence_id": "3021b559dbe3fd0ae716e0ed1b637ea9c3f0ddf04d1a0297196b985ba2f67960",
+          "new_provider_call": false,
+          "original_call_id": "eccffad82ad84ab5b53b84f304d63029",
+          "request_key": "f06962b3e366bb49b154c94369847a95945519e878a9b4b790b3de77e40458da"
+        }
+      },
+      {
+        "stage": "evaluation.r0.q1.step0",
+        "artifact_id": "18a4bf7178771121092dadd0ba1de5105c1481e48297d8c59e56ee8ce6c2c402",
+        "receipt": {
+          "evidence_id": "4dfd96e07fc23e0d82585a1ee375ef2f9003d2ce0613e924642500291e92c620",
+          "new_provider_call": false,
+          "original_call_id": "3d7aa11125d2411c9ed6f0640cd631b0",
+          "request_key": "13acae28d4861ffcea38c994edaa7fe68f3c06493be090d27ea2a0aa807740bd"
+        }
+      },
+      {
+        "stage": "evaluation.r0.q2.step0",
+        "artifact_id": "08d88ba7d9fd578877a9a6cb6e50e1d4dcb95f2469eaf02f117285a2ddf56db3",
+        "receipt": {
+          "evidence_id": "03f883dda559cff189b9dfa96af49be596ad10d6e79b75d3d06939c26445bfa6",
+          "new_provider_call": false,
+          "original_call_id": "9bf3007c628f49e488ae9db14bce5aac",
+          "request_key": "1f6c4dd5943f55cd1c63f0dd561ee26da72d31756ce3c1a505e2e2ec3e2bd174"
+        }
+      }
+    ],
+    "cache_hit_count": 3
+  },
+  "prior_failure": {
+    "type": "RuntimeError",
+    "message": "Gemini response failed validation; inspect artifact 42bb93aa0eb0e223cd0b7096ceb3c89ef77534a6c8255d96ab426aba5c234aed"
+  },
+  "candidate_revision": "0249900d19c5f1c7e6b5cc824f7cda50ae1e9c411c3b554648240b90a8e017d3",
+  "revision_result_artifact": "687aecf038d6a185f9083afff90064cf4fb8710a76576cd947b3daa47cb9716b",
+  "function_name_gate": {
+    "old_absent": true,
+    "new_present": true,
+    "all_other_names_present": true
+  },
+  "function_changes": [
+    {
+      "path": "/3/name",
+      "before": "get_max_earthquake_depth_km",
+      "after": "maximum_depth_km"
+    }
+  ],
+  "schema_changes": [
+    {
+      "path": "/relations/event_has_depth",
+      "before": {
+        "characteristics": [
+          "functional"
+        ],
+        "description": "Relates an earthquake event to its depth measurement.",
+        "inverse_of": null,
+        "source": "EarthquakeEvent",
+        "target": "Depth"
+      },
+      "after": null
+    },
+    {
+      "path": "/relations/event_has_magnitude",
+      "before": {
+        "characteristics": [
+          "functional"
+        ],
+        "description": "Relates an earthquake event to its magnitude measurement.",
+        "inverse_of": null,
+        "source": "EarthquakeEvent",
+        "target": "Magnitude"
+      },
+      "after": null
+    },
+    {
+      "path": "/relations/event_located_at",
+      "before": {
+        "characteristics": [
+          "functional"
+        ],
+        "description": "Relates an earthquake event to its geographic coordinates.",
+        "inverse_of": null,
+        "source": "EarthquakeEvent",
+        "target": "Coordinates"
+      },
+      "after": null
+    },
+    {
+      "path": "/relations/has_coordinates",
+      "before": null,
+      "after": {
+        "characteristics": [
+          "functional"
+        ],
+        "description": "Relates an earthquake event to its geographic coordinates.",
+        "inverse_of": null,
+        "source": "EarthquakeEvent",
+        "target": "Coordinates"
+      }
+    },
+    {
+      "path": "/relations/has_depth",
+      "before": null,
+      "after": {
+        "characteristics": [
+          "functional"
+        ],
+        "description": "Relates an earthquake event to its depth measurement.",
+        "inverse_of": null,
+        "source": "EarthquakeEvent",
+        "target": "Depth"
+      }
+    },
+    {
+      "path": "/relations/has_magnitude",
+      "before": null,
+      "after": {
+        "characteristics": [
+          "functional"
+        ],
+        "description": "Relates an earthquake event to its magnitude measurement.",
+        "inverse_of": null,
+        "source": "EarthquakeEvent",
+        "target": "Magnitude"
+      }
+    }
+  ],
+  "other_functions_exactly_preserved": true,
+  "renamed_function_body_exactly_preserved": true,
+  "regression_summary": {
+    "status": "passed",
+    "adapter": {
+      "mappings": [
+        {
+          "arguments": {},
+          "new_function": "maximum_depth_km",
+          "old_function": "get_max_earthquake_depth_km",
+          "output_fields": {}
+        },
+        {
+          "arguments": {},
+          "new_function": "count_earthquakes",
+          "old_function": "count_earthquakes",
+          "output_fields": {}
+        },
+        {
+          "arguments": {},
+          "new_function": "get_max_earthquake_magnitude",
+          "old_function": "get_max_earthquake_magnitude",
+          "output_fields": {}
+        },
+        {
+          "arguments": {},
+          "new_function": "get_min_earthquake_magnitude",
+          "old_function": "get_min_earthquake_magnitude",
+          "output_fields": {}
+        }
+      ],
+      "new_revision": "0249900d19c5f1c7e6b5cc824f7cda50ae1e9c411c3b554648240b90a8e017d3",
+      "old_revision": "1b2639a99f26dceb97407032540d78f68685aa2c5583410c74c4cab8d20f721d"
+    },
+    "receipt_ids": [
+      "3476534e534c2db4112db60629a714d3674da24082657483d762e98a993676c0",
+      "9c8d5d295687ab1e0e6f1fe7bc83d9c490c61e5454fe1c05cff661e4d435b3f4"
+    ],
+    "checks": [
+      {
+        "receipt_id": "1b2639a99f26dceb97407032540d78f68685aa2c5583410c74c4cab8d20f721d:construction:0",
+        "origin": "parent_construction",
+        "status": "passed",
+        "executed_calls": 1,
+        "reason": null
+      },
+      {
+        "receipt_id": "1b2639a99f26dceb97407032540d78f68685aa2c5583410c74c4cab8d20f721d:construction:1",
+        "origin": "parent_construction",
+        "status": "passed",
+        "executed_calls": 1,
+        "reason": null
+      },
+      {
+        "receipt_id": "1b2639a99f26dceb97407032540d78f68685aa2c5583410c74c4cab8d20f721d:construction:2",
+        "origin": "parent_construction",
+        "status": "passed",
+        "executed_calls": 1,
+        "reason": null
+      },
+      {
+        "receipt_id": "1b2639a99f26dceb97407032540d78f68685aa2c5583410c74c4cab8d20f721d:construction:3",
+        "origin": "parent_construction",
+        "status": "passed",
+        "executed_calls": 1,
+        "reason": null
+      },
+      {
+        "receipt_id": "3476534e534c2db4112db60629a714d3674da24082657483d762e98a993676c0",
+        "origin": "saved_answer",
+        "status": "passed",
+        "executed_calls": 1,
+        "reason": null
+      },
+      {
+        "receipt_id": "9c8d5d295687ab1e0e6f1fe7bc83d9c490c61e5454fe1c05cff661e4d435b3f4",
+        "origin": "saved_answer",
+        "status": "passed",
+        "executed_calls": 1,
+        "reason": null
+      }
+    ]
+  },
+  "actual_adapter_model_calls": [
+    {
+      "call_id": "c7e7c88f679d47a3a85ce8703d00a554",
+      "usage_artifact": "d702977b327de9ab58b978eced30b02f49763c7326ea68169864c38d75e655c4",
+      "proposal": {
+        "mappings": [
+          {
+            "arguments": {},
+            "new_function": "maximum_depth_km",
+            "old_function": "get_max_earthquake_depth_km",
+            "output_fields": {}
+          }
+        ],
+        "new_revision": "0249900d19c5f1c7e6b5cc824f7cda50ae1e9c411c3b554648240b90a8e017d3",
+        "old_revision": "1b2639a99f26dceb97407032540d78f68685aa2c5583410c74c4cab8d20f721d"
+      },
+      "context_sha256": "9d2e2ff154859bcb564a51fd6fa8ae02aad8d0fb3fd979df22a3dcfe65a14f0d",
+      "context_keys": [
+        "adapter_schema",
+        "constraints",
+        "new",
+        "old"
+      ],
+      "old_context_keys": [
+        "functions",
+        "id",
+        "schema"
+      ],
+      "new_context_keys": [
+        "functions",
+        "id",
+        "schema"
+      ],
+      "context_exactly_matches_answer_free_contract": true,
+      "stats": {
+        "files": {
+          "totalLinesAdded": 0,
+          "totalLinesRemoved": 0
+        },
+        "models": {
+          "gemini-3.8-flash": {
+            "api": {
+              "errorsByType": {},
+              "totalErrors": 0,
+              "totalLatencyMs": 2162,
+              "totalRequests": 1
+            },
+            "roles": {
+              "main": {
+                "tokens": {
+                  "cached": 0,
+                  "candidates": 170,
+                  "input": 3250,
+                  "prompt": 3250,
+                  "thoughts": 0,
+                  "tool": 0,
+                  "total": 3420
+                },
+                "totalErrors": 0,
+                "totalLatencyMs": 2162,
+                "totalRequests": 1
+              }
+            },
+            "tokens": {
+              "cached": 0,
+              "candidates": 170,
+              "input": 3250,
+              "prompt": 3250,
+              "thoughts": 0,
+              "tool": 0,
+              "total": 3420
+            }
+          }
+        },
+        "tools": {
+          "byName": {},
+          "totalCalls": 0,
+          "totalDecisions": {
+            "accept": 0,
+            "auto_accept": 0,
+            "modify": 0,
+            "reject": 0
+          },
+          "totalDurationMs": 0,
+          "totalFail": 0,
+          "totalSuccess": 0
+        }
+      },
+      "estimated_usd": 0.003075
+    }
+  ],
+  "promotion_check": {
+    "allowed": true,
+    "reason": "Construction checks and recorded calls passed"
+  },
+  "promoted_revision": "0249900d19c5f1c7e6b5cc824f7cda50ae1e9c411c3b554648240b90a8e017d3",
+  "after_answer": {
+    "answer": "99",
+    "expected_from_raw_geojson": "99",
+    "status": "answered",
+    "kernel_revision": "0249900d19c5f1c7e6b5cc824f7cda50ae1e9c411c3b554648240b90a8e017d3",
+    "called_functions": [
+      "maximum_depth_km"
+    ],
+    "passed": true,
+    "result_artifact": "a23409daaa6281f2584ff84e382299220794f96ace9c02f55301cb925ea74196"
+  },
+  "frozen_inference_immutability": {
+    "before_sha256": {
+      "schema": "51ab09ed837b7bde9d7ad197d02f14898a1eb6ae53fb8effd0f183444fbcf9b9",
+      "functions": "26ddc9e009913f171d191b7eb02147c50866b84e9f2c1f2d7698d25a24137b3e"
+    },
+    "after_sha256": {
+      "schema": "51ab09ed837b7bde9d7ad197d02f14898a1eb6ae53fb8effd0f183444fbcf9b9",
+      "functions": "26ddc9e009913f171d191b7eb02147c50866b84e9f2c1f2d7698d25a24137b3e"
+    },
+    "passed": true
+  },
+  "original_kernel_unchanged": true,
+  "finished_at": "2026-11-03T08:01:53.713454+00:00"
+}

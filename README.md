@@ -20,16 +20,18 @@ The four views are Ask, Audit, Revise, and History. New evidence is acquired exp
 
 ## Verification status
 
-The real seven-event USGS pilot completed construction, frozen answering, a depth/minimum-magnitude revision, old-call replay, and promotion. Its initial function gap is retained as an insufficient-evidence result. The revised maximum-depth answer matched the real source value of 70 km.
+The real seven-event USGS pilot completed construction, frozen answering, a depth/minimum-magnitude revision, old-call replay, and promotion. Its initial function gap is retained as an insufficient-evidence result. The revised maximum-depth answer matched the real source value of 70 km. Adding a second real snapshot expanded the corpus to 15 events; all five prior trajectories replayed on their original corpus and a fresh count answer matched 15.
 
-The official ToolQA Coffee pilot uses all 5,746 corpus rows and separate construction, development, and held-out queries. Its model-backed evaluation is in progress, not yet a reported benchmark result. Small pilot outcomes do not establish broad accuracy or reproduce the paper's reported scores.
+The official ToolQA Coffee pilot uses all 5,746 corpus rows and separate construction, development, and held-out queries. The real frozen kernel scored 3/3 development and 3/3 untouched held-out questions with the official ToolQA metric, after construction reached 3/3. Small pilot outcomes do not establish broad accuracy or reproduce the paper's reported scores.
 
 ```sh
 uv run pytest
 uv run mkdocs serve
 ```
 
-Tests exercise real libraries, genuine public records, actual HermiT, and saved real model trajectories. Live network checks are opt-in with `OAK_LIVE_TESTS=1`; no mock services or fabricated model responses are used. LangSmith cloud tracing is optional and has not been verified here.
+The final suite passed all 50 checks with live API tests enabled. Tests exercise real libraries, genuine public records, actual HermiT, and saved real model trajectories. Live network checks are opt-in with `OAK_LIVE_TESTS=1`; no mock services or fabricated model responses are used. LangSmith cloud tracing is optional and has not been verified here.
+
+The real adapter test also passed: Gemini proposed a function rename, six old trajectories replayed successfully, and fresh depth answers remained 99 km. The browser test submitted and resumed the same real background job. See [acceptance evidence](docs/verification/acceptance.md).
 
 ## Documentation
 

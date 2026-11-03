@@ -17,6 +17,7 @@ markdown_extensions:
   - fenced_code
 nav:
   - Start: index.md
+  - Verified pilot: verification/acceptance.md
   - Stack and setup: stack.md
   - Paper:
       - Specification: paper/method-spec.md

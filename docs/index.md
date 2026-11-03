@@ -1,14 +1,16 @@
-# OaK implementation workspace
+# OaK ontology auditor
 
-Implement [OaK](https://arxiv.org/abs/2608.22974v1) with inspectable schema, knowledge graph, and functions; versioned text suggestions; real OWL/HermiT validation; and explicit regression evidence.
+The local application constructs task-specific schema S, knowledge graph G, and functions F from real evidence, then supports questions and versioned text suggestions. Its LangGraph workflow uses actual Gemini CLI calls through GCP and actual OWL/HermiT validation.
 
-The technology stack is pinned around LangGraph, LangChain, and LangSmith. Source extraction and design are preserved. The OaK runtime and benchmark pilot are the next implementation milestones.
+Run `uv run oak serve` and open [the local auditor](http://127.0.0.1:8501). Ask, Audit, Revise, and History expose answers, evidence, differences, validation, and resumable runs.
 
+The real acceptance checks cover USGS corpus expansion, a model-proposed compatibility adapter, and the official Coffee pilot. See [results and limits](verification/acceptance.md).
+
+- [Runtime method](runtime-method.md)
 - [Pinned stack and setup](stack.md)
 - [Paper specification](paper/method-spec.md)
-- [System design and acceptance criteria](design.md)
-- [Progress and next milestone](work-plan.md)
-- [Setup API generated from code](reference/setup.md)
-- [Independent review prompt](review/gemini-prompt.md)
+- [Interface guide](ui.md)
+- [Generated runtime API](reference/runtime.md)
+- [Progress and continuation](work-plan.md)
 
-The intermediate-output contract lives in the stack decision. Actual runtime artifacts will appear only after the corresponding real stages execute.
+All reports derive from saved real artifacts. No mocked provider, fabricated benchmark record, or simulated reasoner is used.

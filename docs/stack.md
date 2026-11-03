@@ -1,6 +1,6 @@
 # Pinned technology stack
 
-Decision: one local Python application, using the LangChain ecosystem for workflow, model integrations, tracing, and evaluation. This is an engineering decision for implementing OaK, not a stack specified by its authors.
+Decision: one local Python application, using LangGraph for workflow and persistence, with LangSmith instrumentation and a Gemini CLI model boundary. This is an engineering decision for implementing OaK, not a stack specified by its authors.
 
 Exact direct dependencies live in `pyproject.toml`. `uv.lock` locks transitive versions and distribution hashes. `.python-version` pins Python 3.12.13; `toolchain-java.lock.json` pins the Java archive and checksum. Change these deliberately in a dependency commit, then rerun the setup checks.
 
@@ -9,21 +9,21 @@ Exact direct dependencies live in `pyproject.toml`. `uv.lock` locks transitive v
 | Area | Library | Responsibility |
 | --- | --- | --- |
 | Workflow | LangGraph | Explicit construction, repair, freeze, inference, revision, and resume transitions |
-| Agent and model interfaces | LangChain, langchain-core, OpenAI and Anthropic integrations | Messages, typed tool calls, structured outputs, provider usage metadata, bounded ReAct execution |
+| Agent and model interfaces | Pinned Gemini CLI through Vertex AI; Pydantic and JSON Schema | Real JSON requests with usage receipts, bounded ReAct choices, typed function execution. LangChain provider packages remain pinned but are unused in this CLI configuration. |
 | Execution persistence | langgraph-checkpoint-sqlite | Local checkpoints keyed by workflow thread and checkpoint IDs |
-| Traces and evaluations | LangSmith | Nested model/tool traces and experiment results, with benchmark-owned scoring functions |
+| Traces and evaluations | LangSmith instrumentation and local receipts | Model trace instrumentation, actual local stage/tool records, and benchmark-owned scoring. Hosted LangSmith tracing and experiments are not configured. |
 | Contracts | Pydantic and pydantic-settings | Validated schemas, function definitions, patches, manifests, and configuration |
 | Ontology | Owlready2 with its bundled HermiT, Temurin Java 21 | OWL construction and actual logical consistency/unsatisfiability checks |
 | Knowledge graph | NetworkX MultiDiGraph | Typed entities and relations, explicit edge identities, deterministic graph operators |
-| Artifact index | SQLite through SQLModel | Run, revision, dependency, and evidence metadata |
+| Artifact index | SQLite standard library; SQLModel remains pinned but unused | Run, revision, dependency, and evidence metadata |
 | Artifact storage | Immutable JSON/JSONL, OWL, and source files | Inspectable S/G/F versions and actual intermediate outputs, indexed by content hashes |
 | Local interface | Streamlit | Schema, KG, function and revision inspection, text questions, and suggestions |
-| Execution interface and logs | Typer and structlog | Explicit commands and structured local events |
+| Execution interface and logs | Typer and SQLite JSON events | Explicit commands and structured local events; structlog remains available but unused. |
 | Code documentation | MkDocs with its bundled Read the Docs theme and mkdocstrings | A browsable method/design reference and API pages generated from docstrings |
 | Development | uv, pytest, Ruff | Reproducible installation, real component checks, formatting and linting |
 | Source extraction | pypdfium2 and BeautifulSoup | PDF text and arXiv HTML/math extraction |
 
-LangGraph controls the paper's outer loop. LangChain supplies the inner agent/model interfaces. The paper's schema-to-OWL mapping, nine operators, function composition, freeze rules, and regression rules remain explicit project code. Generic memory integrations do not define these semantics.
+LangGraph controls the paper's outer loop. The user-requested Gemini CLI supplies the model boundary; the inner loop executes the versioned typed function catalog directly. The paper's schema-to-OWL mapping, nine operators, function composition, freeze rules, and regression rules remain explicit project code. Generic memory integrations do not define these semantics.
 
 The initial target is a local, single-user pilot. SQLite is appropriate for that scope. A multi-user deployment requires a separate concurrency/storage decision. Streamlit submits explicit work and displays stored state; ordinary page reruns must not launch model calls or repeat a job.
 
@@ -39,7 +39,7 @@ LangSmith's Python SDK supports `evaluate()` and `aevaluate()` with `upload_resu
 
 ## Intermediate outputs are documentation
 
-The following is the required implementation contract, not a claim that runtime stages already exist. Each completed stage saves its actual outputs and a validated manifest. Failed attempts save errors and partial-output status. A successful stage cannot advance without its evidence being durably written.
+The following describes implemented stage evidence. The index links each stage to its run request, immutable artifacts, and model receipts. Earlier acceptance runs created before source-hash receipts were added retain that explicit provenance limitation. Each completed stage saves its actual outputs and a validated manifest. Failed attempts save errors and partial-output status. A successful stage cannot advance without its evidence being durably written.
 
 | Stage | Required inspectable output |
 | --- | --- |
@@ -52,13 +52,13 @@ The following is the required implementation contract, not a claim that runtime 
 | Freeze and resume | Immutable kernel manifest and exact execution checkpoint reference |
 | Adapt and regress | Adapter contract, impacted dependencies, actual replay results, fresh-inference coverage |
 
-Every manifest must include:
+The run request and its linked stage records collectively retain:
 
-- Format version, run/stage/attempt IDs, timestamps, status, parent revision, source-code commit, dependency-lock hash.
+- Format version, run/stage/attempt IDs, timestamps, status, and parent revision. New run requests also pin the Git commit, exact source-file hashes, and dependency-lock hashes.
 - Input/output artifact IDs, SHA-256 hashes, media types, and paths.
 - Prompt, model, generation settings, evaluator and benchmark split versions, when applicable.
 - Validation results with evidence type and coverage, errors, duration, reported usage, and separately labeled cost estimates.
-- LangGraph thread/checkpoint and LangSmith trace IDs when available. Missing optional values are explicit nulls, never invented measurements.
+- LangGraph thread/checkpoint IDs in its checkpoint database. Hosted LangSmith trace IDs are unavailable until tracing is configured; they are not fabricated.
 
 Generate a short stage report from this manifest, link it from the inspector, and render the workflow diagram from the actual LangGraph topology. API documentation comes from docstrings. Keep paper facts in the method specification, engineering decisions here or in the design, and current status in the work plan. This avoids maintaining parallel prose accounts of the same code and run.
 
@@ -82,13 +82,13 @@ uv run --locked ruff check scripts
 uv run --locked mkdocs build --strict
 ```
 
-Use `uv run --locked mkdocs serve` to browse documentation. The generated API pages currently cover setup tooling. Runtime API pages will be added with the real implementation.
+Use `uv run --locked mkdocs serve` to browse documentation. Setup and runtime API pages are generated from their actual Python docstrings.
 
-`.env.example` names configuration variables without credentials. Pin actual provider/model IDs, endpoint, prompt versions, sampling settings, and spending limits in each run's configuration before paid execution. Gemini CLI 0.66.0 is a development review tool, separate from runtime provider integrations; its authentication is still absent.
+`.env.example` names configuration variables without credentials. Pin actual provider/model IDs, endpoint, prompt versions, sampling settings, and spending limits in each run's configuration before paid execution. Gemini CLI 0.66.0 is the authorized runtime provider path through existing GCP application-default credentials. Its exact isolation, configuration, usage accounting, and verified authentication are documented in [gemini.md](gemini.md).
 
 ## Verification boundary
 
-The setup verifier checks pinned package installation/imports, real SQLite checkpointer initialization and reopen, Java/HermiT startup, and the retained paper's hashes. Its machine-readable report records the evidence and failures. It makes no model calls and does not substitute synthetic ontology or benchmark results for the missing application. A successful setup report is not an OaK benchmark pass.
+The setup verifier checks pinned package installation/imports, real SQLite checkpointer initialization and reopen, Java/HermiT startup, and the retained paper's hashes. Its machine-readable report records the evidence and failures. It makes no model calls and does not substitute synthetic ontology or benchmark results for application checks. A successful setup report is not an OaK benchmark pass.
 
 See [work plan](work-plan.md) for the current milestone and [setup API](reference/setup.md) for the actual verification implementation.
 
