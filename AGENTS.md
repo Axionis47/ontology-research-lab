@@ -4,6 +4,8 @@
 
 Implement arXiv:2608.22974v1 faithfully, starting with a small real benchmark surface. Add a user-visible, versioned workflow for inspecting the schema S, knowledge graph G, and functions F, asking questions, and proposing changes.
 
+Build a reusable task-conditioned OaK engine. A benchmark is a validation surface, not the architecture. Keep domain data loading, task descriptions, splits, and official scoring in task adapters. The shared engine must construct/refine domain schemas and functions, then reuse frozen kernels across queries. Do not hardcode benchmark schemas, question patterns, answers, or domain functions into the shared reasoning loop. Demonstrated reuse requires a second materially different real task surface through the same engine.
+
 ## User requirements
 
 - Never use em dashes in authored documentation or user-facing writing. Preserve upstream source documents unchanged.

@@ -4,6 +4,8 @@
 
 Implement OaK from its paper with real components, visible S/G/F artifacts, text suggestions, versioned validation, and efficient compatibility checks after changes. The user wants autonomous progress within stated restrictions, durable context, and meaningful commits.
 
+The engine must work across task domains. Coffee is a first validation surface; its schema and reasoning must not be hardcoded into core code. Frozen S/F are reused across queries, while paper-style inference builds the corpus-dependent G. See docs/design.md for the shared-engine/task-adapter boundary and the evidence required to claim reuse.
+
 ## Completed preparation
 
 - Installed all 18 published context-engineering skills under .agents/skills at upstream commit 9ff0c99108b36d3b886defd825d8ac1f47dba374.
@@ -20,6 +22,7 @@ Implement OaK from its paper with real components, visible S/G/F artifacts, text
 - Pinned Python 3.12.13, uv 0.12.0, exact direct dependencies and a transitive uv.lock. Installed and checksum-verified local Temurin JRE 21.0.13+9.
 - Added reproducible Java setup and environment-verification scripts. The verifier records actual library versions/imports, reopened SQLite checkpoint tables, JVM/HermiT startup, and source hashes in docs/verification/setup.json.
 - Added a documentation site and API pages generated from actual setup code. Runtime stages and their reports remain to be implemented.
+- Checked the user's reusable-kernel interpretation against raw paper Sections 3.1 to 3.3. Recorded the fixed O versus generated S/F distinction, dynamic ReAct calls, per-query G, task-adapter boundary, and decision/evaluation policy in docs/design.md.
 
 ## Meaningful implementation milestones
 
@@ -31,12 +34,13 @@ Implement OaK from its paper with real components, visible S/G/F artifacts, text
 6. **Frozen-kernel execution:** real ReAct calls and benchmark score on the pilot, with S/G/F visible.
 7. **User questions and revision candidates:** read-only questions, text patches, actual validation, history, and disposition.
 8. **Constrained adapters and selective regression:** real old inputs against revised artifacts, explicit compatibility coverage, fresh inference fallback.
+9. **Demonstrated reuse:** run the shared engine on a second materially different genuine task surface, constructing its own kernel and measuring held-out task outcomes. A second loader or copied domain implementation does not satisfy this milestone.
 
 Each milestone should end in a reviewable commit with actual verification evidence. A documentation milestone must not be reported as a working runtime.
 
 ## Next action
 
-The requested stack decision and local setup are complete. Next implementation milestone: inspect/download the official benchmark corpus, select a representative pilot with documented split boundaries, and implement the genuine loader/scorer with its first artifact manifests. Add real runtime modules and API pages together.
+The requested stack decision and local setup are complete. The current discussion concerns whether the installed skills can support the missing design decisions and how reusable kernels differ from a benchmark-specific implementation. The design now records those boundaries; this clarification does not implement the runtime. For the next implementation milestone, define the task-adapter contract alongside the genuine Coffee loader/scorer and its artifact manifests, with documented split boundaries. Preserve a shared engine and add real runtime modules and API pages together.
 
 ## Verification for the stack milestone
 

@@ -10,6 +10,51 @@ The user adds an observable inspection and revision workflow: inspect S/G/F; ask
 
 The user additionally proposes an LLM-generated, constrained adapter to preserve old task/function interfaces under a revised schema. This is a project extension, not an algorithm attributed to the paper.
 
+## Reusable engine and task boundaries
+
+The deliverable is a reusable task-conditioned OaK engine. Coffee is the first real validation surface. Its names, schema, question templates, and answers must not determine the shared engine's behavior.
+
+The paper distinguishes four objects and two loops (Sections 3.1 to 3.3):
+
+| Object | What it represents | Reuse boundary |
+| --- | --- | --- |
+| O | The generic operator library | Shared primitives across task domains |
+| S | Types, properties, identity keys, relations, and declared constraints | Constructed and refined for a task family, then frozen |
+| G | Actual corpus facts instantiated under S, with evidence provenance | Built from each query's accompanying corpus in paper-style inference |
+| F | Typed task functions realized over O and grounded in S/G | Constructed/refined, then reused as the frozen ReAct tool catalog |
+
+The outer construction loop evaluates and improves S/F. The inner ReAct loop selects functions and arguments based on the query and observations. Fixed workflow stages and a frozen catalog do not imply a predetermined sequence of calls. The reusable kernel is K=(S,F), not a single permanent graph or a saved answer trajectory.
+
+Keep the following responsibilities separate:
+
+- **Shared engine:** construction prompts and contracts, OWL translation, validation, extraction/merge, generic operators, function realization, ReAct execution, revision workflow, checkpoints, and artifact evidence.
+- **Task adapter:** task description, genuine corpus/query loading, construction/development/held-out partitions, benchmark-specific output formatting, and official scoring. An adapter supplies task inputs and evaluation semantics, not a handwritten solution or a preselected ontology disguised as discovery.
+- **Generated kernel revision:** the actual task-conditioned S/F, their provenance, declared applicability, and validation evidence. Runs explicitly bind to a task and kernel revision.
+
+Here, a task adapter is separate from the schema-compatibility adapter discussed below. The latter translates contracts between old and new kernel revisions.
+
+Support multiple task/kernel records through explicit selection. Automatically choosing or combining ontologies for an arbitrary new task is an additional routing problem; the reviewed paper does not establish that mechanism. Reusing or incrementally updating G across queries also needs separate validation instead of being assumed from S/F reuse.
+
+Before claiming demonstrated reuse, execute the same engine on a second materially different genuine task surface, such as TravelPlanner after Coffee. Each task must obtain its own kernel through the actual construction loop, with official evaluation and held-out queries. Domain setup may differ; core workflow/operator semantics must remain shared. A second loader alone is not evidence of successful transfer.
+
+## Decisions where the paper is incomplete
+
+The installed project-development and evaluation skills support decomposition, explicit contracts, persistent evidence, and outcome-based evaluation. They do not supply the missing OaK prompts or prove an ontology correct. Paper requirements and user constraints take precedence over generic skill defaults.
+
+For each material missing detail, record its paper gap ID or user requirement, the chosen interpretation, alternatives and tradeoffs, the executable acceptance check, and the evidence/status. Make routine engineering choices autonomously. Escalate only an unresolved product preference or a necessary authorization that available evidence cannot settle.
+
+| Decision surface | Required treatment before claiming it works |
+| --- | --- |
+| Construction prompts | Version Analyze, Draft/Repair, Extract, Compose, Judge, and ReAct prompts with typed inputs/outputs. Inspect actual model outputs and stage failures on real task inputs before fixing the contract. Mark our prompt wording as an implementation choice. |
+| Schema and OWL mapping | Define the supported grammar and exact axioms. Check expressiveness against task requirements and actual evidence; check consistency/unsatisfiable classes with real HermiT. Keep open-world reasoning separate from data-integrity checks. |
+| Function representation | Specify allowed operator compositions and supported pre/post-processing, typed contracts, failure behavior, and execution bounds. Validate real executions against the actual KG. |
+| UI edits | Preserve the selected parent revision, proposal text, interpreted patch and diff. Route candidates through ontology, graph/function, and regression checks. Read-only questions cite artifacts without mutating them. |
+| Schema quality | Evaluate requirement coverage, grounded extraction, function executability, held-out task success, and revision regressions separately. HermiT consistency or a favorable LLM critique alone is insufficient. |
+
+There need not be one uniquely correct schema. Accept a candidate because its declared task coverage and constraints are supported by recorded checks and real execution evidence. Keep final held-out outcomes outside the construction/repair feedback loop. Failure can arise in extraction, functions, or planning even when the schema is adequate; diagnosis must inspect those stages before changing S.
+
+This is a decision and validation policy. None of these runtime mechanisms is implemented or experimentally validated by writing this document.
+
 ## Central engineering problem
 
 Know exactly what a change invalidates. A successful prior task is evidence about a particular kernel, graph, corpus, model/prompt configuration, and evaluator. It is not a universal certificate about all future schemas or questions.
