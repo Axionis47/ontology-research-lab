@@ -14,3 +14,16 @@ node_modules/
 .local/
 site/
 # Preserve reviewed evidence in docs/verification; local runs stay under .local.
+
+# Machine-local tool configuration and dependency-generated skill links.
+/.claude/
+/.agents/skills/developing-with-streamlit
+
+# Reproducible Python packaging and coverage outputs.
+/build/
+/dist/
+*.egg-info/
+.coverage
+.coverage.*
+/htmlcov/
+/coverage.xml
