@@ -18,6 +18,7 @@ markdown_extensions:
 nav:
   - Start: index.md
   - Verified pilot: verification/acceptance.md
+  - Verified MCP slice: verification/mcp-slice.md
   - Stack and setup: stack.md
   - Paper:
       - Specification: paper/method-spec.md
@@ -26,6 +27,7 @@ nav:
   - Work plan: work-plan.md
   - Runtime:
       - Method and boundaries: runtime-method.md
+      - MCP surfaces: mcp-surface.md
       - Corpus: corpus.md
       - Ontology semantics: ontology-semantics.md
       - Functions: functions.md

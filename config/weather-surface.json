@@ -1,0 +1,217 @@
+{
+  "format_version": 1,
+  "name": "weather-daily-pilot-v1",
+  "description": "Authored real-service pilot for acquiring three-day daily forecasts through a genuine MCP server and answering scalar questions. This is not an official benchmark; construction includes a location used in transport preflight.",
+  "base_prompt": "Answer the user's numeric weather question from actual tool observations. The relevant forecast is not provided initially. Honor the requested point or place, provider, forecast-date coverage, and displayed temperature units. Report insufficient evidence if required values are missing. Never treat prior forecast history as a current observation. For a fully supported answer, return only the requested number.",
+  "servers": [
+    {
+      "name": "weather",
+      "transport": "stdio",
+      "command": "node",
+      "args": [
+        ".local/weather-mcp/node_modules/@dangahagan/weather-mcp/dist/index.js"
+      ],
+      "env_refs": {
+        "ENABLED_TOOLS": "OAK_WEATHER_ENABLED_TOOLS",
+        "WEATHER_UNITS": "OAK_WEATHER_UNITS",
+        "ANALYTICS_ENABLED": "OAK_WEATHER_ANALYTICS",
+        "WEATHER_LIGHTNING_PREWARM": "OAK_WEATHER_LIGHTNING_PREWARM",
+        "DOTENV_CONFIG_PATH": "OAK_WEATHER_DOTENV_PATH"
+      },
+      "allowed_tools": [
+        "get_forecast",
+        "search_location"
+      ],
+      "timeout_seconds": 90
+    }
+  ],
+  "queries": [
+    {
+      "id": "construction-01",
+      "split": "construction",
+      "query": "Using the current Open-Meteo daily forecast for the point at latitude 52.52, longitude 13.405, how many forecast dates have a displayed daily high temperature of at least 10 degrees Celsius across the first three local forecast dates, including today? Use the displayed whole-degree Celsius values. Return only the number.",
+      "requirements": [
+        "Acquire the forecast during this episode through the connected MCP server.",
+        "Use exactly three consecutive local forecast dates, including the current local date.",
+        "Missing or incomplete daily highs cannot be treated as zero or as no qualifying dates.",
+        "Use Open-Meteo, daily granularity, and Celsius output."
+      ],
+      "supplied_documents": []
+    },
+    {
+      "id": "construction-02",
+      "split": "construction",
+      "query": "Using the current Open-Meteo daily forecast for the point at latitude 48.8566, longitude 2.3522, what is the maximum displayed daily high temperature across the first three local forecast dates, including today? Use the displayed whole-degree Celsius values. Return only the number.",
+      "requirements": [
+        "Acquire the forecast during this episode through the connected MCP server.",
+        "Use exactly three consecutive local forecast dates, including the current local date.",
+        "Missing or incomplete daily highs cannot be treated as zero or as no qualifying dates.",
+        "Use Open-Meteo, daily granularity, and Celsius output."
+      ],
+      "supplied_documents": []
+    },
+    {
+      "id": "construction-03",
+      "split": "construction",
+      "query": "Using the current Open-Meteo daily forecast for the point at latitude 35.6762, longitude 139.6503, how many forecast dates have a displayed daily high temperature of at least 20 degrees Celsius across the first three local forecast dates, including today? Use the displayed whole-degree Celsius values. Return only the number.",
+      "requirements": [
+        "Acquire the forecast during this episode through the connected MCP server.",
+        "Use exactly three consecutive local forecast dates, including the current local date.",
+        "Missing or incomplete daily highs cannot be treated as zero or as no qualifying dates.",
+        "Use Open-Meteo, daily granularity, and Celsius output."
+      ],
+      "supplied_documents": []
+    },
+    {
+      "id": "construction-04",
+      "split": "construction",
+      "query": "Using the current Open-Meteo daily forecast for the point at latitude -37.8136, longitude 144.9631, what is the maximum displayed daily high temperature across the first three local forecast dates, including today? Use the displayed whole-degree Celsius values. Return only the number.",
+      "requirements": [
+        "Acquire the forecast during this episode through the connected MCP server.",
+        "Use exactly three consecutive local forecast dates, including the current local date.",
+        "Missing or incomplete daily highs cannot be treated as zero or as no qualifying dates.",
+        "Use Open-Meteo, daily granularity, and Celsius output."
+      ],
+      "supplied_documents": []
+    },
+    {
+      "id": "construction-05",
+      "split": "construction",
+      "query": "Using the current Open-Meteo daily forecast for Cambridge, United Kingdom, how many forecast dates have a displayed daily high temperature of at least 12 degrees Celsius across the first three local forecast dates, including today? Use the displayed whole-degree Celsius values. Return only the number.",
+      "requirements": [
+        "Acquire the forecast during this episode through the connected MCP server.",
+        "Use exactly three consecutive local forecast dates, including the current local date.",
+        "Missing or incomplete daily highs cannot be treated as zero or as no qualifying dates.",
+        "Use Open-Meteo, daily granularity, and Celsius output."
+      ],
+      "supplied_documents": []
+    },
+    {
+      "id": "construction-06",
+      "split": "construction",
+      "query": "Using the current Open-Meteo daily forecast for Paris, France, what is the maximum displayed daily high temperature across the first three local forecast dates, including today? Use the displayed whole-degree Celsius values. Return only the number.",
+      "requirements": [
+        "Acquire the forecast during this episode through the connected MCP server.",
+        "Use exactly three consecutive local forecast dates, including the current local date.",
+        "Missing or incomplete daily highs cannot be treated as zero or as no qualifying dates.",
+        "Use Open-Meteo, daily granularity, and Celsius output."
+      ],
+      "supplied_documents": []
+    },
+    {
+      "id": "construction-07",
+      "split": "construction",
+      "query": "Using the current Open-Meteo daily forecast for the point at latitude 59.3293, longitude 18.0686, how many forecast dates have a displayed daily high temperature of at least 5 degrees Celsius across the first three local forecast dates, including today? Use the displayed whole-degree Celsius values. Return only the number.",
+      "requirements": [
+        "Acquire the forecast during this episode through the connected MCP server.",
+        "Use exactly three consecutive local forecast dates, including the current local date.",
+        "Missing or incomplete daily highs cannot be treated as zero or as no qualifying dates.",
+        "Use Open-Meteo, daily granularity, and Celsius output."
+      ],
+      "supplied_documents": []
+    },
+    {
+      "id": "construction-08",
+      "split": "construction",
+      "query": "Using the current Open-Meteo daily forecast for the point at latitude 41.9028, longitude 12.4964, what is the maximum displayed daily high temperature across the first three local forecast dates, including today? Use the displayed whole-degree Celsius values. Return only the number.",
+      "requirements": [
+        "Acquire the forecast during this episode through the connected MCP server.",
+        "Use exactly three consecutive local forecast dates, including the current local date.",
+        "Missing or incomplete daily highs cannot be treated as zero or as no qualifying dates.",
+        "Use Open-Meteo, daily granularity, and Celsius output."
+      ],
+      "supplied_documents": []
+    },
+    {
+      "id": "construction-09",
+      "split": "construction",
+      "query": "Using the current Open-Meteo daily forecast for Madrid, Spain, how many forecast dates have a displayed daily high temperature of at least 15 degrees Celsius across the first three local forecast dates, including today? Use the displayed whole-degree Celsius values. Return only the number.",
+      "requirements": [
+        "Acquire the forecast during this episode through the connected MCP server.",
+        "Use exactly three consecutive local forecast dates, including the current local date.",
+        "Missing or incomplete daily highs cannot be treated as zero or as no qualifying dates.",
+        "Use Open-Meteo, daily granularity, and Celsius output."
+      ],
+      "supplied_documents": []
+    },
+    {
+      "id": "construction-10",
+      "split": "construction",
+      "query": "Using the current Open-Meteo daily forecast for Oslo, Norway, what is the maximum displayed daily high temperature across the first three local forecast dates, including today? Use the displayed whole-degree Celsius values. Return only the number.",
+      "requirements": [
+        "Acquire the forecast during this episode through the connected MCP server.",
+        "Use exactly three consecutive local forecast dates, including the current local date.",
+        "Missing or incomplete daily highs cannot be treated as zero or as no qualifying dates.",
+        "Use Open-Meteo, daily granularity, and Celsius output."
+      ],
+      "supplied_documents": []
+    },
+    {
+      "id": "development-01",
+      "split": "development",
+      "query": "Using the current Open-Meteo daily forecast for the point at latitude 50.0755, longitude 14.4378, how many forecast dates have a displayed daily high temperature of at least 10 degrees Celsius across the first three local forecast dates, including today? Use the displayed whole-degree Celsius values. Return only the number.",
+      "requirements": [
+        "Acquire the forecast during this episode through the connected MCP server.",
+        "Use exactly three consecutive local forecast dates, including the current local date.",
+        "Missing or incomplete daily highs cannot be treated as zero or as no qualifying dates.",
+        "Use Open-Meteo, daily granularity, and Celsius output."
+      ],
+      "supplied_documents": []
+    },
+    {
+      "id": "development-02",
+      "split": "development",
+      "query": "Using the current Open-Meteo daily forecast for Vienna, Austria, what is the maximum displayed daily high temperature across the first three local forecast dates, including today? Use the displayed whole-degree Celsius values. Return only the number.",
+      "requirements": [
+        "Acquire the forecast during this episode through the connected MCP server.",
+        "Use exactly three consecutive local forecast dates, including the current local date.",
+        "Missing or incomplete daily highs cannot be treated as zero or as no qualifying dates.",
+        "Use Open-Meteo, daily granularity, and Celsius output."
+      ],
+      "supplied_documents": []
+    },
+    {
+      "id": "heldout-01",
+      "split": "heldout",
+      "query": "Using the current Open-Meteo daily forecast for the point at latitude 60.1699, longitude 24.9384, how many forecast dates have a displayed daily high temperature of at least 5 degrees Celsius across the first three local forecast dates, including today? Use the displayed whole-degree Celsius values. Return only the number.",
+      "requirements": [
+        "Acquire the forecast during this episode through the connected MCP server.",
+        "Use exactly three consecutive local forecast dates, including the current local date.",
+        "Missing or incomplete daily highs cannot be treated as zero or as no qualifying dates.",
+        "Use Open-Meteo, daily granularity, and Celsius output."
+      ],
+      "supplied_documents": []
+    },
+    {
+      "id": "heldout-02",
+      "split": "heldout",
+      "query": "Using the current Open-Meteo daily forecast for Lisbon, Portugal, what is the maximum displayed daily high temperature across the first three local forecast dates, including today? Use the displayed whole-degree Celsius values. Return only the number.",
+      "requirements": [
+        "Acquire the forecast during this episode through the connected MCP server.",
+        "Use exactly three consecutive local forecast dates, including the current local date.",
+        "Missing or incomplete daily highs cannot be treated as zero or as no qualifying dates.",
+        "Use Open-Meteo, daily granularity, and Celsius output."
+      ],
+      "supplied_documents": []
+    },
+    {
+      "id": "heldout-03",
+      "split": "heldout",
+      "query": "Using the current Open-Meteo daily forecast for the point at latitude 47.3769, longitude 8.5417, how many forecast dates have a displayed daily high temperature of at least 10 degrees Celsius across the first three local forecast dates, including today? Use the displayed whole-degree Celsius values. Return only the number.",
+      "requirements": [
+        "Acquire the forecast during this episode through the connected MCP server.",
+        "Use exactly three consecutive local forecast dates, including the current local date.",
+        "Missing or incomplete daily highs cannot be treated as zero or as no qualifying dates.",
+        "Use Open-Meteo, daily granularity, and Celsius output."
+      ],
+      "supplied_documents": []
+    }
+  ],
+  "limits": {
+    "max_steps": 8,
+    "max_tool_calls": 6,
+    "max_new_spend_usd": 5
+  },
+  "seed": 42,
+  "sampling_fraction": 0.2
+}

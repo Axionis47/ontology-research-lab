@@ -6,6 +6,12 @@ These contracts are generated from the implementation. Model prompts receive the
 
 ::: oak.pipeline
 
+::: oak.bootstrap
+
+::: oak.mcp_bridge
+
+::: oak.task_context
+
 ::: oak.ontology
 
 ::: oak.functions

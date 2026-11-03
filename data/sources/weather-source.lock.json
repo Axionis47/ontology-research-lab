@@ -1,0 +1,23 @@
+{
+  "format_version": 1,
+  "version": "weather-mcp-1.35.7",
+  "repository": "https://github.com/weather-mcp/weather-mcp",
+  "inspected_source_commit": "59b286346838133f7e5c43a2ce46ee8067f03bce",
+  "package": "@dangahagan/weather-mcp",
+  "package_version": "1.35.7",
+  "tarball": "https://registry.npmjs.org/@dangahagan/weather-mcp/-/weather-mcp-1.35.7.tgz",
+  "npm_integrity": "sha512-jMkWr3MVONXyv0Q9XskbI4AoeSyWlmauRbAjjwhiEiXl/x7WfI3MPUo2h0DWH+NdqPNft2W4e5zRfMnLeNLMsw==",
+  "npm_shasum": "4f02b01c42e05b2663529980261860ea293f4597",
+  "provenance_scope": "Source audit commit and published package integrity are pinned separately. Their build correspondence has not been independently attested.",
+  "forecast_provider": "https://open-meteo.com/en/docs",
+  "geocoding_scope": "The real upstream server can use Nominatim, Census.gov, and Open-Meteo. Each result identifies its source.",
+  "task_origin": "OaK-authored real-service pilot requests, not an official benchmark or recorded user requests.",
+  "value_semantics": "Displayed whole-degree daily highs, including the current local forecast date. No forecast values are supplied as task inputs.",
+  "preflight_receipt": {
+    "path": "docs/verification/weather-mcp-preflight.json",
+    "sha256": "c082fcbe438f5062c5349182ffc34734b5247f693087429ab60fc981894ba717"
+  },
+  "installed_entry_sha256": "edfbab55827e2a6ecc9c7b1b9d8c50fd162b65dda1a42ff204d197ab524c0fce",
+  "installed_tree_sha256": "970be3c11a068b5bcf2a528b336f702d6cac80b42c0cdf92f1c25af9e9d3c04f",
+  "installed_tree_hash_method": "SHA256 of compact sorted JSON mapping every installed package-relative file path to its SHA256; transitive packages excluded."
+}

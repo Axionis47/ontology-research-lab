@@ -1,0 +1,144 @@
+{
+  "format_version": 1,
+  "version": "weather-displayed-daily-v1",
+  "scope": "Evaluator-only task requirements, never expose this file or references to the agent. Success means correct arithmetic over a matching actual MCP receipt, not accuracy of a weather prediction.",
+  "objectives": {
+    "construction-01": {
+      "location": {
+        "latitude": 52.52,
+        "longitude": 13.405
+      },
+      "operation": "count_at_least",
+      "days": 3,
+      "unit": "C",
+      "threshold": 10
+    },
+    "construction-02": {
+      "location": {
+        "latitude": 48.8566,
+        "longitude": 2.3522
+      },
+      "operation": "maximum",
+      "days": 3,
+      "unit": "C"
+    },
+    "construction-03": {
+      "location": {
+        "latitude": 35.6762,
+        "longitude": 139.6503
+      },
+      "operation": "count_at_least",
+      "days": 3,
+      "unit": "C",
+      "threshold": 20
+    },
+    "construction-04": {
+      "location": {
+        "latitude": -37.8136,
+        "longitude": 144.9631
+      },
+      "operation": "maximum",
+      "days": 3,
+      "unit": "C"
+    },
+    "construction-05": {
+      "location": {
+        "city_name": "Cambridge, United Kingdom"
+      },
+      "operation": "count_at_least",
+      "days": 3,
+      "unit": "C",
+      "threshold": 12
+    },
+    "construction-06": {
+      "location": {
+        "city_name": "Paris, France"
+      },
+      "operation": "maximum",
+      "days": 3,
+      "unit": "C"
+    },
+    "construction-07": {
+      "location": {
+        "latitude": 59.3293,
+        "longitude": 18.0686
+      },
+      "operation": "count_at_least",
+      "days": 3,
+      "unit": "C",
+      "threshold": 5
+    },
+    "construction-08": {
+      "location": {
+        "latitude": 41.9028,
+        "longitude": 12.4964
+      },
+      "operation": "maximum",
+      "days": 3,
+      "unit": "C"
+    },
+    "construction-09": {
+      "location": {
+        "city_name": "Madrid, Spain"
+      },
+      "operation": "count_at_least",
+      "days": 3,
+      "unit": "C",
+      "threshold": 15
+    },
+    "construction-10": {
+      "location": {
+        "city_name": "Oslo, Norway"
+      },
+      "operation": "maximum",
+      "days": 3,
+      "unit": "C"
+    },
+    "development-01": {
+      "location": {
+        "latitude": 50.0755,
+        "longitude": 14.4378
+      },
+      "operation": "count_at_least",
+      "days": 3,
+      "unit": "C",
+      "threshold": 10
+    },
+    "development-02": {
+      "location": {
+        "city_name": "Vienna, Austria"
+      },
+      "operation": "maximum",
+      "days": 3,
+      "unit": "C"
+    },
+    "heldout-01": {
+      "location": {
+        "latitude": 60.1699,
+        "longitude": 24.9384
+      },
+      "operation": "count_at_least",
+      "days": 3,
+      "unit": "C",
+      "threshold": 5
+    },
+    "heldout-02": {
+      "location": {
+        "city_name": "Lisbon, Portugal"
+      },
+      "operation": "maximum",
+      "days": 3,
+      "unit": "C"
+    },
+    "heldout-03": {
+      "location": {
+        "latitude": 47.3769,
+        "longitude": 8.5417
+      },
+      "operation": "count_at_least",
+      "days": 3,
+      "unit": "C",
+      "threshold": 10
+    }
+  }
+}

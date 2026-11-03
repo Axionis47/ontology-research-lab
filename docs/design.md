@@ -10,6 +10,20 @@ The user adds an observable inspection and revision workflow: inspect S/G/F; ask
 
 The user additionally proposes an LLM-generated, constrained adapter to preserve old task/function interfaces under a revised schema. This is a project extension, not an algorithm attributed to the paper.
 
+## MCP surface extension, 2026-11-03
+
+The user authorized a focused implementation after reviewing a broader design. `TaskSurface` owns public requests, immutable split assignments, a starter prompt, configured MCP servers, and bounds. It requires neither an answer corpus nor a prewritten ontology. The shared engine discovers capability contracts, collects real starter episodes, samples construction requests, and constructs S/F from actual acquired evidence. Provider-native Gemini tools remain disabled; the application owns every MCP invocation.
+
+The first slice uses the official MCP SDK, the existing LangGraph orchestration/checkpointer, SQLite artifacts, and the existing model ledger. An additional $5 campaign ceiling is fixed at onboarding inside the global $40 allowance, including unknown reservations. Server configuration contains environment variable references rather than credential values. Only explicitly reviewed, allowlisted read-only operations are in scope. Tool annotations alone do not establish read-only semantics.
+
+Inference selects frozen functions. The new `invoke_capability` primitive uses a literal version-bound capability identifier and an executor-owned callback. The actual response is recorded, extracted under frozen S, and merged into the current episode graph before subsequent graph operations run. Conflicting observed values fail explicitly; this slice does not implement temporal reconciliation. No saved forecast substitutes for a new call.
+
+Bootstrap discovery, model completion claims, OWL validity, graph integrity, function probes, and independent task scores are distinct evidence. Kernel construction produces immutable candidates with parent identifiers. It does not automatically promote a candidate because its probes passed. Authoritative contracts come from the Pydantic models and operator signatures, not a second prose schema.
+
+History currently uses verified construction-episode manifests and lexical overlap. Prior answer values are excluded, and changed capability contracts are filtered. Semantic ranking, runtime workflow compilation, arbitrary migrations, mutating tools, automatic promotion, and broad benchmark comparisons remain later milestones. These limits must remain explicit in reports.
+
+The weather adapter supplies authored requests and independent receipt-grounded scoring. Its service calls and observations are genuine; it is not an official benchmark. Weather field names, locations, and scoring rules do not enter shared engine code. A second materially different real surface is still required before claiming demonstrated cross-domain reuse.
+
 ## Reusable engine and task boundaries
 
 The deliverable is a reusable task-conditioned OaK engine. Coffee is the first real validation surface. Its names, schema, question templates, and answers must not determine the shared engine's behavior.

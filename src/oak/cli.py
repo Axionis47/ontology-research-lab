@@ -1,5 +1,6 @@
 """Commands for the local application and explicit background jobs."""
 
+import json
 from pathlib import Path
 
 import typer
@@ -43,6 +44,45 @@ def serve():
 def resume(run_id: str, root: Path = Path(".local")):
     """Resume a failed job from its saved workflow checkpoint."""
     Service(root).resume_job(run_id)
+
+
+@app.command()
+def mcp_onboard(configuration: Path, root: Path = Path(".local")):
+    """Discover a real configured MCP surface without a preloaded answer corpus."""
+    from oak.bootstrap import SurfaceEngine
+
+    result = SurfaceEngine(root).onboard(json.loads(configuration.read_text()))
+    typer.echo(json.dumps(result, indent=2))
+
+
+@app.command()
+def mcp_run(
+    surface_id: str, query_id: str, kernel_id: str | None = None, root: Path = Path(".local")
+):
+    """Run a starter episode, or supply a frozen kernel for fresh live inference."""
+    from oak.bootstrap import SurfaceEngine
+
+    result = SurfaceEngine(root).run_episode(surface_id, query_id, kernel_id=kernel_id)
+    typer.echo(json.dumps(result, indent=2))
+
+
+@app.command()
+def mcp_construct(
+    surface_id: str, round_index: int = 0, parent_id: str | None = None, root: Path = Path(".local")
+):
+    """Sample construction requests and construct a candidate S/F from real episodes."""
+    from oak.bootstrap import SurfaceEngine
+
+    result = SurfaceEngine(root).construct(surface_id, round_index=round_index, parent_id=parent_id)
+    typer.echo(json.dumps(result, indent=2))
+
+
+@app.command()
+def artifact(identity: str, root: Path = Path(".local")):
+    """Inspect a hash-verified capability, context, episode, kernel, or receipt."""
+    from oak.store import Store
+
+    typer.echo(json.dumps(Store(root).get(identity), indent=2, ensure_ascii=False))
 
 
 if __name__ == "__main__":

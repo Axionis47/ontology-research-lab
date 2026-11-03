@@ -5,6 +5,7 @@ from __future__ import annotations
 import fcntl
 import hashlib
 import json
+import re
 import subprocess
 from datetime import date
 from pathlib import Path
@@ -24,6 +25,52 @@ from oak.gemini_runtime import (
 from oak.store import Store, canonical
 
 PROJECT = Path(__file__).resolve().parents[2]
+
+_CREDENTIAL_KEY = (
+    r"(?:refresh[_-]?token|access[_-]?token|id[_-]?token|client[_-]?secret|"
+    r"client[_-]?id|api[_-]?key|password|private[_-]?key|"
+    r"proxy[_-]?authorization|authorization|token)"
+)
+_CREDENTIAL_ASSIGNMENT = re.compile(
+    r"(?P<prefix>(?<![\w-])[\"']?_?"
+    + _CREDENTIAL_KEY
+    + r"[\"']?\s*(?:=>|[:=])\s*)(?P<value>\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*'|[^\s,;&\"'{}\[\]]+)",
+    re.IGNORECASE,
+)
+_ESCAPED_CREDENTIAL = re.compile(
+    r"(?P<prefix>\\\"_?" + _CREDENTIAL_KEY + r"\\\"\s*:\s*\\\")(?P<value>.*?)(?P<suffix>\\\")",
+    re.IGNORECASE | re.DOTALL,
+)
+_AUTHORIZATION = re.compile(
+    r"(?P<prefix>(?:proxy[-_])?authorization[\"']?\s*[:=]\s*[\"']?(?:Bearer|Basic)\s+)"
+    r"[^\s,;\"'{}]+",
+    re.IGNORECASE,
+)
+_PRIVATE_KEY = re.compile(
+    r"-----BEGIN (?:[A-Z ]+ )?PRIVATE KEY-----.*?-----END (?:[A-Z ]+ )?PRIVATE KEY-----",
+    re.DOTALL,
+)
+
+
+def redact_diagnostic(value: str | bytes | None) -> str:
+    """Remove credential values from CLI diagnostics before durable publication.
+
+    Covers OAuth form bodies, JSON, Node object inspection, escaped JSON strings,
+    authorization headers, and private-key blocks. Preserve field names and the
+    surrounding transport/status evidence. Parsing the provider response still
+    uses the original in-memory stream, not this redacted diagnostic copy.
+    """
+    text = _text(value)
+    text = _PRIVATE_KEY.sub("[REDACTED PRIVATE KEY]", text)
+    text = _ESCAPED_CREDENTIAL.sub(r"\g<prefix>[REDACTED]\g<suffix>", text)
+    text = _AUTHORIZATION.sub(r"\g<prefix>[REDACTED]", text)
+
+    def replace(match: re.Match) -> str:
+        original = match["value"]
+        quote = original[0] if original[0] in {"'", '"'} else ""
+        return match["prefix"] + quote + "[REDACTED]" + quote
+
+    return _CREDENTIAL_ASSIGNMENT.sub(replace, text)
 
 
 class ModelOutputError(ValueError):
@@ -102,8 +149,9 @@ def register_preflight_receipt(store: Store, report_path: Path) -> str:
         "call_id": identity,
         "source": "completed_external_preflight",
         "report": report,
-        "stdout": stdout,
-        "stderr": Path(report["stderr_path"]).read_text(),
+        "stdout": redact_diagnostic(stdout),
+        "stderr": redact_diagnostic(Path(report["stderr_path"]).read_text()),
+        "diagnostic_redaction": "credential_values_v1",
         "estimated_usd": estimated,
         "pricing": config,
     }
@@ -134,9 +182,13 @@ class GeminiCLI:
     concurrent resumes from buying the same request. Reuse is explicitly logged.
     """
 
-    def __init__(self, store: Store, run_id: str):
+    def __init__(self, store: Store, run_id: str, *, budget_ceiling_usd: float | None = None):
         self.store, self.run_id = store, run_id
         self.config = runtime_config()
+        if budget_ceiling_usd is not None:
+            if not 0 < budget_ceiling_usd <= self.config["total_budget_usd"]:
+                raise ValueError("Campaign ceiling must be positive and within the global budget")
+            self.config["total_budget_usd"] = budget_ceiling_usd
 
     def _cached(self, key: str) -> dict | None:
         for row in self.store.rows(
@@ -242,6 +294,7 @@ class GeminiCLI:
             "reservation_usd": reservation,
             "validated_success": False,
             "model_request_attempted": False,
+            "diagnostic_redaction": "credential_values_v1",
         }
         try:
             invocation = prepare_invocation(self.store.root, call_id, config, project, system)
@@ -267,26 +320,30 @@ class GeminiCLI:
         except subprocess.TimeoutExpired as error:
             evidence.update(
                 error="CLI timeout; usage unknown",
-                stdout=_text(error.stdout),
-                stderr=_text(error.stderr),
+                stdout=redact_diagnostic(error.stdout),
+                stderr=redact_diagnostic(error.stderr),
             )
             self.store.settle(call_id, None, evidence)
             self.store.event(
                 self.run_id, stage, "failed", "Gemini timed out; reservation retained", evidence
             )
-            raise RuntimeError("Gemini CLI timed out; usage reservation retained") from error
+            raise RuntimeError("Gemini CLI timed out; usage reservation retained") from None
         except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
-            evidence.update(error=f"{type(error).__name__}: {error}")
+            evidence.update(error=redact_diagnostic(f"{type(error).__name__}: {error}"))
             estimated = None if evidence["model_request_attempted"] else 0.0
             self.store.settle(call_id, estimated, evidence)
             self.store.event(self.run_id, stage, "failed", "Gemini could not start", evidence)
             raise RuntimeError(
                 "Gemini CLI could not start; inspect saved failure evidence"
-            ) from error
+            ) from None
         finally:
             if invocation is not None:
                 invocation.close()
-        evidence.update(returncode=result.returncode, stdout=result.stdout, stderr=result.stderr)
+        evidence.update(
+            returncode=result.returncode,
+            stdout=redact_diagnostic(result.stdout),
+            stderr=redact_diagnostic(result.stderr),
+        )
         try:
             outer = json.loads(result.stdout)
             if not isinstance(outer, dict):
@@ -324,7 +381,7 @@ class GeminiCLI:
             jsonschema.SchemaError,
         ) as error:
             failure = error
-            evidence["validation_error"] = str(error)
+            evidence["validation_error"] = redact_diagnostic(str(error))
         self.store.settle(call_id, estimated, evidence)
         raw_id = self.store.event(
             self.run_id,
@@ -335,10 +392,16 @@ class GeminiCLI:
         )
         if failure:
             if not isinstance(failure, RuntimeError):
-                raise ModelOutputError(raw_id, str(failure), outer.get("response")) from failure
+                raise ModelOutputError(
+                    raw_id,
+                    redact_diagnostic(str(failure)),
+                    redact_diagnostic(outer.get("response"))
+                    if isinstance(outer.get("response"), str)
+                    else None,
+                ) from None
             raise RuntimeError(
                 f"Gemini response failed validation; inspect artifact {raw_id}"
-            ) from failure
+            ) from None
         return value
 
 

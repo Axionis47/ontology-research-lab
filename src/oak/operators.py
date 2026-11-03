@@ -458,6 +458,23 @@ def extract_runtime_slots(
     )
 
 
+def invoke_capability(
+    *,
+    capability: str,
+    arguments: dict[str, Any],
+    capability_invoker: Callable[..., dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Acquire real evidence through an executor-owned, version-checked MCP binding.
+
+    The callback records the real call and extracts observations under the frozen
+    schema. Returned entities belong to the current episode graph. This operator
+    cannot invent an endpoint or execute without an explicitly supplied binding.
+    """
+    if capability_invoker is None:
+        raise OperatorError("invoke_capability requires an explicit live capability binding")
+    return capability_invoker(capability=capability, arguments=arguments)
+
+
 OperatorName = Literal[
     "lookup_entities",
     "traverse_relations",
@@ -470,6 +487,7 @@ OperatorName = Literal[
     "aggregate_values",
     "extract_runtime_slots",
     "arithmetic",
+    "invoke_capability",
 ]
 OPERATORS: dict[str, Callable[..., Any]] = {
     name: globals()[name] for name in get_args(OperatorName)

@@ -1,8 +1,8 @@
 """Validate and execute a restricted, typed catalog of OaK function compositions.
 
 The catalog is data, not Python source. Only the registered operators can execute.
-The DSL has no loops, imports, dynamic evaluation, file access, or network access.
-The one model-backed operator requires an explicit real model callback.
+The DSL has no loops, imports, dynamic evaluation, or direct file/network access.
+Model and MCP operators require explicit executor-owned callbacks.
 """
 
 from __future__ import annotations
@@ -287,11 +287,17 @@ def validate_functions(
                 raise ValueError(f"Duplicate step ID: {step.id}")
             if step.operator not in operators.OPERATORS:
                 raise ValueError(f"Unsupported operator: {step.operator}")
-            if {"graph", "slot_extractor"}.intersection(step.args):
+            if {"graph", "slot_extractor", "capability_invoker"}.intersection(step.args):
                 raise ValueError(
                     "Graph/model dependencies are supplied by the executor, not the catalog"
                 )
             _references(step.args, arguments, previous_steps)
+            if step.operator == "invoke_capability" and not isinstance(
+                step.args.get("capability"), str
+            ):
+                raise ValueError(
+                    "Capability bindings must be literal frozen capability identifiers"
+                )
             invocation = dict(step.args)
             if step.operator in operators.GRAPH_OPERATORS:
                 invocation["graph"] = {}
@@ -348,6 +354,7 @@ def execute_function(
     *,
     schema: dict[str, Any],
     slot_extractor: Callable[..., dict[str, Any]] | None = None,
+    capability_invoker: Callable[..., dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Execute a validated typed function and retain actual inputs, outputs, and dependencies.
 
@@ -406,6 +413,8 @@ def execute_function(
                 invocation["graph"] = graph
             if step.operator == "extract_runtime_slots":
                 invocation["slot_extractor"] = slot_extractor
+            if step.operator == "invoke_capability":
+                invocation["capability_invoker"] = capability_invoker
             if step.operator == "project_properties":
                 annotated = deepcopy(operators.entity_list(invocation["entities"]))
                 for entity in annotated:
@@ -435,4 +444,5 @@ def execute_function(
         raise FunctionExecutionError(
             f"{name} output contract: {error}", steps=traces, dependencies=dependencies
         ) from error
+    dependencies["graph_after_sha256"] = digest(graph)
     return {"value": output, "steps": traces, "dependencies": dependencies}
