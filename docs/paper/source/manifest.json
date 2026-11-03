@@ -1,0 +1,20 @@
+{
+  "paper": "Toward Effective and Reliable LLM Agents via Dynamic Ontology",
+  "authors": "Xiaohui Zhang, Zequn Sun, Chengyuan Yang, Yuanning Cui, Lingbing Guo, Wei Hu",
+  "version": "2608.22974v1",
+  "license": "CC BY 4.0 as declared on arXiv HTML",
+  "files": [
+    {
+      "file": "oak-2608.22974v1.pdf",
+      "url": "https://arxiv.org/pdf/2608.22974v1",
+      "bytes": 1192087,
+      "sha256": "0af9b0ff75638e3aa4a82bb74115d4a358cddf15d847ca9702077660c928d293"
+    },
+    {
+      "file": "oak-2608.22974v1.html",
+      "url": "https://arxiv.org/html/2608.22974v1",
+      "bytes": 302688,
+      "sha256": "fa7842ae1a11831ea9b18568a3f9d571bea4ae61685831f4155846ea38c47ca7"
+    }
+  ]
+}
