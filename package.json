@@ -1,0 +1,7 @@
+{
+  "name": "oak-gemini-runtime",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Pinned Gemini CLI client used by the Python OaK application",
+  "dependencies": {"@google/gemini-cli": "0.66.0"}
+}

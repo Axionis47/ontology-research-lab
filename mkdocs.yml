@@ -7,7 +7,7 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
-          paths: ["."]
+          paths: [".", "src"]
           options:
             show_source: true
             show_root_heading: true
@@ -23,5 +23,16 @@ nav:
       - Extracted text: paper/extracted/paper-text.md
   - Design: design.md
   - Work plan: work-plan.md
-  - Code reference: reference/setup.md
+  - Runtime:
+      - Method and boundaries: runtime-method.md
+      - Corpus: corpus.md
+      - Ontology semantics: ontology-semantics.md
+      - Functions: functions.md
+      - Regressions: regression.md
+      - Interface: ui.md
+      - Gemini: gemini.md
+      - Coffee protocol: coffee-protocol.md
+  - Code reference:
+      - Runtime: reference/runtime.md
+      - Setup: reference/setup.md
   - Review prompt: review/gemini-prompt.md

@@ -1,0 +1,21 @@
+{
+  "source": "OWL Web Ontology Language Guide, W3C Recommendation 10 February 2004",
+  "guide_url": "https://www.w3.org/TR/2004/REC-owl-guide-20040210/",
+  "copyright": "Copyright 2004 W3C (MIT, ERCIM, Keio), All Rights Reserved",
+  "license_url": "https://www.w3.org/Consortium/Legal/2002/copyright-documents-20021231",
+  "retrieved_at": "2026-11-03",
+  "files": {
+    "wine": {
+      "url": "https://www.w3.org/TR/2004/REC-owl-guide-20040210/wine.rdf",
+      "sha256": "bb1666593f9d7ba2ec9cb06dd4fcc17751ac8d523dc33ce22bcee6beeda778eb",
+      "size_bytes": 78225
+    },
+    "food": {
+      "url": "https://www.w3.org/TR/2004/REC-owl-guide-20040210/food.rdf",
+      "sha256": "64af31d99ee62f58b7daa18977bbb27973c67a717d5d6317f42400bd53504184",
+      "size_bytes": 45326
+    }
+  },
+  "source_modifications": "None. Original source bytes are retained unchanged.",
+  "test_derivations": "Execution copies remap the wine import to local food and remove the redundant food-to-root-wine import, retaining the complete axiom closure and canonical IRIs. Negative controls add explicit contradictory axioms to a copy. The lightweight schema test projects named Wine/Winery/hasMaker declarations and adds a technical RDF IRI identity property. It is not a full roundtrip of the original ontology."
+}

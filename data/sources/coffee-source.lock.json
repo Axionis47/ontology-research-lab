@@ -1,0 +1,58 @@
+{
+  "format_version": 1,
+  "dataset": "ToolQA Coffee Easy",
+  "repository": "https://github.com/night-chen/ToolQA",
+  "commit": "acf55534d6dcd81df84df7b5d01ebdd14508367a",
+  "license": "Apache-2.0 for the ToolQA repository; original corpus provenance is documented by its README",
+  "questions": {
+    "filename": "coffee-easy.jsonl",
+    "url": "https://raw.githubusercontent.com/night-chen/ToolQA/acf55534d6dcd81df84df7b5d01ebdd14508367a/data/questions/easy/coffee-easy.jsonl",
+    "bytes": 12930,
+    "sha256": "a79b132c1c2f802efcc149713babc0dbbbfeff76e365eb187c02209ce85e4dc7",
+    "records": 100
+  },
+  "scorer": {
+    "filename": "official-agents.py",
+    "url": "https://raw.githubusercontent.com/night-chen/ToolQA/acf55534d6dcd81df84df7b5d01ebdd14508367a/benchmark/ReAct/code/agents.py",
+    "bytes": 22479,
+    "sha256": "fb0a81ab570a59ebc77446ea6b2672828ba471bcae8f56e4a833652f7cbb571e",
+    "functions": ["normalize_answer", "EM"]
+  },
+  "repository_license": {
+    "filename": "LICENSE",
+    "url": "https://raw.githubusercontent.com/night-chen/ToolQA/acf55534d6dcd81df84df7b5d01ebdd14508367a/LICENSE",
+    "bytes": 11357,
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+  },
+  "corpus": {
+    "filename": "coffee_price.csv",
+    "archive_page": "https://drive.google.com/file/d/1zRbHzPW2x4dDcfmphBWlan8cxUCRNmqk/view",
+    "archive_url": "https://drive.usercontent.google.com/download?id=1zRbHzPW2x4dDcfmphBWlan8cxUCRNmqk&export=download&confirm=t",
+    "archive_bytes": 592248116,
+    "archive_last_modified": "Thu, 15 Jun 2023 22:06:46 GMT",
+    "directory_offset": 592246549,
+    "directory_and_end_sha256": "84887d224d8164992f055eb00d04ee32588336c04bf6c9b30593ea3bebf4d907",
+    "member": "external_corpus/coffee/coffee_price.csv",
+    "header_offset": 12245478,
+    "data_offset": 12245547,
+    "compressed_bytes": 74041,
+    "compressed_sha256": "5b2b5a65d3ef041fe6f2460dc28bb7a98728b154011ec51cd43293cf495384a6",
+    "compression": 8,
+    "crc32": 3508866719,
+    "bytes": 254031,
+    "sha256": "d84f454477cc9175b17713cb330356fd177f644fcc7b0b602e0ce976aab5007d",
+    "records": 5746,
+    "columns": ["Date", "Open", "High", "Low", "Close", "Volume", "Currency"]
+  },
+  "pilot": {
+    "version": "oak-coffee-pilot-v1",
+    "selection": "Within each date-normalized question template, order by SHA-256 of version + colon + original qid. Assign the first to construction, second to development, third to heldout. Remaining questions are unused.",
+    "small_templates": [
+      "What was the opening price of coffee on {date}?",
+      "What was the volume of coffee on {date}?",
+      "What was the range of coffee price on {date}, based on the difference between the high and low prices??"
+    ],
+    "expanded_templates": "all eight templates in the official Easy question set",
+    "disclosure": "This is our pilot partition, not an author-provided OaK training split. Small selects 9 queries; expanded selects 24."
+  }
+}

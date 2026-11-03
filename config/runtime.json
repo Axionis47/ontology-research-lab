@@ -1,0 +1,16 @@
+{
+  "model": "gemini-3.8-flash",
+  "location": "global",
+  "total_budget_usd": 40.0,
+  "input_usd_per_million": 0.75,
+  "output_usd_per_million": 3.75,
+  "pricing_valid_until": "2026-12-31",
+  "pricing_source": "https://cloud.google.com/model-garden/pricing",
+  "max_output_tokens": 8192,
+  "max_prompt_bytes": 120000,
+  "timeout_seconds": 240,
+  "max_construction_rounds": 3,
+  "max_agent_steps": 8,
+  "max_repair_attempts": 2,
+  "extraction_chunk_bytes": 14000
+}

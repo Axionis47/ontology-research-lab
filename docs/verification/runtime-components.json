@@ -1,0 +1,48 @@
+{
+  "generated_at": "2026-11-03T07:44:27.911964+00:00",
+  "command": [
+    ".venv/bin/pytest",
+    "tests/test_runtime_evidence.py",
+    "-q"
+  ],
+  "returncode": 0,
+  "stdout": ".......                                                                  [100%]\n7 passed in 0.68s\n",
+  "stderr": "",
+  "source_sha256_before": {
+    "tests/test_runtime_evidence.py": "1d0aa86dc7667d95a6ece7d9f22e78ce29fd7161955ced9f9b7345e09f024f30",
+    "src/oak/service.py": "8097a4fbc0bc89c4e4fcba5c9899b5f73c3a109da54822d99e8bb6f9c4cf70a6",
+    "src/oak/regression.py": "775761d0df28ff1bdacef5d7f7752feec3a0c23ee893ba4cdfb15b8a14e8b372",
+    "src/oak/functions.py": "162217cb2261784e5a85d9a555385e037c711cd4b3b864b4ca01d5acc902988d",
+    "src/oak/corpus.py": "e2fb9e62472a3c9006ae2784a92156ba4b6917751c6953e39850828063ffa3cd"
+  },
+  "source_sha256_after": {
+    "tests/test_runtime_evidence.py": "1d0aa86dc7667d95a6ece7d9f22e78ce29fd7161955ced9f9b7345e09f024f30",
+    "src/oak/service.py": "8097a4fbc0bc89c4e4fcba5c9899b5f73c3a109da54822d99e8bb6f9c4cf70a6",
+    "src/oak/regression.py": "775761d0df28ff1bdacef5d7f7752feec3a0c23ee893ba4cdfb15b8a14e8b372",
+    "src/oak/functions.py": "162217cb2261784e5a85d9a555385e037c711cd4b3b864b4ca01d5acc902988d",
+    "src/oak/corpus.py": "e2fb9e62472a3c9006ae2784a92156ba4b6917751c6953e39850828063ffa3cd"
+  },
+  "sources_unchanged_during_check": true,
+  "evidence": {
+    "task_id": "92a95ecf291d41d9887cdaa1be74fe67",
+    "parent_revision": "5a24cf910000ecc9a634368350b7106366e79f3824b2746e6f68226f6e0bb267",
+    "candidate_revision": "4e98205691aabe7166fbc54247f6082d3fff692650d84ed29bf875155a711296",
+    "corpus_id": "cf263735dc6103bfa8aa29ef9fda57ff9b275caabe0b0d516cc21d9edadd7d13"
+  },
+  "verification_scope": [
+    "Actual saved model-generated USGS revisions and completed run receipts",
+    "Source identity, all-document coverage, magnitude/depth values against original API payload",
+    "Same-corpus Service.regression with unchanged model-call count",
+    "Parent construction receipt inclusion before successful parent ask results exist",
+    "Already-active promotion rejection",
+    "Actual pre-promotion acceptance in an isolated database copy",
+    "Missing replay evidence rejects an otherwise validated candidate",
+    "Actual truncated API acquisition cannot create a task",
+    "References remain bound to their source corpus"
+  ],
+  "not_established": [
+    "No new model generation or new external API acquisition in these checks",
+    "No proof of unseen task success from recorded-call replay",
+    "No concurrency stress test or arbitrary changed-corpus extraction check"
+  ]
+}

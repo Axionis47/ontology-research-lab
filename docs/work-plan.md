@@ -38,26 +38,24 @@ The engine must work across task domains. Coffee is a first validation surface; 
 
 Each milestone should end in a reviewable commit with actual verification evidence. A documentation milestone must not be reported as a working runtime.
 
-## Next action
+## Current implementation milestone
 
-The requested stack decision and local setup are complete. The current discussion concerns whether the installed skills can support the missing design decisions and how reusable kernels differ from a benchmark-specific implementation. The design now records those boundaries; this clarification does not implement the runtime. For the next implementation milestone, define the task-adapter contract alongside the genuine Coffee loader/scorer and its artifact manifests, with documented split boundaries. Preserve a shared engine and add real runtime modules and API pages together.
+The real corpus connectors, official Coffee loader/scorer, ontology grammar and OWL/HermiT validation, generic operators, bounded function language, artifact store, LangGraph construction loop, frozen ReAct runner, and minimal Streamlit interface are implemented. Runtime acceptance checks are in progress. The interface has Ask, Audit, Revise, and History views.
 
-## Verification for the stack milestone
+Gemini CLI 0.66.0 successfully reached Vertex AI through the user's existing gcloud project and application-default credentials. A real tiny generation completed with 5,435 input and 6 output tokens and zero native tool calls. No API key is needed. The user authorized a total $40 limit, with careful small checks before longer runs. The CLI runs in an isolated empty directory with hooks and extensions disabled and native tool execution denied. See the model adapter and actual saved preflight evidence.
 
-- Locked dependency installation passed; `uv pip check` found all 109 installed packages compatible.
-- `ruff check scripts` and formatting checks passed.
-- All five checks in `scripts/verify_environment.py` passed; the saved report retains explicit unverified application behavior.
-- `mkdocs build --strict` passed for the browsable documentation and generated setup API pages.
-- No model-backed tests or benchmark runs are claimed. No mock service or synthetic benchmark fixture was used.
+Actual component checks: 26 passed, two live API tests excluded from the default invocation. Earlier live USGS acquisition and truncation checks passed. Genuine Coffee data and scorer checks passed. Real HermiT accepted the consistent W3C ontology and detected the contradictory cases. Three genuine Service/Streamlit AppTest cases passed without mocks. The first real USGS loop subsequently completed: initial count/max construction scored 2/2, a fresh minimum query exposed a missing function with an honest insufficient-evidence response, a revision added minimum/depth, old construction calls replayed, and promotion passed. A fresh depth answer independently matched 70 km. The failed query remains evidence, not a success.
 
-## Open setup items
+Current bounded work: test appending a second actual USGS corpus and replay original task corpora, then independently score fresh expanded-corpus answers. The Coffee construction is running with all 5,746 corpus records, preserving construction/development/held-out boundaries. Its first extracted chunks are under grounding review before concurrent exact-request prefetch. Record actual token costs and failures. Verify the interface against those populated artifacts, generate documentation, and commit reviewable capability groups.
 
-- Gemini authentication is not present in the usual local config paths and no Gemini/Google API credential environment variables were detected. Do not print secrets or invent credentials.
-- Runtime model configuration and paid-run budget are not yet specified.
-- LangSmith cloud tracing is not configured or tested; the SDK supports local evaluation and artifact persistence remains local. `.env.example` leaves tracing disabled until configured.
-- Project-local Java and the bundled HermiT command start successfully. OWL encoding and actual ontology consistency checks belong to the kernel milestone and have not run yet.
-- No application code, real LLM construction, benchmark score, adapter implementation, or user interface exists yet. The only executable project code is setup and verification tooling.
+## Known boundaries
+
+- Initial pilot limits are three construction rounds and eight ReAct steps; these differ from paper defaults and are documented in runtime-method.md.
+- Replay is evidence for recorded calls, not proof of fresh agent success. Changed corpora must preserve original task evidence for regression comparisons.
+- The adapter supports bounded equivalent interface renaming, not arbitrary semantic migrations.
+- LangSmith cloud tracing is not configured or tested. Local traces and artifacts are authoritative for this pilot.
+- Do not report a benchmark score, completed revision loop, or working model-backed UI until its real acceptance checks finish.
 
 ## How to resume
 
-Read AGENTS.md, this file, docs/stack.md, docs/design.md, and docs/paper/method-spec.md. Check git status before edits. Consult the source extraction for any disputed detail. Preserve the separation between paper facts, user extensions, engineering choices, and unresolved questions. Keep intermediate-output documentation generated from actual artifacts as each stage is built.
+Read AGENTS.md, this file, docs/runtime-method.md, docs/design.md, and docs/paper/method-spec.md. Check git status and saved .local/pilots receipts before restarting any paid work. The current goal is a final working, minimally built ontology audit application. Continue the original implementation objective rather than repeating conceptual setup. Preserve all failed-run evidence and keep reference labels outside agent prompts.

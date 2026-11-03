@@ -14,7 +14,7 @@ Build a reusable task-conditioned OaK engine. A benchmark is a validation surfac
 - Preserve paper evidence as text before implementing it. Separate specified facts, deductions, engineering choices, and unresolved details.
 - Use meaningful commits organized around reviewable capabilities. Include what was actually verified and any unverified behavior.
 - Manage context and progress in project files. Read docs/work-plan.md and the relevant specification before continuing after a context refresh.
-- Gemini CLI is authorized for independent review. Never claim a Gemini review ran unless it actually completed. Authentication is not configured as of initial setup.
+- Gemini CLI is authorized for real construction, answering, and review through the existing GCP application-default credentials. The total spending limit is $40. Verify small real checks before extended runs. Never claim a model run or review completed without its actual receipt.
 
 ## Workflow
 
