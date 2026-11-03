@@ -1,0 +1,16 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+node_modules/
+.env
+.env.*
+!.env.example
+*.log
+.tools/
+.local/
+site/
+# Preserve reviewed evidence in docs/verification; local runs stay under .local.
