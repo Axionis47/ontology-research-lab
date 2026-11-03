@@ -17,3 +17,9 @@ These contracts are generated from the implementation. Model prompts receive the
 ::: oak.regression
 
 ::: oak.store.Store
+
+::: oak.ontology_view
+
+::: oak.ontology_chart
+
+::: oak.ontology_ui

@@ -65,3 +65,7 @@ No further paid run is needed for this milestone. Continue from saved artifacts 
 ## How to resume
 
 Read AGENTS.md, this file, docs/runtime-method.md, docs/design.md, and docs/paper/method-spec.md. Check git status and saved .local/pilots receipts before restarting any paid work. The current goal is a final working, minimally built ontology audit application. Continue the original implementation objective rather than repeating conceptual setup. Preserve all failed-run evidence and keep reference labels outside agent prompts.
+
+## Ontology visibility refinement
+
+Replaced identifier-heavy audit tables with named schema and entity diagrams, concept/property/constraint inspectors, source evidence, readable version labels, and actual function steps. The implementation reuses saved artifacts and the pinned Streamlit Graphviz renderer. It adds no model calls or dependencies. See verification/ontology-ui.md for real-artifact tests and browser evidence.

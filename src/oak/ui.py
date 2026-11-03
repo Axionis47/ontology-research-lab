@@ -18,6 +18,8 @@ from typing import Any
 import streamlit as st
 
 from oak.corpus import MAX_BYTES, fetch_usgs, load_local_corpus
+from oak.ontology_ui import show_entities, show_functions, show_schema
+from oak.ontology_view import humanize
 from oak.service import Service
 
 DATA_ROOT = Path(os.environ.get("OAK_DATA_ROOT", ".local"))
@@ -28,6 +30,15 @@ JOB_NAMES = {
     "revise": "Propose a revision",
     "regress": "Check previous tasks",
 }
+
+
+def _date_label(value: str | None) -> str:
+    if not value:
+        return "Time not recorded"
+    try:
+        return datetime.fromisoformat(value).astimezone(UTC).strftime("%b %d, %Y at %H:%M UTC")
+    except ValueError:
+        return value
 
 
 def _text(value: Any) -> str:
@@ -200,7 +211,9 @@ def _launch(service: Service, task_id: str, kind: str, **arguments: Any) -> None
 
 def _run_detail(service: Service, run: dict[str, Any], key: str) -> None:
     st.write(f"**{JOB_NAMES.get(run['kind'], run['kind'])}** · {run.get('status', 'unknown')}")
-    st.caption(f"Run {run['id']} · Started {run.get('created_at', 'not recorded')}")
+    st.caption(f"Started {_date_label(run.get('created_at'))}")
+    with st.expander("Technical run identifiers"):
+        st.json({"run_id": run["id"], "result_id": run.get("result_id")})
     if run.get("error"):
         st.error(_text(run["error"]))
     if run.get("status") in {"failed", "interrupted"}:
@@ -328,23 +341,78 @@ def _live_run(service: Service, task_id: str, run_id: str) -> None:
         st.rerun()
 
 
+def _validation(revision: dict[str, Any]) -> None:
+    st.subheader("Validation evidence")
+    validation = revision.get("validation", {})
+    if validation.get("consistent") is True and not validation.get("unsatisfiable_classes"):
+        st.success("HermiT reports a consistent ontology with no named unsatisfiable classes.")
+    elif validation.get("consistent") is False:
+        st.error("HermiT reports an inconsistent ontology.")
+    elif validation.get("unsatisfiable_classes"):
+        st.error("Some named classes are unsatisfiable. See the saved check for details.")
+    else:
+        st.info("No completed logical consistency result recorded.")
+    st.caption(
+        "Logical consistency checks the ontology rules. Task results and source coverage are separate evidence."
+    )
+    assessment = revision.get("assessment", {})
+    st.write(assessment.get("summary") or "No assessment summary recorded.")
+    st.caption(f"Recorded assessment: {assessment.get('status', 'not recorded')}")
+    if assessment.get("task_accuracy") in (None, "unmeasured"):
+        st.warning(
+            "Task accuracy is unmeasured. A passing logical check alone does not establish it."
+        )
+    elif assessment.get("task_accuracy") in {
+        "measured_on_construction",
+        "partially_measured_on_construction",
+    }:
+        measured = [
+            result.get("score")
+            for result in assessment.get("construction_results", [])
+            if result.get("score") is not None
+        ]
+        st.caption(
+            f"Construction questions: {sum(measured)} of {len(measured)} scored correct. "
+            "These questions helped build this revision."
+        )
+    if assessment.get("heldout_accuracy") in (None, "unmeasured"):
+        st.caption(
+            "Held-out accuracy is not measured in this revision assessment. "
+            "Any later evaluation has its own saved report."
+        )
+    with st.expander("Logical checks, task checks, and coverage"):
+        st.json({"validation": revision.get("validation"), "assessment": assessment})
+
+
 def _audit(service: Service, task: dict[str, Any]) -> None:
     revisions = service.revisions(task["id"])
     if not revisions:
         st.info("Build knowledge to inspect the first schema, graph, and function catalog.")
         return
     ids = [revision["id"] for revision in revisions]
+    versions = {
+        row["id"]: index + 1
+        for index, row in enumerate(
+            sorted(revisions, key=lambda row: (row.get("created_at", ""), row["id"]))
+        )
+    }
+    revision_dates = {row["id"]: _date_label(row.get("created_at")) for row in revisions}
     selected = st.selectbox(
         "Revision",
         ids,
         index=ids.index(task["active_revision"]) if task.get("active_revision") in ids else 0,
         format_func=lambda identifier: (
-            f"{identifier[:12]}{' · Active' if identifier == task.get('active_revision') else ''}"
+            f"Version {versions[identifier]}{' · Active' if identifier == task.get('active_revision') else ''} · {revision_dates[identifier]}"
         ),
         key=f"revision_{task['id']}",
     )
     revision = service.revision(task["id"], selected)
-    st.caption(f"Revision {selected} · Parent {revision.get('parent') or 'none'}")
+    if revision.get("parent"):
+        st.caption(
+            f"Based on version {versions.get(revision['parent'], 'unknown')}. Questions use the active version."
+        )
+    else:
+        st.caption("Initial version. Questions use the active version.")
     if revision.get("parent"):
         parent = service.revision(task["id"], revision["parent"])
         with st.expander("Changes from parent"):
@@ -379,79 +447,39 @@ def _audit(service: Service, task: dict[str, Any]) -> None:
                     st.caption(f"{field.capitalize()}: unchanged")
     schema = revision.get("schema", {})
     graph = revision.get("graph", {})
-    functions = revision.get("functions", [])
-    first, second, third = st.columns(3)
-    first.metric("Entity types", len(schema.get("entity_types", {})))
-    second.metric("Evidence entities", len(graph.get("nodes", [])))
-    third.metric("Callable functions", len(functions))
-    st.subheader("Schema")
-    for name, entity in schema.get("entity_types", {}).items():
-        with st.expander(name):
-            st.write(entity.get("description") or "No description recorded.")
-            st.caption(f"Identity property: {entity.get('primary_key', 'not recorded')}")
-            st.dataframe(
-                [{"property": prop, **spec} for prop, spec in entity.get("properties", {}).items()],
-                hide_index=True,
-            )
-    if schema.get("relations"):
-        st.dataframe(
-            [{"relation": name, **value} for name, value in schema["relations"].items()],
-            hide_index=True,
-        )
-    st.subheader("Knowledge graph")
-    _table(
-        [
-            {
-                "entity": node["id"],
-                "type": node.get("type"),
-                "properties": _text(node.get("properties", {})),
-                "sources": _text(node.get("sources", [])),
-            }
-            for node in graph.get("nodes", [])
-        ],
-        f"nodes_{selected}",
+    columns = st.columns(3)
+    columns[0].metric("Concepts", len(schema.get("entity_types", {})))
+    columns[1].metric("Entities", f"{len(graph.get('nodes', [])):,}")
+    columns[2].metric("Relationships", f"{len(graph.get('edges', [])):,}")
+    counts = {}
+    for node in graph.get("nodes", []):
+        label = humanize(node["type"])
+        counts[label] = counts.get(label, 0) + 1
+    st.caption(" · ".join(f"{label}: {count:,}" for label, count in sorted(counts.items())))
+    section = st.segmented_control(
+        "Explore this version",
+        ["Schema", "Entities", "Functions", "Checks"],
+        default="Schema",
+        required=True,
+        key=f"audit_section_{selected}",
     )
-    with st.expander("Graph relationships"):
-        _table(graph.get("edges", []), f"edges_{selected}")
-    st.subheader("Functions")
-    for function in functions:
-        with st.expander(function.get("name", "Unnamed function")):
-            st.write(function.get("description") or "No description recorded.")
-            st.json(function)
-    st.subheader("Validation evidence")
-    assessment = revision.get("assessment", {})
-    st.write(assessment.get("summary") or "No assessment summary recorded.")
-    st.caption(f"Recorded assessment: {assessment.get('status', 'not recorded')}")
-    if assessment.get("task_accuracy") in (None, "unmeasured"):
-        st.warning(
-            "Task accuracy is unmeasured. A passing logical check alone does not establish it."
-        )
-    elif assessment.get("task_accuracy") in {
-        "measured_on_construction",
-        "partially_measured_on_construction",
-    }:
-        measured = [
-            result.get("score")
-            for result in assessment.get("construction_results", [])
-            if result.get("score") is not None
-        ]
-        st.caption(
-            f"Construction questions: {sum(measured)} of {len(measured)} scored correct. "
-            "These questions helped build this revision."
-        )
-    if assessment.get("heldout_accuracy") in (None, "unmeasured"):
-        st.caption(
-            "Held-out accuracy is not measured in this revision assessment. "
-            "Any later evaluation has its own saved report."
-        )
-    with st.expander("Logical checks, task checks, and coverage"):
-        st.json({"validation": revision.get("validation"), "assessment": assessment})
-    if revision.get("owl"):
-        with st.expander("OWL ontology"):
-            st.code(revision["owl"], language="xml")
-    with st.expander("Exact revision artifacts"):
-        st.json(revision)
-        _json_download(revision, "kernel-revision", f"revision_download_{selected}")
+    if section == "Schema":
+        show_schema(revision, selected)
+    elif section == "Entities":
+        show_entities(service, revision, selected)
+    elif section == "Functions":
+        show_functions(revision, selected)
+    else:
+        _validation(revision)
+    with st.expander("Technical details and downloads", on_change="rerun") as details:
+        if details.open:
+            st.json({"revision_id": selected, "parent_id": revision.get("parent")})
+            if revision.get("owl"):
+                with st.expander("OWL ontology"):
+                    st.code(revision["owl"], language="xml")
+            _json_download(revision, "kernel-revision", f"revision_download_{selected}")
+            with st.expander("Exact revision artifacts"):
+                st.json(revision)
     if selected != task.get("active_revision"):
         promotion = service.promotion_check(task["id"], selected)
         acceptable = bool(promotion.get("allowed"))
@@ -498,9 +526,9 @@ def main() -> None:
     active_runs = [run for run in runs if run.get("status") in ACTIVE_STATUSES]
     busy = bool(active_runs)
     st.subheader(task["title"])
-    st.write(task["scope"])
-    st.caption(f"Task status: {task.get('status', 'not recorded')}")
-    with st.expander("Current evidence and example questions"):
+    with st.expander("Task scope, evidence, and example questions"):
+        st.write(task["scope"])
+        st.caption(f"Task status: {task.get('status', 'not recorded')}")
         if task.get("corpus_id"):
             _snapshot_summary(service.artifact(task["corpus_id"]), f"task_{selected_id}")
         st.write(task.get("example_queries", []))
@@ -574,9 +602,28 @@ def main() -> None:
         if not runs:
             st.info("No runs have been submitted for this task.")
         else:
-            st.dataframe(runs, hide_index=True, width="stretch")
+            st.dataframe(
+                [
+                    {
+                        "Activity": JOB_NAMES.get(run["kind"], run["kind"]),
+                        "Status": humanize(run.get("status", "unknown")),
+                        "Started": _date_label(run.get("created_at")),
+                    }
+                    for run in runs
+                ],
+                hide_index=True,
+                alt="Run activities, statuses, and start times",
+            )
             run_ids = [run["id"] for run in runs]
-            selected_run = st.selectbox("Run", run_ids, key=f"selected_run_{selected_id}")
+            run_labels = {
+                run[
+                    "id"
+                ]: f"{JOB_NAMES.get(run['kind'], run['kind'])} · {run['status']} · {_date_label(run.get('created_at'))}"
+                for run in runs
+            }
+            selected_run = st.selectbox(
+                "Run", run_ids, format_func=run_labels.get, key=f"selected_run_{selected_id}"
+            )
             run = next(item for item in runs if item["id"] == selected_run)
             if run.get("status") in ACTIVE_STATUSES:
                 st.info("This run is in progress. Follow its current steps above.")
