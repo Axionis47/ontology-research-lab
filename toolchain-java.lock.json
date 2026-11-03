@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "vendor": "Eclipse Temurin",
+  "runtime": "JRE HotSpot",
+  "version": "21.0.13+9",
+  "platform": {"system": "Darwin", "machine": "arm64"},
+  "release_url": "https://github.com/adoptium/temurin21-binaries/releases/tag/jdk-21.0.13%2B9",
+  "asset_metadata_url": "https://api.github.com/repos/adoptium/temurin21-binaries/releases/assets/665259936",
+  "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.13%2B9/OpenJDK21U-jre_aarch64_mac_hotspot_21.0.13_9.tar.gz",
+  "sha256": "225bab0a09491ef06835488cd942f5d2befa9a0410a2484f0c8bbcf7506ec09a",
+  "size_bytes": 47935740,
+  "install_directory": ".tools/java/temurin-21.0.13+9",
+  "java_relative_path": "Contents/Home/bin/java"
+}

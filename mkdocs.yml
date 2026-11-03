@@ -1,0 +1,27 @@
+site_name: OaK
+site_description: Paper-grounded implementation, artifacts, revisions, and validation
+theme:
+  name: readthedocs
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: ["."]
+          options:
+            show_source: true
+            show_root_heading: true
+            heading_level: 3
+markdown_extensions:
+  - tables
+  - fenced_code
+nav:
+  - Start: index.md
+  - Stack and setup: stack.md
+  - Paper:
+      - Specification: paper/method-spec.md
+      - Extracted text: paper/extracted/paper-text.md
+  - Design: design.md
+  - Work plan: work-plan.md
+  - Code reference: reference/setup.md
+  - Review prompt: review/gemini-prompt.md
