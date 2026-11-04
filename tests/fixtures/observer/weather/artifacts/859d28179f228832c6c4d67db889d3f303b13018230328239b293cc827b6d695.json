@@ -1,0 +1,1 @@
+{"data":{"action":"call","answer":"","args":{"days":3,"granularity":"daily","latitude":52.52,"longitude":13.405,"source":"openmeteo","temperature_unit":"C"},"citations":[],"function":"weather/get_forecast","reason":"Request a 3-day daily forecast from Open-Meteo in Celsius for coordinates 52.52, 13.405."},"format_version":1,"kind":"decision"}

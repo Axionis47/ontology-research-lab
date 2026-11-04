@@ -1,0 +1,1 @@
+{"data":{"action":"complete","answer":"0","args":{},"citations":["observation-1"],"function":null,"reason":"The tool count_days_above_high_temp returned qualifying_days_count = 0 for the first three local forecast dates using Open-Meteo at the specified coordinates and threshold."},"format_version":1,"kind":"decision"}

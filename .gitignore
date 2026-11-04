@@ -29,3 +29,9 @@ site/
 .coverage.*
 /htmlcov/
 /coverage.xml
+
+# Reproducible frontend outputs and local browser evidence.
+/frontend/dist/
+/frontend/test-results/
+/frontend/playwright-report/
+/frontend/*.tsbuildinfo

@@ -17,35 +17,21 @@ def worker(run_id: str = typer.Option(..., "--run-id"), root: Path = Path(".loca
 
 
 @app.command()
+def serve(root: Path = Path(".local"), port: int = typer.Option(8501, min=1, max=65535)):
+    """Serve the React observer and versioned API on one loopback origin."""
+    import uvicorn
+
+    from oak.api import create_app
+
+    uvicorn.run(create_app(root), host="127.0.0.1", port=port, proxy_headers=False)
+
+
+@app.command()
 def web_worker(run_id: str = typer.Option(..., "--run-id"), root: Path = Path(".local")):
     """Execute one previously accepted discovery, construction, or inference job."""
     from oak.web_jobs import WebJobs
 
     WebJobs(root).run_worker(run_id)
-
-
-@app.command()
-def serve():
-    """Open the small local ontology auditor."""
-    import subprocess
-    import sys
-
-    subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "streamlit",
-            "run",
-            str(Path(__file__).with_name("ui.py")),
-            "--server.address",
-            "127.0.0.1",
-            "--server.port",
-            "8501",
-            "--browser.gatherUsageStats",
-            "false",
-        ],
-        check=True,
-    )
 
 
 @app.command()

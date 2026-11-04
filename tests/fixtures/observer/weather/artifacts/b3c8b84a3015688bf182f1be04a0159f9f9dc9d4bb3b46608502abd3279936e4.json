@@ -1,0 +1,1 @@
+{"data":{"coverage":"Explicit records only; not OWL entailment or task correctness","edge_count":3,"errors":[],"evidence_type":"graph_data_integrity","node_count":4,"status":"valid","valid":true},"format_version":1,"kind":"probe_extract.2.0.1.integrity"}

@@ -1,0 +1,1 @@
+{"data":{"action":"call","answer":"","args":{"city_name":"Madrid, Spain","days":3,"granularity":"daily","source":"openmeteo","temperature_unit":"C"},"citations":[],"function":"weather/get_forecast","reason":"Acquiring the 3-day daily forecast for Madrid, Spain from Open-Meteo in Celsius to determine the daily high temperatures."},"format_version":1,"kind":"decision"}
