@@ -355,12 +355,14 @@ def execute_function(
     schema: dict[str, Any],
     slot_extractor: Callable[..., dict[str, Any]] | None = None,
     capability_invoker: Callable[..., dict[str, Any]] | None = None,
+    step_observer: Callable[[dict[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
     """Execute a validated typed function and retain actual inputs, outputs, and dependencies.
 
     Dependencies conservatively include the complete graph hash and schema hash.
     This includes negative/aggregate query dependencies; it does not claim minimal
     invalidation coverage. Failed executions raise FunctionExecutionError with traces.
+    An optional observer receives real operator boundaries for durable event logging.
     """
     checked = validate_functions(catalog, schema)
     selected = next((entry for entry in checked if entry.name == name), None)
@@ -403,6 +405,8 @@ def execute_function(
     for step in selected.steps:
         started = time.monotonic()
         trace: dict[str, Any] = {"id": step.id, "operator": step.operator, "status": "started"}
+        if step_observer is not None:
+            step_observer(deepcopy(trace))
         try:
             resolved = _resolve(step.args, args, results)
             trace["inputs"] = deepcopy(resolved)
@@ -430,11 +434,15 @@ def execute_function(
             trace.update(status="failed", error=f"{type(error).__name__}: {error}")
             trace["duration_seconds"] = round(time.monotonic() - started, 6)
             traces.append(trace)
+            if step_observer is not None:
+                step_observer(deepcopy(trace))
             raise FunctionExecutionError(
                 f"{name}/{step.id}: {error}", steps=traces, dependencies=dependencies
             ) from error
         trace["duration_seconds"] = round(time.monotonic() - started, 6)
         traces.append(trace)
+        if step_observer is not None:
+            step_observer(deepcopy(trace))
     try:
         output = _resolve(selected.result, args, results)
         Draft202012Validator(selected.output_schema, format_checker=FormatChecker()).validate(

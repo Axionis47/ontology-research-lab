@@ -33,8 +33,8 @@ _ENV_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 _SENSITIVE_NAME = re.compile(r"secret|token|password|credential|api.?key|authorization", re.I)
 
 
-class ServerConfig(BaseModel):
-    """One reviewed server and its explicitly permitted read-only tools.
+class ConnectionConfig(BaseModel):
+    """A user-supplied connection, sufficient for discovery without tool permission.
 
     ``env_refs`` maps subprocess variable names to names in the host environment.
     It contains references, not values. HTTP authentication and model-selected
@@ -48,11 +48,10 @@ class ServerConfig(BaseModel):
     args: list[str] = Field(default_factory=list)
     url: str | None = None
     env_refs: dict[str, str] = Field(default_factory=dict)
-    allowed_tools: list[str] = Field(min_length=1)
     timeout_seconds: float = Field(default=30.0, gt=0, le=120)
 
     @model_validator(mode="after")
-    def check_connection(self) -> ServerConfig:
+    def check_connection(self) -> ConnectionConfig:
         """Reject ambiguous transports, duplicate tools, and literal credentials."""
         if self.transport == "stdio":
             if not self.command or not self.command.strip() or self.url is not None:
@@ -69,10 +68,6 @@ class ServerConfig(BaseModel):
                 )
         if any("\x00" in value for value in [self.command or "", *self.args]):
             raise ValueError("Commands and arguments must not contain NUL bytes")
-        if len(set(self.allowed_tools)) != len(self.allowed_tools) or any(
-            not tool or tool.strip() != tool or "/" in tool for tool in self.allowed_tools
-        ):
-            raise ValueError("allowed_tools must contain unique nonempty unqualified tool names")
         if any(
             not _ENV_NAME.fullmatch(key) or not _ENV_NAME.fullmatch(value)
             for key, value in self.env_refs.items()
@@ -87,12 +82,30 @@ class ServerConfig(BaseModel):
         return self
 
 
+class ServerConfig(ConnectionConfig):
+    """A connection plus the user's explicitly reviewed read-only tool allowlist."""
+
+    allowed_tools: list[str] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def check_allowlist(self) -> ServerConfig:
+        if len(set(self.allowed_tools)) != len(self.allowed_tools) or any(
+            not tool or tool.strip() != tool or "/" in tool for tool in self.allowed_tools
+        ):
+            raise ValueError("allowed_tools must contain unique nonempty unqualified tool names")
+        return self
+
+
 class MCPBridgeError(ValueError):
     """A failed discovery with a persisted partial result and failure receipt."""
 
     def __init__(self, message: str, evidence_id: str):
         super().__init__(message)
         self.evidence_id = evidence_id
+
+
+class MCPContractChanged(ValueError):
+    """The selected tool contract is no longer the one observed or configured."""
 
 
 class _RecordingSession(ClientSession):
@@ -137,6 +150,68 @@ def _validator(schema: dict[str, Any]):
     return cls(schema, format_checker=FormatChecker())
 
 
+def _catalog_tools(config: ConnectionConfig, identity: dict, discovered: dict) -> list[dict]:
+    """Bind wire contracts to one connection and, when present, its review scope."""
+    names = config.allowed_tools if isinstance(config, ServerConfig) else sorted(discovered)
+    missing = sorted(set(names) - discovered.keys())
+    if missing:
+        raise MCPContractChanged("Configured tools are absent from server: " + ", ".join(missing))
+    tools = []
+    for name in names:
+        raw = discovered[name]
+        _validator(raw["inputSchema"])
+        if raw.get("outputSchema") is not None:
+            _validator(raw["outputSchema"])
+        annotations = raw.get("annotations") or {}
+        contradicted = (
+            annotations.get("readOnlyHint") is False or annotations.get("destructiveHint") is True
+        )
+        if isinstance(config, ServerConfig) and contradicted:
+            raise ValueError(f"Tool {name} contradicts this bridge's reviewed read-only surface")
+        tools.append(
+            {
+                "id": f"{config.name}/{name}",
+                "server": config.name,
+                "name": name,
+                "description": raw.get("description", ""),
+                "input_schema": raw["inputSchema"],
+                "output_schema": raw.get("outputSchema"),
+                "annotations": annotations,
+                "contract_id": _digest({"server": identity, "tool": raw}),
+            }
+        )
+    return tools
+
+
+def reviewed_catalog(discovery: dict, config: ServerConfig) -> dict:
+    """Derive the reviewed catalog from genuine saved discovery, without calls.
+
+    A later invocation still rediscovers and compares the exact live contract.
+    This operation records the user's selection; hints alone grant no permission.
+    """
+    if discovery.get("status") != "completed" or len(discovery.get("servers", [])) != 1:
+        raise ValueError("A connector requires one completed discovery")
+    server = discovery["servers"][0]
+    connection = config.model_dump(mode="json", exclude={"allowed_tools"})
+    if server.get("config") != connection:
+        raise ValueError("Connection differs from the discovered configuration")
+    identity = {
+        "config": config.model_dump(mode="json"),
+        "environment_fingerprint": server["environment_fingerprint"],
+        "initialize": server["initialize"],
+    }
+    discovered = {tool["name"]: tool for page in server["tool_pages"] for tool in page["tools"]}
+    return {
+        "format_version": 1,
+        "status": "completed",
+        "started_at": discovery["started_at"],
+        "finished_at": discovery["finished_at"],
+        "source_discovery_id": discovery.get("catalog_id"),
+        "servers": [{"name": config.name, **identity, "tool_pages": server["tool_pages"]}],
+        "tools": _catalog_tools(config, identity, discovered),
+    }
+
+
 class MCPBridge:
     """Discover real servers and execute only explicitly pinned, allowed tools.
 
@@ -149,21 +224,27 @@ class MCPBridge:
 
     def __init__(
         self,
-        configs: list[ServerConfig | dict],
+        configs: list[ServerConfig | ConnectionConfig | dict],
         store: Store,
         run_id: str,
         expected_catalog: dict | None = None,
+        *,
+        discovery_only: bool = False,
     ) -> None:
+        contract = ConnectionConfig if discovery_only else ServerConfig
         self.configs = [
-            config if isinstance(config, ServerConfig) else ServerConfig.model_validate(config)
+            contract.model_validate(
+                config.model_dump() if isinstance(config, BaseModel) else config
+            )
             for config in configs
         ]
         if not self.configs or len({config.name for config in self.configs}) != len(self.configs):
             raise ValueError("Provide at least one server, with unique server names")
         self.store, self.run_id = store, run_id
         self.expected_catalog = deepcopy(expected_catalog)
+        self.discovery_only = discovery_only
 
-    def _environment(self, config: ServerConfig) -> dict[str, str]:
+    def _environment(self, config: ConnectionConfig) -> dict[str, str]:
         missing = [source for source in config.env_refs.values() if source not in os.environ]
         if missing:
             raise ValueError("Missing environment references: " + ", ".join(sorted(set(missing))))
@@ -186,7 +267,7 @@ class MCPBridge:
 
     @asynccontextmanager
     async def _session(
-        self, config: ServerConfig, diagnostics: dict
+        self, config: ConnectionConfig, diagnostics: dict
     ) -> AsyncIterator[_RecordingSession]:
         with tempfile.TemporaryFile(mode="w+", encoding="utf-8") as stderr:
             try:
@@ -220,7 +301,7 @@ class MCPBridge:
                 diagnostics["server_stderr"] = self._redact(stderr.read())
 
     async def _server_catalog(
-        self, config: ServerConfig, session: ClientSession, diagnostics: dict
+        self, config: ConnectionConfig, session: ClientSession, diagnostics: dict
     ) -> tuple[dict, list[dict]]:
         diagnostics["config"] = config.model_dump(mode="json")
         diagnostics["environment_fingerprint"] = _digest(self._environment(config))
@@ -237,7 +318,7 @@ class MCPBridge:
             for tool in page.tools:
                 if tool.name in discovered:
                     raise ValueError(f"Server listed duplicate tool {tool.name}")
-                discovered[tool.name] = tool
+                discovered[tool.name] = _dump(tool)
             cursor = page.next_cursor
             if cursor is None:
                 break
@@ -246,41 +327,13 @@ class MCPBridge:
             cursors.add(cursor)
         else:
             raise ValueError("MCP catalog exceeds the 100-page discovery limit")
-        missing = sorted(set(config.allowed_tools) - discovered.keys())
-        if missing:
-            raise ValueError("Configured tools are absent from server: " + ", ".join(missing))
         identity = {
             "config": config.model_dump(mode="json"),
             "environment_fingerprint": diagnostics["environment_fingerprint"],
             "initialize": initialized,
         }
         server = {"name": config.name, **identity, "tool_pages": pages}
-        tools = []
-        for name in config.allowed_tools:
-            raw = _dump(discovered[name])
-            _validator(raw["inputSchema"])
-            if raw.get("outputSchema") is not None:
-                _validator(raw["outputSchema"])
-            annotations = raw.get("annotations") or {}
-            if (
-                annotations.get("readOnlyHint") is False
-                or annotations.get("destructiveHint") is True
-            ):
-                raise ValueError(
-                    f"Tool {name} contradicts this bridge's reviewed read-only surface"
-                )
-            tool = {
-                "id": f"{config.name}/{name}",
-                "server": config.name,
-                "name": name,
-                "description": raw.get("description", ""),
-                "input_schema": raw["inputSchema"],
-                "output_schema": raw.get("outputSchema"),
-                "annotations": annotations,
-                "contract_id": _digest({"server": identity, "tool": raw}),
-            }
-            tools.append(tool)
-        return server, tools
+        return server, _catalog_tools(config, identity, discovered)
 
     def discover(self) -> dict:
         """Persist the real catalog, or raise MCPBridgeError with failure evidence."""
@@ -329,6 +382,8 @@ class MCPBridge:
             "output": None,
         }
         try:
+            if self.discovery_only:
+                raise ValueError("Discovery-only connections cannot invoke tools")
             if not isinstance(capability_id, str) or capability_id.count("/") != 1:
                 raise ValueError("Use a fully qualified server/tool capability ID")
             server_name, tool_name = capability_id.split("/")
@@ -352,7 +407,15 @@ class MCPBridge:
             _validator(expected["input_schema"]).validate(args)
             asyncio.run(self._invoke(config, expected, args, receipt))
         except Exception as error:
-            receipt.update(status="failed", error=self._error("invocation_failed", error))
+            receipt.update(
+                status="failed",
+                error=self._error(
+                    "tool_contract_changed"
+                    if isinstance(error, MCPContractChanged)
+                    else "invocation_failed",
+                    error,
+                ),
+            )
             if isinstance(error, MCPBridgeError):
                 receipt["discovery_evidence_id"] = error.evidence_id
         receipt["finished_at"] = now()
@@ -379,7 +442,7 @@ class MCPBridge:
             live = next(tool for tool in tools if tool["id"] == expected["id"])
             receipt["observed_contract_id"] = live["contract_id"]
             if live["contract_id"] != expected["contract_id"]:
-                raise ValueError(
+                raise MCPContractChanged(
                     "MCP contract changed since discovery; explicitly onboard a new catalog"
                 )
             receipt["dispatch_evidence_id"] = self.store.event(

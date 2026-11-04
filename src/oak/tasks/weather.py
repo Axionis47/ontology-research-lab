@@ -21,6 +21,25 @@ EVALUATOR_PATH = PROJECT / "config/weather-evaluator.json"
 SURFACE_PATH = PROJECT / "config/weather-surface.json"
 SOURCE_LOCK = PROJECT / "data/sources/weather-source.lock.json"
 
+
+def supports_query(query_input: dict[str, Any]) -> bool:
+    """Bind the evaluator only to the exact registered pilot request contract.
+
+    An ad hoc question never acquires a reference objective through an ID or
+    similar wording. This check stays in the task adapter, outside agent input.
+    """
+    if query_input.get("split") == "inference":
+        return False
+    from oak.task_context import QuerySpec
+
+    try:
+        candidate = QuerySpec.model_validate(query_input)
+    except ValueError:
+        return False
+    configured = json.loads(SURFACE_PATH.read_text())["queries"]
+    return any(candidate == QuerySpec.model_validate(item) for item in configured)
+
+
 _MONTHS = (
     "January",
     "February",

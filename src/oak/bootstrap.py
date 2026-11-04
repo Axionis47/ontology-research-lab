@@ -26,7 +26,7 @@ from oak.ontology import schema_json_schema, validate_graph_records, validate_on
 from oak.operators import GRAPH_OPERATORS, operator_contracts
 from oak.pipeline import build_graph, request_json
 from oak.store import Store, canonical, now
-from oak.task_context import TaskSurface, build_runtime_context, sample_construction
+from oak.task_context import InferenceQuery, TaskSurface, build_runtime_context, sample_construction
 
 PROJECT = Path(__file__).resolve().parents[2]
 
@@ -336,7 +336,12 @@ class SurfaceEngine:
         return histories
 
     def construct(
-        self, surface_id: str, *, round_index: int = 0, parent_id: str | None = None
+        self,
+        surface_id: str,
+        *,
+        round_index: int = 0,
+        parent_id: str | None = None,
+        run_id: str | None = None,
     ) -> dict:
         """Construct a candidate from a recorded fresh sample and genuine starter episodes.
 
@@ -344,22 +349,26 @@ class SurfaceEngine:
         task-success score. Candidates remain explicitly unpromoted until an
         external task evaluator records fresh outcome evidence.
         """
+        managed_run = run_id is not None
         data = self.surface(surface_id)
         surface = TaskSurface.model_validate(data["configuration"])
         parent = self.store.get(parent_id) if parent_id else None
         if parent and parent.get("surface_id") != surface_id:
             raise ValueError("Parent belongs to another surface")
         sample = sample_construction(surface, round_index).model_dump(mode="json")
-        run_id = self.store.create_run(
-            surface_id,
-            "mcp_construct",
-            {
-                "surface_id": surface_id,
-                "sample": sample,
-                "parent_id": parent_id,
-                "budget_ceiling_usd": data["budget_ceiling_usd"],
-            },
-        )
+        request = {
+            "surface_id": surface_id,
+            "sample": sample,
+            "parent_id": parent_id,
+            "budget_ceiling_usd": data["budget_ceiling_usd"],
+        }
+        if run_id is None:
+            run_id = self.store.create_run(surface_id, "mcp_construct", request)
+        else:
+            self._check_run(run_id, surface_id, "mcp_construct")
+            self.store.event(
+                run_id, "construction_request", "completed", "Actual construction sample", request
+            )
         model = GeminiCLI(self.store, run_id, budget_ceiling_usd=data["budget_ceiling_usd"])
         instruction = (PROJECT / "config/prompts/task-construction.md").read_text()
         catalog = data["catalog"]
@@ -369,7 +378,7 @@ class SurfaceEngine:
         def collect(state):
             episodes, documents = [], []
             for query in selected:
-                episode = self.run_episode(surface_id, query.id)
+                episode = self.run_episode(surface_id, query.id, parent_run_id=run_id)
                 episodes.append(episode["episode_id"])
                 for observation in episode["episode"]["observations"]:
                     for receipt_id in observation.get("receipt_ids", []):
@@ -570,6 +579,21 @@ class SurfaceEngine:
                                 probe["args"],
                                 schema=schema,
                                 capability_invoker=acquire,
+                                step_observer=lambda step, probe=probe, index=index, attempt=attempt: (
+                                    self.store.event(
+                                        run_id,
+                                        "operator",
+                                        step["status"],
+                                        f"Probe {probe['function']}: {step['id']}",
+                                        {
+                                            **step,
+                                            "function": probe["function"],
+                                            "phase": "probe",
+                                            "probe_index": index,
+                                            "attempt": attempt,
+                                        },
+                                    )
+                                ),
                             )
                             probe_record["execution"] = result
                             proof = result_acquisition_evidence(function, result, graph, acquired)
@@ -688,22 +712,53 @@ class SurfaceEngine:
                 },
             }
             kernel_id = self.store.put("mcp_kernel", kernel)
+            self.store.event(
+                run_id,
+                "kernel_candidate",
+                "completed",
+                "Candidate kernel saved",
+                {"kernel_id": kernel_id, "parent": parent_id, "assessment": kernel["assessment"]},
+            )
             output = {"run_id": run_id, "kernel_id": kernel_id, "assessment": kernel["assessment"]}
             self.store.set_run(run_id, "completed", result=output)
             return output
         except Exception as exc:
-            self.store.set_run(run_id, "failed", error=f"{type(exc).__name__}: {exc}")
+            if not managed_run:
+                self.store.set_run(run_id, "failed", error=f"{type(exc).__name__}: {exc}")
             raise
 
-    def run_episode(self, surface_id: str, query_id: str, *, kernel_id: str | None = None) -> dict:
+    def _check_run(self, run_id: str, surface_id: str, kind: str) -> None:
+        """Only a matching saved worker request can own an engine execution."""
+        rows = self.store.rows("SELECT * FROM runs WHERE id=?", (run_id,))
+        if not rows or rows[0]["task_id"] != surface_id or rows[0]["kind"] != kind:
+            raise ValueError("Worker request does not match this task operation")
+        if rows[0]["status"] not in {"queued", "running"}:
+            raise ValueError("A terminal run cannot execute again")
+
+    def run_episode(
+        self,
+        surface_id: str,
+        query_id: str | None = None,
+        *,
+        kernel_id: str | None = None,
+        inference_query: InferenceQuery | dict | None = None,
+        run_id: str | None = None,
+        parent_run_id: str | None = None,
+    ) -> dict:
         """Run a real starter or frozen-kernel episode, always acquiring fresh evidence.
 
         Completion is an agent claim until an adapter supplies independent outcome
         evidence. Saved observations are never substituted for a new MCP call.
         """
+        managed_run = run_id is not None
         data = self.surface(surface_id)
         surface = TaskSurface.model_validate(data["configuration"])
-        query = next((q for q in surface.queries if q.id == query_id), None)
+        if inference_query is not None:
+            if query_id is not None or kernel_id is None:
+                raise ValueError("Run-local inference requires a frozen kernel and no query_id")
+            query = InferenceQuery.model_validate(inference_query)
+        else:
+            query = next((q for q in surface.queries if q.id == query_id), None)
         if query is None:
             raise ValueError("Query is absent from the declared surface")
         if kernel_id is None and query.split != "construction":
@@ -719,17 +774,23 @@ class SurfaceEngine:
             history=self.history(surface_id),
             resolve_history=self.store.get,
         )
-        run_id = self.store.create_run(
-            surface_id,
-            "mcp_episode",
-            {
-                "surface_id": surface_id,
-                "query_id": query_id,
-                "kernel_id": kernel_id,
-                "context": context,
-                "budget_ceiling_usd": data["budget_ceiling_usd"],
-            },
-        )
+        request = {
+            "surface_id": surface_id,
+            "query_id": query.id,
+            "kernel_id": kernel_id,
+            "context": context,
+            "budget_ceiling_usd": data["budget_ceiling_usd"],
+            "query_source": "run_local" if inference_query is not None else "registered",
+        }
+        if run_id is None:
+            run_id = self.store.create_run(
+                surface_id, "mcp_episode", request, parent_run_id=parent_run_id
+            )
+        else:
+            self._check_run(run_id, surface_id, "mcp_episode")
+            self.store.event(
+                run_id, "episode_context", "completed", "Initial task context", request
+            )
         model = GeminiCLI(self.store, run_id, budget_ceiling_usd=data["budget_ceiling_usd"])
         bridge = MCPBridge(surface.servers, self.store, run_id, expected_catalog=catalog)
         instruction = (PROJECT / "config/prompts/task-runtime.md").read_text()
@@ -838,6 +899,17 @@ class SurfaceEngine:
                         decision["args"],
                         schema=kernel["schema"],
                         capability_invoker=acquire,
+                        step_observer=lambda step: self.store.event(
+                            run_id,
+                            "operator",
+                            step["status"],
+                            f"{decision['function']}: {step['id']}",
+                            {
+                                **step,
+                                "function": decision["function"],
+                                "decision_step": state["step"],
+                            },
+                        ),
                     )
                     observation["output"] = result["value"]
                     observation["execution_id"] = self.store.put("function_execution", result)
@@ -914,6 +986,12 @@ class SurfaceEngine:
         builder.add_edge("execute", "decide")
         self.store.set_run(run_id, "running")
         try:
+            initial_graph = empty_graph()
+            initial_graph_id = self.store.put("episode_graph", initial_graph)
+            if kernel:
+                self.store.event(
+                    run_id, "graph_snapshot", "completed", "Initial empty graph", initial_graph
+                )
             with SqliteSaver.from_conn_string(
                 str(self.store.root / "mcp-checkpoints.sqlite")
             ) as saver:
@@ -925,7 +1003,7 @@ class SurfaceEngine:
                         "invocation_attempts": 0,
                         "tool_calls": 0,
                         "completed_tool_calls": 0,
-                        "graph_id": self.store.put("episode_graph", empty_graph()),
+                        "graph_id": initial_graph_id,
                     },
                     {
                         "configurable": {"thread_id": run_id},
@@ -958,8 +1036,16 @@ class SurfaceEngine:
             }
             episode_id = self.store.put("episode", episode)
             result = {"run_id": run_id, "episode_id": episode_id, "episode": episode}
+            from oak.tasks.evaluation import assess_mcp_episode
+
+            assessment = assess_mcp_episode(
+                self.store, run_id, episode_id, query.model_dump(mode="json")
+            )
+            if assessment is not None:
+                result["assessment"] = assessment
             self.store.set_run(run_id, "completed", result=result)
             return result
         except Exception as exc:
-            self.store.set_run(run_id, "failed", error=f"{type(exc).__name__}: {exc}")
+            if not managed_run:
+                self.store.set_run(run_id, "failed", error=f"{type(exc).__name__}: {exc}")
             raise

@@ -15,9 +15,20 @@ from pathlib import Path
 import pytest
 
 from oak.task_context import TaskSurface, sample_construction
-from oak.tasks.weather import evaluate_weather_answer, parse_daily_forecast
+from oak.tasks.weather import evaluate_weather_answer, parse_daily_forecast, supports_query
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_evaluator_applies_only_to_exact_curated_requests() -> None:
+    queries = json.loads((ROOT / "config/weather-surface.json").read_text())["queries"]
+    assert supports_query(queries[0])
+    changed = deepcopy(queries[0])
+    changed["requirements"] = []
+    assert not supports_query(changed)
+    changed = deepcopy(queries[0])
+    changed["split"] = "inference"
+    assert not supports_query(changed)
 
 
 @pytest.fixture(scope="module")

@@ -226,8 +226,14 @@ def test_typed_function_executes_real_steps_and_records_source_dependencies(
 ) -> None:
     graph, schema, rows = coffee_graph
     catalog = _range_catalog()
+    boundaries = []
     result = execute_function(
-        graph, catalog, "daily_range", {"date": rows[0]["Date"]}, schema=schema
+        graph,
+        catalog,
+        "daily_range",
+        {"date": rows[0]["Date"]},
+        schema=schema,
+        step_observer=boundaries.append,
     )
     assert result["value"] == float(Decimal(rows[0]["High"]) - Decimal(rows[0]["Low"]))
     assert len(result["steps"]) == 4
@@ -236,6 +242,9 @@ def test_typed_function_executes_real_steps_and_records_source_dependencies(
     assert result["dependencies"]["coverage"] == "entire_graph_conservative"
     assert graph["nodes"][0]["sources"][0]["document_id"] in result["dependencies"]["source_ids"]
     assert graph["nodes"][0]["properties"]["High"] == float(rows[0]["High"])
+    assert [item["status"] for item in boundaries] == ["started", "completed"] * 4
+    assert all("output" not in item for item in boundaries[::2])
+    assert boundaries[1::2] == result["steps"]
 
 
 def test_function_rejects_forward_references_undeclared_fields_and_canned_results(
@@ -263,6 +272,7 @@ def test_dynamic_property_references_are_checked_at_execution(coffee_graph: tupl
     catalog[0]["inputs"]["properties"]["field"] = {"type": "string"}
     catalog[0]["inputs"]["required"].append("field")
     catalog[0]["steps"][1]["args"]["request"]["field"] = {"$arg": "field"}
+    boundaries = []
     with pytest.raises(FunctionExecutionError, match="Undeclared") as caught:
         execute_function(
             graph,
@@ -270,9 +280,11 @@ def test_dynamic_property_references_are_checked_at_execution(coffee_graph: tupl
             "daily_range",
             {"date": graph["nodes"][0]["properties"]["Date"], "field": "undeclared"},
             schema=schema,
+            step_observer=boundaries.append,
         )
     assert caught.value.steps[-1]["status"] == "failed"
     assert caught.value.steps[0]["status"] == "completed"
+    assert [item["status"] for item in boundaries] == ["started", "completed", "started", "failed"]
 
 
 def test_slot_operator_never_substitutes_a_fake_model() -> None:

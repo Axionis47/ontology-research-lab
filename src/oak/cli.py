@@ -17,6 +17,14 @@ def worker(run_id: str = typer.Option(..., "--run-id"), root: Path = Path(".loca
 
 
 @app.command()
+def web_worker(run_id: str = typer.Option(..., "--run-id"), root: Path = Path(".local")):
+    """Execute one previously accepted discovery, construction, or inference job."""
+    from oak.web_jobs import WebJobs
+
+    WebJobs(root).run_worker(run_id)
+
+
+@app.command()
 def serve():
     """Open the small local ontology auditor."""
     import subprocess

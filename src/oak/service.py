@@ -247,7 +247,10 @@ class Service:
     def _reconcile_jobs(self, task_id: str) -> None:
         """Mark a saved job interrupted only when its recorded worker no longer exists."""
         for row in self.store.rows(
-            "SELECT id FROM runs WHERE task_id=? AND status IN ('queued','running')", (task_id,)
+            "SELECT id FROM runs WHERE task_id=? AND status IN ('queued','running') "
+            "AND (owner_kind='service' OR (owner_kind IS NULL "
+            "AND kind IN ('construct','ask','revise','regress')))",
+            (task_id,),
         ):
             path = self.root / "jobs" / f"{row['id']}.pid"
             if not path.exists():
@@ -287,6 +290,8 @@ class Service:
             rows = self.store.rows("SELECT * FROM runs WHERE id=?", (run_id,))
             if not rows:
                 raise ValueError("Run does not exist")
+            if rows[0]["kind"] not in {"construct", "ask", "revise", "regress"}:
+                raise ValueError("This run is not resumable by the corpus worker")
             self._reconcile_jobs(rows[0]["task_id"])
             row = self.store.rows("SELECT * FROM runs WHERE id=?", (run_id,))[0]
             if row["status"] not in {"failed", "interrupted"}:
@@ -486,6 +491,8 @@ class Service:
         directory.mkdir(exist_ok=True)
         (directory / f"{run_id}.pid").write_text(str(os.getpid()))
         row = self.store.rows("SELECT * FROM runs WHERE id=?", (run_id,))[0]
+        if row["kind"] not in {"construct", "ask", "revise", "regress"}:
+            raise ValueError("This run does not belong to the corpus worker")
         inputs = self.artifact(row["input_id"])
         self.store.set_run(run_id, "running")
         try:

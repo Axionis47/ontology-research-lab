@@ -42,17 +42,16 @@ class StrictContract(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True, allow_inf_nan=False)
 
 
-class QuerySpec(StrictContract):
-    """One request and its public requirements, without reference answers."""
+class QueryInput(StrictContract):
+    """Public request fields shared by pool entries and run-local inference."""
 
     id: str = Field(min_length=1)
     query: str = Field(min_length=1)
-    split: Split
     requirements: list[str] = Field(default_factory=list)
     supplied_documents: list[dict[str, JsonValue]] = Field(default_factory=list)
 
     @model_validator(mode="after")
-    def validate_text(self) -> QuerySpec:
+    def validate_text(self) -> QueryInput:
         """Reject empty requests and invalid JSON evidence before model use."""
         if not self.id.strip() or not self.query.strip():
             raise ValueError("query id and text must contain non-whitespace characters")
@@ -60,6 +59,18 @@ class QuerySpec(StrictContract):
             raise ValueError("requirements must contain non-whitespace characters")
         _canonical(self.supplied_documents)
         return self
+
+
+class QuerySpec(QueryInput):
+    """One immutable pool request and split, without reference answers."""
+
+    split: Split
+
+
+class InferenceQuery(QueryInput):
+    """An immutable run-local request, never a member of a construction pool."""
+
+    split: Literal["inference"] = "inference"
 
 
 class RunLimits(StrictContract):
@@ -260,7 +271,7 @@ def _history_card(
 
 def build_runtime_context(
     surface: TaskSurface,
-    query: QuerySpec | str,
+    query: QuerySpec | InferenceQuery | str,
     capability_catalog: list[dict[str, Any]],
     *,
     history: Sequence[str] = (),
@@ -276,7 +287,11 @@ def build_runtime_context(
     semantic compatibility are not implemented or claimed.
     """
     surface = TaskSurface.model_validate(surface.model_dump(mode="json"))
-    selected = _resolve_query(surface, query)
+    selected = (
+        InferenceQuery.model_validate(query.model_dump(mode="json"))
+        if isinstance(query, InferenceQuery)
+        else _resolve_query(surface, query)
+    )
     if type(history_limit) is not int or not 0 <= history_limit <= 10:
         raise ValueError("history_limit must be an integer between zero and ten")
     if isinstance(history, (str, bytes)) or any(not isinstance(item, str) for item in history):
