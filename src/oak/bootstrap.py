@@ -19,6 +19,14 @@ from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import END, START, StateGraph
 from pydantic import BaseModel, ConfigDict, Field
 
+from oak.construction_contracts import (
+    FunctionCoverage,
+    RequirementAnalysis,
+    requirement_inputs,
+    validate_function_coverage,
+    validate_requirement_analysis,
+)
+from oak.construction_prompts import prompt_manifest
 from oak.functions import FunctionExecutionError, FunctionSpec, execute_function, validate_functions
 from oak.mcp_bridge import MCPBridge
 from oak.model import GeminiCLI, runtime_config
@@ -69,8 +77,9 @@ class FunctionProposal(BaseModel):
     """Bounded model output for one candidate function catalog and its probes."""
 
     model_config = ConfigDict(extra="forbid")
-    functions: list[FunctionSpec] = Field(min_length=1, max_length=6)
-    probes: list[FunctionProbe] = Field(min_length=1, max_length=6)
+    functions: list[FunctionSpec] = Field(min_length=1, max_length=64)
+    probes: list[FunctionProbe] = Field(min_length=1, max_length=64)
+    coverage: list[FunctionCoverage] = Field(min_length=1)
 
 
 def function_dataflow(function: dict) -> dict:
@@ -370,10 +379,73 @@ class SurfaceEngine:
                 run_id, "construction_request", "completed", "Actual construction sample", request
             )
         model = GeminiCLI(self.store, run_id, budget_ceiling_usd=data["budget_ceiling_usd"])
-        instruction = (PROJECT / "config/prompts/task-construction.md").read_text()
+        prompts = prompt_manifest()
+        prompt_manifest_id = self.store.put("construction_prompts", prompts)
         catalog = data["catalog"]
         bridge = MCPBridge(surface.servers, self.store, run_id, expected_catalog=catalog)
         selected = [q for q in surface.queries if q.id in sample["selected_query_ids"]]
+        obligations = requirement_inputs(selected)
+        requirements_input = {
+            "surface": surface.description,
+            "starting_instructions": surface.base_prompt,
+            "obligations": [item.model_dump(mode="json") for item in obligations],
+            "capabilities": catalog["tools"],
+        }
+        requirements_input_id = self.store.put("requirement_inputs", requirements_input)
+
+        def analyze(state):
+            feedback = None
+            for attempt in range(runtime_config()["max_repair_attempts"] + 1):
+                proposal = request_json(
+                    model,
+                    f"requirements.{attempt}",
+                    prompts["stages"]["requirements"]["instruction"],
+                    {**requirements_input, "validation_feedback": feedback},
+                    RequirementAnalysis.model_json_schema(),
+                )
+                proposal_id = self.store.put("requirement_analysis_proposal", proposal)
+                try:
+                    analysis = validate_requirement_analysis(
+                        proposal, obligations, {tool["id"] for tool in catalog["tools"]}
+                    )
+                except (ValueError, TypeError, ValidationError) as exc:
+                    feedback = {
+                        "message": str(exc),
+                        "proposal_id": proposal_id,
+                        "requirements_input_id": requirements_input_id,
+                        "prompt_manifest_id": prompt_manifest_id,
+                        "outcome_status": "not_checked",
+                    }
+                    self.store.event(
+                        run_id,
+                        "requirement_validation",
+                        "failed",
+                        "Requirement references need repair",
+                        feedback,
+                    )
+                    continue
+                analysis_id = self.store.put(
+                    "requirement_analysis", analysis.model_dump(mode="json")
+                )
+                self.store.event(
+                    run_id,
+                    "analyze",
+                    "completed",
+                    "Requirements interpreted; task coverage has not been evaluated",
+                    {
+                        "requirements_id": analysis_id,
+                        "requirements_input_id": requirements_input_id,
+                        "prompt_manifest_id": prompt_manifest_id,
+                        "obligation_count": len(obligations),
+                        "outcome_status": "not_checked",
+                    },
+                )
+                return {
+                    "requirements_id": analysis_id,
+                    "requirements_input_id": requirements_input_id,
+                    "prompt_manifest_id": prompt_manifest_id,
+                }
+            raise ValueError(f"No valid requirement analysis within repair limit: {feedback}")
 
         def collect(state):
             episodes, documents = [], []
@@ -397,21 +469,11 @@ class SurfaceEngine:
                 schema = request_json(
                     model,
                     f"schema.{attempt}",
-                    instruction
-                    + "\nDraft only S matching the supplied schema contract. Use meaningful domain "
-                    "entities/properties supporting the public tasks, not opaque tool-result blobs. "
-                    "Choose stable identities scoped to the observed location/time/source where needed. "
-                    "Do not encode particular answers or task IDs. Follow documented datatype names. "
-                    "Each response is extracted and validated separately before merging. Properties "
-                    "available only from another capability response must be optional. Cross-response "
-                    "completeness obligations are not enforced by this first-slice schema extractor. "
-                    "Descriptive metadata absent under another documented input route must also remain "
-                    "optional. Require only grounded identity and fields necessary across supported "
-                    "variants; keep task-specific completeness checks distinct from broad schema rules.",
+                    prompts["stages"]["schema"]["instruction"],
                     {
                         "surface": surface.description,
-                        "base_prompt": surface.base_prompt,
-                        "queries": [q.model_dump() for q in selected],
+                        "obligations": requirements_input["obligations"],
+                        "requirements": self.store.get(state["requirements_id"]),
                         "capabilities": catalog["tools"],
                         "observations": self.store.get(state["documents_id"]),
                         "sampled_episodes": [
@@ -426,6 +488,13 @@ class SurfaceEngine:
                 report = validate_ontology(
                     schema, self.store.root / "reasoner" / run_id / str(attempt)
                 )
+                schema_id = self.store.put("schema", schema)
+                report = {
+                    **report,
+                    "schema_artifact_id": schema_id,
+                    "requirements_id": state["requirements_id"],
+                    "prompt_manifest_id": prompt_manifest_id,
+                }
                 self.store.event(
                     run_id,
                     "ontology_validation",
@@ -435,7 +504,7 @@ class SurfaceEngine:
                 )
                 if report["valid"]:
                     return {
-                        "schema_id": self.store.put("schema", schema),
+                        "schema_id": schema_id,
                         "validation_id": self.store.put("ontology_validation", report),
                     }
                 feedback = report
@@ -448,6 +517,8 @@ class SurfaceEngine:
                 self.store.get(state["schema_id"]),
                 self.store.get(state["documents_id"]),
                 "construction_extract",
+                extraction_instruction=prompts["stages"]["extraction"]["instruction"],
+                prompt_manifest_id=prompt_manifest_id,
             )
             return {"graph_id": self.store.put("construction_graph", graph)}
 
@@ -458,38 +529,12 @@ class SurfaceEngine:
                 proposal = request_json(
                     model,
                     f"compose.{attempt}",
-                    instruction
-                    + "\nReturn the supplied FunctionProposal JSON schema exactly. Prefer one or two "
-                    "parameterized functions and avoid redundant copies for alternative native inputs. "
-                    "At least one useful composition must invoke "
-                    "a real capability and compute over its extracted evidence. invoke_capability "
-                    "takes capability (literal exact catalog id) and arguments (native MCP args). "
-                    "The executor automatically extracts this response into the current episode G; "
-                    "the operator returns {entities,entities_by_type,receipt_id}. entities_by_type "
-                    "maps every declared entity type to its list from THIS response. Prefer "
-                    "{$path:['fetch_step','entities_by_type','DeclaredType']} as filter/aggregate "
-                    "input so prior acquisitions are not mixed into a new request. Later graph steps "
-                    "operate on actual G. Do not supply graph or callback arguments. Each step calls "
-                    "one documented operator. References are {$arg:'input'}, {$step:'previous_id'}, "
-                    "{$path:['previous_id','field',0]}. Return result using these references. "
-                    "Inputs require JSON Schema object/properties/required/additionalProperties:false. "
-                    "The executor does not insert JSON Schema defaults. Every referenced input must "
-                    "be required and supplied by each probe. Pass entities explicitly to filters. "
-                    "For numeric comparisons use {property,operator,value}; minimum/maximum are only "
-                    "for between. aggregate_values takes items and request:{operation,...}, not "
-                    "operation as a top-level argument. Use the actual operator contracts exactly. "
-                    "Provide one probe on real task inputs per function. Preserve native parameter "
-                    "flexibility and valid alternative acquisition routes. Literal numeric API defaults "
-                    "are allowed when documented; request-specific thresholds/locations must be inputs. "
-                    "For alternative native input routes, prefer a required native_arguments object "
-                    "whose schema copies the registered input_schema and bind the entire object with "
-                    "{$arg:'native_arguments'}. Do not force one optional native field to be required "
-                    "because this sample used it. Preserve useful parent operations while extending "
-                    "coverage of this fresh sample. Distinct operations may use separate functions. "
-                    "Do not use extract_runtime_slots in this first slice; model decisions bind slots.",
+                    prompts["stages"]["functions"]["instruction"],
                     {
                         "surface": surface.description,
                         "queries": [q.model_dump() for q in selected],
+                        "obligations": requirements_input["obligations"],
+                        "requirements": self.store.get(state["requirements_id"]),
                         "schema": schema,
                         "graph": self.store.get(state["graph_id"]),
                         "capabilities": catalog["tools"],
@@ -504,6 +549,7 @@ class SurfaceEngine:
                     },
                     FunctionProposal.model_json_schema(),
                 )
+                proposal_id = self.store.put("function_proposal", proposal)
                 try:
                     functions = [
                         f.model_dump(mode="json")
@@ -521,6 +567,26 @@ class SurfaceEngine:
                         function_dataflow(f)["acquisition_computation_steps"] for f in functions
                     ):
                         raise ValueError("Acquisition-plus-computation witness is missing")
+                    coverage = validate_function_coverage(
+                        proposal["coverage"], obligations, functions
+                    )
+                    coverage_id = self.store.event(
+                        run_id,
+                        "coverage_validation",
+                        "passed" if coverage.structurally_complete else "failed",
+                        "Requirement links checked; task success remains Not checked",
+                        {
+                            **coverage.model_dump(mode="json"),
+                            "requirements_id": state["requirements_id"],
+                            "requirements_input_id": requirements_input_id,
+                            "proposal_id": proposal_id,
+                            "prompt_manifest_id": prompt_manifest_id,
+                        },
+                    )
+                    if not coverage.structurally_complete:
+                        raise ValueError(
+                            "Requirement linkage is incomplete: " + "; ".join(coverage.gaps)
+                        )
                     probes, covered = [], set()
                     tool_attempts = 0
                     for index, probe in enumerate(proposal["probes"]):
@@ -562,6 +628,10 @@ class SurfaceEngine:
                                 schema,
                                 receipt_documents(receipt),
                                 f"{probe_stage}.{tool_attempts}",
+                                extraction_instruction=prompts["stages"]["extraction"][
+                                    "instruction"
+                                ],
+                                prompt_manifest_id=prompt_manifest_id,
                             )
                             merged = merge_observations(schema, graph, incoming)
                             graph.clear()
@@ -639,6 +709,7 @@ class SurfaceEngine:
                         raise ValueError("Every function requires a real execution probe")
                     return {
                         "functions_id": self.store.put("functions", functions),
+                        "coverage_id": coverage_id,
                         "probes_id": self.store.event(
                             run_id,
                             "function_probes",
@@ -648,7 +719,13 @@ class SurfaceEngine:
                         ),
                     }
                 except (ValueError, KeyError, TypeError, ValidationError, SchemaError) as exc:
-                    error = {"message": f"{type(exc).__name__}: {exc}"}
+                    error = {
+                        "message": f"{type(exc).__name__}: {exc}",
+                        "proposal_id": proposal_id,
+                        "requirements_id": state["requirements_id"],
+                        "prompt_manifest_id": prompt_manifest_id,
+                        "repair_target": "functions",
+                    }
                     if isinstance(exc, FunctionExecutionError):
                         error.update(steps=exc.steps, dependencies=exc.dependencies)
                     self.store.event(
@@ -659,7 +736,22 @@ class SurfaceEngine:
         self.store.set_run(run_id, "running")
         try:
             # Explicit typed state is required for partial-update accumulation.
+            self.store.event(
+                run_id,
+                "construction_inputs",
+                "completed",
+                "Focused prompts and literal construction obligations saved",
+                {
+                    "prompt_manifest_id": prompt_manifest_id,
+                    "requirements_input_id": requirements_input_id,
+                    "obligation_count": len(obligations),
+                },
+            )
+
             class ConstructionEvidence(TypedDict, total=False):
+                requirements_input_id: str
+                requirements_id: str
+                prompt_manifest_id: str
                 episodes_id: str
                 documents_id: str
                 schema_id: str
@@ -667,9 +759,11 @@ class SurfaceEngine:
                 graph_id: str
                 functions_id: str
                 probes_id: str
+                coverage_id: str
 
             workflow = StateGraph(ConstructionEvidence)
             for name, node in [
+                ("analyze", analyze),
                 ("collect", collect),
                 ("draft", draft),
                 ("extract", extract),
@@ -677,7 +771,8 @@ class SurfaceEngine:
             ]:
                 workflow.add_node(name, node)
             for left, right in [
-                (START, "collect"),
+                (START, "analyze"),
+                ("analyze", "collect"),
                 ("collect", "draft"),
                 ("draft", "extract"),
                 ("extract", "compose"),
@@ -703,11 +798,15 @@ class SurfaceEngine:
                 "catalog": catalog,
                 "evidence": result,
                 "validation": self.store.get(result["validation_id"]),
-                "construction_prompt_sha256": hashlib.sha256(instruction.encode()).hexdigest(),
+                "construction_prompt_manifest_id": prompt_manifest_id,
+                "construction_prompt_manifest_sha256": hashlib.sha256(
+                    canonical(prompts)
+                ).hexdigest(),
                 "assessment": {
                     "status": "candidate",
                     "logical_validity": "passed",
                     "function_execution": "passed",
+                    "requirement_linkage": "passed",
                     "fresh_task_success": "unmeasured",
                 },
             }

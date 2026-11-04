@@ -24,6 +24,8 @@ The three screens are **Setup**, **Construction**, and **Inference**. Setup conn
 
 Existing Coffee and USGS runs remain inspectable. Corpus execution, revision operations, and the MCP commands remain available through the backend and CLI. HTTP authentication, automatic outer refinement, and manual schema editing are outside this release.
 
+MCP construction uses separate requirement-analysis, schema, extraction, and function-composition prompts. Each run saves their exact text and hashes. Literal sampled requests and public requirements receive stable identifiers; the backend rejects omitted requirements, unknown references, and missing or explicitly unsupported function mappings before probing a candidate. These are declaration checks, not proof of semantic coverage or task success. Function probes and independent task assessments remain separate evidence. Task scope and representative cases still define what construction is expected to cover.
+
 For frontend development, run `oak serve` and `npm --prefix frontend run dev` in separate terminals. Vite proxies `/api` to the loopback backend. The production server serves `frontend/dist` and `/api/v1` from the same origin. Keep the server bound to loopback.
 
 MCP onboarding, construction, and inference also use the CLI:

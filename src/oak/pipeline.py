@@ -9,6 +9,7 @@ from typing import TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
+from oak.construction_prompts import prompt_manifest
 from oak.functions import FunctionSpec, execute_function, validate_functions
 from oak.model import GeminiCLI, ModelOutputError, runtime_config
 from oak.ontology import parse_schema, schema_json_schema, validate_graph_records, validate_ontology
@@ -98,8 +99,15 @@ def build_graph(
     documents: list[dict],
     stage: str,
     feedback: str | None = None,
+    *,
+    extraction_instruction: str | None = None,
+    prompt_manifest_id: str | None = None,
 ) -> dict:
     """Extract real records through Gemini, merge by typed primary key, and reject omissions."""
+    if extraction_instruction is None:
+        prompts = prompt_manifest()
+        prompt_manifest_id = store.put("construction_prompts", prompts)
+        extraction_instruction = prompts["stages"]["extraction"]["instruction"]
     spec = parse_schema(schema)
     node_map, relation_candidates, ignored = {}, [], []
     source_records = {
@@ -126,18 +134,7 @@ def build_graph(
         payload = request_json(
             model,
             f"{stage}.{index}",
-            "Extract all facts expressible under the schema from these actual evidence documents. "
-            "Return {entities:[{type,properties,source_ids:[document_id]}], "
-            "relations:[{relation,source_type,source_key,target_type,target_key,source_ids:[document_id]}], "
-            "ignored:[{document_id,reason}]}. Every input document must appear in entity/relation source_ids "
-            "or ignored with an explicit reason. Do not fabricate properties or keys. Missing optional values "
-            "may be omitted. Use actual numeric values and ISO strings for dates. Retain source units; explain "
-            "any necessary conversion in the declared property description. Use supplied stable source IDs "
-            "as an identity only when schema declares a source identifier. Local d0/d1 aliases are citation IDs, "
-            "never stable entity keys. Return actual records, never an extraction program. "
-            "For repeated record types, use entity_tables:[{type,columns:[property_name],rows:[{values:[actual_value],source_ids:[document_id]}]}] "
-            "instead of entities to reduce repetition. Each values array must align exactly with columns. "
-            "Use an empty entities or entity_tables list when using the other format.",
+            extraction_instruction,
             {"schema": schema, "documents": prompt_docs, "previous_validation_error": feedback},
         )
         if not isinstance(payload, dict):
@@ -217,7 +214,12 @@ def build_graph(
             f"{stage}.{index}",
             "completed",
             f"Extracted chunk {index + 1}",
-            {"extraction": payload, "citation_aliases": aliases, "document_count": len(chunk)},
+            {
+                "extraction": payload,
+                "citation_aliases": aliases,
+                "document_count": len(chunk),
+                "prompt_manifest_id": prompt_manifest_id,
+            },
         )
     edges_by_identity = {}
     for relation in relation_candidates:
