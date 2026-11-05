@@ -1,0 +1,7 @@
+{
+  "source_artifact": "8a99b776b9331d2693b54790c5631c54013ba85e3696936b3a15510fc8daab81",
+  "source_sha256": "8a99b776b9331d2693b54790c5631c54013ba85e3696936b3a15510fc8daab81",
+  "derivative_sha256": "403563d2b4a2853b411151e30dbdf73194da5699eb65d818d847b0d08a4f9cf9",
+  "transformation": "Select returncode and parsed stdout; omit session_id. No answer or diagnostics fabricated.",
+  "source_context": "Actual Atlanta weather extraction interrupted at the Gemini CLI session-turn limit; recorded 2026-11-04."
+}

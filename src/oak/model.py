@@ -90,6 +90,44 @@ class ModelOutputError(ValueError):
         )
 
 
+class ModelInterruptedError(RuntimeError):
+    """Provider execution stopped before completion, even if the CLI exited zero.
+
+    This is deliberately not ModelOutputError. Repeating a formatting repair
+    would make another paid call without resolving the execution interruption.
+    """
+
+    def __init__(self, reason: str, evidence_id: str | None = None):
+        self.reason = reason
+        self.evidence_id = evidence_id
+        suffix = f"; inspect artifact {evidence_id}" if evidence_id else ""
+        super().__init__(f"Gemini execution interrupted: {reason}{suffix}")
+
+
+def validate_cli_completion(outer: dict, returncode: int) -> None:
+    """Check execution metadata before parsing generated output.
+
+    Only CLI metadata is inspected, never model-generated answer text. A
+    zero exit status and zero native tool calls do not establish completion.
+    Usage settlement is separate and retains unknown reservations.
+    """
+    warnings = outer.get("warnings", [])
+    if isinstance(warnings, list) and any(
+        isinstance(warning, str) and "maximum session turns exceeded" in warning.casefold()
+        for warning in warnings
+    ):
+        raise ModelInterruptedError("Maximum session turns exceeded")
+    if returncode != 0 or outer.get("error"):
+        raise RuntimeError(f"Gemini CLI failed with exit code {returncode}")
+    stats = outer.get("stats")
+    if (
+        not isinstance(stats, dict)
+        or not isinstance(stats.get("tools"), dict)
+        or stats["tools"].get("totalCalls") != 0
+    ):
+        raise RuntimeError("Gemini CLI native tool calls were nonzero or unreported")
+
+
 def runtime_config() -> dict:
     return json.loads((PROJECT / "config/runtime.json").read_text())
 
@@ -356,14 +394,7 @@ class GeminiCLI:
         failure = None
         value = None
         try:
-            if result.returncode != 0 or outer.get("error"):
-                raise RuntimeError(f"Gemini CLI failed with exit code {result.returncode}")
-            if (
-                not isinstance(stats, dict)
-                or not isinstance(stats.get("tools"), dict)
-                or stats["tools"].get("totalCalls") != 0
-            ):
-                raise RuntimeError("Gemini CLI native tool calls were nonzero or unreported")
+            validate_cli_completion(outer, result.returncode)
             text = outer.get("response", "").strip()
             if text.startswith("```"):
                 text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
@@ -382,6 +413,9 @@ class GeminiCLI:
         ) as error:
             failure = error
             evidence["validation_error"] = redact_diagnostic(str(error))
+            if isinstance(error, ModelInterruptedError):
+                evidence["failure_category"] = "execution_interrupted"
+                evidence["repairable_output"] = False
         self.store.settle(call_id, estimated, evidence)
         raw_id = self.store.event(
             self.run_id,
@@ -391,6 +425,8 @@ class GeminiCLI:
             evidence,
         )
         if failure:
+            if isinstance(failure, ModelInterruptedError):
+                raise ModelInterruptedError(failure.reason, raw_id) from None
             if not isinstance(failure, RuntimeError):
                 raise ModelOutputError(
                     raw_id,
