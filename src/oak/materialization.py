@@ -16,10 +16,12 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, JsonValue, model_validator
 
+from oak.functions import FunctionSpec
+from oak.mcp_bridge import _validator
 from oak.ontology import parse_schema, validate_graph_records
 from oak.operators import lookup_entities, traverse_relations
 
-MATERIALIZATION_VERSION = "demand-v1"
+MATERIALIZATION_VERSION = "demand-v2"
 CoverageMode = Literal["witness", "complete_scope", "complete_adjacency"]
 
 
@@ -91,6 +93,179 @@ class MaterializationPlan(MaterializationContract):
     expansion_reason: str | None = None
 
 
+class AcquisitionBinding(MaterializationContract):
+    """Frozen source binding for a pure callable, separate from its implementation.
+
+    The expression language only binds declared function inputs to a catalogued
+    tool's native arguments. It cannot select a tool dynamically, execute code,
+    or interpret the question. Authorization remains the executor's catalog.
+    """
+
+    format_version: Literal[1] = 1
+    function_name: str
+    schema_sha256: str
+    function_sha256: str
+    capability_id: str
+    native_arguments: dict[str, JsonValue]
+    contract_id: str
+
+    @property
+    def binding_id(self) -> str:
+        """Content identity pins the computation, template, and tool contract."""
+        return _digest(self.model_dump(mode="json"))
+
+
+class PreparedAcquisition(MaterializationContract):
+    """Validated executor request, with no side effects during preparation."""
+
+    capability: str
+    arguments: dict[str, JsonValue]
+    contract_id: str
+    binding_id: str
+
+
+class PreparedMaterialization(MaterializationContract):
+    """Demand and authorized source requests for one immutable function call."""
+
+    demand: EvidenceDemand
+    acquisitions: list[PreparedAcquisition] = Field(default_factory=list)
+
+
+def _binding_tool(capability_id: str, capabilities: list[dict]) -> dict:
+    matches = [tool for tool in capabilities if tool.get("id") == capability_id]
+    if len(matches) != 1:
+        raise ValueError(f"Source binding requires one authorized capability: {capability_id}")
+    tool = matches[0]
+    annotations = tool.get("annotations") or {}
+    if annotations.get("readOnlyHint") is False or annotations.get("destructiveHint") is True:
+        raise ValueError("Source binding requires an authorized read-only capability")
+    if not isinstance(tool.get("contract_id"), str) or not tool["contract_id"]:
+        raise ValueError("Source binding requires a recorded tool contract identity")
+    _validator(tool["input_schema"])
+    return tool
+
+
+def _bind_template(
+    value: Any, input_names: set[str], arguments: dict | None, *, depth: int = 0
+) -> Any:
+    """Validate or bind the small source-argument language without execution."""
+    if depth > 24:
+        raise ValueError("Source binding template exceeds the nesting limit of 24")
+    if isinstance(value, dict):
+        if any(key.startswith("$") for key in value):
+            if set(value) == {"$arg"}:
+                path = [value["$arg"]]
+            elif set(value) == {"$arg_path"}:
+                path = value["$arg_path"]
+                if not isinstance(path, list) or len(path) < 2:
+                    raise ValueError("$arg_path starts with an input name and field/index keys")
+            else:
+                raise ValueError("Source bindings support only exact $arg and $arg_path")
+            if (
+                not isinstance(path[0], str)
+                or path[0] not in input_names
+                or any(
+                    isinstance(part, bool)
+                    or not isinstance(part, str | int)
+                    or (isinstance(part, int) and part < 0)
+                    for part in path[1:]
+                )
+            ):
+                raise ValueError("Source binding references an undeclared input or invalid path")
+            if arguments is None:
+                return deepcopy(value)
+            result: Any = arguments
+            for part in path:
+                if isinstance(result, dict) and isinstance(part, str) and part in result:
+                    result = result[part]
+                elif isinstance(result, list) and isinstance(part, int) and part < len(result):
+                    result = result[part]
+                else:
+                    raise ValueError("Source binding input path is absent or has the wrong type")
+            return deepcopy(result)
+        return {
+            key: _bind_template(item, input_names, arguments, depth=depth + 1)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [_bind_template(item, input_names, arguments, depth=depth + 1) for item in value]
+    return deepcopy(value)
+
+
+def freeze_acquisition_binding(
+    schema: dict,
+    function: dict,
+    capability_id: str,
+    native_arguments: dict,
+    capabilities: list[dict],
+) -> AcquisitionBinding:
+    """Pin a generated source template to an actual authorized tool contract."""
+    parse_schema(schema)
+    FunctionSpec.model_validate(function)
+    tool = _binding_tool(capability_id, capabilities)
+    _bind_template(native_arguments, set(function["inputs"].get("properties", {})), None)
+    if not _unresolved(native_arguments):
+        _validator(tool["input_schema"]).validate(native_arguments)
+    return AcquisitionBinding(
+        function_name=function["name"],
+        schema_sha256=_digest(schema),
+        function_sha256=_digest(function),
+        capability_id=capability_id,
+        native_arguments=deepcopy(native_arguments),
+        contract_id=tool["contract_id"],
+    )
+
+
+def prepare_bound_materialization(
+    schema: dict,
+    function: dict,
+    arguments: dict,
+    bindings: list[AcquisitionBinding | dict],
+    capabilities: list[dict],
+) -> PreparedMaterialization:
+    """Prepare demands and native calls, without acquiring or spending anything.
+
+    Frozen function and source contracts must still match. Selectors stay in the
+    graph demand unless the generated template explicitly binds an actual native
+    input. A question-specific selector is never added to an MCP request by guess.
+    """
+    FunctionSpec.model_validate(function)
+    _validator(function["inputs"]).validate(arguments)
+    requests: list[PreparedAcquisition] = []
+    seen: set[str] = set()
+    for raw in bindings:
+        binding = (
+            raw if isinstance(raw, AcquisitionBinding) else AcquisitionBinding.model_validate(raw)
+        )
+        if binding.function_name != function["name"]:
+            continue
+        if binding.schema_sha256 != _digest(schema) or binding.function_sha256 != _digest(function):
+            raise ValueError("Source binding does not match the frozen schema/function")
+        tool = _binding_tool(binding.capability_id, capabilities)
+        if tool["contract_id"] != binding.contract_id:
+            raise ValueError("Source binding tool contract changed")
+        native = _bind_template(
+            binding.native_arguments, set(function["inputs"].get("properties", {})), arguments
+        )
+        if not isinstance(native, dict):
+            raise ValueError("Source binding must produce an object of native arguments")
+        _validator(tool["input_schema"]).validate(native)
+        identity = _digest({"capability": binding.capability_id, "arguments": native})
+        if identity in seen:
+            continue
+        seen.add(identity)
+        requests.append(
+            PreparedAcquisition(
+                capability=binding.capability_id,
+                arguments=native,
+                contract_id=binding.contract_id,
+                binding_id=binding.binding_id,
+            )
+        )
+    demand = derive_demand(schema, function, arguments)
+    return PreparedMaterialization(demand=demand, acquisitions=requests)
+
+
 class MissingFact(MaterializationContract):
     """Absence is attributed rather than silently converted to a null value."""
 
@@ -157,14 +332,31 @@ class SufficiencyResult(MaterializationContract):
     edge_count: int = Field(ge=0)
 
 
-def _resolve_arguments(value: Any, arguments: dict[str, Any]) -> Any:
-    """Bind input references while preserving unresolved execution references."""
+def _resolve_arguments(
+    value: Any, arguments: dict[str, Any], step_outputs: dict[str, Any] | None = None
+) -> Any:
+    """Bind inputs and actual prior outputs, preserving unresolved references."""
+    outputs = step_outputs or {}
     if isinstance(value, dict):
         if set(value) == {"$arg"}:
             return deepcopy(arguments.get(value["$arg"], value))
-        return {key: _resolve_arguments(item, arguments) for key, item in value.items()}
+        if set(value) == {"$step"} and value["$step"] in outputs:
+            return deepcopy(outputs[value["$step"]])
+        if set(value) == {"$path"}:
+            path = value["$path"]
+            if isinstance(path, list) and path and path[0] in outputs:
+                result = outputs[path[0]]
+                for key in path[1:]:
+                    if isinstance(result, list) and type(key) is int and 0 <= key < len(result):
+                        result = result[key]
+                    elif isinstance(result, dict) and isinstance(key, str) and key in result:
+                        result = result[key]
+                    else:
+                        raise ValueError("Demand path does not match the actual step output")
+                return deepcopy(result)
+        return {key: _resolve_arguments(item, arguments, outputs) for key, item in value.items()}
     if isinstance(value, list):
-        return [_resolve_arguments(item, arguments) for item in value]
+        return [_resolve_arguments(item, arguments, outputs) for item in value]
     return value
 
 
@@ -193,16 +385,24 @@ def _required_properties(spec, entity_type: str) -> set[str]:
     return result
 
 
-def derive_demand(schema: dict, function: dict, arguments: dict) -> EvidenceDemand:
+def derive_demand(
+    schema: dict,
+    function: dict,
+    arguments: dict,
+    *,
+    step_outputs: dict[str, Any] | None = None,
+) -> EvidenceDemand:
     """Derive conservative information needs without interpreting natural language.
 
-    Dynamic step-derived selectors broaden the demand and remain unknown. Exact
+    Dynamic step-derived selectors broaden the demand until real prior outputs
+    are supplied. Output paths bind from those values, never from predictions. Exact
     primary-key or ID lookup can use witness coverage. Aggregation always needs
     population coverage; traversal requires complete adjacency. Type hints in
     acquisition result paths are recognized from the existing executor format.
     """
     spec = parse_schema(schema)
     selected: set[str] = set()
+    acquired_types: set[str] = set()
     fields: set[str] = set()
     relations: set[str] = set()
     selectors: list[EntitySelector] = []
@@ -234,9 +434,15 @@ def derive_demand(schema: dict, function: dict, arguments: dict) -> EvidenceDema
         nonlocal needs_all_fields
         if isinstance(value, dict):
             path = value.get("$path")
-            if isinstance(path, list) and len(path) >= 3 and path[1] == "entities_by_type":
+            if (
+                isinstance(path, list)
+                and len(path) >= 3
+                and path[0] in graph_value_steps
+                and path[1] == "entities_by_type"
+            ):
                 if path[2] in spec.entity_types:
                     selected.add(path[2])
+                    acquired_types.add(path[2])
             if isinstance(path, list) and path and path[0] in graph_value_steps:
                 for position, part in enumerate(path[1:], 1):
                     if part == "properties":
@@ -274,8 +480,8 @@ def derive_demand(schema: dict, function: dict, arguments: dict) -> EvidenceDema
     collect_path_types(function.get("result"))
     for step in function.get("steps", []):
         operator = step["operator"]
-        args = _resolve_arguments(step.get("args", {}), arguments)
-        collect_path_types(args)
+        collect_path_types(step.get("args", {}))
+        args = _resolve_arguments(step.get("args", {}), arguments, step_outputs)
         if operator == "invoke_capability":
             if step["id"] in acquisition_entity_results:
                 graph_read = True
@@ -387,6 +593,10 @@ def derive_demand(schema: dict, function: dict, arguments: dict) -> EvidenceDema
 
     if graph_read and not selected:
         selected.update(spec.entity_types)
+    # An acquisition result path reads the whole returned type population. A
+    # traversal endpoint declaration alone does not: it is restricted by the
+    # resolved frontier and must not pull every endpoint of that type into G.
+    selectors.extend(EntitySelector(entity_types=[name]) for name in sorted(acquired_types))
     if unresolved_fields:
         unknowns.append("Required property names depend on runtime values")
     if unresolved_frontier:
@@ -441,6 +651,48 @@ def derive_demand(schema: dict, function: dict, arguments: dict) -> EvidenceDema
     )
 
 
+def derive_step_demand(
+    schema: dict,
+    function: dict,
+    arguments: dict,
+    step_id: str,
+    *,
+    step_outputs: dict[str, Any] | None = None,
+) -> EvidenceDemand:
+    """Activate graph scope through the impending step using actual prior outputs.
+
+    Future lookups, acquisition, and traversal do not force all their scopes into
+    the first slice. Property dependencies from the complete frozen computation
+    remain present, so entities returned by earlier steps keep the fields later
+    pure operations need. This is an executor preparation helper, not a changed
+    callable: the resulting demand pins the original full function identity.
+    """
+    steps = function.get("steps", [])
+    positions = [index for index, step in enumerate(steps) if step["id"] == step_id]
+    if len(positions) != 1:
+        raise ValueError("Materialization step is absent or ambiguous in the frozen function")
+    boundary = positions[0]
+    scope_operators = {
+        "lookup_entities",
+        "traverse_relations",
+        "filter_relation_connected",
+        "invoke_capability",
+    }
+    scoped = deepcopy(function)
+    scoped["steps"] = [
+        step
+        for index, step in enumerate(steps)
+        if index <= boundary or step["operator"] not in scope_operators
+    ]
+    demand = derive_demand(schema, scoped, arguments, step_outputs=step_outputs)
+    unknowns = list(demand.unknowns)
+    if len(scoped["steps"]) < len(steps):
+        unknowns.append("Future graph-read scopes await their actual execution boundary")
+    return demand.model_copy(
+        update={"function_sha256": _digest(function), "unknowns": sorted(set(unknowns))}
+    )
+
+
 def extraction_schema(schema: dict, demand: EvidenceDemand) -> dict:
     """Return the unchanged frozen schema after validating the demand binding.
 
@@ -468,13 +720,6 @@ def _selected_nodes(graph: dict, demand: EvidenceDemand) -> set[str]:
                     property_filters=selector.property_filters,
                 )
             )
-        # Types read directly from acquisition results lack lookup selectors.
-        selector_types = {name for selector in demand.selectors for name in selector.entity_types}
-        selected.update(
-            node["id"]
-            for node in graph.get("nodes", [])
-            if node["type"] in set(demand.entity_types) - selector_types
-        )
     elif not demand.traversals:
         selected.update(
             node["id"] for node in graph.get("nodes", []) if node["type"] in demand.entity_types

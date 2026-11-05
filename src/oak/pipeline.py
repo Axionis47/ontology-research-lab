@@ -12,7 +12,13 @@ from langgraph.graph import END, START, StateGraph
 
 from oak.construction_prompts import prompt_manifest
 from oak.functions import FunctionSpec, execute_function, validate_functions
-from oak.materialization import EvidenceDemand, assess_sufficiency, derive_demand, slice_graph
+from oak.materialization import (
+    EvidenceDemand,
+    assess_sufficiency,
+    derive_demand,
+    derive_step_demand,
+    slice_graph,
+)
 from oak.model import GeminiCLI, ModelOutputError, runtime_config
 from oak.ontology import parse_schema, schema_json_schema, validate_graph_records, validate_ontology
 from oak.operators import operator_contracts
@@ -403,8 +409,9 @@ def answer(
         try:
             demand = None
             working_graph = graph
+            selected = None
             if materialize is not None:
-                from oak.bootstrap import merge_observations
+                from oak.bootstrap import empty_graph, merge_observations
 
                 selected = next(
                     (
@@ -416,28 +423,53 @@ def answer(
                 )
                 if selected is None:
                     raise ValueError("Selected function is absent from the frozen kernel")
-                demand = derive_demand(schema, selected, decision["args"])
+                working_graph = empty_graph()
+
+            materialized_demands = set()
+
+            def before_step(
+                *,
+                step_id,
+                operator,
+                arguments,
+                step_outputs,
+                selected=selected,
+                decision=decision,
+                materialized_demands=materialized_demands,
+                working_graph=working_graph,
+            ):
+                nonlocal demand, graph
+                from oak.operators import GRAPH_OPERATORS
+
+                if materialize is None or operator not in GRAPH_OPERATORS:
+                    return
+                demand = derive_step_demand(
+                    schema, selected, decision["args"], step_id, step_outputs=step_outputs
+                )
+                if demand.demand_id in materialized_demands:
+                    return
                 incoming = materialize(demand)
                 graph = merge_observations(schema, graph, incoming)
                 revision["graph"] = graph
-                working_graph = slice_graph(schema, graph, demand)
+                current = slice_graph(schema, graph, demand)
+                working_graph.clear()
+                working_graph.update(current)
+                materialized_demands.add(demand.demand_id)
                 store.event(
                     model.run_id,
                     "graph_snapshot",
                     "completed",
-                    "Expanded actual corpus evidence",
+                    "Expanded corpus evidence at the graph operation boundary",
                     graph,
                 )
-                observation["evidence_scope"] = assess_sufficiency(
-                    schema, working_graph, demand
-                ).model_dump(mode="json")
-                observation["working_graph_id"] = store.put("function_graph", working_graph)
+
             output = execute_function(
                 working_graph,
                 functions,
                 decision["function"],
                 decision["args"],
                 schema=schema,
+                before_step=before_step,
                 slot_extractor=lambda **kwargs: request_json(
                     model,
                     stage + ".slots",
@@ -445,6 +477,21 @@ def answer(
                     kwargs,
                 ),
             )
+            if materialize is not None:
+                demand = derive_demand(
+                    schema,
+                    selected,
+                    decision["args"],
+                    step_outputs={
+                        item["id"]: item["output"]
+                        for item in output["steps"]
+                        if item["status"] == "completed"
+                    },
+                )
+                observation["evidence_scope"] = assess_sufficiency(
+                    schema, working_graph, demand
+                ).model_dump(mode="json")
+                observation["working_graph_id"] = store.put("function_graph", working_graph)
             observation.update(
                 status="completed", value=output["value"], dependencies=output["dependencies"]
             )

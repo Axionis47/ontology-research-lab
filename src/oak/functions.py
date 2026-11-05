@@ -356,6 +356,7 @@ def execute_function(
     slot_extractor: Callable[..., dict[str, Any]] | None = None,
     capability_invoker: Callable[..., dict[str, Any]] | None = None,
     step_observer: Callable[[dict[str, Any]], None] | None = None,
+    before_step: Callable[..., None] | None = None,
 ) -> dict[str, Any]:
     """Execute a validated typed function and retain actual inputs, outputs, and dependencies.
 
@@ -363,6 +364,11 @@ def execute_function(
     This includes negative/aggregate query dependencies; it does not claim minimal
     invalidation coverage. Failed executions raise FunctionExecutionError with traces.
     An optional observer receives real operator boundaries for durable event logging.
+    An executor-owned ``before_step`` callback receives keyword arguments
+    ``step_id``, ``operator``, ``arguments``, and ``step_outputs`` after binding.
+    It may materialize evidence in the shared graph before the primitive runs.
+    Inputs and earlier outputs passed to it are copies. New graph records are
+    validated and included in dependency evidence, including when execution fails.
     """
     checked = validate_functions(catalog, schema)
     selected = next((entry for entry in checked if entry.name == name), None)
@@ -387,19 +393,30 @@ def execute_function(
         "source_ids": [],
         "sources": [],
     }
-    source_records = {
-        json.dumps(source, sort_keys=True): source
-        for item in [*graph["nodes"], *graph.get("edges", [])]
-        for source in item.get("sources", [])
-    }
-    dependencies["sources"] = [source_records[key] for key in sorted(source_records)]
-    dependencies["source_ids"] = sorted(
-        {
-            str(source.get("document_id") or source.get("source_id") or source.get("source_ref"))
-            for source in dependencies["sources"]
-            if source.get("document_id") or source.get("source_id") or source.get("source_ref")
-        }
-    )
+    source_records: dict[str, dict] = {}
+
+    def record_graph_dependencies() -> None:
+        """Retain initial and incrementally acquired provenance, even on failure."""
+        source_records.update(
+            {
+                json.dumps(source, sort_keys=True): deepcopy(source)
+                for item in [*graph["nodes"], *graph.get("edges", [])]
+                for source in item.get("sources", [])
+            }
+        )
+        dependencies["sources"] = [source_records[key] for key in sorted(source_records)]
+        dependencies["source_ids"] = sorted(
+            {
+                str(
+                    source.get("document_id") or source.get("source_id") or source.get("source_ref")
+                )
+                for source in dependencies["sources"]
+                if source.get("document_id") or source.get("source_id") or source.get("source_ref")
+            }
+        )
+        dependencies["graph_after_sha256"] = digest(graph)
+
+    record_graph_dependencies()
     results: dict[str, Any] = {}
     traces = []
     for step in selected.steps:
@@ -410,6 +427,20 @@ def execute_function(
         try:
             resolved = _resolve(step.args, args, results)
             trace["inputs"] = deepcopy(resolved)
+            if before_step is not None:
+                trace["graph_before_sha256"] = digest(graph)
+                before_step(
+                    step_id=step.id,
+                    operator=step.operator,
+                    arguments=deepcopy(resolved),
+                    step_outputs=deepcopy(results),
+                )
+                graph_validation = validate_graph_records(
+                    schema, graph["nodes"], graph.get("edges", [])
+                )
+                if not graph_validation["valid"]:
+                    raise ValueError(f"Invalid materialized graph: {graph_validation['errors']}")
+                trace["graph_materialized_sha256"] = digest(graph)
             _check_membership(resolved, schema, runtime=True)
             _check_evidence_inputs(resolved, graph)
             invocation = dict(resolved)
@@ -431,6 +462,7 @@ def execute_function(
             trace.update(status="completed", output=deepcopy(value))
             results[step.id] = value
         except Exception as error:
+            record_graph_dependencies()
             trace.update(status="failed", error=f"{type(error).__name__}: {error}")
             trace["duration_seconds"] = round(time.monotonic() - started, 6)
             traces.append(trace)
@@ -443,6 +475,7 @@ def execute_function(
         traces.append(trace)
         if step_observer is not None:
             step_observer(deepcopy(trace))
+    record_graph_dependencies()
     try:
         output = _resolve(selected.result, args, results)
         Draft202012Validator(selected.output_schema, format_checker=FormatChecker()).validate(
@@ -452,5 +485,4 @@ def execute_function(
         raise FunctionExecutionError(
             f"{name} output contract: {error}", steps=traces, dependencies=dependencies
         ) from error
-    dependencies["graph_after_sha256"] = digest(graph)
     return {"value": output, "steps": traces, "dependencies": dependencies}
