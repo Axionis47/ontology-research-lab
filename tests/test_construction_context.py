@@ -17,6 +17,7 @@ from oak.bootstrap import FunctionProposal, receipt_documents
 from oak.construction_context import compact_construction_context, expand_construction_context
 from oak.construction_prompts import stage_prompt
 from oak.functions import FunctionSpec
+from oak.learning import repair_feedback
 from oak.ontology import schema_json_schema
 from oak.operators import operator_contracts
 from oak.store import canonical
@@ -91,17 +92,20 @@ def test_exact_failed_schema_payload_roundtrips_below_existing_limit(schema_inpu
     assert request_size(schema_inputs) > 120_000
     assert request_size(compact) < 120_000
     assert request_size(compact) < request_size(schema_inputs) * 0.6
-    assert {key: len(value) for key, value in compact["definitions"].items()} == {
+    assert {
+        key: len(value) for key, value in compact["definitions"].items() if key != "shared"
+    } == {
         "programs": 70,
         "fields": 3,
         "operations": 20,
         "input_domains": 1,
     }
-    # All non-program obligation/behavior metadata, including IDs and frozen
-    # denominators, stays inline and identical rather than being summarized.
+    # All obligation/behavior metadata and frozen denominators reconstruct
+    # identically. Shared values are references, never summaries.
+    restored = expand_construction_context(compact)
     for name, collection in (("task_ir", "obligations"), ("behavior_bank", "behaviors")):
         before = schema_inputs[name]
-        after = compact["inputs"][name]
+        after = restored[name]
         assert {key: value for key, value in before.items() if key != collection} == {
             key: value for key, value in after.items() if key != collection
         }
@@ -137,7 +141,7 @@ def test_genuine_composition_components_fit_without_contract_or_graph_elision(
     }
     assert request_size(components, **size_args) > 120_000
     assert request_size(compact, **size_args) < 120_000
-    for key in ("schema", "graph", "parent_functions", "operators", "function_contract"):
+    for key in ("schema", "graph", "operators", "function_contract"):
         assert compact["inputs"][key] == components[key]
 
 
@@ -173,7 +177,7 @@ def test_task_program_shaped_source_content_is_never_reinterpreted(schema_inputs
         "observations": [{"program": program}],
         "capabilities": [{"input_schema": program}],
         "schema": {"properties": program},
-        "validation_feedback": {"task_ir": schema_inputs["task_ir"]},
+        "arbitrary_payload": {"task_ir": schema_inputs["task_ir"]},
     }
     compact = compact_construction_context(payload)
     assert all(not value for value in compact["definitions"].values())
@@ -193,4 +197,81 @@ def test_changed_or_missing_definitions_fail_expansion(schema_inputs):
     with pytest.raises(ValueError, match="Missing field definition"):
         expand_construction_context(damaged)
     with pytest.raises(ValueError, match="Unsupported construction context encoding"):
-        expand_construction_context({**compact, "version": 2})
+        expand_construction_context({**compact, "version": 3})
+
+
+@pytest.mark.parametrize(
+    ("request_id", "feedback_slot", "parent_slot", "parent_key"),
+    [
+        (
+            "f6c14a9b582d5986462c5da088f4e0d44d11205510d15b5ca70a70445ed03cce",
+            "validation_feedback",
+            "previous_schema",
+            "schema",
+        ),
+        (
+            "abce02580b7a3db4c3fa49f9dca1feb850cc9c533d3167aab64d6b279e50794a",
+            "execution_feedback",
+            "parent_functions",
+            "functions",
+        ),
+    ],
+)
+def test_real_later_round_feedback_and_parent_fit_without_dropping_checks(
+    evidence, request_id, feedback_slot, parent_slot, parent_key
+):
+    """Rebuild later-round inputs from the actual successful preceding round."""
+    kernel = evidence("c63045e6fd83601911a6252dcad21d1098b44a74f049cd41331ef3aa5c2821c4")
+    report = evidence("f63ac3762a1e26375fd529eec120f3fa4863c1f46523165a80c0783ee291d321")
+    request = json.loads(evidence(request_id)["request"]["prompt"])
+    inputs = expand_construction_context(request["inputs"])
+    feedback = repair_feedback(report)
+    feedback["historical_replay"] = report["historical_replay"]["feedback"]
+    feedback["behavior_counterexamples"] = [
+        item for item in report["behavior_evaluation"]["checks"] if item["status"] != "passed"
+    ]
+    assert len(canonical(feedback)) == 32960
+    inputs[feedback_slot] = feedback
+    inputs[parent_slot] = kernel[parent_key]
+    before = canonical(inputs)
+    compact = compact_construction_context(inputs)
+    assert canonical(inputs) == before
+    assert canonical(expand_construction_context(compact)) == before
+    assert len(canonical({**request, "inputs": compact})) < 120_000
+    assert compact["definitions"]["shared"]
+    for key in ("observations", "capabilities", "schema", "previous_schema", "graph"):
+        if key in inputs:
+            assert compact["inputs"][key] == inputs[key]
+    restored = expand_construction_context(compact)
+    assert (
+        restored[feedback_slot]["behavior_counterexamples"] == feedback["behavior_counterexamples"]
+    )
+    assert restored[feedback_slot]["counterexamples"] == feedback["counterexamples"]
+
+    # Shared definitions are complete literal values. They never contain
+    # another generated $shared reference, so expansion cannot form cycles.
+    def has_reference(value):
+        if isinstance(value, dict):
+            return set(value) == {"$shared"} or any(has_reference(item) for item in value.values())
+        return isinstance(value, list) and any(has_reference(item) for item in value)
+
+    assert not any(has_reference(value) for value in compact["definitions"]["shared"].values())
+    changed = deepcopy(compact)
+    identity = next(iter(changed["definitions"]["shared"]))
+    changed["definitions"]["shared"][identity] = "Corrupted inspection copy"
+    with pytest.raises(ValueError, match="Changed shared definition"):
+        expand_construction_context(changed)
+
+
+def test_literal_shared_syntax_is_not_interpreted_and_cycles_are_rejected(schema_inputs):
+    program = schema_inputs["requirements"]["interpretations"][0]["program"]
+    feedback = {"first": program, "second": program, "literal": {"$shared": "source-literal"}}
+    payload = {"validation_feedback": feedback}
+    compact = compact_construction_context(payload)
+    assert "validation_feedback" not in compact["shared_slots"]
+    assert compact["inputs"]["validation_feedback"] == feedback
+    assert expand_construction_context(compact) == payload
+    cyclic = {}
+    cyclic["validation_feedback"] = cyclic
+    with pytest.raises(ValueError, match="Circular reference"):
+        compact_construction_context(cyclic)

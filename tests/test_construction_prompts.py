@@ -15,7 +15,7 @@ PROJECT = Path(__file__).resolve().parents[1]
 def test_manifest_pins_exact_sources_and_assembled_prompts() -> None:
     """A saved manifest can reproduce prompts after source files later change."""
     manifest = prompt_manifest()
-    assert manifest["version"] == 5
+    assert manifest["version"] == 6
     sources = {source["path"]: source for source in manifest["sources"]}
     assert len(sources) == 5
     for path, source in sources.items():
