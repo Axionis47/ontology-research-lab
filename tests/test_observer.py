@@ -62,7 +62,13 @@ def test_genuine_generated_flows_remain_separate_and_inspectable(observer: Obser
     assert run["outcome"] == "complete"
     assert run["assessment"]["status"] == "not_checked"
     assert observer.graph(run["graph_id"])["total_nodes"] == 2
-    assert len(history["attempts"]) == 1  # The campaign wrapper is not another attempt.
+    attempts = [item for item in history["attempts"] if item["kernel_id"] == run["kernel_id"]]
+    assert len(attempts) == 1
+    construction = next(item for item in history["runs"] if item["id"] == attempts[0]["run_id"])
+    # Later real campaigns may add attempts. This original campaign's wrapper
+    # remains a distinct run, not another construction attempt.
+    assert construction["parent_run_id"] == construction["root_run_id"]
+    assert construction["root_run_id"] not in {item["run_id"] for item in history["attempts"]}
     events = observer.events(inference_id, limit=200)["items"]
     for stage in ("evidence_demand", "materialization_plan", "evidence_scope"):
         event = next(item for item in events if item["stage"] == stage)

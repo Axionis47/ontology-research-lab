@@ -529,7 +529,7 @@ def test_learning_bank_and_verifier_meet_on_actual_candidate_behavior(real_case)
                 operator="project",
                 inputs=["read"],
                 fields=["quote_high"],
-                result_kind="scalar",
+                result_kind="records",
             ),
         ],
         result="project",

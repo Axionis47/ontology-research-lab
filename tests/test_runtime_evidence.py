@@ -17,6 +17,7 @@ import pytest
 
 from oak.regression import replay_recorded_calls
 from oak.service import Service, corpus_documents
+from oak.store import canonical
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -80,31 +81,29 @@ def test_saved_graphs_retain_every_actual_source_record(evidence) -> None:
     assert all("depth_km" in node["properties"] for node in candidate["graph"]["nodes"])
 
 
-def test_service_replays_original_construction_calls_without_model_use(evidence) -> None:
+def test_legacy_component_replay_is_not_upgraded_to_inherited_preservation(evidence) -> None:
     service, manifest, parent, candidate = evidence
-    # Establish the actual compatibility path before calling a service that can
-    # propose an adapter for other candidates. This pair requires no model work.
     assert parent["corpus_id"] == candidate["corpus_id"]
-    assert replay_recorded_calls(parent, candidate)["status"] == "passed"
-    model_calls_before = service.store.rows("SELECT id FROM model_calls ORDER BY id")
-    report = service.regression(manifest["task_id"], candidate)
-    assert service.store.rows("SELECT id FROM model_calls ORDER BY id") == model_calls_before
-    assert report["status"] == "passed"
-    assert report["adapter"] is None
-    assert report["fresh_agent_success"] == "unverified"
-    checks = [check for group in report["reports"] for check in group["checks"]]
-    construction = [check for check in checks if check["origin"] == "parent_construction"]
-    assert len(construction) == len(parent["assessment"]["construction_results"])
-    assert construction and all(check["executed_calls"] > 0 for check in construction)
-    for check in construction:
+    # These genuine old logs still support the original component check, but
+    # lack the new captured boundaries and immutable inherited baseline bank.
+    component = replay_recorded_calls(parent, candidate)
+    assert component["status"] == "passed"
+    assert component["checks"] and all(check["executed_calls"] > 0 for check in component["checks"])
+    for check in component["checks"]:
         for call in check["calls"]:
             assert (
                 call["new_dependencies"]["graph_sha256"]
-                == hashlib.sha256(
-                    json.dumps(candidate["graph"], sort_keys=True, separators=(",", ":")).encode()
-                ).hexdigest()
+                == hashlib.sha256(canonical(candidate["graph"])).hexdigest()
             )
             assert call["adapted_value"] == call["old_value"]
+    model_calls_before = service.store.rows("SELECT id FROM model_calls ORDER BY id")
+    report = service.regression(manifest["task_id"], candidate)
+    assert service.store.rows("SELECT id FROM model_calls ORDER BY id") == model_calls_before
+    assert report["status"] == "unable_to_check"
+    assert not report["allowed"]
+    assert report["fresh_agent_success"] == "unverified"
+    assert report["feedback"][0]["repair_target"] == "verification_gap"
+    assert report["feedback"][0]["reason"]
 
 
 def test_actual_promoted_revision_cannot_be_promoted_again(evidence) -> None:
@@ -120,7 +119,7 @@ def test_actual_promoted_revision_cannot_be_promoted_again(evidence) -> None:
         service.promote(task_id, active_id)
 
 
-def test_actual_saved_evidence_allows_promotion_and_retains_parent(evidence) -> None:
+def test_legacy_saved_evidence_cannot_bypass_full_bank_promotion(evidence) -> None:
     service, manifest, parent, candidate = evidence
     task_id = manifest["task_id"]
     parent_bytes = (service.root / "artifacts" / f"{parent['id']}.json").read_bytes()
@@ -129,9 +128,10 @@ def test_actual_saved_evidence_allows_promotion_and_retains_parent(evidence) -> 
     with service.store.connect() as connection:
         connection.execute("UPDATE tasks SET active_revision=? WHERE id=?", (parent["id"], task_id))
     check = service.promotion_check(task_id, candidate["id"])
-    assert check["allowed"] is True
-    service.promote(task_id, candidate["id"])
-    assert service.task(task_id)["active_revision"] == candidate["id"]
+    assert check["allowed"] is False
+    with pytest.raises(ValueError, match="protected bank"):
+        service.promote(task_id, candidate["id"])
+    assert service.task(task_id)["active_revision"] == parent["id"]
     assert (service.root / "artifacts" / f"{parent['id']}.json").read_bytes() == parent_bytes
     assert service.revision(task_id, parent["id"])["id"] == parent["id"]
 
@@ -145,7 +145,7 @@ def test_missing_replay_evidence_blocks_even_an_actually_validated_candidate(evi
         connection.execute("DELETE FROM events WHERE stage='regression'")
     check = service.promotion_check(manifest["task_id"], candidate["id"])
     assert check["allowed"] is False
-    assert "needs recorded-call regression" in check["reason"]
+    assert "protected bank" in check["reason"]
 
 
 def test_actual_incomplete_capture_cannot_create_task(tmp_path) -> None:

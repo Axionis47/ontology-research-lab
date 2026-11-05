@@ -35,6 +35,7 @@ from oak.api_contracts import (
     TaskSummary,
     WorkspaceResponse,
 )
+from oak.historical_replay import inference_admission
 from oak.model import redact_diagnostic, runtime_config
 from oak.ontology_view import humanize, instance_view, schema_view
 from oak.store import canonical
@@ -150,6 +151,22 @@ def _references(value: Any) -> list[str]:
         for item in value:
             found.update(_references(item))
     return sorted(found)
+
+
+class _ReplayReader:
+    """Expose hash-checked reads to the shared admission rule without a Store writer."""
+
+    def __init__(self, observer):
+        self.observer = observer
+
+    def get(self, identity):
+        try:
+            return self.observer._source(identity)["data"]
+        except LookupError as error:
+            raise ValueError(str(error)) from error
+
+    def rows(self, query, parameters=()):
+        return self.observer._rows(query, parameters)
 
 
 class Observer:
@@ -681,6 +698,7 @@ class Observer:
             raise LookupError("Kernel is not available")
         task = data.get("surface_id") or data.get("task_id")
         kind = "mcp" if data.get("surface_id") else "corpus"
+        replay_admission = inference_admission(_ReplayReader(self), identity)
         flow_evidence = {
             flow: [
                 value
@@ -689,7 +707,15 @@ class Observer:
                 and _ARTIFACT_ID.fullmatch(value)
             ]
             for flow, names in {
-                "learning": ("task_ir_id", "learning_id", "demands_id"),
+                "learning": (
+                    "task_ir_id",
+                    "learning_id",
+                    "demands_id",
+                    "behavior_bank_id",
+                    "behavior_bindings_id",
+                    "behavior_input_id",
+                    "compilation_id",
+                ),
                 "verification": ("verification_id", "preservation_id"),
                 "instantiation": ("materialization_id", "coverage_id", "sufficiency_id"),
             }.items()
@@ -698,10 +724,16 @@ class Observer:
         # Resolve recorded relationships without rewriting frozen artifacts.
         for row in self._rows(
             "SELECT e.stage,e.artifact_id FROM events e JOIN runs r ON r.id=e.run_id "
-            "WHERE r.task_id=? AND e.stage IN ('candidate_verification','candidate_selection') ORDER BY e.id",
+            "WHERE r.task_id=? AND e.stage IN ('candidate_verification','candidate_selection',"
+            "'evaluation_plan','selective_evaluation','historical_replay') ORDER BY e.id",
             (task,),
         ):
             evidence = self._data(row["artifact_id"], {})
+            if row["stage"] == "historical_replay" and evidence.get("kernel_id") == identity:
+                for name in ("report_id", "bank_id"):
+                    reference = evidence.get(name)
+                    if isinstance(reference, str) and _ARTIFACT_ID.fullmatch(reference):
+                        flow_evidence["verification"].append(reference)
             if row["stage"] == "candidate_verification" and evidence.get("kernel_id") == identity:
                 reference = evidence.get("verification_id")
                 if isinstance(reference, str) and _ARTIFACT_ID.fullmatch(reference):
@@ -712,6 +744,15 @@ class Observer:
                 reference = evidence.get("selection_id")
                 if isinstance(reference, str) and _ARTIFACT_ID.fullmatch(reference):
                     flow_evidence["learning"].append(reference)
+            if (
+                row["stage"] in {"evaluation_plan", "selective_evaluation"}
+                and evidence.get("kernel_id", evidence.get("candidate_id")) == identity
+            ):
+                reference = evidence.get("evaluation_plan_id") or evidence.get(
+                    "evaluation_receipt_id"
+                )
+                if isinstance(reference, str) and _ARTIFACT_ID.fullmatch(reference):
+                    flow_evidence["verification"].append(reference)
         result, _ = sanitize_public(
             {
                 "id": identity,
@@ -726,11 +767,15 @@ class Observer:
                 },
                 "eligible_for_inference": kind == "mcp"
                 and bool(data.get("validation", {}).get("valid"))
-                and data.get("assessment", {}).get("function_execution") == "passed",
+                and data.get("assessment", {}).get("function_execution") == "passed"
+                and replay_admission["allowed"],
                 "validation": {
-                    key: data.get("validation", {})[key]
-                    for key in ("valid", "status", "coverage", "evidence_type")
-                    if key in data.get("validation", {})
+                    **{
+                        key: data.get("validation", {})[key]
+                        for key in ("valid", "status", "coverage", "evidence_type")
+                        if key in data.get("validation", {})
+                    },
+                    "historical_replay": replay_admission,
                 },
                 "case_links": self._case_links(data),
                 "schema_id": data.get("evidence", {}).get("schema_id"),
@@ -754,11 +799,17 @@ class Observer:
                 **summary,
                 "schema": data["schema"],
                 "functions": data["functions"],
+                "acquisition_bindings": data.get("acquisition_bindings", []),
                 "schema_view": schema_view(data["schema"], graph),
                 "artifact_refs": sorted(set([identity, *_references(data.get("evidence", {}))])),
                 "limitations": [
                     "Kernel assessment and independent task scores are distinct evidence."
-                ],
+                ]
+                + (
+                    [summary["validation"]["historical_replay"]["reason"]]
+                    if not summary["validation"]["historical_replay"]["allowed"]
+                    else []
+                ),
             }
         )
         return KernelResponse(**public).model_dump()
@@ -907,6 +958,8 @@ class Observer:
             return "run.lifecycle"
         if stage == "kernel_candidate":
             return "kernel.candidate"
+        if stage in {"evaluation_plan", "selective_evaluation", "historical_replay"}:
+            return "validation.recorded"
         if any(word in stage for word in ("verification", "preservation", "sufficiency")):
             return "validation.recorded"
         if any(word in stage for word in ("learning", "materialization", "evidence_demand")):
@@ -958,7 +1011,7 @@ class Observer:
             execution = self._data(value["execution_id"], {})
             if isinstance(execution, dict) and "steps" in execution:
                 selected["steps"] = execution["steps"]
-        if "entity_types" in value:
+        if isinstance(value.get("entity_types"), dict):
             return {
                 "schema_id": artifact_id,
                 "name": value.get("name"),
@@ -1053,6 +1106,205 @@ class Observer:
 
         return bound(public)
 
+    def _flow_evidence(self, stage: str, value: Any, artifact_id: str | None) -> dict | None:
+        """Project actual flow records before generic payload truncation loses structure."""
+        if not isinstance(value, dict) or value.get("flow") not in {
+            "learning",
+            "verification",
+            "instantiation",
+        }:
+            return None
+        view: dict[str, Any] = {"kind": stage, "artifact_id": artifact_id}
+        actions, checks, unknowns = [], [], []
+        metrics = {}
+        if stage == "historical_replay":
+            reports = value.get("reports", [])
+            if not isinstance(reports, list):
+                reports = []
+            cases = []
+            for report in reports[:30]:
+                if not isinstance(report, dict):
+                    continue
+                try:
+                    case_view = {
+                        key: report[key]
+                        for key in contracts.ReplayCaseView.model_fields
+                        if key in report
+                    }
+                    if isinstance(case_view.get("first_difference"), dict):
+                        case_view["first_difference"] = self._event_payload(
+                            case_view["first_difference"], None
+                        )
+                    cases.append(contracts.ReplayCaseView.model_validate(case_view).model_dump())
+                except ValidationError:
+                    unknowns.append(
+                        "A historical replay case lacks valid presentation fields; inspect the original report."
+                    )
+            try:
+                view["historical_replay"] = contracts.HistoricalReplayView.model_validate(
+                    {
+                        "status": value.get("status"),
+                        "allowed": value.get("allowed"),
+                        "candidate_kernel_id": value.get("kernel_id"),
+                        "report_id": value.get("report_id"),
+                        "bank_id": value.get("bank_id"),
+                        "case_count": value.get("case_count", len(reports)),
+                        "cases": cases,
+                        "omitted_cases": max(0, len(reports) - len(cases)),
+                        "model_calls": value.get("model_calls"),
+                        "live_mcp_calls": value.get("live_mcp_calls"),
+                        "feedback": [
+                            self._event_payload(item, None)
+                            for item in value.get("feedback", [])[:30]
+                            if isinstance(item, dict)
+                        ],
+                    }
+                ).model_dump()
+            except ValidationError:
+                unknowns.append(
+                    "Historical replay status is incomplete; inspect the original report before judging preservation."
+                )
+        if stage == "evaluation_plan":
+            for decision in value.get("decisions", []):
+                case = decision.get("case", {})
+                actions.append(
+                    {
+                        "case_id": case.get("case_id", "Unidentified recorded case"),
+                        "local_action": decision.get("local_action", "unknown"),
+                        "planner_action": decision.get("planner_action"),
+                        "reasons": decision.get("reasons", []),
+                        "planner_reason": decision.get("planner_reason"),
+                        "evidence_refs": [decision["previous_receipt_ref"]]
+                        if decision.get("previous_receipt_ref")
+                        else [],
+                    }
+                )
+            for key in ("estimated_fresh_cost", "max_fresh_cases", "bank_comparable"):
+                if key in value:
+                    metrics[key] = value[key]
+        if stage == "selective_evaluation":
+            for case_id, reference in value.get("case_receipt_refs", {}).items():
+                receipt = self._data(reference, {})
+                if not isinstance(receipt, dict) or not receipt:
+                    unknowns.append(f"Missing evaluation receipt for {case_id}")
+                    continue
+                actions.append(
+                    {
+                        "case_id": case_id,
+                        "local_action": receipt.get("action", "unknown"),
+                        "planner_action": receipt.get("planner_exposure"),
+                        "status": receipt.get("status"),
+                        "reasons": [receipt["summary"]] if receipt.get("summary") else [],
+                        "source_candidate_id": receipt.get("source_candidate_id"),
+                        "fresh_candidate_id": receipt.get("fresh_candidate_id"),
+                        "task_assessment": receipt.get("task_assessment"),
+                        "evidence_refs": [reference, *receipt.get("evidence_refs", [])],
+                    }
+                )
+            unknowns.extend(
+                f"Deferred: {case_id}" for case_id in value.get("deferred_case_ids", [])
+            )
+            for key in ("known_regression_case_ids", "preservation_difference_case_ids"):
+                if key in value:
+                    metrics[key.removesuffix("_case_ids") + "_count"] = len(value[key])
+        behavior = value.get("behavior_evaluation") or {}
+        if not isinstance(behavior, dict):
+            behavior = {}
+        for check in [*behavior.get("checks", []), *value.get("checks", [])]:
+            if not isinstance(check, dict):
+                continue
+            checks.append(
+                {
+                    "id": check.get("behavior_id") or check.get("obligation_id") or check.get("id"),
+                    "function_name": check.get("function_name"),
+                    "dimension": check.get("dimension", "generated_behavior"),
+                    "status": check.get("status", "unknown"),
+                    "summary": check.get("summary")
+                    or check.get("reason")
+                    or check.get("reference_basis")
+                    or "Recorded callable check",
+                    "evidence_refs": check.get("evidence_refs", []),
+                }
+            )
+        groups = behavior.get("behavior_coverage_by_group") or value.get(
+            "behavior_coverage_by_group"
+        )
+        if groups:
+            view["group_results"] = groups
+        penalties = behavior.get("penalties", value.get("penalties", []))
+        view["penalties"] = [
+            f"{item.get('behavior_id', 'Behavior')}: {item.get('reason', 'Recorded penalty')}"
+            if isinstance(item, dict)
+            else str(item)
+            for item in penalties
+        ][:30]
+        unknowns.extend(value.get("unresolved_obligation_ids", []))
+        unknowns.extend(behavior.get("unresolved_behavior_ids", []))
+        unknowns.extend(behavior.get("limitations", []))
+        if stage == "candidate_selection":
+            for key in ("selected_kernel_id", "disposition", "stop_reason"):
+                if value.get(key) is not None:
+                    metrics[key] = value[key]
+        if stage == "candidate_comparison" and isinstance(value.get("comparison"), dict):
+            comparison = value["comparison"]
+            for key in ("deferred_cases", "unexecuted_previous"):
+                unknowns.extend(
+                    f"Fresh execution deferred: {identity}" for identity in comparison.get(key, [])
+                )
+            if comparison.get("boundary_failure"):
+                unknowns.append(str(comparison["boundary_failure"]))
+            if isinstance(comparison.get("same_source_behavior_comparison"), bool):
+                metrics["same_source_behavior_comparison"] = comparison[
+                    "same_source_behavior_comparison"
+                ]
+        for key in ("known_regressions", "mutants_executed", "node_count", "edge_count", "reused"):
+            source = behavior if key in behavior else value
+            if key in source and isinstance(source[key], (int, float, str, bool)):
+                metrics[key] = source[key]
+        if value.get("flow") == "instantiation":
+            scope = (
+                value.get("sufficiency") or value
+                if stage == "evidence_scope"
+                else value.get("sufficiency")
+            )
+            if isinstance(scope, dict):
+                try:
+                    view["scope"] = contracts.SufficiencyResult.model_validate(
+                        {
+                            key: scope[key]
+                            for key in contracts.SufficiencyResult.model_fields
+                            if key in scope
+                        }
+                    ).model_dump()
+                except ValidationError:
+                    pass
+            view["demand_id"] = value.get("demand_id")
+            view["expansion_reason"] = value.get("expansion_reason")
+            view["receipt_refs"] = value.get("receipt_ids", [])
+            unknowns.extend(value.get("unknowns", []))
+            demand = value.get("demand")
+            if isinstance(demand, dict):
+                unknowns.extend(demand.get("unknowns", []))
+        view.update(
+            actions=actions[:30],
+            omitted_actions=max(0, len(actions) - 30),
+            checks=checks[:30],
+            omitted_checks=max(0, len(checks) - 30),
+            remaining_unknowns=list(dict.fromkeys(unknowns))[:30],
+            metrics=metrics,
+        )
+        for field, records, key in (
+            ("action_counts", actions, "local_action"),
+            ("planner_counts", actions, "planner_action"),
+            ("check_counts", checks, "status"),
+        ):
+            counts: dict[str, int] = {}
+            for record in records:
+                if record.get(key):
+                    counts[record[key]] = counts.get(record[key], 0) + 1
+            view[field] = counts
+        return contracts.FlowEvidence.model_validate(sanitize_public(view)[0]).model_dump()
+
     def events(
         self,
         run_id: str,
@@ -1124,6 +1376,7 @@ class Observer:
                     summary=summary,
                     artifact_refs=refs,
                     payload=payload,
+                    flow_evidence=self._flow_evidence(event["stage"], data, event["artifact_id"]),
                 )
             )
         return EventsResponse(
@@ -1336,6 +1589,21 @@ class Observer:
             "evidence_scope": contracts.SufficiencyResult,
             "candidate_verification": contracts.VerificationReport,
             "preservation_certificate": contracts.PreservationCertificate,
+            "evaluation_plan": contracts.EvaluationPlan,
+            "evaluation_receipt": contracts.EvaluationReceipt,
+            "selective_evaluation": contracts.EvaluationReceipt,
+            "case_evaluation_receipt": contracts.CaseEvaluationReceipt,
+            "selective_case_evaluation": contracts.CaseEvaluationReceipt,
+            "behavior_bank": contracts.BehaviorBank,
+            "behavior_compilation": contracts.CompilationResult,
+            "replay_comparison": contracts.ComparisonContract,
+            "comparison_contract": contracts.ComparisonContract,
+            "replay_case": contracts.ReplayCase,
+            "replay_bank": contracts.ReplayBank,
+            "replay_report": contracts.ReplayReport,
+            "replay_bank_report": contracts.ReplayBankReport,
+            "historical_replay": contracts.ReplayBankReport,
+            "adapter_edge": contracts.AdapterEdge,
         }
         typed = None
         model = models.get(source.get("kind"))
@@ -1344,7 +1612,14 @@ class Observer:
                 # Events attach attribution to the authoritative artifact body.
                 # Keep those bytes in data; only unwrap known event metadata for
                 # the typed product projection.
-                metadata = {"flow", "nonblocking", "kernel_id", "verification_id", "demand_id"}
+                metadata = {
+                    "flow",
+                    "nonblocking",
+                    "kernel_id",
+                    "verification_id",
+                    "demand_id",
+                    "report_id",
+                }
                 typed = model.model_validate(
                     {
                         key: value

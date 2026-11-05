@@ -250,6 +250,13 @@ class WebJobs:
         kernel = self._artifact(identity)
         if kernel.get("kind") != "mcp_kernel" or kernel.get("surface_id") != surface_id:
             raise ValueError("Kernel must belong to this MCP task")
+        from oak.historical_replay import inference_admission
+
+        admission = inference_admission(self.store, identity)
+        if not admission["allowed"]:
+            raise ValueError(
+                f"Kernel has not passed historical preservation: {admission['reason']}"
+            )
         assessment = kernel.get("assessment", {})
         if (
             kernel.get("validation", {}).get("valid") is not True

@@ -286,6 +286,68 @@ export interface components {
       reused: boolean;
     };
     /**
+     * AcquisitionBinding
+     * @description Frozen source binding for a pure callable, separate from its implementation.
+     *
+     *     The expression language only binds declared function inputs to a catalogued
+     *     tool's native arguments. It cannot select a tool dynamically, execute code,
+     *     or interpret the question. Authorization remains the executor's catalog.
+     */
+    AcquisitionBinding: {
+      /**
+       * Format Version
+       * @default 1
+       * @constant
+       */
+      format_version: 1;
+      /** Function Name */
+      function_name: string;
+      /** Schema Sha256 */
+      schema_sha256: string;
+      /** Function Sha256 */
+      function_sha256: string;
+      /** Capability Id */
+      capability_id: string;
+      /** Native Arguments */
+      native_arguments: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+      /** Contract Id */
+      contract_id: string;
+    };
+    /**
+     * AdapterEdge
+     * @description One shared M/A/B package bound to the actual parent-child revision edge.
+     */
+    AdapterEdge: {
+      /** Parent Id */
+      parent_id: string;
+      /** Child Id */
+      child_id: string;
+      migration?: components["schemas"]["MigrationSpec"];
+      call_adapter: components["schemas"]["AdapterSpec"];
+      /** Step Mappings */
+      step_mappings?: {
+        [key: string]: {
+          [key: string]: string;
+        };
+      };
+      /** Proposal Ref */
+      proposal_ref?: string | null;
+    };
+    /**
+     * AdapterSpec
+     * @description A version-bound, inspectable set of bijective interface renames.
+     */
+    AdapterSpec: {
+      /** Old Revision */
+      old_revision: string;
+      /** New Revision */
+      new_revision: string;
+      /** Mappings */
+      mappings?: components["schemas"]["FunctionMapping"][];
+    };
+    /**
      * ArtifactReference
      * @description An immutable evidence reference and its role in an event.
      */
@@ -330,6 +392,17 @@ export interface components {
         | components["schemas"]["SufficiencyResult"]
         | components["schemas"]["VerificationReport"]
         | components["schemas"]["PreservationCertificate"]
+        | components["schemas"]["EvaluationPlan"]
+        | components["schemas"]["EvaluationReceipt"]
+        | components["schemas"]["CaseEvaluationReceipt"]
+        | components["schemas"]["BehaviorBank"]
+        | components["schemas"]["CompilationResult"]
+        | components["schemas"]["ComparisonContract"]
+        | components["schemas"]["ReplayCase"]
+        | components["schemas"]["ReplayBank"]
+        | components["schemas"]["ReplayReport"]
+        | components["schemas"]["ReplayBankReport"]
+        | components["schemas"]["AdapterEdge"]
         | null;
       /** Provenance */
       provenance?: {
@@ -363,6 +436,99 @@ export interface components {
       details?: {
         [key: string]: unknown;
       };
+    };
+    /**
+     * BehaviorBank
+     * @description Frozen check meanings and denominators, independent of candidate code.
+     */
+    BehaviorBank: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /**
+       * Flow
+       * @default learning
+       * @constant
+       */
+      flow: "learning";
+      /** Task Ir Sha256 */
+      task_ir_sha256: string;
+      /** Behaviors */
+      behaviors: components["schemas"]["BehaviorTemplate"][];
+      /**
+       * Max Mutants Per Behavior
+       * @default 8
+       */
+      max_mutants_per_behavior: number;
+      /**
+       * Max Mutants Campaign
+       * @default 64
+       */
+      max_mutants_campaign: number;
+      /**
+       * Parameter Strata
+       * @default 2
+       */
+      parameter_strata: number;
+      /**
+       * Interpretation Status
+       * @default proposed
+       * @constant
+       */
+      interpretation_status: "proposed";
+      /** Gaps */
+      gaps?: string[];
+    };
+    /**
+     * BehaviorCheckView
+     * @description A bounded readable check, with its actual callable and evidence dimension.
+     */
+    BehaviorCheckView: {
+      /** Id */
+      id?: string | null;
+      /** Function Name */
+      function_name?: string | null;
+      /** Dimension */
+      dimension: string;
+      /** Status */
+      status: string;
+      /** Summary */
+      summary: string;
+      /** Evidence Refs */
+      evidence_refs?: string[];
+    };
+    /**
+     * BehaviorTemplate
+     * @description A semantic computation or callable getter, not a trajectory prefix.
+     */
+    BehaviorTemplate: {
+      /** Behavior Id */
+      behavior_id: string;
+      program: components["schemas"]["TaskProgram"] | null;
+      /**
+       * Kind
+       * @default computation
+       * @enum {string}
+       */
+      kind: "computation" | "projection" | "point" | "uninterpreted";
+      /** Projection Fields */
+      projection_fields?: string[];
+      /** Selector Fields */
+      selector_fields?: string[];
+      /** Obligation Ids */
+      obligation_ids: string[];
+      /** Mandatory */
+      mandatory: boolean;
+      /**
+       * Group
+       * @enum {string}
+       */
+      group: "retrieval" | "subtask" | "composition";
+      /** Description */
+      description: string;
     };
     /**
      * BudgetView
@@ -422,6 +588,161 @@ export interface components {
       arguments: {
         [key: string]: components["schemas"]["JsonValue"];
       };
+    };
+    /** CaseDecision */
+    CaseDecision: {
+      case: components["schemas"]["EvaluationCase"];
+      manifest: components["schemas"]["DependencyManifest"];
+      /**
+       * Local Action
+       * @enum {string}
+       */
+      local_action: "reuse" | "proof" | "replay" | "rematerialize" | "defer";
+      /** Reasons */
+      reasons: string[];
+      /** Previous Receipt Ref */
+      previous_receipt_ref?: string | null;
+      /**
+       * Planner Action
+       * @default defer
+       * @enum {string}
+       */
+      planner_action: "fresh" | "defer" | "reuse" | "not_required";
+      /**
+       * Planner Reason
+       * @default No fresh execution selected
+       */
+      planner_reason: string;
+      /**
+       * Planner Sentinel
+       * @default false
+       */
+      planner_sentinel: boolean;
+    };
+    /**
+     * CaseEvaluationReceipt
+     * @description Actual local evidence and independently attributed fresh agent evidence.
+     */
+    CaseEvaluationReceipt: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /** Candidate Id */
+      candidate_id: string;
+      /** Case Id */
+      case_id: string;
+      /** Bank Version */
+      bank_version: string;
+      manifest: components["schemas"]["DependencyManifest"];
+      /**
+       * Action
+       * @enum {string}
+       */
+      action: "reuse" | "proof" | "replay" | "rematerialize" | "defer";
+      /**
+       * Status
+       * @enum {string}
+       */
+      status: "passed" | "failed" | "unknown";
+      /** Summary */
+      summary: string;
+      /** Evidence Refs */
+      evidence_refs?: string[];
+      /** Evaluated Case Ref */
+      evaluated_case_ref?: string | null;
+      /** Source Candidate Id */
+      source_candidate_id?: string | null;
+      /** Previous Receipt Ref */
+      previous_receipt_ref?: string | null;
+      /** Results */
+      results?: {
+        [key: string]: unknown;
+      }[];
+      /** Fresh Episode Ref */
+      fresh_episode_ref?: string | null;
+      /** Fresh Candidate Id */
+      fresh_candidate_id?: string | null;
+      historical_agent_evidence?:
+        components["schemas"]["HistoricalAgentEvidence"] | null;
+      /** Agent Outcome */
+      agent_outcome?: string | null;
+      /**
+       * Task Assessment
+       * @default not_checked
+       */
+      task_assessment: string;
+      /**
+       * Planner Exposure
+       * @default deferred
+       * @enum {string}
+       */
+      planner_exposure: "checked" | "unchanged" | "deferred" | "not_applicable";
+      /**
+       * Independent
+       * @default false
+       */
+      independent: boolean;
+    };
+    /**
+     * ComparisonContract
+     * @description Exact typed equality; unordered collections require an original declaration.
+     */
+    ComparisonContract: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /**
+       * Collection
+       * @default ordered
+       * @enum {string}
+       */
+      collection: "ordered" | "multiset";
+    };
+    /**
+     * CompilationResult
+     * @description Compilation may report unsupported behaviors without discarding them.
+     */
+    CompilationResult: {
+      /** Functions */
+      functions: {
+        [key: string]: unknown;
+      }[];
+      /** Entries */
+      entries: components["schemas"]["CompiledEntry"][];
+      /** Acquisition Bindings */
+      acquisition_bindings: {
+        [key: string]: unknown;
+      }[];
+      /** Diagnostics */
+      diagnostics: {
+        [key: string]: unknown;
+      }[];
+    };
+    /**
+     * CompiledEntry
+     * @description An actual pure callable and the behavior whose meaning it binds.
+     */
+    CompiledEntry: {
+      /** Behavior Id */
+      behavior_id: string;
+      /** Function Name */
+      function_name: string;
+      /** Function Sha256 */
+      function_sha256: string;
+      /** Generated */
+      generated: boolean;
+      /** Required Inputs */
+      required_inputs: {
+        [key: string]: unknown;
+      };
+      /** Domain Issues */
+      domain_issues?: string[];
     };
     /**
      * ConnectionConfig
@@ -616,6 +937,62 @@ export interface components {
       missing?: components["schemas"]["MissingFact"][];
     };
     /**
+     * DependencyManifest
+     * @description Separate computation, materialization and full planner-visible exposure.
+     */
+    DependencyManifest: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /** Candidate Id */
+      candidate_id: string;
+      /** Case Id */
+      case_id: string;
+      /** Bank Version */
+      bank_version: string;
+      computation: components["schemas"]["DependencyScope"];
+      materialization: components["schemas"]["DependencyScope"];
+      planner: components["schemas"]["DependencyScope"];
+      /** Function Names */
+      function_names: string[];
+      /** Cache Key */
+      cache_key: string;
+    };
+    /**
+     * DependencyScope
+     * @description Complete means conservative static scope, never just observed node IDs.
+     */
+    DependencyScope: {
+      /**
+       * Completeness
+       * @enum {string}
+       */
+      completeness: "complete" | "unknown";
+      /** Fingerprints */
+      fingerprints?: {
+        [key: string]: string;
+      };
+      /** Reasons */
+      reasons?: string[];
+    };
+    /**
+     * DerivedRelation
+     * @description Connect two outputs derived from the same actual source record.
+     */
+    DerivedRelation: {
+      /** Source Type */
+      source_type: string;
+      /** Source Target Type */
+      source_target_type: string;
+      /** Target Target Type */
+      target_target_type: string;
+      /** Relation */
+      relation: string;
+    };
+    /**
      * DiscoveryRequest
      * @description Explicit connection configuration for one real discovery job.
      */
@@ -651,6 +1028,16 @@ export interface components {
       artifact_refs?: string[];
       /** Error */
       error?: string | null;
+    };
+    /**
+     * EndpointTypes
+     * @description Select one mapped type per endpoint when a split creates alternatives.
+     */
+    EndpointTypes: {
+      /** Source */
+      source?: string | null;
+      /** Target */
+      target?: string | null;
     };
     /**
      * EntitySelector
@@ -689,6 +1076,155 @@ export interface components {
       retryable: boolean;
       /** Evidence Refs */
       evidence_refs?: string[];
+    };
+    /**
+     * EvaluationActionView
+     * @description One recorded local evaluation decision, separately from planner exposure.
+     */
+    EvaluationActionView: {
+      /** Case Id */
+      case_id: string;
+      /** Local Action */
+      local_action: string;
+      /** Planner Action */
+      planner_action?: string | null;
+      /** Status */
+      status?: string | null;
+      /** Reasons */
+      reasons?: string[];
+      /** Planner Reason */
+      planner_reason?: string | null;
+      /** Source Candidate Id */
+      source_candidate_id?: string | null;
+      /** Fresh Candidate Id */
+      fresh_candidate_id?: string | null;
+      /** Task Assessment */
+      task_assessment?: string | null;
+      /** Evidence Refs */
+      evidence_refs?: string[];
+    };
+    /**
+     * EvaluationCase
+     * @description One versioned construction/development evaluation unit, never held out.
+     */
+    EvaluationCase: {
+      /** Case Id */
+      case_id: string;
+      /** Question */
+      question?: string | null;
+      /**
+       * Split
+       * @default construction
+       * @enum {string}
+       */
+      split: "construction" | "development" | "development-regression";
+      /** Bank Version */
+      bank_version: string;
+      /** Calls */
+      calls?: components["schemas"]["ReplayCall"][];
+      /** Graph Ref */
+      graph_ref?: string | null;
+      /** Source Refs */
+      source_refs?: string[];
+      /** Demand Ref */
+      demand_ref?: string | null;
+      /** Extractor Version */
+      extractor_version?: string | null;
+      /** Episode Ref */
+      episode_ref?: string | null;
+      /** Generated Check Refs */
+      generated_check_refs?: string[];
+      /** Behavior Input Ref */
+      behavior_input_ref?: string | null;
+      /**
+       * Is New
+       * @default false
+       */
+      is_new: boolean;
+      /**
+       * Counterexample
+       * @default false
+       */
+      counterexample: boolean;
+      /**
+       * Last Fresh Round
+       * @default -1
+       */
+      last_fresh_round: number;
+      /** Estimated Fresh Cost */
+      estimated_fresh_cost?: number | null;
+      /**
+       * Planner Required
+       * @default true
+       */
+      planner_required: boolean;
+    };
+    /** EvaluationPlan */
+    EvaluationPlan: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /** Candidate Id */
+      candidate_id: string;
+      /** Bank Version */
+      bank_version: string;
+      /** Decisions */
+      decisions: components["schemas"]["CaseDecision"][];
+      /**
+       * Max Fresh Cases
+       * @default 3
+       */
+      max_fresh_cases: number;
+      /**
+       * Max Planner Sentinels
+       * @default 1
+       */
+      max_planner_sentinels: number;
+      /**
+       * Estimated Fresh Cost
+       * @default 0
+       */
+      estimated_fresh_cost: number;
+      /** Fresh Budget */
+      fresh_budget?: number | null;
+      /**
+       * Bank Comparable
+       * @default true
+       */
+      bank_comparable: boolean;
+      /**
+       * Plan Sha256
+       * @default
+       */
+      plan_sha256: string;
+    };
+    /** EvaluationReceipt */
+    EvaluationReceipt: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /** Candidate Id */
+      candidate_id: string;
+      /** Plan Sha256 */
+      plan_sha256: string;
+      /** Case Receipt Refs */
+      case_receipt_refs: {
+        [key: string]: string;
+      };
+      /** Deferred Case Ids */
+      deferred_case_ids: string[];
+      /** Known Regression Case Ids */
+      known_regression_case_ids: string[];
+      /** Preservation Difference Case Ids */
+      preservation_difference_case_ids?: string[];
+      /** Bank Comparable */
+      bank_comparable: boolean;
     };
     /**
      * EventEnvelope
@@ -744,6 +1280,7 @@ export interface components {
       payload?: {
         [key: string]: unknown;
       };
+      flow_evidence?: components["schemas"]["FlowEvidence"] | null;
     };
     /**
      * EventsResponse
@@ -780,7 +1317,7 @@ export interface components {
       format_version: 1;
       /**
        * Derivation Version
-       * @default demand-v1
+       * @default demand-v2
        */
       derivation_version: string;
       /** Function Name */
@@ -815,6 +1352,118 @@ export interface components {
       coverage_mode: "witness" | "complete_scope" | "complete_adjacency";
       /** Unknowns */
       unknowns?: string[];
+    };
+    /** FirstDifference */
+    FirstDifference: {
+      /** Phase */
+      phase: string;
+      /** Call Index */
+      call_index?: number | null;
+      /**
+       * Path
+       * @default $
+       */
+      path: string;
+      /** Reason */
+      reason: string;
+      /** Expected */
+      expected?: unknown;
+      /** Actual */
+      actual?: unknown;
+      /** Original Function */
+      original_function?: string | null;
+      /** Current Function */
+      current_function?: string | null;
+      /**
+       * Repair Target
+       * @enum {string}
+       */
+      repair_target:
+        | "migration"
+        | "schema"
+        | "call_adapter"
+        | "function"
+        | "verification_gap"
+        | "baseline";
+    };
+    /**
+     * FlowEvidence
+     * @description Typed, bounded observation of recorded decisions, checks, and expansion.
+     *
+     *     Counts describe recorded evidence only. Missing measurements remain absent.
+     *     Source artifacts retain complete details when lists are bounded for display.
+     */
+    FlowEvidence: {
+      /** Kind */
+      kind: string;
+      /** Artifact Id */
+      artifact_id?: string | null;
+      /** Action Counts */
+      action_counts?: {
+        [key: string]: number;
+      };
+      /** Planner Counts */
+      planner_counts?: {
+        [key: string]: number;
+      };
+      /** Actions */
+      actions?: components["schemas"]["EvaluationActionView"][];
+      /**
+       * Omitted Actions
+       * @default 0
+       */
+      omitted_actions: number;
+      /** Checks */
+      checks?: components["schemas"]["BehaviorCheckView"][];
+      /** Check Counts */
+      check_counts?: {
+        [key: string]: number;
+      };
+      /**
+       * Omitted Checks
+       * @default 0
+       */
+      omitted_checks: number;
+      /** Group Results */
+      group_results?: {
+        [key: string]: {
+          [key: string]: number;
+        };
+      };
+      /** Penalties */
+      penalties?: string[];
+      /** Remaining Unknowns */
+      remaining_unknowns?: string[];
+      /** Metrics */
+      metrics?: {
+        [key: string]: number | string | boolean;
+      };
+      scope?: components["schemas"]["SufficiencyResult"] | null;
+      /** Demand Id */
+      demand_id?: string | null;
+      /** Expansion Reason */
+      expansion_reason?: string | null;
+      /** Receipt Refs */
+      receipt_refs?: string[];
+      historical_replay?: components["schemas"]["HistoricalReplayView"] | null;
+    };
+    /**
+     * FunctionMapping
+     * @description One interface rename; omitted argument/output names retain their names.
+     */
+    FunctionMapping: {
+      /** Old Function */
+      old_function: string;
+      /** New Function */
+      new_function: string;
+      /** Arguments */
+      arguments?: {
+        [key: string]: string;
+      };
+      /** Output Fields */
+      output_fields?: {
+        [key: string]: string;
+      };
     };
     /**
      * GraphResponse
@@ -855,6 +1504,61 @@ export interface components {
       scope: string;
       /** Limitations */
       limitations?: string[];
+    };
+    /**
+     * HistoricalAgentEvidence
+     * @description A previous observed outcome, never a fresh assessment of this candidate.
+     */
+    HistoricalAgentEvidence: {
+      /** Episode Ref */
+      episode_ref: string;
+      /** Candidate Id */
+      candidate_id: string;
+      /** Agent Outcome */
+      agent_outcome?: string | null;
+      /**
+       * Task Assessment
+       * @default not_checked
+       */
+      task_assessment: string;
+      /** Evidence Refs */
+      evidence_refs?: string[];
+    };
+    /**
+     * HistoricalReplayView
+     * @description Recorded bank outcome, distinct from eligibility and task correctness.
+     */
+    HistoricalReplayView: {
+      /**
+       * Status
+       * @enum {string}
+       */
+      status: "preserved" | "regressed" | "unable_to_check" | "interrupted";
+      /** Allowed */
+      allowed: boolean;
+      /** Candidate Kernel Id */
+      candidate_kernel_id?: string | null;
+      /** Report Id */
+      report_id?: string | null;
+      /** Bank Id */
+      bank_id?: string | null;
+      /** Case Count */
+      case_count: number;
+      /** Cases */
+      cases?: components["schemas"]["ReplayCaseView"][];
+      /**
+       * Omitted Cases
+       * @default 0
+       */
+      omitted_cases: number;
+      /** Feedback */
+      feedback?: {
+        [key: string]: unknown;
+      }[];
+      /** Model Calls */
+      model_calls?: number | null;
+      /** Live Mcp Calls */
+      live_mcp_calls?: number | null;
     };
     /**
      * HistoryResponse
@@ -962,6 +1666,8 @@ export interface components {
       functions: {
         [key: string]: unknown;
       }[];
+      /** Acquisition Bindings */
+      acquisition_bindings?: components["schemas"]["AcquisitionBinding"][];
       /** Schema View */
       schema_view: {
         [key: string]: unknown;
@@ -1042,11 +1748,57 @@ export interface components {
       }[];
       /**
        * Extractor Version
-       * @default demand-v1
+       * @default demand-v2
        */
       extractor_version: string;
       /** Expansion Reason */
       expansion_reason?: string | null;
+    };
+    /**
+     * MigrationSpec
+     * @description One shared graph transformation, independent of tasks and expected answers.
+     *
+     *     Renames and identity remaps address original types and original properties.
+     *     Explicit record projections replace all records of their source types and
+     *     cannot overlap rename/remap rules for those types. Relations retain their
+     *     order, multiplicity, and provenance. An explicitly contracted relation may
+     *     disappear only when a keyed join maps both endpoints to the same record.
+     */
+    MigrationSpec: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /** Type Renames */
+      type_renames?: {
+        [key: string]: string;
+      };
+      /** Property Renames */
+      property_renames?: {
+        [key: string]: {
+          [key: string]: string;
+        };
+      };
+      /** Relation Renames */
+      relation_renames?: {
+        [key: string]: string;
+      };
+      /** Identity Remaps */
+      identity_remaps?: {
+        [key: string]: string[];
+      };
+      /** Records */
+      records?: components["schemas"]["RecordProjection"][];
+      /** Endpoint Types */
+      endpoint_types?: {
+        [key: string]: components["schemas"]["EndpointTypes"];
+      };
+      /** Derived Relations */
+      derived_relations?: components["schemas"]["DerivedRelation"][];
+      /** Contracted Relations */
+      contracted_relations?: string[];
     };
     /**
      * MissingFact
@@ -1147,6 +1899,16 @@ export interface components {
       certificate_sha256: string;
     };
     /**
+     * PropertySource
+     * @description Copy a property from one declared source alias, retaining missingness.
+     */
+    PropertySource: {
+      /** Source */
+      source: string;
+      /** Property */
+      property: string;
+    };
+    /**
      * QuerySpec
      * @description One immutable pool request and split, without reference answers.
      */
@@ -1166,6 +1928,316 @@ export interface components {
        * @enum {string}
        */
       split: "construction" | "development" | "heldout";
+    };
+    /**
+     * RecordIdentity
+     * @description Preserve one source ID or derive an ID from named target key properties.
+     */
+    RecordIdentity: {
+      /** Source */
+      source?: string | null;
+      /** Keys */
+      keys?: string[];
+    };
+    /**
+     * RecordProjection
+     * @description Replace source records with copied fields under one target type.
+     *
+     *     A single source requires no join. Multiple source types require one-to-one
+     *     joins over equal nonempty key lists and an explicit ordering anchor. Every
+     *     source row must match exactly once. Multiple projections of one source type
+     *     form a split. All facts of replaced source records must remain represented
+     *     across those projections; deliberate information deletion is unsupported.
+     */
+    RecordProjection: {
+      /** Sources */
+      sources: {
+        [key: string]: string;
+      };
+      /** Join Keys */
+      join_keys?: {
+        [key: string]: string[];
+      };
+      /** Anchor */
+      anchor?: string | null;
+      /** Target Type */
+      target_type: string;
+      /** Properties */
+      properties: {
+        [key: string]: components["schemas"]["PropertySource"];
+      };
+      identity: components["schemas"]["RecordIdentity"];
+    };
+    /** RecordedCall */
+    RecordedCall: {
+      /** Capture Id */
+      capture_id: string;
+      /** Bindings */
+      bindings?: components["schemas"]["ResultBinding"][];
+    };
+    /**
+     * ReplayBank
+     * @description Append-only case bank tied to an exact kernel and inherited bank.
+     */
+    ReplayBank: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /** Kernel Id */
+      kernel_id: string;
+      /** Parent Bank Id */
+      parent_bank_id?: string | null;
+      /** Previous Bank Id */
+      previous_bank_id?: string | null;
+      /** Case Ids */
+      case_ids?: string[];
+    };
+    /** ReplayBankReport */
+    ReplayBankReport: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /** Kernel Id */
+      kernel_id: string;
+      /** Bank Id */
+      bank_id: string;
+      /**
+       * Status
+       * @enum {string}
+       */
+      status: "preserved" | "regressed" | "unable_to_check" | "interrupted";
+      /** Allowed */
+      allowed: boolean;
+      /** Case Count */
+      case_count: number;
+      /** Reports */
+      reports?: components["schemas"]["ReplayReport"][];
+      /** Report Refs */
+      report_refs?: string[];
+      /** Feedback */
+      feedback?: {
+        [key: string]: unknown;
+      }[];
+      /** Repair Context */
+      repair_context?: {
+        [key: string]: unknown;
+      };
+      /** Runtime Dependencies */
+      runtime_dependencies?: {
+        [key: string]: string;
+      };
+      /**
+       * Model Calls
+       * @default 0
+       * @constant
+       */
+      model_calls: 0;
+      /**
+       * Live Mcp Calls
+       * @default 0
+       * @constant
+       */
+      live_mcp_calls: 0;
+    };
+    /**
+     * ReplayCall
+     * @description An actual invocation, optionally rebound through a stable behavior ID.
+     */
+    ReplayCall: {
+      /** Function */
+      function: string;
+      /** Args */
+      args?: {
+        [key: string]: unknown;
+      };
+      /** Graph Ref */
+      graph_ref?: string | null;
+      /** Execution Ref */
+      execution_ref?: string | null;
+      /** Behavior Id */
+      behavior_id?: string | null;
+      /**
+       * Input Graph Known
+       * @default true
+       */
+      input_graph_known: boolean;
+      /** Source Refs */
+      source_refs?: string[];
+    };
+    /**
+     * ReplayCase
+     * @description Original computations and assessment, never rewritten for a new kernel.
+     */
+    ReplayCase: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /** Origin Kernel Id */
+      origin_kernel_id: string;
+      /** Run Id */
+      run_id: string;
+      /**
+       * Question
+       * @default
+       */
+      question: string;
+      /**
+       * Requirement Version
+       * @default recorded_execution_v1
+       */
+      requirement_version: string;
+      /**
+       * Split
+       * @default construction
+       * @enum {string}
+       */
+      split: "construction" | "development";
+      /**
+       * Scope
+       * @default component
+       * @enum {string}
+       */
+      scope: "component" | "trajectory";
+      /**
+       * Assessment Category
+       * @default execution_succeeded
+       * @enum {string}
+       */
+      assessment_category:
+        | "execution_succeeded"
+        | "generated_consistency_check"
+        | "independent_task_check";
+      /** Assessment Refs */
+      assessment_refs?: string[];
+      /** Source Refs */
+      source_refs?: string[];
+      /** Calls */
+      calls: components["schemas"]["RecordedCall"][];
+      /** Comparison Id */
+      comparison_id: string;
+    };
+    /**
+     * ReplayCaseView
+     * @description Bounded presentation of one immutable case's actual replay evidence.
+     */
+    ReplayCaseView: {
+      /** Original Case Id */
+      original_case_id: string;
+      /** Origin Kernel Id */
+      origin_kernel_id?: string | null;
+      /** Candidate Kernel Id */
+      candidate_kernel_id?: string | null;
+      /** Adapter Path */
+      adapter_path?: string[];
+      /**
+       * Status
+       * @enum {string}
+       */
+      status: "preserved" | "regressed" | "unable_to_check" | "interrupted";
+      /**
+       * Scope
+       * @enum {string}
+       */
+      scope: "component" | "trajectory" | "unknown";
+      /** Assessment Category */
+      assessment_category: string;
+      /** Baseline Execution Id */
+      baseline_execution_id?: string | null;
+      /** Candidate Execution Id */
+      candidate_execution_id?: string | null;
+      /** Original Graph Ids */
+      original_graph_ids?: string[];
+      /** Migrated Graph Ids */
+      migrated_graph_ids?: string[];
+      /** First Difference */
+      first_difference?: {
+        [key: string]: unknown;
+      } | null;
+      /** Reason */
+      reason?: string | null;
+    };
+    /**
+     * ReplayReport
+     * @description Attributable evidence for original observations on a terminal candidate.
+     */
+    ReplayReport: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /** Original Case Id */
+      original_case_id: string;
+      /** Origin Kernel Id */
+      origin_kernel_id: string | null;
+      /** Candidate Kernel Id */
+      candidate_kernel_id: string;
+      /**
+       * Status
+       * @enum {string}
+       */
+      status: "preserved" | "regressed" | "unable_to_check" | "interrupted";
+      /**
+       * Scope
+       * @enum {string}
+       */
+      scope: "component" | "trajectory" | "unknown";
+      /** Assessment Category */
+      assessment_category: string;
+      /** Adapter Path */
+      adapter_path?: string[];
+      /** Original Graph Ids */
+      original_graph_ids?: string[];
+      /** Migrated Graph Ids */
+      migrated_graph_ids?: string[];
+      /** Baseline Execution Id */
+      baseline_execution_id?: string | null;
+      /** Candidate Execution Id */
+      candidate_execution_id?: string | null;
+      first_difference?: components["schemas"]["FirstDifference"] | null;
+      /** Runtime Dependencies */
+      runtime_dependencies?: {
+        [key: string]: string;
+      };
+      /**
+       * Reason
+       * @default
+       */
+      reason: string;
+      /**
+       * Model Calls
+       * @default 0
+       * @constant
+       */
+      model_calls: 0;
+      /**
+       * Live Mcp Calls
+       * @default 0
+       * @constant
+       */
+      live_mcp_calls: 0;
+    };
+    /**
+     * ResultBinding
+     * @description An explicit argument path fed by an earlier replayed call's result.
+     */
+    ResultBinding: {
+      /** Argument Path */
+      argument_path: (string | number)[];
+      /** Prior Call */
+      prior_call: number;
+      /** Output Path */
+      output_path?: (string | number)[];
     };
     /**
      * RunCreateRequest
@@ -1336,6 +2408,12 @@ export interface components {
       grain: string;
       /** Source Capability Ids */
       source_capability_ids?: string[];
+      /**
+       * Role
+       * @default value
+       * @enum {string}
+       */
+      role: "value" | "identity" | "selector" | "context";
     };
     /**
      * SufficiencyResult
@@ -1561,6 +2639,18 @@ export interface components {
       };
       /** Observation Contract */
       observation_contract: string;
+      /** Parameter Fields */
+      parameter_fields?: {
+        [key: string]: string;
+      };
+      /** Source Parameters */
+      source_parameters?: string[];
+      /**
+       * Ordering
+       * @default unordered
+       * @enum {string}
+       */
+      ordering: "unordered" | "ordered";
     };
     /**
      * TaskResponse
@@ -1719,9 +2809,11 @@ export interface components {
         | "graph"
         | "execution"
         | "generated"
+        | "behavior"
         | "coverage"
         | "task"
-        | "preservation";
+        | "preservation"
+        | "historical_replay";
       /**
        * Status
        * @enum {string}
@@ -1781,12 +2873,20 @@ export interface components {
           [key: string]: number;
         };
       };
+      /** Behavior Evaluation */
+      behavior_evaluation?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
       /**
        * Known Regressions
        * @default 0
        */
       known_regressions: number;
       preservation?: components["schemas"]["PreservationCertificate"] | null;
+      /** Historical Replay */
+      historical_replay?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      } | null;
     };
     /**
      * WorkspaceResponse

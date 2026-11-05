@@ -18,7 +18,7 @@ from urllib.parse import urljoin
 import pytest
 from jsonschema import ValidationError
 
-from oak.bootstrap import empty_graph, merge_observations
+from oak.bootstrap import empty_graph, merge_observations, result_acquisition_evidence
 from oak.functions import execute_function
 from oak.materialization import (
     CoverageReceipt,
@@ -176,6 +176,54 @@ def test_later_field_demand_reuses_same_source_request_and_retained_receipt() ->
                 retained, [function], function["name"], args, schema=kernel["schema"]
             )["value"]
         )
+
+
+@pytest.mark.parametrize("operation", ["list", "count"])
+def test_empty_bound_result_keeps_actual_receipt_attribution_without_claiming_absence(
+    operation,
+) -> None:
+    """A negative lookup over genuine evidence is not a fabricated empty source."""
+    kernel, retained, function, args = bound_point()
+    # Deliberately request an identity outside this saved receipt's records.
+    # The receipt and graph facts are unchanged; this is a negative input probe.
+    args["identity"] += "/outside-retained-scope"
+    function["steps"] = function["steps"][:1]
+    function["result"] = {"$step": "lookup"}
+    if operation == "count":
+        function["steps"].append(
+            {
+                "id": "count",
+                "operator": "aggregate_values",
+                "args": {"items": {"$step": "lookup"}, "request": {"operation": "count"}},
+            }
+        )
+        function["result"] = {"$step": "count"}
+        function["output_schema"] = {"type": "integer"}
+    tools = kernel["catalog"]["tools"]
+    binding = freeze_acquisition_binding(
+        kernel["schema"], function, tools[0]["id"], {"$arg": "source_request"}, tools
+    )
+    prepared = prepare_bound_materialization(kernel["schema"], function, args, [binding], tools)
+    assert prepared.acquisitions[0].arguments == artifact(RECEIPT)["args"]
+    graph = slice_graph(kernel["schema"], retained, prepared.demand)
+    assert graph["nodes"] == [] and graph["edges"] == []
+    execution = execute_function(graph, [function], function["name"], args, schema=kernel["schema"])
+    assert execution["value"] == (0 if operation == "count" else [])
+    receipts = [{**artifact(RECEIPT), "evidence_id": RECEIPT, "reused": True}]
+    assert result_acquisition_evidence(function, execution, graph, receipts) == []
+    assert result_acquisition_evidence(
+        function, execution, graph, receipts, materialization_receipt_ids=[RECEIPT, GRAPH]
+    ) == [RECEIPT]
+    assert (
+        result_acquisition_evidence(
+            function, execution, graph, [], materialization_receipt_ids=[RECEIPT]
+        )
+        == []
+    )
+    assert assess_sufficiency(kernel["schema"], graph, prepared.demand).status in {
+        "needs_evidence",
+        "unknown",
+    }
 
 
 def test_source_binding_nested_input_paths_and_frozen_contract_validation() -> None:
@@ -435,6 +483,59 @@ def test_resolved_demand_paths_never_guess_missing_step_output_fields() -> None:
     function["steps"][0]["args"]["entity_ids"] = {"$path": ["prior", "missing"]}
     with pytest.raises(ValueError, match="actual step output"):
         derive_demand(kernel["schema"], function, {}, step_outputs={"prior": {}})
+
+
+def test_deferred_target_property_keeps_initial_graph_narrow_and_executes_exactly() -> None:
+    kernel, retained = artifact(KERNEL), artifact(GRAPH)
+    schema = kernel["schema"]
+    function = point_function(schema, retained)
+    function["steps"] = [
+        function["steps"][0],
+        {
+            "id": "location",
+            "operator": "traverse_relations",
+            "args": {
+                "start_entity_ids": [{"$path": ["lookup", 0, "id"]}],
+                "relation_types": [retained["edges"][0]["relation"]],
+                "include_starting_entities": False,
+            },
+        },
+        {
+            "id": "latitude",
+            "operator": "project_properties",
+            "args": {
+                "entities": {"$path": ["location", "entities"]},
+                "property_names": ["latitude"],
+            },
+        },
+    ]
+    function["result"] = {"$step": "latitude"}
+    args = actual_point_args(schema, retained)
+    graph, sizes = empty_graph(), []
+
+    def materialize(*, step_id, operator, arguments, step_outputs):
+        if operator not in {"lookup_entities", "traverse_relations"}:
+            return
+        demand = derive_step_demand(schema, function, args, step_id, step_outputs=step_outputs)
+        if step_id == "lookup":
+            assert demand.entity_types == ["DailyForecast"]
+            assert "Location" not in demand.required_fields
+            assert "latitude" not in demand.required_fields["DailyForecast"]
+        incoming = slice_graph(schema, retained, demand)
+        graph.update(merge_observations(schema, graph, incoming))
+        sizes.append((len(graph["nodes"]), len(graph["edges"])))
+
+    partial = execute_function(
+        graph, [function], function["name"], args, schema=schema, before_step=materialize
+    )
+    complete = execute_function(retained, [function], function["name"], args, schema=schema)
+    assert partial["value"] == complete["value"]
+    assert partial["value"][0]["latitude"] is not None
+    assert sizes == [(1, 0), (2, 1)]
+    invalid = deepcopy(function)
+    invalid["steps"][-1]["args"]["property_names"] = ["undeclared_target_property"]
+    with pytest.raises(ValueError, match="undeclared properties"):
+        derive_step_demand(schema, invalid, args, "lookup")
 
 
 def test_frontier_does_not_materialize_unrelated_endpoint_entities_from_real_rdf() -> None:

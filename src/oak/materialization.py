@@ -608,7 +608,10 @@ def derive_demand(
         if relation not in spec.relations:
             raise ValueError("demand references an undeclared relation")
         selected.update([spec.relations[relation].source, spec.relations[relation].target])
-    declared_fields = {field for name in selected for field in _properties(spec, name)}
+    # A property can belong to a later traversal target whose population is not
+    # active yet. Validate names against the frozen schema, then intersect with
+    # each currently demanded type below, without widening the entity scope.
+    declared_fields = {field for name in spec.entity_types for field in _properties(spec, name)}
     if fields - declared_fields:
         raise ValueError(
             f"demand references undeclared properties: {sorted(fields - declared_fields)}"

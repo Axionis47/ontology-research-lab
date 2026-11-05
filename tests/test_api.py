@@ -26,7 +26,7 @@ def test_openapi_generation_does_not_initialize_storage(tmp_path):
     assert {"task_id", "run_id", "root_run_id", "parent_run_id", "occurred_at"} <= envelope[
         "properties"
     ].keys()
-    assert "Replay" not in json.dumps(schema)
+    assert not any("replay" in path.lower() or "reset" in path.lower() for path in schema["paths"])
     assert {
         "TaskIR",
         "CandidateSelection",
@@ -36,8 +36,15 @@ def test_openapi_generation_does_not_initialize_storage(tmp_path):
         "SufficiencyResult",
         "VerificationReport",
         "PreservationCertificate",
+        "FlowEvidence",
+        "EvaluationPlan",
+        "EvaluationReceipt",
+        "CaseEvaluationReceipt",
+        "BehaviorBank",
+        "CompilationResult",
     } <= schema["components"]["schemas"].keys()
     assert "flow" in envelope["properties"]
+    assert "flow_evidence" in envelope["properties"]
 
 
 def test_empty_workspace_and_security_do_not_execute(tmp_path):

@@ -1,8 +1,10 @@
-"""Actual recorded-call replay with a narrow declarative compatibility adapter.
+"""Recorded-call primitives and the inherited historical regression entry point.
 
 Adapters rename function/argument names and optional top-level output fields.
 They cannot generate answers, supply constants, branch on tasks, change types,
 invoke arbitrary code, or access old outputs while being proposed.
+The adjacent-call helpers are component checks. Candidate acceptance uses the
+full inherited bank through ``replay_inherited_cases``, never these helpers alone.
 """
 
 from __future__ import annotations
@@ -16,6 +18,13 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from oak.functions import execute_function, validate_functions
 from oak.store import canonical
+
+
+def replay_inherited_cases(store, candidate_id: str, *, run_id: str) -> dict:
+    """Execute the complete protected bank through actual ancestry, offline only."""
+    from oak.historical_replay import replay_bank
+
+    return replay_bank(store, candidate_id, run_id=run_id)
 
 
 class FunctionMapping(BaseModel):

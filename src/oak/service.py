@@ -14,9 +14,14 @@ from pathlib import Path
 from langgraph.checkpoint.sqlite import SqliteSaver
 
 from oak.corpus import normalize_snapshot
+from oak.historical_replay import (
+    accepted_replay_report,
+    check_candidate_replay,
+    inference_admission,
+    prepare_candidate_adapter,
+)
 from oak.model import GeminiCLI, runtime_config
 from oak.pipeline import answer, build_graph, construction_graph
-from oak.regression import propose_adapter, replay_recorded_calls
 from oak.store import Store, canonical, now
 from oak.tasks.evaluation import get_scorer
 
@@ -184,6 +189,10 @@ class Service:
             raise ValueError("This action needs an active kernel revision")
         if kind == "ask" and not (query or "").strip():
             raise ValueError("A query is required")
+        if kind == "ask":
+            admission = inference_admission(self.store, task["active_revision"])
+            if not admission["allowed"]:
+                raise ValueError(admission["reason"])
         if kind == "construct" and task["active_revision"]:
             raise ValueError("Use Revise to change an existing ontology")
         corpus = self.artifact(task["corpus_id"])
@@ -320,7 +329,7 @@ class Service:
         return receipts
 
     def promotion_check(self, task_id: str, revision_id: str) -> dict:
-        """Require candidate checks and replay of every currently recorded parent answer."""
+        """Require candidate checks and the complete inherited historical bank."""
         revision = self.revision(task_id, revision_id)
         active = self.task(task_id)["active_revision"]
         if active == revision_id:
@@ -329,30 +338,14 @@ class Service:
             return {"allowed": False, "reason": "Candidate construction checks failed"}
         if active != revision["parent"]:
             return {"allowed": False, "reason": "Candidate is based on a different active revision"}
-        expected = sorted(item["receipt_id"] for item in self._regression_receipts(task_id, active))
-        for event in self.store.rows(
-            "SELECT artifact_id FROM events WHERE stage='regression' ORDER BY id DESC"
-        ):
-            report = self.artifact(event["artifact_id"])
-            if report.get("candidate_revision") != revision_id:
-                continue
-            if report.get("receipt_ids") != expected:
-                return {
-                    "allowed": False,
-                    "reason": "New parent answers need another regression check",
-                    "regression": report,
-                }
-            passed = report["status"] == "passed"
-            return {
-                "allowed": passed,
-                "reason": "Construction checks and recorded calls passed"
-                if passed
-                else "Recorded calls failed or lack evidence",
-                "regression": report,
-            }
+        try:
+            report = accepted_replay_report(self.store, revision_id, refresh_bank=False)
+        except (ValueError, KeyError, OSError) as error:
+            return {"allowed": False, "reason": str(error)}
         return {
-            "allowed": False,
-            "reason": "Candidate needs recorded-call regression before promotion",
+            "allowed": True,
+            "reason": "Every inherited protected computation passed on the candidate",
+            "regression": report,
         }
 
     def promote(self, task_id: str, revision_id: str) -> None:
@@ -396,93 +389,21 @@ class Service:
         )
 
     def regression(self, task_id: str, candidate: dict, run_id: str | None = None) -> dict:
-        """Replay original tasks on their original corpora under the new schema/functions.
+        """Execute the complete inherited historical bank with no model or live acquisition.
 
-        A changed corpus needs fresh extraction, but no ReAct replanning. A constrained
-        adapter can rename equivalent interfaces; it cannot change answers or inject facts.
+        Shared adapter proposal belongs to construction. This command cannot
+        extract a changed corpus or invoke a model to hide a missing mapping.
         """
-        parent = self.revision(task_id, candidate["parent"])
-        receipts = self._regression_receipts(task_id, parent["id"])
-        model = GeminiCLI(self.store, run_id or candidate["run_id"])
-        corpus_ids = {parent["corpus_id"]} | {
-            r["result"].get("corpus_id", parent["corpus_id"]) for r in receipts
-        }
-        contexts = []
-        for corpus_id in sorted(corpus_ids):
-            old = {**parent}
-            if corpus_id != parent["corpus_id"]:
-                old["assessment"] = {**parent["assessment"], "construction_results": []}
-            new = {**candidate}
-            if corpus_id != candidate["corpus_id"]:
-                new["graph"] = build_graph(
-                    self.store,
-                    model,
-                    candidate["schema"],
-                    corpus_documents(self.artifact(corpus_id)),
-                    "regression_extract." + corpus_id[:12],
-                )
-                new["corpus_id"] = corpus_id
-                self.store.event(
-                    model.run_id,
-                    "regression_graph",
-                    "completed",
-                    "New schema extracted over original task evidence",
-                    {
-                        "candidate_revision": candidate["id"],
-                        "corpus_id": corpus_id,
-                        "graph": new["graph"],
-                    },
-                )
-            if new["graph"].get("ignored_documents"):
-                raise ValueError(
-                    "Regression graph excludes source documents; compatibility remains unverified"
-                )
-            group = [
-                r
-                for r in receipts
-                if r["result"].get("corpus_id", parent["corpus_id"]) == corpus_id
-            ]
-            contexts.append((old, new, group))
-        reports = [replay_recorded_calls(old, new, group) for old, new, group in contexts]
-        adapter = None
-        if any(report["status"] != "passed" for report in reports):
-            try:
-                adapter = propose_adapter(
-                    parent,
-                    candidate,
-                    lambda payload: model.json(
-                        "compatibility_adapter",
-                        "Propose only a bounded interface rename adapter matching this contract. "
-                        "Do not alter computations, add constants, or special-case questions. "
-                        "If interfaces are not equivalent return an empty mappings list.",
-                        payload,
-                    ),
-                )
-                self.store.event(
-                    model.run_id,
-                    "adapter",
-                    "validated",
-                    "Constrained interface adapter validated",
-                    adapter.model_dump(mode="json"),
-                )
-                reports = [
-                    replay_recorded_calls(old, new, group, adapter=adapter)
-                    for old, new, group in contexts
-                ]
-            except (ValueError, TypeError, KeyError) as error:
-                self.store.event(model.run_id, "adapter", "failed", str(error))
+        self.revision(task_id, candidate["id"])
+        result = check_candidate_replay(
+            self.store, candidate["id"], run_id=run_id or candidate["run_id"]
+        )
         return {
-            "evidence_type": "recorded_function_replay",
+            **result,
             "candidate_revision": candidate["id"],
-            "parent_revision": parent["id"],
-            "receipt_ids": sorted(r["receipt_id"] for r in receipts),
-            "status": "passed"
-            if reports and all(r["status"] == "passed" for r in reports)
-            else "failed",
-            "reports": reports,
-            "adapter": adapter.model_dump(mode="json") if adapter else None,
+            "parent_revision": candidate.get("parent"),
+            "evidence_type": "historical_execution_replay",
             "fresh_agent_success": "unverified",
-            "coverage": "recorded_calls_only_on_original_corpora",
         }
 
     def run_worker(self, run_id: str) -> None:
@@ -531,6 +452,23 @@ class Service:
                     )
                     final = graph.invoke(None if checkpoint.values else initial, graph_config)
                 revision = self.revision(inputs["task_id"], final["revision_id"])
+                if inputs["parent"]:
+                    try:
+                        proposal_model = GeminiCLI(self.store, run_id)
+                        prepare_candidate_adapter(
+                            self.store,
+                            revision["id"],
+                            run_id=run_id,
+                            proposer=lambda payload: proposal_model.json(
+                                "historical_adapter",
+                                "Propose one shared bounded migration and interface adapter. "
+                                "Use only supplied contracts and DSL. Never insert answers, "
+                                "task identifiers, defaults, or external calls.",
+                                payload,
+                            ),
+                        )
+                    except (ValueError, RuntimeError) as error:
+                        self.store.event(run_id, "historical_adapter", "failed", str(error))
                 replay = (
                     self.regression(inputs["task_id"], revision, run_id)
                     if inputs["parent"]
@@ -556,6 +494,9 @@ class Service:
                 )
             elif row["kind"] == "ask":
                 revision = self.revision(inputs["task_id"], inputs["parent"])
+                admission = inference_admission(self.store, revision["id"])
+                if not admission["allowed"]:
+                    raise ValueError(admission["reason"])
                 demand_profile = (
                     revision.get("instantiation_profile", revision.get("construction_profile"))
                     == "demand_v1"

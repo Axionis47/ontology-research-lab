@@ -452,6 +452,7 @@ def answer(
                 graph = merge_observations(schema, graph, incoming)
                 revision["graph"] = graph
                 current = slice_graph(schema, graph, demand)
+                current = merge_observations(schema, working_graph, current)
                 working_graph.clear()
                 working_graph.update(current)
                 materialized_demands.add(demand.demand_id)
@@ -469,6 +470,7 @@ def answer(
                 decision["function"],
                 decision["args"],
                 schema=schema,
+                artifact_store=store,
                 before_step=before_step,
                 slot_extractor=lambda **kwargs: request_json(
                     model,
@@ -493,11 +495,16 @@ def answer(
                 ).model_dump(mode="json")
                 observation["working_graph_id"] = store.put("function_graph", working_graph)
             observation.update(
-                status="completed", value=output["value"], dependencies=output["dependencies"]
+                status="completed",
+                value=output["value"],
+                dependencies=output["dependencies"],
+                capture_id=output["capture_id"],
             )
             trajectory.append({**observation, "steps": output["steps"]})
         except (ValueError, KeyError, TypeError) as error:
-            observation.update(status="failed", error=str(error))
+            observation.update(
+                status="failed", error=str(error), capture_id=getattr(error, "capture_id", None)
+            )
             trajectory.append({**observation, "steps": getattr(error, "steps", [])})
         artifact_id = store.event(
             model.run_id,
@@ -772,7 +779,12 @@ def construction_graph(
                 covered, probe_results = set(), []
                 for probe in proposal["probes"]:
                     result = execute_function(
-                        graph, catalog, probe["function"], probe["args"], schema=schema
+                        graph,
+                        catalog,
+                        probe["function"],
+                        probe["args"],
+                        schema=schema,
+                        artifact_store=store,
                     )
                     covered.add(probe["function"])
                     probe_results.append({**probe, "result": result})
@@ -971,9 +983,35 @@ def construction_graph(
             "runtime_config": config,
             "implementation_sha256": IMPLEMENTATION_SHA256,
             "construction_profile": "corpus_v1",
+            "historical_replay_policy": "inherited_v1",
             "instantiation_profile": "demand_v1",
         }
         identity = store.put("kernel_revision", revision)
+        from oak.historical_replay import (
+            check_candidate_replay,
+            register_kernel_bank,
+            seal_execution_case,
+        )
+
+        protected_cases = [
+            seal_execution_case(
+                store,
+                identity,
+                call["capture_id"],
+                run_id=state["run_id"],
+                question=item["query"],
+                split="construction",
+            )
+            for item in results
+            for call in item["result"].get("trajectory", [])
+            if call.get("status") == "completed" and call.get("capture_id")
+        ]
+        register_kernel_bank(store, identity, protected_cases)
+        initial_replay = (
+            check_candidate_replay(store, identity, run_id=state["run_id"])
+            if not state.get("parent")
+            else None
+        )
         with store.connect() as connection:
             connection.execute(
                 "INSERT OR IGNORE INTO revisions(id,task_id,parent,created_at,status) VALUES(?,?,?,?,?)",
@@ -985,7 +1023,7 @@ def construction_graph(
                     "candidate" if passed else "failed",
                 ),
             )
-            if passed and not state.get("parent"):
+            if passed and initial_replay is not None and initial_replay["allowed"]:
                 connection.execute(
                     "UPDATE tasks SET active_revision=? WHERE id=? AND active_revision IS NULL",
                     (identity, state["task_id"]),
@@ -995,7 +1033,11 @@ def construction_graph(
             "freeze",
             "passed" if passed else "failed",
             "Kernel revision saved; previous revisions retained",
-            {"revision_id": identity, "assessment": revision["assessment"]},
+            {
+                "revision_id": identity,
+                "assessment": revision["assessment"],
+                "historical_replay": initial_replay,
+            },
         )
         return {"revision_id": identity}
 

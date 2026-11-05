@@ -10,8 +10,11 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from oak.behavior import BehaviorBank, CompilationResult
+from oak.historical_replay import AdapterEdge
 from oak.learning_contracts import CandidateSelection, TaskIR
 from oak.materialization import (
+    AcquisitionBinding,
     CoverageReceipt,
     EvidenceDemand,
     MaterializationPlan,
@@ -19,6 +22,14 @@ from oak.materialization import (
 )
 from oak.mcp_bridge import ConnectionConfig
 from oak.preservation import PreservationCertificate
+from oak.replay_contracts import (
+    ComparisonContract,
+    ReplayBank,
+    ReplayBankReport,
+    ReplayCase,
+    ReplayReport,
+)
+from oak.selective_evaluation import CaseEvaluationReceipt, EvaluationPlan, EvaluationReceipt
 from oak.task_context import QuerySpec, RunLimits
 from oak.verification import VerificationReport
 
@@ -187,6 +198,98 @@ class ArtifactReference(BaseModel):
     role: str
 
 
+class EvaluationActionView(BaseModel):
+    """One recorded local evaluation decision, separately from planner exposure."""
+
+    model_config = ConfigDict(extra="forbid")
+    case_id: str
+    local_action: str
+    planner_action: str | None = None
+    status: str | None = None
+    reasons: list[str] = Field(default_factory=list)
+    planner_reason: str | None = None
+    source_candidate_id: str | None = None
+    fresh_candidate_id: str | None = None
+    task_assessment: str | None = None
+    evidence_refs: list[str] = Field(default_factory=list)
+
+
+class BehaviorCheckView(BaseModel):
+    """A bounded readable check, with its actual callable and evidence dimension."""
+
+    model_config = ConfigDict(extra="forbid")
+    id: str | None = None
+    function_name: str | None = None
+    dimension: str
+    status: str
+    summary: str
+    evidence_refs: list[str] = Field(default_factory=list)
+
+
+class ReplayCaseView(BaseModel):
+    """Bounded presentation of one immutable case's actual replay evidence."""
+
+    model_config = ConfigDict(extra="forbid")
+    original_case_id: str
+    origin_kernel_id: str | None = None
+    candidate_kernel_id: str | None = None
+    adapter_path: list[str] = Field(default_factory=list)
+    status: Literal["preserved", "regressed", "unable_to_check", "interrupted"]
+    scope: Literal["component", "trajectory", "unknown"]
+    assessment_category: str
+    baseline_execution_id: str | None = None
+    candidate_execution_id: str | None = None
+    original_graph_ids: list[str] = Field(default_factory=list)
+    migrated_graph_ids: list[str] = Field(default_factory=list)
+    first_difference: dict[str, Any] | None = None
+    reason: str | None = None
+
+
+class HistoricalReplayView(BaseModel):
+    """Recorded bank outcome, distinct from eligibility and task correctness."""
+
+    model_config = ConfigDict(extra="forbid")
+    status: Literal["preserved", "regressed", "unable_to_check", "interrupted"]
+    allowed: bool
+    candidate_kernel_id: str | None = None
+    report_id: str | None = None
+    bank_id: str | None = None
+    case_count: int
+    cases: list[ReplayCaseView] = Field(default_factory=list)
+    omitted_cases: int = 0
+    feedback: list[dict[str, Any]] = Field(default_factory=list)
+    model_calls: int | None = None
+    live_mcp_calls: int | None = None
+
+
+class FlowEvidence(BaseModel):
+    """Typed, bounded observation of recorded decisions, checks, and expansion.
+
+    Counts describe recorded evidence only. Missing measurements remain absent.
+    Source artifacts retain complete details when lists are bounded for display.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+    kind: str
+    artifact_id: str | None = None
+    action_counts: dict[str, int] = Field(default_factory=dict)
+    planner_counts: dict[str, int] = Field(default_factory=dict)
+    actions: list[EvaluationActionView] = Field(default_factory=list)
+    omitted_actions: int = 0
+    checks: list[BehaviorCheckView] = Field(default_factory=list)
+    check_counts: dict[str, int] = Field(default_factory=dict)
+    omitted_checks: int = 0
+    group_results: dict[str, dict[str, int]] = Field(default_factory=dict)
+    penalties: list[str] = Field(default_factory=list)
+    remaining_unknowns: list[str] = Field(default_factory=list)
+    metrics: dict[str, int | float | str | bool] = Field(default_factory=dict)
+    scope: SufficiencyResult | None = None
+    demand_id: str | None = None
+    expansion_reason: str | None = None
+    receipt_refs: list[str] = Field(default_factory=list)
+    historical_replay: HistoricalReplayView | None = None
+
+
 class EventEnvelope(PublicResponse):
     """Durable event cursor plus a bounded, sanitized evidence projection."""
 
@@ -215,6 +318,7 @@ class EventEnvelope(PublicResponse):
     summary: str
     artifact_refs: list[ArtifactReference] = Field(default_factory=list)
     payload: dict[str, Any] = Field(default_factory=dict)
+    flow_evidence: FlowEvidence | None = None
 
 
 class EventsResponse(PublicResponse):
@@ -232,6 +336,7 @@ class KernelResponse(KernelSummary):
 
     schema_definition: dict[str, Any] = Field(alias="schema")
     functions: list[dict[str, Any]]
+    acquisition_bindings: list[AcquisitionBinding] = Field(default_factory=list)
     schema_view: dict[str, Any]
     artifact_refs: list[str] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
@@ -286,6 +391,17 @@ class ArtifactResponse(PublicResponse):
         | SufficiencyResult
         | VerificationReport
         | PreservationCertificate
+        | EvaluationPlan
+        | EvaluationReceipt
+        | CaseEvaluationReceipt
+        | BehaviorBank
+        | CompilationResult
+        | ComparisonContract
+        | ReplayCase
+        | ReplayBank
+        | ReplayReport
+        | ReplayBankReport
+        | AdapterEdge
         | None
     ) = None
     provenance: dict[str, Any] | None = None

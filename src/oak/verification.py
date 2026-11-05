@@ -33,7 +33,16 @@ from oak.store import Store
 
 CheckStatus = Literal["passed", "failed", "unknown"]
 CheckDimension = Literal[
-    "structure", "ontology", "graph", "execution", "generated", "coverage", "task", "preservation"
+    "structure",
+    "ontology",
+    "graph",
+    "execution",
+    "generated",
+    "behavior",
+    "coverage",
+    "task",
+    "preservation",
+    "historical_replay",
 ]
 
 
@@ -67,7 +76,7 @@ class ObservedCheck(StrictModel):
     """A reference to actual evidence, with no caller-supplied correctness status."""
 
     obligation_id: str
-    dimension: Literal["execution", "generated", "coverage", "task"]
+    dimension: Literal["execution", "generated", "behavior", "coverage", "task"]
     evidence_ref: str = Field(pattern=r"^[0-9a-f]{64}$")
     evaluator_id: str | None = None
 
@@ -97,8 +106,10 @@ class VerificationReport(StrictModel):
     unresolved_obligation_ids: list[str] = Field(default_factory=list)
     coverage_by_group: dict[str, dict[str, int]] = Field(default_factory=dict)
     generated_coverage_by_group: dict[str, dict[str, int]] = Field(default_factory=dict)
+    behavior_evaluation: dict[str, JsonValue] = Field(default_factory=dict)
     known_regressions: int = 0
     preservation: PreservationCertificate | None = None
+    historical_replay: dict[str, JsonValue] | None = None
 
 
 Evaluator = Callable[[KernelCandidate, ObligationCheck, dict], dict]
@@ -166,6 +177,7 @@ def execute_generated_check(
     schema: dict,
     *,
     candidate_functions: list[dict] | None = None,
+    artifact_store: Store | None = None,
 ) -> dict:
     """Actually execute a generated relation on genuine graph data, without services.
 
@@ -239,14 +251,24 @@ def execute_generated_check(
         }
     try:
         left_execution = execute_function(
-            deepcopy(graph), [left_program], left_program.name, spec.left_args, schema=schema
+            deepcopy(graph),
+            [left_program],
+            left_program.name,
+            spec.left_args,
+            schema=schema,
+            artifact_store=artifact_store,
         )
         left = left_execution["value"]
         receipt["left_execution"] = left_execution
         right = None
         if right_program is not None:
             right_execution = execute_function(
-                deepcopy(graph), [right_program], right_program.name, spec.right_args, schema=schema
+                deepcopy(graph),
+                [right_program],
+                right_program.name,
+                spec.right_args,
+                schema=schema,
+                artifact_store=artifact_store,
             )
             receipt["right_execution"] = right_execution
             right = right_execution["value"]
@@ -445,7 +467,12 @@ def _execution_check(
         }
     graph = store.get(payload["graph_id"])
     actual = execute_function(
-        deepcopy(graph), candidate.functions, name, payload["args"], schema=candidate.schema
+        deepcopy(graph),
+        candidate.functions,
+        name,
+        payload["args"],
+        schema=candidate.schema,
+        artifact_store=store,
     )
     if "value" in payload and actual["value"] != payload["value"]:
         return {
@@ -476,6 +503,7 @@ def verify_candidate(
     ontology_validation_ref: str | None = None,
     parent: KernelCandidate | dict | None = None,
     certificate: PreservationCertificate | dict | None = None,
+    historical_replay_ref: str | None = None,
 ) -> VerificationReport:
     """Verify one candidate without generating requirements, answers or evidence.
 
@@ -577,7 +605,45 @@ def verify_candidate(
                         store.get(payload["graph_id"]),
                         candidate.schema,
                         candidate_functions=candidate.functions,
+                        artifact_store=store,
                     )
+            elif observation.dimension == "behavior":
+                from oak.behavior import BehaviorBank, replay_behavior_evaluation
+
+                if payload.get("candidate_id") != candidate.id:
+                    raise ValueError("Behavior-check evidence belongs to a different candidate")
+                if observation.evaluator_id != "generated_behavior_v1":
+                    raise ValueError("Behavior checks require the registered generic evaluator")
+                bank = BehaviorBank.model_validate(store.get(payload["bank_id"]))
+                behavior_ids = [
+                    item.behavior_id
+                    for item in bank.behaviors
+                    if obligation.id in item.obligation_ids
+                ]
+                if not behavior_ids:
+                    raise ValueError("Frozen behavior bank has no behavior for this obligation")
+                for identity in payload.get("evidence_refs", []):
+                    store.get(identity)
+                actual = replay_behavior_evaluation(
+                    candidate, {**payload, "behavior_ids": behavior_ids}, store
+                )
+                checks_for_obligation = actual["checks"]
+                status = (
+                    "failed"
+                    if any(item["status"] == "failed" for item in checks_for_obligation)
+                    else "passed"
+                    if checks_for_obligation
+                    and all(item["status"] == "passed" for item in checks_for_obligation)
+                    else "unknown"
+                )
+                result = {
+                    **actual,
+                    "status": status,
+                    "summary": "Executed frozen generated behaviors against actual candidate functions; independent task truth remains unchecked",
+                    "contributes_to_learning": any(
+                        item.get("function_name") for item in checks_for_obligation
+                    ),
+                }
             elif observation.evaluator_id not in evaluators:
                 result = {
                     "status": "unknown",
@@ -695,7 +761,10 @@ def verify_candidate(
         )
         group["total"] += 1
         relevant = [check for check in checks if check.obligation_id == obligation.id]
-        failed = any(check.status == "failed" for check in relevant)
+        failed = any(
+            check.status == "failed" and check.dimension not in {"generated", "behavior"}
+            for check in relevant
+        )
         passed = (
             obligation.semantic_status == "grounded"
             and all(
@@ -712,7 +781,8 @@ def verify_candidate(
         generated_results = [
             check
             for check in relevant
-            if check.dimension == "generated" and check.details.get("contributes_to_learning")
+            if check.dimension in {"generated", "behavior"}
+            and check.details.get("contributes_to_learning")
         ]
         generated_status = (
             "failed"
@@ -724,15 +794,47 @@ def verify_candidate(
         generated_group[generated_status] += 1
         if obligation.mandatory and not passed:
             unresolved.append(obligation.id)
+    historical = {}
+    historical_passed = False
+    if historical_replay_ref is not None:
+        from oak.historical_replay import accepted_replay_report
+        from oak.replay_contracts import ReplayBankReport
+
+        try:
+            historical = ReplayBankReport.model_validate(
+                store.get(historical_replay_ref)
+            ).model_dump(mode="json")
+            if historical["kernel_id"] != candidate.id:
+                raise ValueError("Historical replay belongs to another candidate")
+            accepted = accepted_replay_report(store, candidate.id, refresh_bank=False)
+            if accepted["report_id"] != historical_replay_ref:
+                raise ValueError("Historical replay is not the current accepted report")
+            historical_passed = True
+            historical_status = "passed"
+            historical_summary = "Every inherited protected computation preserved"
+        except (ValueError, KeyError, OSError) as error:
+            historical_status = "failed" if historical.get("status") == "regressed" else "unknown"
+            historical_summary = str(error)
+        checks.append(
+            VerificationCheck(
+                dimension="historical_replay",
+                status=historical_status,
+                summary=historical_summary,
+                evidence_refs=[historical_replay_ref],
+            )
+        )
     blocking = [
         check
         for check in checks
         if check.status == "failed"
-        and check.dimension != "generated"
+        and check.dimension not in {"generated", "behavior"}
         and (check.obligation_id is None or by_id[check.obligation_id].mandatory)
     ]
-    preservation_passed = candidate.parent_id is None or any(
-        check.dimension == "preservation" and check.status == "passed" for check in checks
+    preservation_passed = (
+        historical_passed
+        if historical_replay_ref is not None
+        else candidate.parent_id is None
+        or any(check.dimension == "preservation" and check.status == "passed" for check in checks)
     )
     target_met = bool(
         execution_eligible
@@ -753,6 +855,7 @@ def verify_candidate(
     return VerificationReport(
         candidate_id=candidate.id,
         parent_id=candidate.parent_id,
+        historical_replay=historical,
         disposition=disposition,
         execution_eligible=execution_eligible,
         target_met=target_met,

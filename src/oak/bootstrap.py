@@ -19,8 +19,14 @@ from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import END, START, StateGraph
 from pydantic import BaseModel, ConfigDict, Field
 
+from oak.behavior import (
+    BehaviorBinding,
+    build_behavior_bank,
+    compile_behavior_bindings,
+    make_behavior_inputs,
+)
+from oak.campaign_evidence import retained_starter, starter_key
 from oak.construction_contracts import (
-    FunctionCoverage,
     RequirementAnalysis,
     requirement_inputs,
     validate_function_coverage,
@@ -28,14 +34,17 @@ from oak.construction_contracts import (
 )
 from oak.construction_prompts import prompt_manifest
 from oak.functions import FunctionExecutionError, FunctionSpec, execute_function, validate_functions
-from oak.learning import candidate_rank, compare_fresh_runs, freeze_task_ir, repair_feedback
-from oak.learning_contracts import CandidateSelection, TaskIR
+from oak.learning import freeze_task_ir
+from oak.learning_contracts import TaskIR
 from oak.materialization import (
     MATERIALIZATION_VERSION,
     MaterializationPlan,
     assess_sufficiency,
     derive_demand,
+    derive_step_demand,
     materialization_cache_key,
+    prepare_bound_materialization,
+    slice_graph,
 )
 from oak.mcp_bridge import MCPBridge
 from oak.model import GeminiCLI, runtime_config
@@ -44,7 +53,6 @@ from oak.operators import GRAPH_OPERATORS, operator_contracts
 from oak.pipeline import build_graph, request_json
 from oak.store import Store, canonical, now
 from oak.task_context import InferenceQuery, TaskSurface, build_runtime_context, sample_construction
-from oak.verification import GeneratedCheckSpec, execute_generated_check
 
 PROJECT = Path(__file__).resolve().parents[2]
 
@@ -89,10 +97,9 @@ class FunctionProposal(BaseModel):
     """Bounded model output for one candidate function catalog and its probes."""
 
     model_config = ConfigDict(extra="forbid")
-    functions: list[FunctionSpec] = Field(min_length=1, max_length=64)
-    probes: list[FunctionProbe] = Field(min_length=1, max_length=64)
-    coverage: list[FunctionCoverage] = Field(min_length=1)
-    generated_checks: list[GeneratedCheckSpec] = Field(default_factory=list, max_length=64)
+    functions: list[FunctionSpec] = Field(default_factory=list, max_length=64)
+    probes: list[FunctionProbe] = Field(default_factory=list, max_length=64)
+    behavior_bindings: list[BehaviorBinding] = Field(default_factory=list, max_length=256)
 
 
 def function_dataflow(function: dict) -> dict:
@@ -132,7 +139,12 @@ def function_dataflow(function: dict) -> dict:
 
 
 def result_acquisition_evidence(
-    function: dict, execution: dict, graph: dict, receipts: list[dict]
+    function: dict,
+    execution: dict,
+    graph: dict,
+    receipts: list[dict],
+    *,
+    materialization_receipt_ids: list[str] | tuple[str, ...] = (),
 ) -> list[str]:
     """Find actual current-episode acquisitions supporting the executed result.
 
@@ -185,6 +197,9 @@ def result_acquisition_evidence(
                 evidence.add(identity)
         if step["operator"] in GRAPH_OPERATORS:
             evidence.update(sources(graph) & available)
+            # Empty results still have actual source-dispatch attribution.
+            # This does not certify population completeness or absence.
+            evidence.update(set(materialization_receipt_ids) & available)
         evidence.update(sources(step["inputs"]) & available)
     return sorted(evidence)
 
@@ -387,401 +402,12 @@ class SurfaceEngine:
         parent_id: str | None = None,
         run_id: str | None = None,
     ) -> dict:
-        """Run bounded learning rounds, consuming independent verifier reports.
+        """Construct reusable candidates through the independent selective verifier."""
+        from oak.construction_campaign import construct_campaign
 
-        Every round is a separate owned child run. The original requirement
-        bank is frozen once, candidates are immutable, and a failed later
-        revision never replaces the retained eligible winner.
-        """
-        from oak.verification import (
-            KernelCandidate,
-            ObligationCheck,
-            ObservedCheck,
-            verify_candidate,
+        return construct_campaign(
+            self, surface_id, round_index=round_index, parent_id=parent_id, run_id=run_id
         )
-
-        data = self.surface(surface_id)
-        surface = TaskSurface.model_validate(data["configuration"])
-        managed = run_id is not None
-        if run_id is None:
-            run_id = self.store.create_run(
-                surface_id,
-                "mcp_construct",
-                {
-                    "surface_id": surface_id,
-                    "parent_id": parent_id,
-                    "construction_profile": "demand_v1",
-                    "round_index": round_index,
-                },
-            )
-        else:
-            self._check_run(run_id, surface_id, "mcp_construct")
-        self.store.set_run(run_id, "running")
-        seen: list[str] = []
-        task_ir_id = None
-        generated_bank_id = None
-        candidates, verification_ids, attempts = [], [], []
-        ranks: dict[str, list[float]] = {}
-        best_id, best_rank = parent_id, None
-        best_fresh: dict[str, dict] = {}
-        best_verification_inputs = None
-        best_measured_cost = 0.0
-        feedback, last_failure = None, None
-        stop_reason, target_met = "round_limit", False
-        try:
-            for offset in range(runtime_config()["max_construction_rounds"]):
-                index = round_index + offset
-                child = self.store.create_run(
-                    surface_id,
-                    "mcp_construct",
-                    {
-                        "construction_profile": "demand_v1",
-                        "round_index": index,
-                        "parent_id": best_id,
-                        "task_ir_id": task_ir_id,
-                    },
-                    parent_run_id=run_id,
-                )
-                attempt = {"run_id": child, "round_index": index}
-                attempts.append(attempt)
-                try:
-                    result = self._construct_round(
-                        surface_id,
-                        round_index=index,
-                        parent_id=best_id,
-                        run_id=child,
-                        task_ir_id=task_ir_id,
-                        seen_query_ids=seen,
-                        repair=feedback,
-                        generated_bank_id=generated_bank_id,
-                    )
-                except (ValueError, KeyError, TypeError, ValidationError, SchemaError) as exc:
-                    self.store.set_run(child, "failed", error=f"{type(exc).__name__}: {exc}")
-                    attempt["error"] = f"{type(exc).__name__}: {exc}"
-                    # Even a failed candidate must retain the same bank next round.
-                    for row in self.store.rows(
-                        "SELECT artifact_id FROM events WHERE run_id=? AND stage='task_ir' ORDER BY id",
-                        (child,),
-                    ):
-                        task_ir_id = self.store.get(row["artifact_id"])["task_ir_id"]
-                    failure = str(exc)
-                    feedback = {"repair_target": "construction", "message": failure}
-                    if failure == last_failure:
-                        stop_reason = "repeated_failure"
-                        break
-                    last_failure = failure
-                    continue
-                except RuntimeError as exc:
-                    self.store.set_run(child, "failed", error=f"{type(exc).__name__}: {exc}")
-                    attempt["error"] = f"{type(exc).__name__}: {exc}"
-                    stop_reason = "execution_boundary_failure"
-                    break
-                except Exception as exc:
-                    self.store.set_run(child, "failed", error=f"{type(exc).__name__}: {exc}")
-                    raise
-                identity = result["kernel_id"]
-                kernel = self.store.get(identity)
-                candidate_generated = self.store.get(kernel["evidence"]["generated_checks_id"])
-                new_generated_bank = generated_bank_id is None and any(
-                    item.get("outcome", {}).get("contributes_to_learning")
-                    for item in candidate_generated
-                )
-                if new_generated_bank:
-                    generated_bank_id = kernel["evidence"]["generated_checks_id"]
-                task_ir_id = kernel["evidence"]["task_ir_id"]
-                bank = TaskIR.model_validate(self.store.get(task_ir_id))
-                seen = sorted(set(seen) | set(kernel["sample"]["selected_query_ids"]))
-                candidates.append(identity)
-                attempt["kernel_id"] = identity
-                mapping = {
-                    item["obligation_id"]: item["function_names"]
-                    for item in self.store.get(kernel["evidence"]["coverage_id"])["mappings"]
-                }
-                checks = [
-                    ObligationCheck(
-                        id=item.obligation_id,
-                        group=item.group,
-                        mandatory=item.mandatory,
-                        function_names=mapping.get(item.obligation_id, []),
-                        semantic_status=item.semantic_status,
-                        oracle_ref=item.oracle_ref,
-                    )
-                    for item in bank.obligations
-                ]
-                observations = []
-                probes = self.store.get(kernel["evidence"]["probes_id"])
-                for obligation in checks:
-                    for probe in probes:
-                        if probe["probe"]["function"] not in obligation.function_names:
-                            continue
-                        payload = {
-                            **probe,
-                            "candidate_id": identity,
-                            "probe_evidence_id": probe["evidence_id"],
-                            "function": probe["probe"]["function"],
-                            "args": probe["probe"]["args"],
-                            "value": probe.get("execution", {}).get("value"),
-                            "run_id": child,
-                        }
-                        evidence_ref = self.store.put("candidate_execution_evidence", payload)
-                        observations.append(
-                            ObservedCheck(
-                                obligation_id=obligation.id,
-                                dimension="execution",
-                                evidence_ref=evidence_ref,
-                            )
-                        )
-                for generated in self.store.get(kernel["evidence"]["generated_checks_id"]):
-                    payload = {
-                        "candidate_id": identity,
-                        "graph_id": generated["graph_id"],
-                        "check": generated["check"],
-                        "source_schema_sha256": generated["source_schema_sha256"],
-                    }
-                    evidence_ref = self.store.put("generated_check_evidence", payload)
-                    observations.append(
-                        ObservedCheck(
-                            obligation_id=generated["check"]["obligation_id"],
-                            dimension="generated",
-                            evidence_ref=evidence_ref,
-                            evaluator_id="generated_dsl_v1",
-                        )
-                    )
-                candidate = KernelCandidate(
-                    id=identity,
-                    schema=kernel["schema"],
-                    functions=kernel["functions"],
-                    parent_id=best_id,
-                )
-                previous = self.store.get(best_id) if best_id else None
-                parent_candidate = (
-                    KernelCandidate(
-                        id=best_id,
-                        schema=previous["schema"],
-                        functions=previous["functions"],
-                        parent_id=previous.get("parent"),
-                    )
-                    if previous
-                    else None
-                )
-                verification_inputs = {
-                    "candidate": candidate,
-                    "obligations": checks,
-                    "evidence": observations,
-                    "store": self.store,
-                    "parent": parent_candidate,
-                    "ontology_validation_ref": kernel["evidence"]["validation_id"],
-                }
-                if new_generated_bank and best_verification_inputs is not None:
-                    prior_inputs = dict(best_verification_inputs)
-                    prior_observations = [
-                        item for item in prior_inputs["evidence"] if item.dimension != "generated"
-                    ]
-                    for generated in candidate_generated:
-                        evidence_ref = self.store.put(
-                            "generated_check_evidence",
-                            {
-                                "candidate_id": best_id,
-                                "graph_id": generated["graph_id"],
-                                "check": generated["check"],
-                                "source_schema_sha256": generated["source_schema_sha256"],
-                            },
-                        )
-                        prior_observations.append(
-                            ObservedCheck(
-                                obligation_id=generated["check"]["obligation_id"],
-                                dimension="generated",
-                                evidence_ref=evidence_ref,
-                                evaluator_id="generated_dsl_v1",
-                            )
-                        )
-                    prior_inputs["evidence"] = prior_observations
-                    prior_report = verify_candidate(**prior_inputs).model_dump(mode="json")
-                    prior_id = self.store.put("candidate_verification", prior_report)
-                    verification_ids.append(prior_id)
-                    self.store.event(
-                        run_id,
-                        "candidate_verification",
-                        "completed",
-                        "Retained candidate checked against the same generated bank",
-                        {
-                            "flow": "verification",
-                            "kernel_id": best_id,
-                            "verification_id": prior_id,
-                            "generated_bank_id": generated_bank_id,
-                            **prior_report,
-                        },
-                    )
-                    prior_failures = compare_fresh_runs({}, list(best_fresh.values()))["failures"]
-                    best_rank = (
-                        0.0,
-                        float(len(prior_failures)),
-                        *candidate_rank(
-                            prior_report, self.store.get(best_id), measured_cost=best_measured_cost
-                        ),
-                    )
-                    ranks[best_id] = list(best_rank)
-                    best_verification_inputs = prior_inputs
-                report = verify_candidate(**verification_inputs)
-                report_data = report.model_dump(mode="json")
-                verification_id = self.store.put("candidate_verification", report_data)
-                verification_ids.append(verification_id)
-                self.store.event(
-                    child,
-                    "candidate_verification",
-                    "completed",
-                    "Independent verification evidence",
-                    {
-                        "flow": "verification",
-                        "kernel_id": identity,
-                        "verification_id": verification_id,
-                        **report_data,
-                    },
-                )
-                target_met = bool(report_data.get("target_met"))
-                feedback = repair_feedback(report_data)
-                fresh = []
-                boundary_failure = None
-                if report_data.get("execution_eligible"):
-                    fresh_query_ids = sorted(
-                        set(kernel["sample"]["selected_query_ids"]) | set(best_fresh)
-                    )
-                    for query_id in fresh_query_ids:
-                        try:
-                            episode = self.run_episode(
-                                surface_id, query_id, kernel_id=identity, parent_run_id=child
-                            )
-                        except RuntimeError as exc:
-                            boundary_failure = f"{type(exc).__name__}: {exc}"
-                            stop_reason = "execution_boundary_failure"
-                            break
-                        fresh.append(
-                            {
-                                "query_id": query_id,
-                                "run_id": episode["run_id"],
-                                "episode_id": episode["episode_id"],
-                                "status": episode["episode"]["status"],
-                                "assessment": episode.get("assessment"),
-                            }
-                        )
-                    self.store.event(
-                        child,
-                        "fresh_agent_execution",
-                        "completed",
-                        "Fresh agent results remain distinct from generated checks",
-                        {
-                            "flow": "verification",
-                            "kernel_id": identity,
-                            "episodes": fresh,
-                            "boundary_failure": boundary_failure,
-                        },
-                    )
-                spend = self.store.rows(
-                    "WITH RECURSIVE family(id) AS (SELECT id FROM runs WHERE id=? UNION ALL "
-                    "SELECT r.id FROM runs r JOIN family f ON r.parent_run_id=f.id) "
-                    "SELECT SUM(estimated) AS estimated,SUM(CASE WHEN status!='settled' THEN reserved ELSE 0 END) AS reserved "
-                    "FROM model_calls WHERE run_id IN (SELECT id FROM family)",
-                    (child,),
-                )[0]
-                rank = candidate_rank(
-                    report_data,
-                    kernel,
-                    measured_cost=float(spend["estimated"] or 0) + float(spend["reserved"] or 0),
-                )
-                comparison = compare_fresh_runs(best_fresh, fresh)
-                if comparison["failures"]:
-                    feedback["fresh_agent_failures"] = [
-                        item for item in fresh if item["query_id"] in comparison["failures"]
-                    ]
-                rank = (
-                    float(len(comparison["regressions"])),
-                    float(len(comparison["failures"])),
-                    *rank,
-                )
-                ranks[identity] = list(rank)
-                self.store.event(
-                    child,
-                    "candidate_comparison",
-                    "completed",
-                    "Compared fresh behavior before candidate selection",
-                    {
-                        "flow": "learning",
-                        "kernel_id": identity,
-                        "previous_kernel_id": best_id,
-                        "comparison": comparison,
-                        "rank": list(rank),
-                    },
-                )
-                if (
-                    report_data.get("execution_eligible")
-                    and not report_data.get("known_regressions", 0)
-                    and not comparison["regressions"]
-                    and not comparison["unexecuted_previous"]
-                ):
-                    if best_rank is None or rank < best_rank:
-                        best_id, best_rank = identity, rank
-                        best_fresh = {item["query_id"]: item for item in fresh}
-                        best_verification_inputs = verification_inputs
-                        best_measured_cost = float(spend["estimated"] or 0) + float(
-                            spend["reserved"] or 0
-                        )
-                target_met = target_met and not comparison["failures"] and boundary_failure is None
-                if boundary_failure:
-                    break
-                if target_met:
-                    stop_reason = "construction_target_met"
-                    break
-                pool_ids = {q.id for q in surface.queries if q.split == "construction"}
-                if (
-                    pool_ids.issubset(seen)
-                    and not report_data.get("counterexamples")
-                    and not feedback.get("fresh_agent_failures")
-                    and not feedback.get("actionable_learning_gaps")
-                ):
-                    stop_reason = "sampled_task_surface"
-                    break
-            selection = CandidateSelection(
-                task_ir_id=task_ir_id or "",
-                candidate_ids=candidates,
-                selected_kernel_id=best_id,
-                verification_ids=verification_ids,
-                disposition="target_met"
-                if target_met
-                else ("incomplete" if best_id else "rejected"),
-                stop_reason=stop_reason,
-                ranks=ranks,
-            )
-            selection_id = self.store.put("candidate_selection", selection.model_dump(mode="json"))
-            self.store.event(
-                run_id,
-                "candidate_selection",
-                "completed",
-                "Learning retained the best eligible candidate",
-                {
-                    "flow": "learning",
-                    "selection_id": selection_id,
-                    **selection.model_dump(mode="json"),
-                },
-            )
-            output = {
-                "run_id": run_id,
-                "kernel_id": best_id,
-                "candidate_ids": candidates,
-                "selection_id": selection_id,
-                "task_ir_id": task_ir_id,
-                "verification_ids": verification_ids,
-                "attempts": attempts,
-                "assessment": {
-                    "construction": selection.disposition,
-                    "fresh_task_success": "unmeasured",
-                },
-            }
-            self.store.set_run(run_id, "completed", result=output)
-            return output
-        except Exception as exc:
-            if not managed:
-                self.store.set_run(run_id, "failed", error=f"{type(exc).__name__}: {exc}")
-            raise
 
     def _construct_round(
         self,
@@ -793,7 +419,7 @@ class SurfaceEngine:
         task_ir_id: str | None = None,
         seen_query_ids: list[str] | None = None,
         repair: dict | None = None,
-        generated_bank_id: str | None = None,
+        starter_cache: dict[str, str] | None = None,
     ) -> dict:
         """Construct a candidate from a recorded fresh sample and genuine starter episodes.
 
@@ -801,6 +427,7 @@ class SurfaceEngine:
         task-success score. Candidates remain explicitly unpromoted until an
         external task evaluator records fresh outcome evidence.
         """
+        starter_cache = starter_cache if starter_cache is not None else {}
         managed_run = run_id is not None
         data = self.surface(surface_id)
         surface = TaskSurface.model_validate(data["configuration"])
@@ -862,6 +489,9 @@ class SurfaceEngine:
                 return {
                     "requirements_id": bank.analysis_id,
                     "task_ir_id": task_ir_id,
+                    "behavior_bank_id": self.store.put(
+                        "behavior_bank", build_behavior_bank(bank).model_dump(mode="json")
+                    ),
                     "requirements_input_id": requirements_input_id,
                     "prompt_manifest_id": prompt_manifest_id,
                 }
@@ -901,6 +531,9 @@ class SurfaceEngine:
                 bank = freeze_task_ir(surface.description, obligations, analysis)
                 bank.analysis_id = analysis_id
                 frozen_id = self.store.put("task_ir", bank.model_dump(mode="json"))
+                behavior_bank_id = self.store.put(
+                    "behavior_bank", build_behavior_bank(bank).model_dump(mode="json")
+                )
                 self.store.event(
                     run_id,
                     "task_ir",
@@ -909,6 +542,7 @@ class SurfaceEngine:
                     {
                         "flow": "learning",
                         "task_ir_id": frozen_id,
+                        "behavior_bank_id": behavior_bank_id,
                         "mandatory_obligations": sum(item.mandatory for item in bank.obligations),
                         "exploratory_obligations": sum(
                             not item.mandatory for item in bank.obligations
@@ -934,20 +568,46 @@ class SurfaceEngine:
                     "requirements_input_id": requirements_input_id,
                     "prompt_manifest_id": prompt_manifest_id,
                     "task_ir_id": frozen_id,
+                    "behavior_bank_id": behavior_bank_id,
                 }
             raise ValueError(f"No valid requirement analysis within repair limit: {feedback}")
 
         def collect(state):
             episodes, documents = [], []
             for query in selected:
-                episode = self.run_episode(surface_id, query.id, parent_run_id=run_id)
-                episodes.append(episode["episode_id"])
-                for observation in episode["episode"]["observations"]:
-                    for receipt_id in observation.get("receipt_ids", []):
-                        receipt = {**self.store.get(receipt_id), "evidence_id": receipt_id}
-                        documents.extend(receipt_documents(receipt))
+                key = starter_key(
+                    surface_id, query.model_dump(mode="json"), catalog.get("catalog_id")
+                )
+                reused = key in starter_cache
+                if not reused:
+                    episode = self.run_episode(surface_id, query.id, parent_run_id=run_id)
+                    starter_cache[key] = episode["episode_id"]
+                snapshot = retained_starter(
+                    self.store,
+                    starter_cache[key],
+                    surface_id=surface_id,
+                    query_id=query.id,
+                    catalog_id=catalog.get("catalog_id"),
+                    document_reader=receipt_documents,
+                )
+                episodes.append(snapshot["episode_id"])
+                documents.extend(snapshot["documents"])
+                self.store.event(
+                    run_id,
+                    "starter_evidence",
+                    "completed",
+                    "Reused the campaign's recorded source snapshot"
+                    if reused
+                    else "Recorded actual starter acquisition",
+                    {
+                        "flow": "learning",
+                        **{k: v for k, v in snapshot.items() if k != "documents"},
+                        "reused": reused,
+                    },
+                )
             if not documents:
                 raise ValueError("Construction requires actual acquired evidence")
+            documents = list({item["document_id"]: item for item in documents}.values())
             return {
                 "episodes_id": self.store.put("sample_episodes", episodes),
                 "documents_id": self.store.put("acquired_documents", documents),
@@ -965,12 +625,9 @@ class SurfaceEngine:
                         "obligations": requirements_input["obligations"],
                         "requirements": self.store.get(state["requirements_id"]),
                         "task_ir": self.store.get(state["task_ir_id"]),
+                        "behavior_bank": self.store.get(state["behavior_bank_id"]),
                         "capabilities": catalog["tools"],
                         "observations": self.store.get(state["documents_id"]),
-                        "sampled_episodes": [
-                            sampled_episode_summary(identity, self.store.get(identity))
-                            for identity in self.store.get(state["episodes_id"])
-                        ],
                         "previous_schema": parent["schema"] if parent else None,
                         "validation_feedback": feedback,
                     },
@@ -1002,6 +659,25 @@ class SurfaceEngine:
             raise ValueError("No logically valid schema within repair limit")
 
         def extract(state):
+            if (
+                parent
+                and parent.get("materialization_version") == MATERIALIZATION_VERSION
+                and canonical(parent["schema"]) == canonical(self.store.get(state["schema_id"]))
+                and self.store.get(parent["evidence"]["documents_id"])
+                == self.store.get(state["documents_id"])
+                and self.store.get(parent["evidence"]["prompt_manifest_id"])["stages"]["extraction"]
+                == prompts["stages"]["extraction"]
+            ):
+                graph_id = parent["evidence"]["graph_id"]
+                self.store.get(graph_id)
+                self.store.event(
+                    run_id,
+                    "construction_materialization_reused",
+                    "completed",
+                    "Unchanged schema, extractor and source snapshot reused",
+                    {"flow": "verification", "graph_id": graph_id, "parent_kernel_id": parent_id},
+                )
+                return {"graph_id": graph_id}
             graph = build_graph(
                 self.store,
                 model,
@@ -1016,10 +692,32 @@ class SurfaceEngine:
         def compose(state):
             schema = self.store.get(state["schema_id"])
             bank = TaskIR.model_validate(self.store.get(state["task_ir_id"]))
+            behavior_bank = self.store.get(state["behavior_bank_id"])
+            retained_receipts = [
+                {**self.store.get(identity), "evidence_id": identity, "reused": True}
+                for identity in sorted(
+                    {document["source_id"] for document in self.store.get(state["documents_id"])}
+                )
+            ]
+            receipt_arguments = {}
+            for receipt in retained_receipts:
+                if receipt.get("status") == "completed":
+                    receipt_arguments.setdefault(receipt["capability_id"], []).append(
+                        receipt["args"]
+                    )
             mandatory = [item for item in bank.obligations if item.mandatory]
             error = repair
             tool_attempts = 0
-            probe_receipt_cache: dict[str, str] = {}
+            probe_receipt_cache: dict[str, str] = {
+                hashlib.sha256(
+                    canonical(
+                        {"capability": receipt["capability_id"], "arguments": receipt["args"]}
+                    )
+                ).hexdigest(): document["source_id"]
+                for document in self.store.get(state["documents_id"])
+                for receipt in [self.store.get(document["source_id"])]
+                if receipt.get("status") == "completed"
+            }
             for attempt in range(runtime_config()["max_repair_attempts"] + 1):
                 proposal = request_json(
                     model,
@@ -1030,31 +728,51 @@ class SurfaceEngine:
                         "queries": [q.model_dump() for q in selected],
                         "obligations": [item.model_dump(mode="json") for item in mandatory],
                         "task_ir": bank.model_dump(mode="json"),
+                        "behavior_bank": behavior_bank,
+                        "recorded_acquisition_arguments": receipt_arguments,
                         "requirements": self.store.get(state["requirements_id"]),
                         "schema": schema,
                         "graph": self.store.get(state["graph_id"]),
                         "capabilities": catalog["tools"],
                         "operators": operator_contracts(),
                         "function_contract": FunctionSpec.model_json_schema(),
-                        "generated_check_contract": GeneratedCheckSpec.model_json_schema(),
-                        "frozen_generated_check_bank": self.store.get(generated_bank_id)
-                        if generated_bank_id
-                        else None,
                         "parent_functions": parent["functions"] if parent else None,
-                        "sampled_episodes": [
-                            sampled_episode_summary(identity, self.store.get(identity))
-                            for identity in self.store.get(state["episodes_id"])
-                        ],
                         "execution_feedback": error,
                     },
                     FunctionProposal.model_json_schema(),
                 )
                 proposal_id = self.store.put("function_proposal", proposal)
                 try:
+                    proposal = FunctionProposal.model_validate(proposal).model_dump(mode="json")
                     functions = [
                         f.model_dump(mode="json")
-                        for f in validate_functions(proposal["functions"], schema)
+                        for f in (
+                            validate_functions(proposal["functions"], schema)
+                            if proposal["functions"]
+                            else []
+                        )
                     ]
+                    compilation = compile_behavior_bindings(
+                        behavior_bank,
+                        schema,
+                        proposal["behavior_bindings"],
+                        functions=functions,
+                        capabilities=catalog["tools"],
+                    )
+                    functions = [
+                        f.model_dump(mode="json")
+                        for f in validate_functions(compilation.functions, schema)
+                    ]
+                    if not functions:
+                        raise ValueError(
+                            f"No callable semantic behavior: {compilation.diagnostics}"
+                        )
+                    compiled_by_behavior = {
+                        entry.behavior_id: entry for entry in compilation.entries
+                    }
+                    binding_by_behavior = {
+                        item["behavior_id"]: item for item in proposal["behavior_bindings"]
+                    }
                     allowed = {t["id"] for t in catalog["tools"]}
                     for function in functions:
                         for step in function["steps"]:
@@ -1063,12 +781,32 @@ class SurfaceEngine:
                                 and step["args"]["capability"] not in allowed
                             ):
                                 raise ValueError("Function binds an undiscovered capability")
-                    if not any(
+                    if not compilation.acquisition_bindings and not any(
                         function_dataflow(f)["acquisition_computation_steps"] for f in functions
                     ):
-                        raise ValueError("Acquisition-plus-computation witness is missing")
+                        raise ValueError(
+                            "An authorized acquisition/materialization strategy is missing"
+                        )
+                    links = {item.obligation_id: set() for item in mandatory}
+                    for template in behavior_bank["behaviors"]:
+                        entry = compiled_by_behavior.get(template["behavior_id"])
+                        if entry:
+                            for identity in template["obligation_ids"]:
+                                if identity in links:
+                                    links[identity].add(entry.function_name)
                     coverage = validate_function_coverage(
-                        proposal["coverage"], mandatory, functions
+                        [
+                            {
+                                "obligation_id": identity,
+                                "function_names": sorted(names),
+                                "unsupported_reason": None
+                                if names
+                                else "No executable binding for this interpreted behavior",
+                            }
+                            for identity, names in links.items()
+                        ],
+                        mandatory,
+                        functions,
                     )
                     coverage_id = self.store.event(
                         run_id,
@@ -1088,7 +826,26 @@ class SurfaceEngine:
                             "Requirement linkage is incomplete: " + "; ".join(coverage.gaps)
                         )
                     probes, covered, demands = [], set(), []
-                    for index, probe in enumerate(proposal["probes"]):
+                    probe_inputs = list(proposal["probes"])
+                    for template in behavior_bank["behaviors"]:
+                        entry = compiled_by_behavior.get(template["behavior_id"])
+                        if entry is None:
+                            continue
+                        inputs = make_behavior_inputs(
+                            template,
+                            binding_by_behavior[template["behavior_id"]],
+                            schema,
+                            self.store.get(state["graph_id"]),
+                            receipt_arguments=receipt_arguments,
+                        )
+                        if inputs:
+                            probe_inputs.append(
+                                {"function": entry.function_name, "args": inputs[0]}
+                            )
+                    probe_inputs = list(
+                        {canonical(probe): probe for probe in probe_inputs}.values()
+                    )
+                    for index, probe in enumerate(probe_inputs):
                         function = next(
                             (f for f in functions if f["name"] == probe["function"]), None
                         )
@@ -1097,9 +854,16 @@ class SurfaceEngine:
                         has_acquisition = any(
                             s["operator"] == "invoke_capability" for s in function["steps"]
                         )
+                        prepared = prepare_bound_materialization(
+                            schema,
+                            function,
+                            probe["args"],
+                            compilation.acquisition_bindings,
+                            catalog["tools"],
+                        )
                         graph = (
                             empty_graph()
-                            if has_acquisition
+                            if has_acquisition or prepared.acquisitions
                             else deepcopy(self.store.get(state["graph_id"]))
                         )
                         starting_graph_id = self.store.put("probe_starting_graph", graph)
@@ -1157,12 +921,64 @@ class SurfaceEngine:
 
                         probe_record = {"probe": probe, "starting_graph_id": starting_graph_id}
                         try:
+                            if prepared.acquisitions:
+                                matching = []
+                                for request in prepared.acquisitions:
+                                    receipts = [
+                                        receipt
+                                        for receipt in retained_receipts
+                                        if receipt["capability_id"] == request.capability
+                                        and receipt["args"] == request.arguments
+                                        and receipt["status"] == "completed"
+                                    ]
+                                    if not receipts:
+                                        raise ValueError(
+                                            "No retained receipt matches the frozen probe acquisition arguments"
+                                        )
+                                    matching.extend(receipts)
+                                acquired.extend(matching)
+                                document_ids = {
+                                    item["document_id"]
+                                    for receipt in matching
+                                    for item in receipt_documents(receipt)
+                                }
+                                retained = deepcopy(self.store.get(state["graph_id"]))
+                                retained["nodes"] = [
+                                    node
+                                    for node in retained["nodes"]
+                                    if any(
+                                        source["document_id"] in document_ids
+                                        for source in node["sources"]
+                                    )
+                                ]
+                                node_ids = {node["id"] for node in retained["nodes"]}
+                                retained["edges"] = [
+                                    edge
+                                    for edge in retained["edges"]
+                                    if edge["source"] in node_ids
+                                    and edge["target"] in node_ids
+                                    and any(
+                                        source["document_id"] in document_ids
+                                        for source in edge["sources"]
+                                    )
+                                ]
+                                graph.update(slice_graph(schema, retained, prepared.demand))
+                                probe_record.update(
+                                    strategy_basis="retained_materialized_source_slice",
+                                    source_graph_id=state["graph_id"],
+                                    acquisition_requests=[
+                                        item.model_dump(mode="json")
+                                        for item in prepared.acquisitions
+                                    ],
+                                    limitation="Native bindings and retained computation checked. Record provenance does not independently verify each field's source mapping; fresh acquisition/extraction require a live episode",
+                                )
                             result = execute_function(
                                 graph,
                                 functions,
                                 probe["function"],
                                 probe["args"],
                                 schema=schema,
+                                artifact_store=self.store,
                                 capability_invoker=acquire,
                                 step_observer=lambda step, probe=probe, index=index, attempt=attempt: (
                                     self.store.event(
@@ -1181,7 +997,17 @@ class SurfaceEngine:
                                 ),
                             )
                             probe_record["execution"] = result
-                            proof = result_acquisition_evidence(function, result, graph, acquired)
+                            proof = result_acquisition_evidence(
+                                function,
+                                result,
+                                graph,
+                                acquired,
+                                materialization_receipt_ids=[
+                                    item["evidence_id"] for item in acquired
+                                ]
+                                if prepared.acquisitions
+                                else [],
+                            )
                             if (
                                 function_dataflow(function)["acquisition_computation_steps"]
                                 and not proof
@@ -1200,7 +1026,11 @@ class SurfaceEngine:
                                 status="failed", error=f"{type(exc).__name__}: {exc}"
                             )
                             if isinstance(exc, FunctionExecutionError):
-                                probe_record.update(steps=exc.steps, dependencies=exc.dependencies)
+                                probe_record.update(
+                                    steps=exc.steps,
+                                    dependencies=exc.dependencies,
+                                    capture_id=exc.capture_id,
+                                )
                             raise
                         finally:
                             probe_record.update(
@@ -1230,71 +1060,41 @@ class SurfaceEngine:
                         covered.add(probe["function"])
                     if covered != {f["name"] for f in functions}:
                         raise ValueError("Every function requires a real execution probe")
-                    generated_checks = []
-                    frozen_generated = (
-                        self.store.get(generated_bank_id) if generated_bank_id else None
+                    bindings_id = self.store.put("behavior_bindings", proposal["behavior_bindings"])
+                    behavior_input_id = self.store.put(
+                        "behavior_evaluation_input",
+                        {
+                            "bank_id": state["behavior_bank_id"],
+                            "bindings_id": bindings_id,
+                            "graph_id": state["graph_id"],
+                            "receipt_arguments": receipt_arguments,
+                            "receipt_ids": sorted(
+                                {
+                                    document["source_id"]
+                                    for document in self.store.get(state["documents_id"])
+                                }
+                            ),
+                            "capabilities_id": catalog["catalog_id"],
+                            "evidence_refs": sorted(
+                                {
+                                    document["source_id"]
+                                    for document in self.store.get(state["documents_id"])
+                                }
+                            ),
+                        },
                     )
-                    check_inputs = (
-                        [item["check"] for item in frozen_generated]
-                        if frozen_generated is not None
-                        else proposal.get("generated_checks", [])
-                    )
-                    for check_index, check in enumerate(check_inputs):
-                        specification = GeneratedCheckSpec.model_validate(check)
-                        if specification.obligation_id not in {
-                            item.obligation_id for item in bank.obligations
-                        }:
-                            raise ValueError(
-                                "Generated check references an obligation outside the frozen bank"
-                            )
-                        prior_check = (
-                            frozen_generated[check_index] if frozen_generated is not None else None
-                        )
-                        graph_id = prior_check["graph_id"] if prior_check else state["graph_id"]
-                        source_schema_sha256 = (
-                            prior_check["source_schema_sha256"]
-                            if prior_check
-                            else hashlib.sha256(canonical(schema)).hexdigest()
-                        )
-                        if source_schema_sha256 == hashlib.sha256(canonical(schema)).hexdigest():
-                            outcome = execute_generated_check(
-                                specification,
-                                self.store.get(graph_id),
-                                schema,
-                                candidate_functions=functions,
-                            )
-                        else:
-                            outcome = {
-                                "status": "unknown",
-                                "independent": False,
-                                "summary": "Frozen generated check requires a schema translation",
-                            }
-                        evidence = {
-                            "flow": "verification",
-                            "independent": False,
-                            "graph_id": graph_id,
-                            "check": specification.model_dump(mode="json"),
-                            "outcome": outcome,
-                            "proposal_id": proposal_id,
-                            "prompt_manifest_id": prompt_manifest_id,
-                            "source_schema_sha256": source_schema_sha256,
-                            "bank_id": generated_bank_id,
-                        }
-                        evidence["evidence_id"] = self.store.event(
-                            run_id,
-                            "generated_check",
-                            "completed",
-                            "Executed a generated consistency check on actual evidence",
-                            evidence,
-                        )
-                        generated_checks.append(evidence)
                     return {
                         "functions_id": self.store.put("functions", functions),
                         "coverage_id": coverage_id,
                         "demands_id": self.store.put(
                             "evidence_demands", {"flow": "learning", "demands": demands}
                         ),
-                        "generated_checks_id": self.store.put("generated_checks", generated_checks),
+                        "generated_checks_id": self.store.put("generated_checks", []),
+                        "behavior_bindings_id": bindings_id,
+                        "behavior_input_id": behavior_input_id,
+                        "compilation_id": self.store.put(
+                            "behavior_compilation", compilation.model_dump(mode="json")
+                        ),
                         "learning_id": self.store.put(
                             "learning_candidate",
                             {
@@ -1360,6 +1160,10 @@ class SurfaceEngine:
                 demands_id: str
                 learning_id: str
                 generated_checks_id: str
+                behavior_bank_id: str
+                behavior_bindings_id: str
+                behavior_input_id: str
+                compilation_id: str
 
             workflow = StateGraph(ConstructionEvidence)
             for name, node in [
@@ -1388,7 +1192,9 @@ class SurfaceEngine:
             kernel = {
                 "format_version": 1,
                 "kind": "mcp_kernel",
-                "construction_profile": "demand_v1",
+                "historical_replay_policy": "inherited_v1",
+                "construction_profile": "semantic_v2",
+                "materialization_version": MATERIALIZATION_VERSION,
                 "surface_id": surface_id,
                 "parent": parent_id,
                 "created_at": now(),
@@ -1396,6 +1202,9 @@ class SurfaceEngine:
                 "sample": sample,
                 "schema": self.store.get(result["schema_id"]),
                 "functions": self.store.get(result["functions_id"]),
+                "acquisition_bindings": self.store.get(result["compilation_id"])[
+                    "acquisition_bindings"
+                ],
                 "catalog": catalog,
                 "evidence": result,
                 "validation": self.store.get(result["validation_id"]),
@@ -1412,6 +1221,20 @@ class SurfaceEngine:
                 },
             }
             kernel_id = self.store.put("mcp_kernel", kernel)
+            from oak.historical_replay import register_kernel_bank, seal_execution_case
+
+            protected_cases = [
+                seal_execution_case(
+                    self.store,
+                    kernel_id,
+                    probe["execution"]["capture_id"],
+                    run_id=run_id,
+                    split="construction",
+                )
+                for probe in self.store.get(result["probes_id"])
+                if probe.get("status") == "passed" and probe.get("execution", {}).get("capture_id")
+            ]
+            register_kernel_bank(self.store, kernel_id, protected_cases)
             self.store.event(
                 run_id,
                 "kernel_candidate",
@@ -1420,7 +1243,8 @@ class SurfaceEngine:
                 {"kernel_id": kernel_id, "parent": parent_id, "assessment": kernel["assessment"]},
             )
             output = {"run_id": run_id, "kernel_id": kernel_id, "assessment": kernel["assessment"]}
-            self.store.set_run(run_id, "completed", result=output)
+            if not managed_run:
+                self.store.set_run(run_id, "completed", result=output)
             return output
         except Exception as exc:
             if not managed_run:
@@ -1466,6 +1290,37 @@ class SurfaceEngine:
         kernel = self.store.get(kernel_id) if kernel_id else None
         if kernel and kernel.get("surface_id") != surface_id:
             raise ValueError("Kernel belongs to another surface")
+        if kernel is not None:
+            from oak.historical_replay import inference_admission
+
+            admission = inference_admission(self.store, kernel_id)
+            internal_evaluation = False
+            if (
+                not admission["allowed"]
+                and parent_run_id is not None
+                and inference_query is None
+                and query.split in {"construction", "development"}
+            ):
+                owned = self.store.rows(
+                    "SELECT id,task_id,kind,status,parent_run_id FROM runs WHERE id=?",
+                    (kernel.get("run_id"),),
+                )
+                parent_runs = self.store.rows(
+                    "SELECT task_id,kind,status FROM runs WHERE id=?", (parent_run_id,)
+                )
+                internal_evaluation = bool(
+                    owned
+                    and parent_runs
+                    and owned[0]["task_id"] == surface_id
+                    and owned[0]["kind"] == "mcp_construct"
+                    and owned[0]["status"] == "running"
+                    and parent_run_id in {owned[0]["id"], owned[0]["parent_run_id"]}
+                    and parent_runs[0]["task_id"] == surface_id
+                    and parent_runs[0]["kind"] == "mcp_construct"
+                    and parent_runs[0]["status"] == "running"
+                )
+            if not admission["allowed"] and not internal_evaluation:
+                raise ValueError(admission["reason"])
         catalog = kernel["catalog"] if kernel else data["catalog"]
         context = build_runtime_context(
             surface,
@@ -1502,7 +1357,9 @@ class SurfaceEngine:
             "observation IDs with nonempty acquisition_evidence_ids from this episode. "
             "Completion is independently assessed."
         )
-        demand_enabled = bool(kernel and kernel.get("construction_profile") == "demand_v1")
+        demand_enabled = bool(
+            kernel and kernel.get("construction_profile") in {"demand_v1", "semantic_v2"}
+        )
         if demand_enabled:
             instruction += (
                 "\nGraph evidence is materialized incrementally from your selected function and arguments. "
@@ -1683,7 +1540,11 @@ class SurfaceEngine:
                     )
                 return receipt["output"]
 
-            observation = {"id": f"observation-{state['step']}", "function": decision["function"]}
+            observation = {
+                "id": f"observation-{state['step']}",
+                "function": decision["function"],
+                "args": decision["args"],
+            }
             try:
                 if kernel:
                     selected_function = next(
@@ -1696,11 +1557,17 @@ class SurfaceEngine:
                     )
                     if selected_function is None:
                         raise ValueError("Selected function is absent from the frozen kernel")
+                    prepared = None
                     if demand_enabled:
-                        demand = derive_demand(
-                            kernel["schema"], selected_function, decision["args"]
+                        prepared = prepare_bound_materialization(
+                            kernel["schema"],
+                            selected_function,
+                            decision["args"],
+                            kernel.get("acquisition_bindings", []),
+                            catalog["tools"],
                         )
-                        if any(
+                        demand = prepared.demand
+                        if prepared.acquisitions or any(
                             step["operator"] == "invoke_capability"
                             for step in selected_function["steps"]
                         ):
@@ -1721,13 +1588,56 @@ class SurfaceEngine:
                                 },
                             )
                         )
+                    materialized_demands = set()
+
+                    def before_step(*, step_id, operator, arguments, step_outputs):
+                        nonlocal demand
+                        if (
+                            not prepared
+                            or not prepared.acquisitions
+                            or operator not in GRAPH_OPERATORS
+                        ):
+                            return
+                        demand = derive_step_demand(
+                            kernel["schema"],
+                            selected_function,
+                            decision["args"],
+                            step_id,
+                            step_outputs=step_outputs,
+                        )
+                        if demand.demand_id in materialized_demands:
+                            return
+                        instantiation_refs.append(
+                            self.store.event(
+                                run_id,
+                                "evidence_expansion",
+                                "running",
+                                "Resolve the impending graph operation from its actual inputs",
+                                {
+                                    "flow": "instantiation",
+                                    "step_id": step_id,
+                                    "operator": operator,
+                                    "demand": demand.model_dump(mode="json"),
+                                    "bindings": [
+                                        item.model_dump(mode="json")
+                                        for item in prepared.acquisitions
+                                    ],
+                                },
+                            )
+                        )
+                        for request in prepared.acquisitions:
+                            acquire(capability=request.capability, arguments=request.arguments)
+                        materialized_demands.add(demand.demand_id)
+
                     result = execute_function(
                         graph,
                         kernel["functions"],
                         decision["function"],
                         decision["args"],
                         schema=kernel["schema"],
+                        artifact_store=self.store,
                         capability_invoker=acquire,
+                        before_step=before_step,
                         step_observer=lambda step: self.store.event(
                             run_id,
                             "operator",
@@ -1741,6 +1651,7 @@ class SurfaceEngine:
                         ),
                     )
                     observation["output"] = result["value"]
+                    observation["capture_id"] = result["capture_id"]
                     observation["execution_id"] = self.store.put("function_execution", result)
                     observation["working_graph_id"] = self.store.put("function_graph", graph)
                     previous_receipts = [
@@ -1749,9 +1660,25 @@ class SurfaceEngine:
                         for identity in previous.get("receipt_ids", [])
                     ]
                     observation["acquisition_evidence_ids"] = result_acquisition_evidence(
-                        selected_function, result, graph, previous_receipts + acquired
+                        selected_function,
+                        result,
+                        graph,
+                        previous_receipts + acquired,
+                        materialization_receipt_ids=[item["evidence_id"] for item in acquired]
+                        if prepared and prepared.acquisitions
+                        else [],
                     )
                     if demand:
+                        demand = derive_demand(
+                            kernel["schema"],
+                            selected_function,
+                            decision["args"],
+                            step_outputs={
+                                step["id"]: step["output"]
+                                for step in result["steps"]
+                                if step["status"] == "completed"
+                            },
+                        )
                         scope = assess_sufficiency(kernel["schema"], graph, demand)
                         observation["evidence_scope"] = scope.model_dump(mode="json")
                         instantiation_refs.append(
@@ -1780,6 +1707,7 @@ class SurfaceEngine:
             except (ValueError, KeyError, TypeError, ValidationError) as exc:
                 observation.update(status="failed", error=f"{type(exc).__name__}: {exc}")
                 if isinstance(exc, FunctionExecutionError):
+                    observation["capture_id"] = exc.capture_id
                     observation["execution_id"] = self.store.put(
                         "function_failure",
                         {
@@ -1905,6 +1833,44 @@ class SurfaceEngine:
             )
             if assessment is not None:
                 result["assessment"] = assessment
+            if (
+                kernel_id is not None
+                and kernel.get("historical_replay_policy") == "inherited_v1"
+                and inference_query is None
+                and query.split in {"construction", "development"}
+            ):
+                from oak.historical_replay import (
+                    check_candidate_replay,
+                    register_kernel_bank,
+                    seal_execution_case,
+                )
+
+                previous_bank = self.store.rows(
+                    "SELECT bank_id FROM replay_banks WHERE kernel_id=?", (kernel_id,)
+                )
+                previous_bank_id = previous_bank[0]["bank_id"] if previous_bank else None
+
+                protected_cases = [
+                    seal_execution_case(
+                        self.store,
+                        kernel_id,
+                        observation["capture_id"],
+                        run_id=run_id,
+                        question=query.query,
+                        split=query.split,
+                    )
+                    for observation in episode["observations"]
+                    if observation.get("status") == "completed" and observation.get("capture_id")
+                ]
+                result["replay_bank_id"] = register_kernel_bank(
+                    self.store, kernel_id, protected_cases
+                )
+                if not internal_evaluation and result["replay_bank_id"] != previous_bank_id:
+                    # The completed episode remains its own evidence. A changed
+                    # protected bank needs a new offline report before admission.
+                    result["historical_replay"] = check_candidate_replay(
+                        self.store, kernel_id, run_id=run_id
+                    )
             self.store.set_run(run_id, "completed", result=result)
             return result
         except Exception as exc:
