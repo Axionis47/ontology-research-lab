@@ -396,12 +396,12 @@ def compile_behavior(
                 steps.append(
                     {
                         "id": identity + "n",
-                        "operator": "filter_property_numerical",
+                        "operator": "filter_numeric",
                         "args": {"entities": parent, "conditions": numeric},
                     }
                 )
                 parent = {"$step": identity + "n"}
-            operator = "filter_property_categorical" if categorical else "filter_property_numerical"
+            operator = "filter_property_categorical" if categorical else "filter_numeric"
             args = {"entities": parent, "conditions": categorical or numeric}
         elif operation.operator == "arithmetic":
             operator, args = (

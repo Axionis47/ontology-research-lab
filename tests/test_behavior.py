@@ -24,6 +24,7 @@ from oak.behavior import (
     make_behavior_inputs,
     replay_behavior_evaluation,
 )
+from oak.behavior_reference import generated_mutants
 from oak.functions import execute_function
 from oak.learning import candidate_rank
 from oak.learning_contracts import SemanticField, TaskIR, TaskObligation, TaskOperation, TaskProgram
@@ -95,7 +96,7 @@ def bank_for(task_program=None, *, duplicates=1):
                 TaskObligation(
                     obligation_id=f"obligation_{index}",
                     case_id=f"authored_{index}",
-                    text="Maximum over the requested scope",
+                    text=task_program.observation_contract,
                     parent_requirement_ids=[],
                     derivation_rule="authored_test_contract",
                     program=task_program,
@@ -484,3 +485,145 @@ def test_omitting_a_failed_behavior_cannot_improve_its_learning_rank():
     )
     assert failed_rank < omitted_rank
     assert repaired_rank < failed_rank
+
+
+@pytest.mark.parametrize("mixed", [False, True], ids=["numeric", "numeric-and-categorical"])
+def test_filters_compile_callable_records_and_aggregate_over_genuine_evidence(mixed):
+    """Authored task semantics lower to real registered operators on saved rows."""
+    kernel, graph = artifact(WEATHER, KERNEL), artifact(WEATHER, GRAPH)
+    rows = [row for row in graph["nodes"] if row["type"] == "DailyForecast"]
+    thresholds = sorted({row["properties"]["high_temperature"] for row in rows})
+    assert len(thresholds) > 1
+    conditions = [{"field": "high", "operator": ">=", "value": "$input.threshold"}]
+    inputs, parameter_fields = {"threshold": "number"}, {"threshold": "high"}
+    if mixed:
+        conditions.append({"field": "date", "operator": "in", "values": ["$input.date"]})
+        inputs["date"], parameter_fields["date"] = "string", "date"
+    described = TaskProgram(
+        fields=program().fields,
+        operations=[
+            TaskOperation(
+                id="records", operator="read", fields=["date", "high"], result_kind="records"
+            ),
+            TaskOperation(
+                id="matching",
+                operator="filter",
+                inputs=["records"],
+                fields=["high", "date"] if mixed else ["high"],
+                result_kind="records",
+                parameters={"conditions": conditions},
+            ),
+            TaskOperation(
+                id="count",
+                operator="aggregate",
+                inputs=["matching"],
+                fields=[],
+                result_kind="scalar",
+                parameters={"operation": "count"},
+            ),
+        ],
+        result="count",
+        input_domain=inputs,
+        parameter_fields=parameter_fields,
+        observation_contract="Count the dated records satisfying the parameterized predicates",
+    )
+    bank = bank_for(described)
+    bindings = bindings_for(bank)
+    compiled = compile_behavior_bindings(bank, kernel["schema"], bindings)
+    assert compiled.diagnostics == []
+    selected = {
+        result: next(
+            template
+            for template in bank.behaviors
+            if template.kind == "computation" and template.program.result == result
+        )
+        for result in ("matching", "count")
+    }
+    functions = {
+        result: next(
+            function
+            for function in compiled.functions
+            if function["name"] == "behavior_" + template.behavior_id[2:]
+        )
+        for result, template in selected.items()
+    }
+    assert functions["matching"]["name"] != functions["count"]["name"]
+    for function in functions.values():
+        numeric = next(step for step in function["steps"] if step["operator"] == "filter_numeric")
+        assert numeric["args"]["conditions"][0]["value"] == {"$arg": "threshold"}
+        assert set(function["inputs"]["required"]) == set(inputs)
+        if mixed:
+            categorical = next(
+                step
+                for step in function["steps"]
+                if step["operator"] == "filter_property_categorical"
+            )
+            assert categorical["args"]["entities"] == {"$step": numeric["id"]}
+            assert categorical["args"]["conditions"][0]["values"] == [{"$arg": "date"}]
+    # Both argument values come from actual retained observations. The mixed
+    # case deliberately asks about a real date below the higher real threshold.
+    date = min(rows, key=lambda row: row["properties"]["high_temperature"])["properties"]["date"]
+    for threshold in (thresholds[0], thresholds[-1]):
+        arguments = {"threshold": threshold, **({"date": date} if mixed else {})}
+        expected = [
+            row
+            for row in rows
+            if row["properties"]["high_temperature"] >= threshold
+            and (not mixed or row["properties"]["date"] == date)
+        ]
+        retrieved = execute_function(
+            graph,
+            compiled.functions,
+            functions["matching"]["name"],
+            arguments,
+            schema=kernel["schema"],
+        )["value"]
+        counted = execute_function(
+            graph,
+            compiled.functions,
+            functions["count"]["name"],
+            arguments,
+            schema=kernel["schema"],
+        )["value"]
+        assert {row["id"] for row in retrieved} == {row["id"] for row in expected}
+        assert counted == len(expected)
+    binding = next(item for item in bindings if item.behavior_id == selected["count"].behavior_id)
+    actual_inputs = make_behavior_inputs(selected["count"], binding, kernel["schema"], graph)
+    assert len(actual_inputs) == 2
+    assert all(item["threshold"] in thresholds for item in actual_inputs)
+    if mixed:
+        assert all(
+            item["date"] in {row["properties"]["date"] for row in rows} for item in actual_inputs
+        )
+    report = evaluate_behavior_bank(
+        bank, kernel["schema"], compiled.functions, bindings, graph, evidence_refs=[GRAPH]
+    )
+    for template in selected.values():
+        checked = next(
+            item for item in report["checks"] if item["behavior_id"] == template.behavior_id
+        )
+        assert checked["status"] == "passed"
+        assert any(
+            mutation["defect"] == "dropped_predicate" and mutation["detected"]
+            for mutation in checked["mutations"]
+        )
+    detected = set()
+    for defect, mutant in generated_mutants(
+        functions["count"], kernel["schema"], arguments, counted
+    ):
+        if defect != "dropped_predicate":
+            continue
+        changed_operator = next(
+            left["operator"]
+            for left, right in zip(functions["count"]["steps"], mutant["steps"], strict=True)
+            if left != right
+        )
+        actual = execute_function(
+            graph, [mutant], mutant["name"], arguments, schema=kernel["schema"]
+        )["value"]
+        if actual != counted:
+            detected.add(changed_operator)
+    assert detected == (
+        {"filter_numeric", "filter_property_categorical"} if mixed else {"filter_numeric"}
+    )
+    assert graph == artifact(WEATHER, GRAPH)

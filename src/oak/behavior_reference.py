@@ -367,7 +367,11 @@ def generated_mutants(function, schema, arguments, expected, *, limit=8):
             changed = deepcopy(function)
             changed["steps"][index]["args"]["property_names"] = []
             variants.append(("missing_projected_field", changed))
-        if step["operator"] in {"filter_property_numerical", "filter_property_categorical"}:
+        if step["operator"] in {
+            "filter_numeric",
+            "filter_property_categorical",
+            "filter_categorical",
+        }:
             changed = deepcopy(function)
             changed["steps"][index]["args"]["conditions"] = []
             variants.append(("dropped_predicate", changed))
