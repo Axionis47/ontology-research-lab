@@ -29,7 +29,7 @@ from oak.preservation import (
     lower_function,
     validate_certificate,
 )
-from oak.store import Store
+from oak.store import Store, canonical
 
 CheckStatus = Literal["passed", "failed", "unknown"]
 CheckDimension = Literal[
@@ -407,6 +407,8 @@ def _recorded_execution(
         for actual, expected in zip(steps, function["steps"], strict=True)
     ):
         raise ValueError("Probe lacks the complete ordered function trace")
+    if probe.get("strategy_basis") == "retained_materialized_source_slice":
+        return _retained_materialized_probe(store, candidate, probe_id, probe, event, function)
     receipts = []
     for identity in probe.get("receipt_ids", []):
         receipt = store.get(identity)
@@ -445,6 +447,173 @@ def _recorded_execution(
         "probe_evidence_id": probe_id,
         "receipt_ids": probe.get("receipt_ids", []),
         "task_correctness": "not_checked",
+    }
+
+
+def _retained_materialized_probe(
+    store: Store,
+    candidate: KernelCandidate,
+    probe_id: str,
+    probe: dict,
+    event: dict,
+    function: dict,
+) -> dict:
+    """Authenticate retained source binding and reexecute the pure computation.
+
+    Source calls belong to their original execution, which may be a starter
+    episode. Their receipts remain historical evidence, never fresh dispatches
+    or independent evidence of extraction completeness or task correctness.
+    """
+    from oak.bootstrap import receipt_documents
+    from oak.historical_replay import _validated_capture, _validated_receipt
+    from oak.materialization import prepare_bound_materialization, slice_graph
+
+    if any(step["operator"] in EFFECT_OPERATORS for step in function["steps"]):
+        raise ValueError("Retained materialization probes require a pure function")
+    kernel = store.get(candidate.id)
+    if kernel["schema"] != candidate.schema or kernel["functions"] != candidate.functions:
+        raise ValueError("Retained probe candidate differs from its immutable kernel")
+    if kernel.get("run_id") != event["run_id"]:
+        raise ValueError("Retained probe event belongs to another kernel construction")
+    prepared = prepare_bound_materialization(
+        candidate.schema,
+        function,
+        probe["probe"]["args"],
+        kernel.get("acquisition_bindings", []),
+        kernel.get("catalog", {}).get("tools", []),
+    )
+    requests = [request.model_dump(mode="json") for request in prepared.acquisitions]
+    if not requests or requests != probe.get("acquisition_requests"):
+        raise ValueError("Retained probe acquisition requests differ from frozen bindings")
+    if prepared.demand.model_dump(mode="json") != probe.get("demand"):
+        raise ValueError("Retained probe demand differs from its frozen computation")
+    if any(
+        probe.get(key) != 0 for key in ("invocation_attempts", "tool_calls", "completed_tool_calls")
+    ):
+        raise ValueError("Retained materialization cannot attest a fresh tool call")
+
+    execution = probe["execution"]
+    capture, source_refs = _validated_capture(
+        store, execution["capture_id"], kernel, include_source_refs=True
+    )
+    if (
+        capture["function"] != function["name"]
+        or capture["args"] != probe["probe"]["args"]
+        or any(
+            canonical(capture[key]) != canonical(execution[key])
+            for key in ("steps", "value", "dependencies")
+        )
+        or store.get(capture["final_graph_ref"]) != store.get(probe["graph_id"])
+        or store.get(capture["initial_graph_ref"]) != store.get(capture["final_graph_ref"])
+    ):
+        raise ValueError("Retained probe differs from its complete immutable pure capture")
+
+    receipt_ids = probe.get("receipt_ids", [])
+    if (
+        not receipt_ids
+        or len(receipt_ids) != len(set(receipt_ids))
+        or set(probe.get("acquisition_evidence_ids", [])) != set(receipt_ids)
+    ):
+        raise ValueError("Retained probe lacks exact acquisition receipt attribution")
+    matched_requests, document_ids = set(), set()
+    for identity in receipt_ids:
+        receipt = store.get(identity)
+        matches = [
+            index
+            for index, request in enumerate(requests)
+            if request["capability"] == receipt.get("capability_id")
+            and request["arguments"] == receipt.get("args")
+            and request["contract_id"] == receipt.get("contract_id")
+        ]
+        if not matches or identity not in source_refs:
+            raise ValueError(
+                "Retained receipt does not match the frozen request and source capture"
+            )
+        _validated_receipt(
+            store,
+            kernel,
+            identity,
+            {"capability": receipt["capability_id"], "arguments": receipt["args"]},
+        )
+        matched_requests.update(matches)
+        document_ids.update(
+            document["document_id"]
+            for document in receipt_documents({**receipt, "evidence_id": identity})
+        )
+    if len(matched_requests) != len(requests):
+        raise ValueError("Retained probe does not cover every frozen acquisition request")
+
+    # Check every original MCP source in the capture, including merged provenance.
+    # Dispatch and completion must remain together in their actual source run.
+    for identity in source_refs:
+        source = store.get(identity)
+        if not isinstance(source, dict) or not source.get("tool_call_attempted"):
+            continue
+        completed = _event(store, identity, {"mcp_call"})
+        dispatch = _event(store, source.get("dispatch_evidence_id", ""), {"mcp_dispatch"})
+        if (
+            completed is None
+            or completed["status"] != "completed"
+            or dispatch is None
+            or dispatch["status"] != "started"
+            or dispatch["run_id"] != completed["run_id"]
+            or not source.get("live_catalog_evidence_id")
+        ):
+            raise ValueError("Retained source lacks its original completed MCP dispatch evidence")
+        owners = store.rows(
+            "SELECT id,task_id FROM runs WHERE id IN (?,?)",
+            (event["run_id"], completed["run_id"]),
+        )
+        if not owners or any(owner["task_id"] != kernel.get("surface_id") for owner in owners):
+            raise ValueError("Retained source belongs to another task surface")
+        if {owner["id"] for owner in owners} != {event["run_id"], completed["run_id"]}:
+            raise ValueError("Retained source run ownership is unavailable")
+
+    if probe.get("source_graph_id") != kernel.get("evidence", {}).get("graph_id"):
+        raise ValueError("Retained probe source graph is not the kernel construction evidence")
+    retained = deepcopy(store.get(probe["source_graph_id"]))
+    retained["nodes"] = [
+        node
+        for node in retained["nodes"]
+        if any(source["document_id"] in document_ids for source in node["sources"])
+    ]
+    node_ids = {node["id"] for node in retained["nodes"]}
+    retained["edges"] = [
+        edge
+        for edge in retained["edges"]
+        if edge["source"] in node_ids
+        and edge["target"] in node_ids
+        and any(source["document_id"] in document_ids for source in edge["sources"])
+    ]
+    graph = slice_graph(candidate.schema, retained, prepared.demand)
+    if graph != store.get(probe["graph_id"]):
+        raise ValueError("Retained probe graph is not its demand-scoped source slice")
+    actual = execute_function(
+        deepcopy(graph),
+        candidate.functions,
+        function["name"],
+        capture["args"],
+        schema=candidate.schema,
+    )
+    if canonical(actual["value"]) != canonical(capture["value"]) or any(
+        any(canonical(current[key]) != canonical(recorded[key]) for key in ("inputs", "output"))
+        for current, recorded in zip(actual["steps"], capture["steps"], strict=True)
+    ):
+        raise ValueError("Pure reexecution differs from the retained computation")
+    return {
+        "status": "passed",
+        "summary": "Pure computation reexecuted on its retained source slice; original MCP dispatches verified",
+        "function": function["name"],
+        "mode": "retained_materialized_reexecution",
+        "graph_id": probe["graph_id"],
+        "probe_evidence_id": probe_id,
+        "capture_id": execution["capture_id"],
+        "receipt_ids": receipt_ids,
+        "source_evidence_refs": source_refs,
+        "fresh_tool_calls": 0,
+        "task_correctness": "not_checked",
+        "coverage": "not_checked",
+        "limitation": "Source attribution and retained computation checked; extraction completeness and fresh acquisition remain unverified",
     }
 
 
