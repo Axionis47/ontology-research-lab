@@ -403,6 +403,8 @@ export interface components {
         | components["schemas"]["ReplayReport"]
         | components["schemas"]["ReplayBankReport"]
         | components["schemas"]["AdapterEdge"]
+        | components["schemas"]["DiscoveryResult"]
+        | components["schemas"]["DiscoveryState"]
         | null;
       /** Provenance */
       provenance?: {
@@ -992,6 +994,29 @@ export interface components {
       /** Relation */
       relation: string;
     };
+    /** DiscoveryContextSummary */
+    DiscoveryContextSummary: {
+      /** Catalog Id */
+      catalog_id: string;
+      /** Kernel Id */
+      kernel_id: string;
+      /**
+       * Context Bytes
+       * @default 0
+       */
+      context_bytes: number;
+      /**
+       * Max Context Bytes
+       * @default 36000
+       */
+      max_context_bytes: number;
+      /** Loaded Function Ids */
+      loaded_function_ids?: string[];
+      /** View Definition Ids */
+      view_definition_ids?: string[];
+      /** Evicted Definition Ids */
+      evicted_definition_ids?: string[];
+    };
     /**
      * DiscoveryRequest
      * @description Explicit connection configuration for one real discovery job.
@@ -1028,6 +1053,108 @@ export interface components {
       artifact_refs?: string[];
       /** Error */
       error?: string | null;
+    };
+    /**
+     * DiscoveryResult
+     * @description One actual read-only lookup, distinct from domain execution evidence.
+     */
+    DiscoveryResult: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /** Catalog Id */
+      catalog_id: string;
+      /** Kernel Id */
+      kernel_id: string;
+      /** Tool */
+      tool: string;
+      /**
+       * Status
+       * @default ok
+       * @enum {string}
+       */
+      status: "ok" | "error";
+      /**
+       * Query
+       * @default
+       */
+      query: string;
+      /**
+       * Kind
+       * @default all
+       */
+      kind: string;
+      /** Definition Id */
+      definition_id?: string | null;
+      /**
+       * Pointer
+       * @default
+       */
+      pointer: string;
+      /** Items */
+      items?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      }[];
+      /**
+       * Total Count
+       * @default 0
+       */
+      total_count: number;
+      /**
+       * Offset
+       * @default 0
+       */
+      offset: number;
+      /** Next Cursor */
+      next_cursor?: string | null;
+      /**
+       * Has More
+       * @default false
+       */
+      has_more: boolean;
+      /**
+       * Complete
+       * @default true
+       */
+      complete: boolean;
+      definition?: components["schemas"]["JsonValue"];
+      /** Dependencies */
+      dependencies?: string[];
+      /**
+       * Dependency Count
+       * @default 0
+       */
+      dependency_count: number;
+      /** Loaded Tool Name */
+      loaded_tool_name?: string | null;
+      /** Error */
+      error?: string | null;
+      context?: components["schemas"]["DiscoveryContextSummary"] | null;
+    };
+    /**
+     * DiscoveryState
+     * @description Small checkpoint state; canonical definitions stay in the frozen kernel.
+     */
+    DiscoveryState: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /** Catalog Id */
+      catalog_id: string;
+      /** Loaded Function Ids */
+      loaded_function_ids?: string[];
+      /** Views */
+      views?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      }[];
+      /** Evicted Definition Ids */
+      evicted_definition_ids?: string[];
     };
     /**
      * EndpointTypes
@@ -1281,6 +1408,9 @@ export interface components {
         [key: string]: unknown;
       };
       flow_evidence?: components["schemas"]["FlowEvidence"] | null;
+      inference_discovery?:
+        components["schemas"]["InferenceDiscoveryView"] | null;
+      inference_context?: components["schemas"]["InferenceContextView"] | null;
     };
     /**
      * EventsResponse
@@ -1579,6 +1709,119 @@ export interface components {
       kernels: components["schemas"]["KernelSummary"][];
       /** Attempts */
       attempts: components["schemas"]["ConstructionAttempt"][];
+    };
+    /**
+     * InferenceContextView
+     * @description Attribution and size of one exact model-facing discovery snapshot.
+     */
+    InferenceContextView: {
+      /** Artifact Id */
+      artifact_id?: string | null;
+      /** Catalog Id */
+      catalog_id: string;
+      /** Kernel Id */
+      kernel_id: string;
+      /** Step */
+      step?: number | null;
+      /** View Ref */
+      view_ref?: string | null;
+      context: components["schemas"]["DiscoveryContextSummary"];
+      /** Catalog Ref */
+      catalog_ref?: string | null;
+    };
+    /**
+     * InferenceDiscoveryView
+     * @description Bounded navigation receipt; exact definitions remain in source artifacts.
+     */
+    InferenceDiscoveryView: {
+      /** Artifact Id */
+      artifact_id?: string | null;
+      /** Catalog Id */
+      catalog_id: string;
+      /** Kernel Id */
+      kernel_id: string;
+      /** Step */
+      step?: number | null;
+      /** Tool */
+      tool: string;
+      /** Status */
+      status: string;
+      /**
+       * Query
+       * @default
+       */
+      query: string;
+      /**
+       * Kind
+       * @default all
+       */
+      kind: string;
+      /** Definition Id */
+      definition_id?: string | null;
+      /**
+       * Pointer
+       * @default
+       */
+      pointer: string;
+      /**
+       * Result Count
+       * @default 0
+       */
+      result_count: number;
+      /** Result Ids */
+      result_ids?: string[];
+      /**
+       * Omitted Results
+       * @default 0
+       */
+      omitted_results: number;
+      /**
+       * Total Count
+       * @default 0
+       */
+      total_count: number;
+      /**
+       * Offset
+       * @default 0
+       */
+      offset: number;
+      /** Next Cursor */
+      next_cursor?: string | null;
+      /**
+       * Has More
+       * @default false
+       */
+      has_more: boolean;
+      /**
+       * Complete
+       * @default true
+       */
+      complete: boolean;
+      /** Dependencies */
+      dependencies?: string[];
+      /**
+       * Dependency Count
+       * @default 0
+       */
+      dependency_count: number;
+      /**
+       * Omitted Dependencies
+       * @default 0
+       */
+      omitted_dependencies: number;
+      /** Loaded Tool Name */
+      loaded_tool_name?: string | null;
+      /** Error */
+      error?: string | null;
+      /** Truncated Fields */
+      truncated_fields?: string[];
+      context?: components["schemas"]["DiscoveryContextSummary"] | null;
+      /** State Ref */
+      state_ref?: string | null;
+      /** Result Ref */
+      result_ref?: string | null;
+      /** Catalog Ref */
+      catalog_ref?: string | null;
     };
     JsonValue: unknown;
     /**
@@ -2268,6 +2511,11 @@ export interface components {
        * @default 8
        */
       max_steps: number;
+      /**
+       * Max Discovery Steps
+       * @default 12
+       */
+      max_discovery_steps: number;
       /**
        * Max Tool Calls
        * @default 6

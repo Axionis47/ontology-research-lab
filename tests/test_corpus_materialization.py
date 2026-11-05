@@ -33,8 +33,13 @@ def artifact(identity):
     return json.loads(raw)["data"]
 
 
-def test_retained_corpus_view_is_deferred_cached_and_executes_the_original_function(tmp_path):
+@pytest.mark.parametrize("function_index", [0, 1])
+def test_retained_corpus_view_is_deferred_cached_and_executes_the_original_function(
+    tmp_path, function_index
+):
     kernel = artifact(COFFEE_KERNEL)
+    assert kernel.get("instantiation_profile") is None
+    assert kernel.get("construction_profile") is None
     store = Store(tmp_path / "store")
     run_id = store.create_run("retained-coffee", "ask", {"kernel_id": COFFEE_KERNEL})
     model = GeminiCLI(store, run_id)
@@ -49,7 +54,7 @@ def test_retained_corpus_view_is_deferred_cached_and_executes_the_original_funct
     )
     assert materialize.documents is None and materialize.cache == {}
     assert not store.rows("SELECT * FROM model_calls")
-    function = kernel["functions"][1]
+    function = kernel["functions"][function_index]
     args = {"date": kernel["graph"]["nodes"][0]["properties"]["Date"]}
     demand = derive_demand(kernel["schema"], function, args)
     small = materialize(demand)

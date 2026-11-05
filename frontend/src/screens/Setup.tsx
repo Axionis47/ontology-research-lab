@@ -50,6 +50,7 @@ export function Setup() {
   const [cases, setCases] = useState<Query[]>([newCase()]);
   const [connectorIds, setConnectorIds] = useState<string[]>([]);
   const [steps, setSteps] = useState(8);
+  const [discoverySteps, setDiscoverySteps] = useState(12);
   const [calls, setCalls] = useState(6);
   const [spend, setSpend] = useState(1);
   const [fraction, setFraction] = useState(0.2);
@@ -79,6 +80,7 @@ export function Setup() {
         connector_ids: connectorIds,
         limits: {
           max_steps: steps,
+          max_discovery_steps: discoverySteps,
           max_tool_calls: calls,
           max_new_spend_usd: spend,
         },
@@ -144,6 +146,7 @@ export function Setup() {
       );
       if (input.limits) {
         setSteps(input.limits.max_steps ?? 8);
+        setDiscoverySteps(input.limits.max_discovery_steps ?? 12);
         setCalls(input.limits.max_tool_calls ?? 6);
         setSpend(input.limits.max_new_spend_usd ?? 1);
       }

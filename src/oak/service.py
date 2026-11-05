@@ -21,7 +21,7 @@ from oak.historical_replay import (
     prepare_candidate_adapter,
 )
 from oak.model import GeminiCLI, runtime_config
-from oak.pipeline import answer, build_graph, construction_graph
+from oak.pipeline import answer, construction_graph
 from oak.store import Store, canonical, now
 from oak.tasks.evaluation import get_scorer
 
@@ -503,7 +503,10 @@ class Service:
                 )
                 materialize = None
                 reused = inputs["corpus_id"] == revision["corpus_id"]
-                if demand_profile:
+                # Fresh inference evidence always waits for an executable
+                # demand, including kernels frozen before profile flags existed.
+                demand_driven = demand_profile or not reused
+                if demand_driven:
                     from oak.corpus_materialization import CorpusMaterializer
 
                     materialize = CorpusMaterializer(
@@ -529,18 +532,8 @@ class Service:
                         "Initial empty query graph",
                         revision["graph"],
                     )
-                elif inputs["corpus_id"] != revision["corpus_id"]:
-                    model = GeminiCLI(self.store, run_id)
-                    revision["graph"] = build_graph(
-                        self.store,
-                        model,
-                        revision["schema"],
-                        corpus_documents(self.artifact(inputs["corpus_id"])),
-                        "inference_extract",
-                    )
-                    revision["corpus_id"] = inputs["corpus_id"]
                 # Identical corpus/schema reuses the actual frozen graph artifact as a documented cache extension.
-                if not demand_profile and revision["graph"].get("ignored_documents"):
+                if not demand_driven and revision["graph"].get("ignored_documents"):
                     raise ValueError(
                         "Inference graph excludes source documents; revise and validate corpus coverage before answering"
                     )
@@ -556,11 +549,11 @@ class Service:
                             "corpus_id": revision["corpus_id"],
                             "graph": revision["graph"],
                             "reused_construction_graph": reused,
-                            "instantiation_profile": "demand_v1" if demand_profile else "legacy",
+                            "instantiation_profile": "demand_v1" if demand_driven else "legacy",
                         },
                     )
 
-                graph_id = save_query_graph() if not demand_profile else None
+                graph_id = save_query_graph() if not demand_driven else None
                 result = answer(
                     self.store,
                     GeminiCLI(self.store, run_id),
@@ -568,7 +561,7 @@ class Service:
                     inputs["query"],
                     materialize=materialize,
                 )
-                if demand_profile:
+                if demand_driven:
                     graph_id = save_query_graph()
                 result["query"] = inputs["query"]
                 result["graph_artifact_id"] = graph_id

@@ -28,11 +28,28 @@ Return the outer Decision JSON object required by the executor. A task-specific
 instruction such as "return only the number" applies to Decision.answer when
 completing the task, not to the surrounding Decision object or intermediate calls.
 
-For a frozen-kernel run, invoke only functions explicitly declared in frozen F.
-An atomic capability is callable only through its declared F function; the raw
-MCP catalog is documentation, not a bypass around F. In bootstrap mode, use the
-registered capability IDs supplied by the executor. Choose and parameterize
-the functions available in the current mode from actual observations.
+For a frozen-kernel run, catalog_context contains read-only discovery tools and
+currently loaded function interfaces. Use its search tool to find relevant
+functions or schema declarations, inspect exact definitions, and expand needed
+dependencies. Empty-query browsing and continuation cursors expose entries that
+a search missed. A miss is not proof that a capability is absent. Follow explicit
+deferred-definition and eviction references to load more context when needed.
+decision_budget reports separate remaining discovery and task decisions. Use
+discovery to resolve the needed interface, then execute; reserve a task decision
+for completion. All calls remain subject to the original spending ceiling.
+Use action=call and the exact advertised tool name for discovery and domain
+function calls. Inspect a function before invoking its advertised alias. Its
+JSON input schema governs arguments and its output schema describes the result.
+The executor resolves that alias to the unchanged frozen function. Function
+implementations and the full schema remain in the executor.
+
+Discovery results describe interfaces, not observed facts. They cannot be cited
+as evidence for a task answer. Only successful domain-function observations can
+support completion. An atomic capability is callable only through its declared
+F function. Source capability definitions are documentation and do not authorize
+direct MCP calls. In bootstrap mode, use the registered capability IDs supplied
+by the executor. Choose and parameterize the functions available in the current
+mode from actual observations.
 Do not edit the schema, function catalog, hard constraints, or compiled workflow
 during inference. An unsupported route is an explicit unresolved outcome. A
 compiled workflow cannot silently fall back to unconstrained replanning.

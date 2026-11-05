@@ -36,6 +36,7 @@ import { GraphView } from "../components/GraphView";
 import { Playback, Trajectory } from "../components/Trajectory";
 import { SplitView } from "../components/SplitView";
 import { MaterializationEvidence } from "../components/FlowEvidence";
+import { InferenceContext } from "../components/InferenceContext";
 type Accepted = components["schemas"]["AcceptedRun"];
 function snapshot(events: Event[], initial: string | null | undefined) {
   let current = initial;
@@ -414,6 +415,10 @@ export function Inference({ taskId }: { taskId: string }) {
                             </Badge>
                           </div>
                           <MaterializationEvidence
+                            events={events.slice(0, selected + 1)}
+                            onInspect={setInspection}
+                          />
+                          <InferenceContext
                             events={events.slice(0, selected + 1)}
                             onInspect={setInspection}
                           />

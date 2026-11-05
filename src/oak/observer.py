@@ -140,10 +140,13 @@ def _references(value: Any) -> list[str]:
             if (
                 isinstance(item, str)
                 and _ARTIFACT_ID.fullmatch(item)
-                and (key.endswith("_id") or key in {"parent", "kernel_revision", "artifact"})
+                and (
+                    key.endswith(("_id", "_ref"))
+                    or key in {"parent", "kernel_revision", "artifact"}
+                )
             ):
                 found.add(item)
-            elif key.endswith("_ids") and isinstance(item, list):
+            elif key.endswith(("_ids", "_refs")) and isinstance(item, list):
                 found.update(x for x in item if isinstance(x, str) and _ARTIFACT_ID.fullmatch(x))
             elif isinstance(item, (dict, list)):
                 found.update(_references(item))
@@ -958,6 +961,8 @@ class Observer:
             return "run.lifecycle"
         if stage == "kernel_candidate":
             return "kernel.candidate"
+        if stage in {"inference_discovery", "inference_context", "inference_tool_error"}:
+            return "evidence.recorded"
         if stage in {"evaluation_plan", "selective_evaluation", "historical_replay"}:
             return "validation.recorded"
         if any(word in stage for word in ("verification", "preservation", "sufficiency")):
@@ -1305,6 +1310,91 @@ class Observer:
             view[field] = counts
         return contracts.FlowEvidence.model_validate(sanitize_public(view)[0]).model_dump()
 
+    @staticmethod
+    def _inference_views(
+        stage: str, value: Any, artifact_id: str | None
+    ) -> tuple[contracts.InferenceDiscoveryView | None, contracts.InferenceContextView | None]:
+        """Project catalog navigation without treating it as domain evidence.
+
+        Definition contents stay in the immutable artifact. The timeline shows
+        their handles and counts so inspecting a large definition cannot turn
+        the event feed into an unbounded copy of S or F.
+        """
+        if not isinstance(value, dict):
+            return None, None
+        data, _ = sanitize_public(value)
+        try:
+            if stage == "inference_discovery":
+                result = contracts.DiscoveryResult.model_validate(data.get("result", {}))
+                args = data.get("args") if isinstance(data.get("args"), dict) else {}
+                truncated_fields = []
+
+                def bounded_text(name: str, value: str | None) -> str | None:
+                    if value is not None and len(value) > 2000:
+                        truncated_fields.append(name)
+                        return value[:2000]
+                    return value
+
+                def argument(name: str, default: str | None) -> str | None:
+                    value = args.get(name, default)
+                    return bounded_text(name, value if isinstance(value, str) else default)
+
+                identities = [
+                    item["id"] for item in result.items if isinstance(item.get("id"), str)
+                ]
+                return (
+                    contracts.InferenceDiscoveryView(
+                        artifact_id=artifact_id,
+                        catalog_id=result.catalog_id,
+                        kernel_id=result.kernel_id,
+                        step=data.get("step"),
+                        tool=result.tool,
+                        status=result.status,
+                        query=argument("query", result.query),
+                        kind=argument("kind", result.kind),
+                        definition_id=argument("id", result.definition_id),
+                        pointer=argument("pointer", result.pointer),
+                        result_count=len(result.items),
+                        result_ids=identities[:32],
+                        omitted_results=max(0, len(identities) - 32),
+                        total_count=result.total_count,
+                        offset=result.offset,
+                        next_cursor=result.next_cursor,
+                        has_more=result.has_more,
+                        complete=result.complete,
+                        dependencies=result.dependencies[:32],
+                        dependency_count=result.dependency_count,
+                        omitted_dependencies=max(0, len(result.dependencies) - 32),
+                        loaded_tool_name=result.loaded_tool_name,
+                        error=bounded_text("error", result.error),
+                        truncated_fields=truncated_fields,
+                        context=result.context,
+                        state_ref=data.get("state_ref"),
+                        result_ref=data.get("result_ref"),
+                        catalog_ref=data.get("catalog_ref"),
+                    ),
+                    None,
+                )
+            if stage == "inference_context":
+                context = data.get("context") or {
+                    name: data[name]
+                    for name in contracts.DiscoveryContextSummary.model_fields
+                    if name in data
+                }
+                return None, contracts.InferenceContextView(
+                    artifact_id=artifact_id,
+                    catalog_id=data["catalog_id"],
+                    kernel_id=data["kernel_id"],
+                    step=data.get("step"),
+                    view_ref=data.get("view_ref"),
+                    context=contracts.DiscoveryContextSummary.model_validate(context),
+                    catalog_ref=data.get("catalog_ref"),
+                )
+        except (KeyError, TypeError, ValidationError):
+            # Preserve older or incomplete receipts in the artifact inspector.
+            pass
+        return None, None
+
     def events(
         self,
         run_id: str,
@@ -1342,14 +1432,37 @@ class Observer:
         for event in rows[:limit]:
             owner = self._run_row(event["run_id"])
             data = self._data(event["artifact_id"], {})
-            payload = {"status": event["status"], **self._event_payload(data, event["artifact_id"])}
+            discovery, context = self._inference_views(event["stage"], data, event["artifact_id"])
+            navigation = event["stage"] in {
+                "inference_discovery",
+                "inference_context",
+                "inference_tool_error",
+            }
+            payload_source = (
+                {
+                    key: value
+                    for key, value in data.items()
+                    if key not in {"result", "state", "view", "args"}
+                }
+                if navigation and isinstance(data, dict)
+                else data
+            )
+            payload = {
+                "status": event["status"],
+                **self._event_payload(payload_source, event["artifact_id"]),
+                **({"context_only": True} if navigation else {}),
+            }
+            references = _references(data)
+            if navigation and isinstance(data, dict):
+                # A catalog fingerprint is distinct from its Store artifact.
+                references = [ref for ref in references if ref != data.get("catalog_id")]
             refs = [
                 {"id": identity, "role": "event" if identity == event["artifact_id"] else "related"}
                 for identity in list(
                     dict.fromkeys(
                         [
                             *([event["artifact_id"]] if event["artifact_id"] else []),
-                            *_references(data),
+                            *references,
                         ]
                     )
                 )
@@ -1368,7 +1481,8 @@ class Observer:
                     else None,
                     parent_step_id=None,
                     flow=data.get("flow")
-                    if isinstance(data, dict)
+                    if not navigation
+                    and isinstance(data, dict)
                     and data.get("flow") in {"learning", "verification", "instantiation"}
                     else None,
                     type=self._event_type(event["stage"]),
@@ -1376,7 +1490,11 @@ class Observer:
                     summary=summary,
                     artifact_refs=refs,
                     payload=payload,
-                    flow_evidence=self._flow_evidence(event["stage"], data, event["artifact_id"]),
+                    flow_evidence=None
+                    if navigation
+                    else self._flow_evidence(event["stage"], data, event["artifact_id"]),
+                    inference_discovery=discovery,
+                    inference_context=context,
                 )
             )
         return EventsResponse(
@@ -1604,6 +1722,9 @@ class Observer:
             "replay_bank_report": contracts.ReplayBankReport,
             "historical_replay": contracts.ReplayBankReport,
             "adapter_edge": contracts.AdapterEdge,
+            "inference_discovery": contracts.DiscoveryResult,
+            "inference_discovery_result": contracts.DiscoveryResult,
+            "inference_discovery_state": contracts.DiscoveryState,
         }
         typed = None
         model = models.get(source.get("kind"))
@@ -1620,14 +1741,19 @@ class Observer:
                     "demand_id",
                     "report_id",
                 }
+                typed_source = (
+                    data.get("result", data)
+                    if source.get("kind") == "inference_discovery" and isinstance(data, dict)
+                    else data
+                )
                 typed = model.model_validate(
                     {
                         key: value
-                        for key, value in data.items()
+                        for key, value in typed_source.items()
                         if key not in metadata or key in model.model_fields
                     }
-                    if isinstance(data, dict)
-                    else data
+                    if isinstance(typed_source, dict)
+                    else typed_source
                 )
             except ValidationError:
                 # Older or redacted evidence remains inspectable as recorded.

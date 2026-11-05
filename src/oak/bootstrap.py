@@ -35,6 +35,7 @@ from oak.construction_contracts import (
 )
 from oak.construction_prompts import prompt_manifest
 from oak.functions import FunctionExecutionError, FunctionSpec, execute_function, validate_functions
+from oak.inference_catalog import CONTROL_NAMES, InferenceCatalog, InferenceDecisionBudget
 from oak.learning import freeze_task_ir
 from oak.learning_contracts import TaskIR
 from oak.materialization import (
@@ -53,7 +54,13 @@ from oak.ontology import schema_json_schema, validate_graph_records, validate_on
 from oak.operators import GRAPH_OPERATORS, operator_contracts
 from oak.pipeline import build_graph, request_json
 from oak.store import Store, canonical, now
-from oak.task_context import InferenceQuery, TaskSurface, build_runtime_context, sample_construction
+from oak.task_context import (
+    InferenceQuery,
+    TaskSurface,
+    build_runtime_context,
+    inference_discovery_context,
+    sample_construction,
+)
 
 PROJECT = Path(__file__).resolve().parents[2]
 
@@ -84,6 +91,11 @@ class EpisodeState(TypedDict, total=False):
     completed_tool_calls: int
     receipt_cache: dict[str, str]
     materializations: dict[str, str]
+    discovery_state: dict
+    discovery_feedback: dict | None
+    discovery_calls: int
+    decision_budget: dict
+    discovery_allowed: bool
 
 
 class FunctionProbe(BaseModel):
@@ -1334,11 +1346,23 @@ class SurfaceEngine:
             history=self.history(surface_id),
             resolve_history=self.store.get,
         )
+        discovery = InferenceCatalog(kernel, kernel_id=kernel_id) if kernel else None
+        catalog_ref = (
+            self.store.put("inference_catalog", discovery.manifest()) if discovery else None
+        )
+        model_context = (
+            inference_discovery_context(
+                context, catalog_id=discovery.catalog_id, catalog_ref=catalog_ref
+            )
+            if discovery
+            else context
+        )
         request = {
             "surface_id": surface_id,
             "query_id": query.id,
             "kernel_id": kernel_id,
             "context": context,
+            "inference_catalog_ref": catalog_ref,
             "budget_ceiling_usd": data["budget_ceiling_usd"],
             "query_source": "run_local" if inference_query is not None else "registered",
         }
@@ -1356,15 +1380,16 @@ class SurfaceEngine:
         instruction = (PROJECT / "config/prompts/task-runtime.md").read_text()
         instruction += (
             "\nIn bootstrap mode function is the exact discovered capability id; "
-            "in kernel mode it is a frozen function name. Return the Decision schema. "
+            "in kernel mode it is an advertised catalog control or loaded function tool name. "
+            "Return the Decision schema. "
             "A task instruction to return only a number applies to Decision.answer, never to the outer "
             "response: always return the Decision JSON object. Complete requires citations to successful "
             "observation IDs with nonempty acquisition_evidence_ids from this episode. "
             "Completion is independently assessed."
         )
-        demand_enabled = bool(
-            kernel and kernel.get("construction_profile") in {"demand_v1", "semantic_v2"}
-        )
+        # Every frozen-kernel inference scopes extraction from its actual
+        # callable demand, including kernels constructed before demand profiles.
+        demand_enabled = kernel is not None
         if demand_enabled:
             instruction += (
                 "\nGraph evidence is materialized incrementally from your selected function and arguments. "
@@ -1375,10 +1400,10 @@ class SurfaceEngine:
                 "identical acquisition arguments within this run reuses its actual source receipt. "
                 "Generated self-checks are internal consistency evidence, not independent task truth."
             )
-        tools = catalog["tools"] if kernel is None else kernel["functions"]
 
         def decide(state: EpisodeState):
-            if state["step"] >= surface.limits.max_steps:
+            decision_budget = InferenceDecisionBudget(**state["decision_budget"])
+            if decision_budget.exhausted():
                 return {
                     "terminal": {
                         "action": "unresolved",
@@ -1386,18 +1411,43 @@ class SurfaceEngine:
                         "citations": [],
                     }
                 }
+            inputs = {
+                "context": model_context,
+                "mode": "kernel" if kernel else "bootstrap",
+                "observations": state["observations"],
+                "decision_budget": {
+                    **decision_budget.to_dict(),
+                    "remaining": decision_budget.remaining(),
+                },
+            }
+            if discovery:
+                view = discovery.prompt(state["discovery_state"])
+                view_ref = self.store.put("inference_prompt_view", view)
+                self.store.event(
+                    run_id,
+                    "inference_context",
+                    "completed",
+                    "Bounded frozen-kernel definitions exposed to inference",
+                    {
+                        **discovery.context_summary(state["discovery_state"], view).model_dump(
+                            mode="json"
+                        ),
+                        "catalog_ref": catalog_ref,
+                        "step": state["step"] + 1,
+                        "view_ref": view_ref,
+                        "decision_budget": inputs["decision_budget"],
+                    },
+                )
+                inputs["catalog_context"] = view
+                inputs["tool_error"] = state.get("discovery_feedback")
+            else:
+                inputs["tools"] = catalog["tools"]
             decision = Decision.model_validate(
                 request_json(
                     model,
                     f"decision.{state['step']}",
                     instruction,
-                    {
-                        "context": context,
-                        "mode": "kernel" if kernel else "bootstrap",
-                        "tools": tools,
-                        "schema": kernel["schema"] if kernel else None,
-                        "observations": state["observations"],
-                    },
+                    inputs,
                     Decision.model_json_schema(),
                 )
             ).model_dump()
@@ -1406,6 +1456,10 @@ class SurfaceEngine:
                 "step": state["step"] + 1,
                 "decision": decision,
                 "trajectory": state["trajectory"] + [decision],
+                "discovery_allowed": decision_budget.record(
+                    decision["action"], decision["function"]
+                ),
+                "decision_budget": decision_budget.to_dict(),
             }
             if decision["action"] != "call":
                 successes = {x["id"] for x in state["observations"] if x["status"] == "completed"}
@@ -1430,6 +1484,74 @@ class SurfaceEngine:
 
         def execute(state: EpisodeState):
             decision = state["decision"]
+            requested_tool = decision["function"]
+            if discovery:
+                if requested_tool in CONTROL_NAMES:
+                    if not state["discovery_allowed"]:
+                        feedback = {
+                            "requested_tool": requested_tool,
+                            "error": "Discovery allowance exhausted. Use a loaded function or finish from actual evidence.",
+                        }
+                        self.store.event(
+                            run_id,
+                            "inference_tool_error",
+                            "failed",
+                            "Bounded discovery allowance exhausted",
+                            {
+                                "kernel_id": kernel_id,
+                                "catalog_id": discovery.catalog_id,
+                                "catalog_ref": catalog_ref,
+                                "step": state["step"],
+                                **feedback,
+                            },
+                        )
+                        return {"discovery_feedback": feedback}
+                    next_state, discovery_result = discovery.dispatch(
+                        requested_tool, decision["args"], state["discovery_state"]
+                    )
+                    result_ref = self.store.put("inference_discovery_result", discovery_result)
+                    state_ref = self.store.put("inference_discovery_state", next_state)
+                    self.store.event(
+                        run_id,
+                        "inference_discovery",
+                        "failed" if discovery_result.get("status") == "error" else "completed",
+                        "Read-only frozen-kernel discovery",
+                        {
+                            "kernel_id": kernel_id,
+                            "catalog_id": discovery.catalog_id,
+                            "catalog_ref": catalog_ref,
+                            "step": state["step"],
+                            "tool": requested_tool,
+                            "args": decision["args"],
+                            "result": discovery_result,
+                            "result_ref": result_ref,
+                            "state_ref": state_ref,
+                        },
+                    )
+                    return {
+                        "discovery_state": next_state,
+                        "discovery_feedback": None,
+                        "discovery_calls": state.get("discovery_calls", 0) + 1,
+                    }
+                try:
+                    name = discovery.resolve_call(requested_tool, state["discovery_state"])
+                except (ValueError, TypeError) as error:
+                    feedback = {"requested_tool": requested_tool, "error": str(error)}
+                    self.store.event(
+                        run_id,
+                        "inference_tool_error",
+                        "failed",
+                        "Function contract must be discovered before execution",
+                        {
+                            "kernel_id": kernel_id,
+                            "catalog_id": discovery.catalog_id,
+                            "catalog_ref": catalog_ref,
+                            "step": state["step"],
+                            **feedback,
+                        },
+                    )
+                    return {"discovery_feedback": feedback}
+                decision = {**decision, "function": name}
             graph = self.store.get(state["graph_id"])
             episode_graph = deepcopy(graph)
             count = state["invocation_attempts"]
@@ -1549,6 +1671,7 @@ class SurfaceEngine:
                 "id": f"observation-{state['step']}",
                 "function": decision["function"],
                 "args": decision["args"],
+                **({"tool_name": requested_tool} if discovery else {}),
             }
             try:
                 if kernel:
@@ -1634,27 +1757,38 @@ class SurfaceEngine:
                             acquire(capability=request.capability, arguments=request.arguments)
                         materialized_demands.add(demand.demand_id)
 
-                    result = execute_function(
-                        graph,
-                        kernel["functions"],
-                        decision["function"],
-                        decision["args"],
-                        schema=kernel["schema"],
-                        artifact_store=self.store,
-                        capability_invoker=acquire,
-                        before_step=before_step,
-                        step_observer=lambda step: self.store.event(
-                            run_id,
-                            "operator",
-                            step["status"],
-                            f"{decision['function']}: {step['id']}",
-                            {
-                                **step,
-                                "function": decision["function"],
-                                "decision_step": state["step"],
-                            },
-                        ),
-                    )
+                    execution = {}
+
+                    def invoke_function(function_name, arguments):
+                        execution.update(
+                            execute_function(
+                                graph,
+                                kernel["functions"],
+                                function_name,
+                                arguments,
+                                schema=kernel["schema"],
+                                artifact_store=self.store,
+                                capability_invoker=acquire,
+                                before_step=before_step,
+                                step_observer=lambda step: self.store.event(
+                                    run_id,
+                                    "operator",
+                                    step["status"],
+                                    f"{function_name}: {step['id']}",
+                                    {
+                                        **step,
+                                        "function": function_name,
+                                        "decision_step": state["step"],
+                                    },
+                                ),
+                            )
+                        )
+                        return execution["value"]
+
+                    discovery.as_langchain_tool(
+                        requested_tool, state["discovery_state"], invoke_function
+                    ).invoke(decision["args"])
+                    result = execution
                     observation["output"] = result["value"]
                     observation["capture_id"] = result["capture_id"]
                     observation["execution_id"] = self.store.put("function_execution", result)
@@ -1757,6 +1891,7 @@ class SurfaceEngine:
                 "invocation_attempts": count,
                 "receipt_cache": receipt_cache,
                 "materializations": materializations,
+                "discovery_feedback": None,
                 "tool_calls": state["tool_calls"]
                 + sum(
                     bool(receipt["tool_call_attempted"]) and not receipt.get("reused")
@@ -1799,10 +1934,23 @@ class SurfaceEngine:
                         "graph_id": initial_graph_id,
                         "receipt_cache": {},
                         "materializations": {},
+                        "discovery_state": discovery.initial_state() if discovery else {},
+                        "discovery_feedback": None,
+                        "discovery_calls": 0,
+                        "decision_budget": InferenceDecisionBudget(
+                            surface.limits.max_steps,
+                            surface.limits.max_discovery_steps if discovery else 0,
+                        ).to_dict(),
+                        "discovery_allowed": True,
                     },
                     {
                         "configurable": {"thread_id": run_id},
-                        "recursion_limit": surface.limits.max_steps * 2 + 4,
+                        "recursion_limit": (
+                            surface.limits.max_steps
+                            + (surface.limits.max_discovery_steps if discovery else 0)
+                        )
+                        * 2
+                        + 4,
                     },
                 )
             terminal = state["terminal"]
@@ -1828,6 +1976,14 @@ class SurfaceEngine:
                 "tool_calls": state["tool_calls"],
                 "completed_tool_calls": state["completed_tool_calls"],
                 "assessment": {"status": "unmeasured"},
+                "inference_catalog_ref": catalog_ref,
+                "discovery_calls": state.get("discovery_calls", 0),
+                "decision_budget": state["decision_budget"],
+                "discovery_state_ref": self.store.put(
+                    "inference_discovery_state", state["discovery_state"]
+                )
+                if discovery
+                else None,
             }
             episode_id = self.store.put("episode", episode)
             result = {"run_id": run_id, "episode_id": episode_id, "episode": episode}

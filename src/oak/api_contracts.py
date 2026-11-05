@@ -12,6 +12,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from oak.behavior import BehaviorBank, CompilationResult
 from oak.historical_replay import AdapterEdge
+from oak.inference_catalog import DiscoveryContextSummary, DiscoveryResult, DiscoveryState
 from oak.learning_contracts import CandidateSelection, TaskIR
 from oak.materialization import (
     AcquisitionBinding,
@@ -290,6 +291,51 @@ class FlowEvidence(BaseModel):
     historical_replay: HistoricalReplayView | None = None
 
 
+class InferenceDiscoveryView(BaseModel):
+    """Bounded navigation receipt; exact definitions remain in source artifacts."""
+
+    artifact_id: str | None = None
+    catalog_id: str
+    kernel_id: str
+    step: int | None = None
+    tool: str
+    status: str
+    query: str = ""
+    kind: str = "all"
+    definition_id: str | None = None
+    pointer: str = ""
+    result_count: int = 0
+    result_ids: list[str] = Field(default_factory=list)
+    omitted_results: int = 0
+    total_count: int = 0
+    offset: int = 0
+    next_cursor: str | None = None
+    has_more: bool = False
+    complete: bool = True
+    dependencies: list[str] = Field(default_factory=list)
+    dependency_count: int = 0
+    omitted_dependencies: int = 0
+    loaded_tool_name: str | None = None
+    error: str | None = None
+    truncated_fields: list[str] = Field(default_factory=list)
+    context: DiscoveryContextSummary | None = None
+    state_ref: str | None = None
+    result_ref: str | None = None
+    catalog_ref: str | None = None
+
+
+class InferenceContextView(BaseModel):
+    """Attribution and size of one exact model-facing discovery snapshot."""
+
+    artifact_id: str | None = None
+    catalog_id: str
+    kernel_id: str
+    step: int | None = None
+    view_ref: str | None = None
+    context: DiscoveryContextSummary
+    catalog_ref: str | None = None
+
+
 class EventEnvelope(PublicResponse):
     """Durable event cursor plus a bounded, sanitized evidence projection."""
 
@@ -319,6 +365,8 @@ class EventEnvelope(PublicResponse):
     artifact_refs: list[ArtifactReference] = Field(default_factory=list)
     payload: dict[str, Any] = Field(default_factory=dict)
     flow_evidence: FlowEvidence | None = None
+    inference_discovery: InferenceDiscoveryView | None = None
+    inference_context: InferenceContextView | None = None
 
 
 class EventsResponse(PublicResponse):
@@ -402,6 +450,8 @@ class ArtifactResponse(PublicResponse):
         | ReplayReport
         | ReplayBankReport
         | AdapterEdge
+        | DiscoveryResult
+        | DiscoveryState
         | None
     ) = None
     provenance: dict[str, Any] | None = None

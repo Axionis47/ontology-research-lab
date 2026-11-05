@@ -20,6 +20,7 @@ from oak.task_context import (
     QuerySpec,
     TaskSurface,
     build_runtime_context,
+    inference_discovery_context,
     load_task_prompt,
     sample_construction,
 )
@@ -63,6 +64,27 @@ def test_supplied_project_document_is_preserved(surface: TaskSurface) -> None:
     assert context["observations"] == []
     context["supplied_facts"][0]["content"] = "explicit mutation of returned context"
     assert changed.queries[0].supplied_documents[0]["content"] == source.read_text()
+
+
+def test_kernel_planner_discovers_capabilities_without_copying_source_catalog(surface) -> None:
+    """Project genuine retained contracts without changing the saved runtime inputs."""
+    artifacts = PROJECT / "tests/fixtures/observer/weather/artifacts"
+    episode = json.loads(
+        (
+            artifacts / "697f6356e475e850faee6abc4ca3b70e520f36df9c2fe1d5f235c0dd2a0b51ea.json"
+        ).read_text()
+    )["data"]
+    kernel = json.loads((artifacts / f"{episode['kernel_revision']}.json").read_text())["data"]
+    original = build_runtime_context(surface, surface.queries[0], kernel["catalog"]["tools"])
+    before = copy.deepcopy(original)
+    projected = inference_discovery_context(
+        original, catalog_id="revision-catalog", catalog_ref="artifact"
+    )
+    assert "capability_catalog" not in projected
+    assert projected["capability_discovery"]["capability_count"] == len(kernel["catalog"]["tools"])
+    assert projected["query"] == original["query"]
+    projected["observations"].append({"explicit_test_mutation": True})
+    assert original == before
 
 
 def test_sampling_is_reproducible_and_confined_to_construction(surface: TaskSurface) -> None:
@@ -143,9 +165,7 @@ def test_history_must_resolve_and_cannot_cross_final_boundary(
         build_runtime_context(
             surface, surface.queries[0], [], history=[invalid], resolve_history=store.get
         )
-    actual_document = store.put(
-        "source_document", {"text": (PROJECT / "README.md").read_text()}
-    )
+    actual_document = store.put("source_document", {"text": (PROJECT / "README.md").read_text()})
     with pytest.raises(ValueError, match="episode manifest"):
         build_runtime_context(
             surface, surface.queries[0], [], history=[actual_document], resolve_history=store.get

@@ -77,6 +77,7 @@ class RunLimits(StrictContract):
     """Per-episode execution bounds and a ceiling on new model spending."""
 
     max_steps: int = Field(default=8, ge=1, le=100)
+    max_discovery_steps: int = Field(default=12, ge=0, le=100)
     max_tool_calls: int = Field(default=6, ge=1, le=100)
     max_new_spend_usd: float = Field(default=5.0, gt=0)
 
@@ -284,6 +285,24 @@ def _history_card(
         "capability_contracts": contracts,
         "use": "procedural_evidence_only; prior answers and observation values omitted",
     }
+
+
+def inference_discovery_context(context: dict, *, catalog_id: str, catalog_ref: str) -> dict:
+    """Present task inputs without embedding the complete source-tool catalog.
+
+    The original context remains an immutable run input. Discovery binds its
+    exact source contracts through the frozen kernel and provides definitions
+    on demand; procedural history never grants additional capabilities.
+    """
+    result = json.loads(_canonical(context))
+    capabilities = result.pop("capability_catalog", [])
+    result["capability_discovery"] = {
+        "catalog_id": catalog_id,
+        "catalog_ref": catalog_ref,
+        "capability_count": len(capabilities),
+        "access": "Search and inspect source contracts through catalog_context; invoke only loaded frozen functions.",
+    }
+    return result
 
 
 def build_runtime_context(
