@@ -26,6 +26,7 @@ from oak.behavior import (
     make_behavior_inputs,
 )
 from oak.campaign_evidence import retained_starter, starter_key
+from oak.construction_context import compact_construction_context
 from oak.construction_contracts import (
     RequirementAnalysis,
     requirement_inputs,
@@ -620,17 +621,19 @@ class SurfaceEngine:
                     model,
                     f"schema.{attempt}",
                     prompts["stages"]["schema"]["instruction"],
-                    {
-                        "surface": surface.description,
-                        "obligations": requirements_input["obligations"],
-                        "requirements": self.store.get(state["requirements_id"]),
-                        "task_ir": self.store.get(state["task_ir_id"]),
-                        "behavior_bank": self.store.get(state["behavior_bank_id"]),
-                        "capabilities": catalog["tools"],
-                        "observations": self.store.get(state["documents_id"]),
-                        "previous_schema": parent["schema"] if parent else None,
-                        "validation_feedback": feedback,
-                    },
+                    compact_construction_context(
+                        {
+                            "surface": surface.description,
+                            "obligations": requirements_input["obligations"],
+                            "requirements": self.store.get(state["requirements_id"]),
+                            "task_ir": self.store.get(state["task_ir_id"]),
+                            "behavior_bank": self.store.get(state["behavior_bank_id"]),
+                            "capabilities": catalog["tools"],
+                            "observations": self.store.get(state["documents_id"]),
+                            "previous_schema": parent["schema"] if parent else None,
+                            "validation_feedback": feedback,
+                        }
+                    ),
                     schema_json_schema(),
                 )
                 report = validate_ontology(
@@ -723,22 +726,24 @@ class SurfaceEngine:
                     model,
                     f"compose.{attempt}",
                     prompts["stages"]["functions"]["instruction"],
-                    {
-                        "surface": surface.description,
-                        "queries": [q.model_dump() for q in selected],
-                        "obligations": [item.model_dump(mode="json") for item in mandatory],
-                        "task_ir": bank.model_dump(mode="json"),
-                        "behavior_bank": behavior_bank,
-                        "recorded_acquisition_arguments": receipt_arguments,
-                        "requirements": self.store.get(state["requirements_id"]),
-                        "schema": schema,
-                        "graph": self.store.get(state["graph_id"]),
-                        "capabilities": catalog["tools"],
-                        "operators": operator_contracts(),
-                        "function_contract": FunctionSpec.model_json_schema(),
-                        "parent_functions": parent["functions"] if parent else None,
-                        "execution_feedback": error,
-                    },
+                    compact_construction_context(
+                        {
+                            "surface": surface.description,
+                            "queries": [q.model_dump() for q in selected],
+                            "obligations": [item.model_dump(mode="json") for item in mandatory],
+                            "task_ir": bank.model_dump(mode="json"),
+                            "behavior_bank": behavior_bank,
+                            "recorded_acquisition_arguments": receipt_arguments,
+                            "requirements": self.store.get(state["requirements_id"]),
+                            "schema": schema,
+                            "graph": self.store.get(state["graph_id"]),
+                            "capabilities": catalog["tools"],
+                            "operators": operator_contracts(),
+                            "function_contract": FunctionSpec.model_json_schema(),
+                            "parent_functions": parent["functions"] if parent else None,
+                            "execution_feedback": error,
+                        }
+                    ),
                     FunctionProposal.model_json_schema(),
                 )
                 proposal_id = self.store.put("function_proposal", proposal)

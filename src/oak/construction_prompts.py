@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Literal
 
 PROJECT = Path(__file__).resolve().parents[2]
-PROMPT_VERSION = 4
+PROMPT_VERSION = 5
 ConstructionStage = Literal["requirements", "schema", "functions", "extraction"]
 _SHARED = "task-construction.md"
 _STAGE_FILES: dict[ConstructionStage, str] = {
