@@ -556,7 +556,39 @@ class Service:
                 )
             elif row["kind"] == "ask":
                 revision = self.revision(inputs["task_id"], inputs["parent"])
-                if inputs["corpus_id"] != revision["corpus_id"]:
+                demand_profile = (
+                    revision.get("instantiation_profile", revision.get("construction_profile"))
+                    == "demand_v1"
+                )
+                materialize = None
+                reused = inputs["corpus_id"] == revision["corpus_id"]
+                if demand_profile:
+                    from oak.corpus_materialization import CorpusMaterializer
+
+                    materialize = CorpusMaterializer(
+                        self.store,
+                        GeminiCLI(self.store, run_id),
+                        schema=revision["schema"],
+                        kernel_id=revision["id"],
+                        corpus_id=inputs["corpus_id"],
+                        load_documents=lambda: corpus_documents(self.artifact(inputs["corpus_id"])),
+                        retained_graph=revision["graph"] if reused else None,
+                    )
+                    revision["graph"] = {
+                        "nodes": [],
+                        "edges": [],
+                        "source_document_ids": [],
+                        "source_document_count": 0,
+                    }
+                    revision["corpus_id"] = inputs["corpus_id"]
+                    self.store.event(
+                        run_id,
+                        "graph_snapshot",
+                        "completed",
+                        "Initial empty query graph",
+                        revision["graph"],
+                    )
+                elif inputs["corpus_id"] != revision["corpus_id"]:
                     model = GeminiCLI(self.store, run_id)
                     revision["graph"] = build_graph(
                         self.store,
@@ -567,26 +599,36 @@ class Service:
                     )
                     revision["corpus_id"] = inputs["corpus_id"]
                 # Identical corpus/schema reuses the actual frozen graph artifact as a documented cache extension.
-                if revision["graph"].get("ignored_documents"):
+                if not demand_profile and revision["graph"].get("ignored_documents"):
                     raise ValueError(
                         "Inference graph excludes source documents; revise and validate corpus coverage before answering"
                     )
-                graph_id = self.store.event(
-                    run_id,
-                    "inference_graph",
-                    "completed",
-                    "Actual query graph saved",
-                    {
-                        "kernel_revision": revision["id"],
-                        "corpus_id": revision["corpus_id"],
-                        "graph": revision["graph"],
-                        "reused_construction_graph": inputs["corpus_id"]
-                        == self.revision(inputs["task_id"], inputs["parent"])["corpus_id"],
-                    },
-                )
+
+                def save_query_graph():
+                    return self.store.event(
+                        run_id,
+                        "inference_graph",
+                        "completed",
+                        "Actual query graph saved",
+                        {
+                            "kernel_revision": revision["id"],
+                            "corpus_id": revision["corpus_id"],
+                            "graph": revision["graph"],
+                            "reused_construction_graph": reused,
+                            "instantiation_profile": "demand_v1" if demand_profile else "legacy",
+                        },
+                    )
+
+                graph_id = save_query_graph() if not demand_profile else None
                 result = answer(
-                    self.store, GeminiCLI(self.store, run_id), revision, inputs["query"]
+                    self.store,
+                    GeminiCLI(self.store, run_id),
+                    revision,
+                    inputs["query"],
+                    materialize=materialize,
                 )
+                if demand_profile:
+                    graph_id = save_query_graph()
                 result["query"] = inputs["query"]
                 result["graph_artifact_id"] = graph_id
                 self.store.set_run(run_id, "completed", result=result)

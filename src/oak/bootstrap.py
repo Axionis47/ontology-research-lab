@@ -28,6 +28,15 @@ from oak.construction_contracts import (
 )
 from oak.construction_prompts import prompt_manifest
 from oak.functions import FunctionExecutionError, FunctionSpec, execute_function, validate_functions
+from oak.learning import candidate_rank, compare_fresh_runs, freeze_task_ir, repair_feedback
+from oak.learning_contracts import CandidateSelection, TaskIR
+from oak.materialization import (
+    MATERIALIZATION_VERSION,
+    MaterializationPlan,
+    assess_sufficiency,
+    derive_demand,
+    materialization_cache_key,
+)
 from oak.mcp_bridge import MCPBridge
 from oak.model import GeminiCLI, runtime_config
 from oak.ontology import schema_json_schema, validate_graph_records, validate_ontology
@@ -35,6 +44,7 @@ from oak.operators import GRAPH_OPERATORS, operator_contracts
 from oak.pipeline import build_graph, request_json
 from oak.store import Store, canonical, now
 from oak.task_context import InferenceQuery, TaskSurface, build_runtime_context, sample_construction
+from oak.verification import GeneratedCheckSpec, execute_generated_check
 
 PROJECT = Path(__file__).resolve().parents[2]
 
@@ -63,6 +73,8 @@ class EpisodeState(TypedDict, total=False):
     invocation_attempts: int
     tool_calls: int
     completed_tool_calls: int
+    receipt_cache: dict[str, str]
+    materializations: dict[str, str]
 
 
 class FunctionProbe(BaseModel):
@@ -80,6 +92,7 @@ class FunctionProposal(BaseModel):
     functions: list[FunctionSpec] = Field(min_length=1, max_length=64)
     probes: list[FunctionProbe] = Field(min_length=1, max_length=64)
     coverage: list[FunctionCoverage] = Field(min_length=1)
+    generated_checks: list[GeneratedCheckSpec] = Field(default_factory=list, max_length=64)
 
 
 def function_dataflow(function: dict) -> dict:
@@ -255,8 +268,30 @@ def merge_observations(schema: dict, graph: dict, incoming: dict) -> dict:
             {canonical(x): x for x in existing["sources"] + edge["sources"]}.values()
         )
     result["edges"] = list(edges.values())
-    result["source_document_count"] += incoming["source_document_count"]
-    result["ignored_documents"] += incoming.get("ignored_documents", [])
+    # A repeated materialization of one receipt must not invent additional source
+    # documents. Historical graphs lacking explicit IDs retain an attributed
+    # additive count because their overlap cannot be reconstructed from counts.
+    known_documents = all(
+        "source_document_ids" in item or item.get("source_document_count", 0) == 0
+        for item in (graph, incoming)
+    )
+    if known_documents:
+        source_ids = sorted(
+            set(graph.get("source_document_ids", [])) | set(incoming.get("source_document_ids", []))
+        )
+        result["source_document_ids"] = source_ids
+        result["source_document_count"] = len(source_ids)
+        result["source_document_count_basis"] = "unique_recorded_ids"
+    else:
+        result.pop("source_document_ids", None)
+        result["source_document_count"] += incoming["source_document_count"]
+        result["source_document_count_basis"] = "legacy_additive_overlap_unknown"
+    result["ignored_documents"] = list(
+        {
+            canonical(item): item
+            for item in result.get("ignored_documents", []) + incoming.get("ignored_documents", [])
+        }.values()
+    )
     check = validate_graph_records(schema, result["nodes"], result["edges"])
     if not check["valid"]:
         raise ValueError(f"Merged graph is invalid: {check['errors']}")
@@ -352,6 +387,414 @@ class SurfaceEngine:
         parent_id: str | None = None,
         run_id: str | None = None,
     ) -> dict:
+        """Run bounded learning rounds, consuming independent verifier reports.
+
+        Every round is a separate owned child run. The original requirement
+        bank is frozen once, candidates are immutable, and a failed later
+        revision never replaces the retained eligible winner.
+        """
+        from oak.verification import (
+            KernelCandidate,
+            ObligationCheck,
+            ObservedCheck,
+            verify_candidate,
+        )
+
+        data = self.surface(surface_id)
+        surface = TaskSurface.model_validate(data["configuration"])
+        managed = run_id is not None
+        if run_id is None:
+            run_id = self.store.create_run(
+                surface_id,
+                "mcp_construct",
+                {
+                    "surface_id": surface_id,
+                    "parent_id": parent_id,
+                    "construction_profile": "demand_v1",
+                    "round_index": round_index,
+                },
+            )
+        else:
+            self._check_run(run_id, surface_id, "mcp_construct")
+        self.store.set_run(run_id, "running")
+        seen: list[str] = []
+        task_ir_id = None
+        generated_bank_id = None
+        candidates, verification_ids, attempts = [], [], []
+        ranks: dict[str, list[float]] = {}
+        best_id, best_rank = parent_id, None
+        best_fresh: dict[str, dict] = {}
+        best_verification_inputs = None
+        best_measured_cost = 0.0
+        feedback, last_failure = None, None
+        stop_reason, target_met = "round_limit", False
+        try:
+            for offset in range(runtime_config()["max_construction_rounds"]):
+                index = round_index + offset
+                child = self.store.create_run(
+                    surface_id,
+                    "mcp_construct",
+                    {
+                        "construction_profile": "demand_v1",
+                        "round_index": index,
+                        "parent_id": best_id,
+                        "task_ir_id": task_ir_id,
+                    },
+                    parent_run_id=run_id,
+                )
+                attempt = {"run_id": child, "round_index": index}
+                attempts.append(attempt)
+                try:
+                    result = self._construct_round(
+                        surface_id,
+                        round_index=index,
+                        parent_id=best_id,
+                        run_id=child,
+                        task_ir_id=task_ir_id,
+                        seen_query_ids=seen,
+                        repair=feedback,
+                        generated_bank_id=generated_bank_id,
+                    )
+                except (ValueError, KeyError, TypeError, ValidationError, SchemaError) as exc:
+                    self.store.set_run(child, "failed", error=f"{type(exc).__name__}: {exc}")
+                    attempt["error"] = f"{type(exc).__name__}: {exc}"
+                    # Even a failed candidate must retain the same bank next round.
+                    for row in self.store.rows(
+                        "SELECT artifact_id FROM events WHERE run_id=? AND stage='task_ir' ORDER BY id",
+                        (child,),
+                    ):
+                        task_ir_id = self.store.get(row["artifact_id"])["task_ir_id"]
+                    failure = str(exc)
+                    feedback = {"repair_target": "construction", "message": failure}
+                    if failure == last_failure:
+                        stop_reason = "repeated_failure"
+                        break
+                    last_failure = failure
+                    continue
+                except RuntimeError as exc:
+                    self.store.set_run(child, "failed", error=f"{type(exc).__name__}: {exc}")
+                    attempt["error"] = f"{type(exc).__name__}: {exc}"
+                    stop_reason = "execution_boundary_failure"
+                    break
+                except Exception as exc:
+                    self.store.set_run(child, "failed", error=f"{type(exc).__name__}: {exc}")
+                    raise
+                identity = result["kernel_id"]
+                kernel = self.store.get(identity)
+                candidate_generated = self.store.get(kernel["evidence"]["generated_checks_id"])
+                new_generated_bank = generated_bank_id is None and any(
+                    item.get("outcome", {}).get("contributes_to_learning")
+                    for item in candidate_generated
+                )
+                if new_generated_bank:
+                    generated_bank_id = kernel["evidence"]["generated_checks_id"]
+                task_ir_id = kernel["evidence"]["task_ir_id"]
+                bank = TaskIR.model_validate(self.store.get(task_ir_id))
+                seen = sorted(set(seen) | set(kernel["sample"]["selected_query_ids"]))
+                candidates.append(identity)
+                attempt["kernel_id"] = identity
+                mapping = {
+                    item["obligation_id"]: item["function_names"]
+                    for item in self.store.get(kernel["evidence"]["coverage_id"])["mappings"]
+                }
+                checks = [
+                    ObligationCheck(
+                        id=item.obligation_id,
+                        group=item.group,
+                        mandatory=item.mandatory,
+                        function_names=mapping.get(item.obligation_id, []),
+                        semantic_status=item.semantic_status,
+                        oracle_ref=item.oracle_ref,
+                    )
+                    for item in bank.obligations
+                ]
+                observations = []
+                probes = self.store.get(kernel["evidence"]["probes_id"])
+                for obligation in checks:
+                    for probe in probes:
+                        if probe["probe"]["function"] not in obligation.function_names:
+                            continue
+                        payload = {
+                            **probe,
+                            "candidate_id": identity,
+                            "probe_evidence_id": probe["evidence_id"],
+                            "function": probe["probe"]["function"],
+                            "args": probe["probe"]["args"],
+                            "value": probe.get("execution", {}).get("value"),
+                            "run_id": child,
+                        }
+                        evidence_ref = self.store.put("candidate_execution_evidence", payload)
+                        observations.append(
+                            ObservedCheck(
+                                obligation_id=obligation.id,
+                                dimension="execution",
+                                evidence_ref=evidence_ref,
+                            )
+                        )
+                for generated in self.store.get(kernel["evidence"]["generated_checks_id"]):
+                    payload = {
+                        "candidate_id": identity,
+                        "graph_id": generated["graph_id"],
+                        "check": generated["check"],
+                        "source_schema_sha256": generated["source_schema_sha256"],
+                    }
+                    evidence_ref = self.store.put("generated_check_evidence", payload)
+                    observations.append(
+                        ObservedCheck(
+                            obligation_id=generated["check"]["obligation_id"],
+                            dimension="generated",
+                            evidence_ref=evidence_ref,
+                            evaluator_id="generated_dsl_v1",
+                        )
+                    )
+                candidate = KernelCandidate(
+                    id=identity,
+                    schema=kernel["schema"],
+                    functions=kernel["functions"],
+                    parent_id=best_id,
+                )
+                previous = self.store.get(best_id) if best_id else None
+                parent_candidate = (
+                    KernelCandidate(
+                        id=best_id,
+                        schema=previous["schema"],
+                        functions=previous["functions"],
+                        parent_id=previous.get("parent"),
+                    )
+                    if previous
+                    else None
+                )
+                verification_inputs = {
+                    "candidate": candidate,
+                    "obligations": checks,
+                    "evidence": observations,
+                    "store": self.store,
+                    "parent": parent_candidate,
+                    "ontology_validation_ref": kernel["evidence"]["validation_id"],
+                }
+                if new_generated_bank and best_verification_inputs is not None:
+                    prior_inputs = dict(best_verification_inputs)
+                    prior_observations = [
+                        item for item in prior_inputs["evidence"] if item.dimension != "generated"
+                    ]
+                    for generated in candidate_generated:
+                        evidence_ref = self.store.put(
+                            "generated_check_evidence",
+                            {
+                                "candidate_id": best_id,
+                                "graph_id": generated["graph_id"],
+                                "check": generated["check"],
+                                "source_schema_sha256": generated["source_schema_sha256"],
+                            },
+                        )
+                        prior_observations.append(
+                            ObservedCheck(
+                                obligation_id=generated["check"]["obligation_id"],
+                                dimension="generated",
+                                evidence_ref=evidence_ref,
+                                evaluator_id="generated_dsl_v1",
+                            )
+                        )
+                    prior_inputs["evidence"] = prior_observations
+                    prior_report = verify_candidate(**prior_inputs).model_dump(mode="json")
+                    prior_id = self.store.put("candidate_verification", prior_report)
+                    verification_ids.append(prior_id)
+                    self.store.event(
+                        run_id,
+                        "candidate_verification",
+                        "completed",
+                        "Retained candidate checked against the same generated bank",
+                        {
+                            "flow": "verification",
+                            "kernel_id": best_id,
+                            "verification_id": prior_id,
+                            "generated_bank_id": generated_bank_id,
+                            **prior_report,
+                        },
+                    )
+                    prior_failures = compare_fresh_runs({}, list(best_fresh.values()))["failures"]
+                    best_rank = (
+                        0.0,
+                        float(len(prior_failures)),
+                        *candidate_rank(
+                            prior_report, self.store.get(best_id), measured_cost=best_measured_cost
+                        ),
+                    )
+                    ranks[best_id] = list(best_rank)
+                    best_verification_inputs = prior_inputs
+                report = verify_candidate(**verification_inputs)
+                report_data = report.model_dump(mode="json")
+                verification_id = self.store.put("candidate_verification", report_data)
+                verification_ids.append(verification_id)
+                self.store.event(
+                    child,
+                    "candidate_verification",
+                    "completed",
+                    "Independent verification evidence",
+                    {
+                        "flow": "verification",
+                        "kernel_id": identity,
+                        "verification_id": verification_id,
+                        **report_data,
+                    },
+                )
+                target_met = bool(report_data.get("target_met"))
+                feedback = repair_feedback(report_data)
+                fresh = []
+                boundary_failure = None
+                if report_data.get("execution_eligible"):
+                    fresh_query_ids = sorted(
+                        set(kernel["sample"]["selected_query_ids"]) | set(best_fresh)
+                    )
+                    for query_id in fresh_query_ids:
+                        try:
+                            episode = self.run_episode(
+                                surface_id, query_id, kernel_id=identity, parent_run_id=child
+                            )
+                        except RuntimeError as exc:
+                            boundary_failure = f"{type(exc).__name__}: {exc}"
+                            stop_reason = "execution_boundary_failure"
+                            break
+                        fresh.append(
+                            {
+                                "query_id": query_id,
+                                "run_id": episode["run_id"],
+                                "episode_id": episode["episode_id"],
+                                "status": episode["episode"]["status"],
+                                "assessment": episode.get("assessment"),
+                            }
+                        )
+                    self.store.event(
+                        child,
+                        "fresh_agent_execution",
+                        "completed",
+                        "Fresh agent results remain distinct from generated checks",
+                        {
+                            "flow": "verification",
+                            "kernel_id": identity,
+                            "episodes": fresh,
+                            "boundary_failure": boundary_failure,
+                        },
+                    )
+                spend = self.store.rows(
+                    "WITH RECURSIVE family(id) AS (SELECT id FROM runs WHERE id=? UNION ALL "
+                    "SELECT r.id FROM runs r JOIN family f ON r.parent_run_id=f.id) "
+                    "SELECT SUM(estimated) AS estimated,SUM(CASE WHEN status!='settled' THEN reserved ELSE 0 END) AS reserved "
+                    "FROM model_calls WHERE run_id IN (SELECT id FROM family)",
+                    (child,),
+                )[0]
+                rank = candidate_rank(
+                    report_data,
+                    kernel,
+                    measured_cost=float(spend["estimated"] or 0) + float(spend["reserved"] or 0),
+                )
+                comparison = compare_fresh_runs(best_fresh, fresh)
+                if comparison["failures"]:
+                    feedback["fresh_agent_failures"] = [
+                        item for item in fresh if item["query_id"] in comparison["failures"]
+                    ]
+                rank = (
+                    float(len(comparison["regressions"])),
+                    float(len(comparison["failures"])),
+                    *rank,
+                )
+                ranks[identity] = list(rank)
+                self.store.event(
+                    child,
+                    "candidate_comparison",
+                    "completed",
+                    "Compared fresh behavior before candidate selection",
+                    {
+                        "flow": "learning",
+                        "kernel_id": identity,
+                        "previous_kernel_id": best_id,
+                        "comparison": comparison,
+                        "rank": list(rank),
+                    },
+                )
+                if (
+                    report_data.get("execution_eligible")
+                    and not report_data.get("known_regressions", 0)
+                    and not comparison["regressions"]
+                    and not comparison["unexecuted_previous"]
+                ):
+                    if best_rank is None or rank < best_rank:
+                        best_id, best_rank = identity, rank
+                        best_fresh = {item["query_id"]: item for item in fresh}
+                        best_verification_inputs = verification_inputs
+                        best_measured_cost = float(spend["estimated"] or 0) + float(
+                            spend["reserved"] or 0
+                        )
+                target_met = target_met and not comparison["failures"] and boundary_failure is None
+                if boundary_failure:
+                    break
+                if target_met:
+                    stop_reason = "construction_target_met"
+                    break
+                pool_ids = {q.id for q in surface.queries if q.split == "construction"}
+                if (
+                    pool_ids.issubset(seen)
+                    and not report_data.get("counterexamples")
+                    and not feedback.get("fresh_agent_failures")
+                    and not feedback.get("actionable_learning_gaps")
+                ):
+                    stop_reason = "sampled_task_surface"
+                    break
+            selection = CandidateSelection(
+                task_ir_id=task_ir_id or "",
+                candidate_ids=candidates,
+                selected_kernel_id=best_id,
+                verification_ids=verification_ids,
+                disposition="target_met"
+                if target_met
+                else ("incomplete" if best_id else "rejected"),
+                stop_reason=stop_reason,
+                ranks=ranks,
+            )
+            selection_id = self.store.put("candidate_selection", selection.model_dump(mode="json"))
+            self.store.event(
+                run_id,
+                "candidate_selection",
+                "completed",
+                "Learning retained the best eligible candidate",
+                {
+                    "flow": "learning",
+                    "selection_id": selection_id,
+                    **selection.model_dump(mode="json"),
+                },
+            )
+            output = {
+                "run_id": run_id,
+                "kernel_id": best_id,
+                "candidate_ids": candidates,
+                "selection_id": selection_id,
+                "task_ir_id": task_ir_id,
+                "verification_ids": verification_ids,
+                "attempts": attempts,
+                "assessment": {
+                    "construction": selection.disposition,
+                    "fresh_task_success": "unmeasured",
+                },
+            }
+            self.store.set_run(run_id, "completed", result=output)
+            return output
+        except Exception as exc:
+            if not managed:
+                self.store.set_run(run_id, "failed", error=f"{type(exc).__name__}: {exc}")
+            raise
+
+    def _construct_round(
+        self,
+        surface_id: str,
+        *,
+        round_index: int = 0,
+        parent_id: str | None = None,
+        run_id: str | None = None,
+        task_ir_id: str | None = None,
+        seen_query_ids: list[str] | None = None,
+        repair: dict | None = None,
+        generated_bank_id: str | None = None,
+    ) -> dict:
         """Construct a candidate from a recorded fresh sample and genuine starter episodes.
 
         Real OWL and function probes are admission evidence, not an independent
@@ -364,7 +807,9 @@ class SurfaceEngine:
         parent = self.store.get(parent_id) if parent_id else None
         if parent and parent.get("surface_id") != surface_id:
             raise ValueError("Parent belongs to another surface")
-        sample = sample_construction(surface, round_index).model_dump(mode="json")
+        sample = sample_construction(
+            surface, round_index, seen_query_ids=seen_query_ids
+        ).model_dump(mode="json")
         request = {
             "surface_id": surface_id,
             "sample": sample,
@@ -384,7 +829,7 @@ class SurfaceEngine:
         catalog = data["catalog"]
         bridge = MCPBridge(surface.servers, self.store, run_id, expected_catalog=catalog)
         selected = [q for q in surface.queries if q.id in sample["selected_query_ids"]]
-        obligations = requirement_inputs(selected)
+        obligations = requirement_inputs([q for q in surface.queries if q.split == "construction"])
         requirements_input = {
             "surface": surface.description,
             "starting_instructions": surface.base_prompt,
@@ -394,6 +839,32 @@ class SurfaceEngine:
         requirements_input_id = self.store.put("requirement_inputs", requirements_input)
 
         def analyze(state):
+            if task_ir_id:
+                bank = TaskIR.model_validate(self.store.get(task_ir_id))
+                if (
+                    bank.source_sha256
+                    != hashlib.sha256(
+                        canonical([item.model_dump() for item in obligations])
+                    ).hexdigest()
+                ):
+                    raise ValueError("Frozen TaskIR does not match the construction input bank")
+                self.store.event(
+                    run_id,
+                    "task_ir",
+                    "completed",
+                    "Frozen task bank reused",
+                    {
+                        "flow": "learning",
+                        "task_ir_id": task_ir_id,
+                        "mandatory_obligations": sum(item.mandatory for item in bank.obligations),
+                    },
+                )
+                return {
+                    "requirements_id": bank.analysis_id,
+                    "task_ir_id": task_ir_id,
+                    "requirements_input_id": requirements_input_id,
+                    "prompt_manifest_id": prompt_manifest_id,
+                }
             feedback = None
             for attempt in range(runtime_config()["max_repair_attempts"] + 1):
                 proposal = request_json(
@@ -427,6 +898,24 @@ class SurfaceEngine:
                 analysis_id = self.store.put(
                     "requirement_analysis", analysis.model_dump(mode="json")
                 )
+                bank = freeze_task_ir(surface.description, obligations, analysis)
+                bank.analysis_id = analysis_id
+                frozen_id = self.store.put("task_ir", bank.model_dump(mode="json"))
+                self.store.event(
+                    run_id,
+                    "task_ir",
+                    "completed",
+                    "Candidate-independent subtask bank frozen",
+                    {
+                        "flow": "learning",
+                        "task_ir_id": frozen_id,
+                        "mandatory_obligations": sum(item.mandatory for item in bank.obligations),
+                        "exploratory_obligations": sum(
+                            not item.mandatory for item in bank.obligations
+                        ),
+                        "exploration_omitted": bank.exploration_omitted,
+                    },
+                )
                 self.store.event(
                     run_id,
                     "analyze",
@@ -444,6 +933,7 @@ class SurfaceEngine:
                     "requirements_id": analysis_id,
                     "requirements_input_id": requirements_input_id,
                     "prompt_manifest_id": prompt_manifest_id,
+                    "task_ir_id": frozen_id,
                 }
             raise ValueError(f"No valid requirement analysis within repair limit: {feedback}")
 
@@ -464,7 +954,7 @@ class SurfaceEngine:
             }
 
         def draft(state):
-            feedback = None
+            feedback = repair
             for attempt in range(runtime_config()["max_repair_attempts"] + 1):
                 schema = request_json(
                     model,
@@ -474,6 +964,7 @@ class SurfaceEngine:
                         "surface": surface.description,
                         "obligations": requirements_input["obligations"],
                         "requirements": self.store.get(state["requirements_id"]),
+                        "task_ir": self.store.get(state["task_ir_id"]),
                         "capabilities": catalog["tools"],
                         "observations": self.store.get(state["documents_id"]),
                         "sampled_episodes": [
@@ -524,7 +1015,11 @@ class SurfaceEngine:
 
         def compose(state):
             schema = self.store.get(state["schema_id"])
-            error = None
+            bank = TaskIR.model_validate(self.store.get(state["task_ir_id"]))
+            mandatory = [item for item in bank.obligations if item.mandatory]
+            error = repair
+            tool_attempts = 0
+            probe_receipt_cache: dict[str, str] = {}
             for attempt in range(runtime_config()["max_repair_attempts"] + 1):
                 proposal = request_json(
                     model,
@@ -533,13 +1028,18 @@ class SurfaceEngine:
                     {
                         "surface": surface.description,
                         "queries": [q.model_dump() for q in selected],
-                        "obligations": requirements_input["obligations"],
+                        "obligations": [item.model_dump(mode="json") for item in mandatory],
+                        "task_ir": bank.model_dump(mode="json"),
                         "requirements": self.store.get(state["requirements_id"]),
                         "schema": schema,
                         "graph": self.store.get(state["graph_id"]),
                         "capabilities": catalog["tools"],
                         "operators": operator_contracts(),
                         "function_contract": FunctionSpec.model_json_schema(),
+                        "generated_check_contract": GeneratedCheckSpec.model_json_schema(),
+                        "frozen_generated_check_bank": self.store.get(generated_bank_id)
+                        if generated_bank_id
+                        else None,
                         "parent_functions": parent["functions"] if parent else None,
                         "sampled_episodes": [
                             sampled_episode_summary(identity, self.store.get(identity))
@@ -568,11 +1068,11 @@ class SurfaceEngine:
                     ):
                         raise ValueError("Acquisition-plus-computation witness is missing")
                     coverage = validate_function_coverage(
-                        proposal["coverage"], obligations, functions
+                        proposal["coverage"], mandatory, functions
                     )
                     coverage_id = self.store.event(
                         run_id,
-                        "coverage_validation",
+                        "requirement_links",
                         "passed" if coverage.structurally_complete else "failed",
                         "Requirement links checked; task success remains Not checked",
                         {
@@ -583,12 +1083,11 @@ class SurfaceEngine:
                             "prompt_manifest_id": prompt_manifest_id,
                         },
                     )
-                    if not coverage.structurally_complete:
+                    if not coverage.valid:
                         raise ValueError(
                             "Requirement linkage is incomplete: " + "; ".join(coverage.gaps)
                         )
-                    probes, covered = [], set()
-                    tool_attempts = 0
+                    probes, covered, demands = [], set(), []
                     for index, probe in enumerate(proposal["probes"]):
                         function = next(
                             (f for f in functions if f["name"] == probe["function"]), None
@@ -605,6 +1104,8 @@ class SurfaceEngine:
                         )
                         starting_graph_id = self.store.put("probe_starting_graph", graph)
                         acquired = []
+                        demand = derive_demand(schema, function, probe["args"])
+                        demands.append(demand.model_dump(mode="json"))
 
                         def acquire(
                             *,
@@ -613,12 +1114,25 @@ class SurfaceEngine:
                             graph=graph,
                             acquired=acquired,
                             probe_stage=f"probe_extract.{attempt}.{index}",
+                            demand=demand,
                         ):
                             nonlocal tool_attempts
-                            if tool_attempts >= surface.limits.max_tool_calls:
-                                raise ValueError("Construction probe call bound reached")
-                            tool_attempts += 1
-                            receipt = bridge.invoke(capability, arguments)
+                            request_key = hashlib.sha256(
+                                canonical({"capability": capability, "arguments": arguments})
+                            ).hexdigest()
+                            if request_key in probe_receipt_cache:
+                                receipt_id = probe_receipt_cache[request_key]
+                                receipt = {
+                                    **self.store.get(receipt_id),
+                                    "evidence_id": receipt_id,
+                                    "reused": True,
+                                }
+                            else:
+                                if tool_attempts >= surface.limits.max_tool_calls:
+                                    raise ValueError("Construction probe call bound reached")
+                                tool_attempts += 1
+                                receipt = bridge.invoke(capability, arguments)
+                                probe_receipt_cache[request_key] = receipt["evidence_id"]
                             acquired.append(receipt)
                             if receipt["status"] != "completed":
                                 raise ValueError(f"Real MCP probe failed: {receipt.get('error')}")
@@ -632,6 +1146,7 @@ class SurfaceEngine:
                                     "instruction"
                                 ],
                                 prompt_manifest_id=prompt_manifest_id,
+                                demand=demand,
                             )
                             merged = merge_observations(schema, graph, incoming)
                             graph.clear()
@@ -677,6 +1192,9 @@ class SurfaceEngine:
                             probe_record.update(
                                 status="passed", execution=result, acquisition_evidence_ids=proof
                             )
+                            sufficiency = assess_sufficiency(schema, graph, demand)
+                            probe_record["sufficiency"] = sufficiency.model_dump(mode="json")
+                            probe_record["demand"] = demand.model_dump(mode="json")
                         except Exception as exc:
                             probe_record.update(
                                 status="failed", error=f"{type(exc).__name__}: {exc}"
@@ -688,12 +1206,17 @@ class SurfaceEngine:
                             probe_record.update(
                                 graph_id=self.store.put("probe_graph", graph),
                                 receipt_ids=[receipt["evidence_id"] for receipt in acquired],
-                                invocation_attempts=len(acquired),
+                                invocation_attempts=sum(
+                                    not receipt.get("reused", False) for receipt in acquired
+                                ),
                                 tool_calls=sum(
-                                    bool(receipt["tool_call_attempted"]) for receipt in acquired
+                                    bool(receipt["tool_call_attempted"])
+                                    and not receipt.get("reused")
+                                    for receipt in acquired
                                 ),
                                 completed_tool_calls=sum(
-                                    receipt["status"] == "completed" for receipt in acquired
+                                    receipt["status"] == "completed" and not receipt.get("reused")
+                                    for receipt in acquired
                                 ),
                             )
                             probe_record["evidence_id"] = self.store.event(
@@ -707,9 +1230,82 @@ class SurfaceEngine:
                         covered.add(probe["function"])
                     if covered != {f["name"] for f in functions}:
                         raise ValueError("Every function requires a real execution probe")
+                    generated_checks = []
+                    frozen_generated = (
+                        self.store.get(generated_bank_id) if generated_bank_id else None
+                    )
+                    check_inputs = (
+                        [item["check"] for item in frozen_generated]
+                        if frozen_generated is not None
+                        else proposal.get("generated_checks", [])
+                    )
+                    for check_index, check in enumerate(check_inputs):
+                        specification = GeneratedCheckSpec.model_validate(check)
+                        if specification.obligation_id not in {
+                            item.obligation_id for item in bank.obligations
+                        }:
+                            raise ValueError(
+                                "Generated check references an obligation outside the frozen bank"
+                            )
+                        prior_check = (
+                            frozen_generated[check_index] if frozen_generated is not None else None
+                        )
+                        graph_id = prior_check["graph_id"] if prior_check else state["graph_id"]
+                        source_schema_sha256 = (
+                            prior_check["source_schema_sha256"]
+                            if prior_check
+                            else hashlib.sha256(canonical(schema)).hexdigest()
+                        )
+                        if source_schema_sha256 == hashlib.sha256(canonical(schema)).hexdigest():
+                            outcome = execute_generated_check(
+                                specification,
+                                self.store.get(graph_id),
+                                schema,
+                                candidate_functions=functions,
+                            )
+                        else:
+                            outcome = {
+                                "status": "unknown",
+                                "independent": False,
+                                "summary": "Frozen generated check requires a schema translation",
+                            }
+                        evidence = {
+                            "flow": "verification",
+                            "independent": False,
+                            "graph_id": graph_id,
+                            "check": specification.model_dump(mode="json"),
+                            "outcome": outcome,
+                            "proposal_id": proposal_id,
+                            "prompt_manifest_id": prompt_manifest_id,
+                            "source_schema_sha256": source_schema_sha256,
+                            "bank_id": generated_bank_id,
+                        }
+                        evidence["evidence_id"] = self.store.event(
+                            run_id,
+                            "generated_check",
+                            "completed",
+                            "Executed a generated consistency check on actual evidence",
+                            evidence,
+                        )
+                        generated_checks.append(evidence)
                     return {
                         "functions_id": self.store.put("functions", functions),
                         "coverage_id": coverage_id,
+                        "demands_id": self.store.put(
+                            "evidence_demands", {"flow": "learning", "demands": demands}
+                        ),
+                        "generated_checks_id": self.store.put("generated_checks", generated_checks),
+                        "learning_id": self.store.put(
+                            "learning_candidate",
+                            {
+                                "flow": "learning",
+                                "task_ir_id": state["task_ir_id"],
+                                "mandatory_count": len(mandatory),
+                                "exploratory_count": len(bank.obligations) - len(mandatory),
+                                "feedback": repair,
+                                "outcome_status": "not_checked",
+                            },
+                        ),
                         "probes_id": self.store.event(
                             run_id,
                             "function_probes",
@@ -760,6 +1356,10 @@ class SurfaceEngine:
                 functions_id: str
                 probes_id: str
                 coverage_id: str
+                task_ir_id: str
+                demands_id: str
+                learning_id: str
+                generated_checks_id: str
 
             workflow = StateGraph(ConstructionEvidence)
             for name, node in [
@@ -788,6 +1388,7 @@ class SurfaceEngine:
             kernel = {
                 "format_version": 1,
                 "kind": "mcp_kernel",
+                "construction_profile": "demand_v1",
                 "surface_id": surface_id,
                 "parent": parent_id,
                 "created_at": now(),
@@ -901,6 +1502,17 @@ class SurfaceEngine:
             "observation IDs with nonempty acquisition_evidence_ids from this episode. "
             "Completion is independently assessed."
         )
+        demand_enabled = bool(kernel and kernel.get("construction_profile") == "demand_v1")
+        if demand_enabled:
+            instruction += (
+                "\nGraph evidence is materialized incrementally from your selected function and arguments. "
+                "evidence_scope describes missing or unestablished coverage, not a permission gate. "
+                "Decide autonomously whether to call another frozen function to expand evidence, answer "
+                "with the appropriate scope, clarify, or report unresolved. Do not equate an empty "
+                "partial graph with absence or a partial count with a complete population. Repeating "
+                "identical acquisition arguments within this run reuses its actual source receipt. "
+                "Generated self-checks are internal consistency evidence, not independent task truth."
+            )
         tools = catalog["tools"] if kernel is None else kernel["functions"]
 
         def decide(state: EpisodeState):
@@ -957,31 +1569,114 @@ class SurfaceEngine:
         def execute(state: EpisodeState):
             decision = state["decision"]
             graph = self.store.get(state["graph_id"])
+            episode_graph = deepcopy(graph)
             count = state["invocation_attempts"]
             acquired = []
+            receipt_cache = dict(state.get("receipt_cache", {}))
+            materializations = dict(state.get("materializations", {}))
+            demand = None
+            instantiation_refs = []
 
             def acquire(*, capability: str, arguments: dict):
                 nonlocal count
-                if count >= surface.limits.max_tool_calls:
-                    raise ValueError("MCP invocation-attempt limit reached")
-                count += 1
-                receipt = bridge.invoke(capability, arguments)
+                request_key = hashlib.sha256(
+                    canonical({"capability": capability, "arguments": arguments})
+                ).hexdigest()
+                reused = demand_enabled and request_key in receipt_cache
+                if reused:
+                    receipt_id = receipt_cache[request_key]
+                    receipt = {
+                        **self.store.get(receipt_id),
+                        "evidence_id": receipt_id,
+                        "reused": True,
+                    }
+                else:
+                    if count >= surface.limits.max_tool_calls:
+                        raise ValueError("MCP invocation-attempt limit reached")
+                    count += 1
+                    receipt = bridge.invoke(capability, arguments)
+                    if demand_enabled:
+                        # Failed/uncertain dispatches are remembered too: another
+                        # decision must not repeat their effects automatically.
+                        receipt_cache[request_key] = receipt["evidence_id"]
                 acquired.append(receipt)
                 if receipt["status"] != "completed":
                     raise ValueError(f"MCP call failed: {receipt.get('error')}")
                 if kernel:
-                    incoming = build_graph(
-                        self.store,
-                        model,
-                        kernel["schema"],
-                        receipt_documents(receipt),
-                        f"ingest.{state['step']}.{count}",
+                    cache_key = (
+                        materialization_cache_key(
+                            receipt["evidence_id"],
+                            kernel_id,
+                            MATERIALIZATION_VERSION,
+                            demand,
+                        )
+                        if demand
+                        else None
                     )
+                    if cache_key and cache_key in materializations:
+                        incoming = self.store.get(materializations[cache_key])
+                        instantiation_refs.append(
+                            self.store.event(
+                                run_id,
+                                "materialization_reused",
+                                "completed",
+                                "Reused actual materialized evidence from this run",
+                                {
+                                    "flow": "instantiation",
+                                    "demand_id": demand.demand_id,
+                                    "graph_id": materializations[cache_key],
+                                    "receipt_id": receipt["evidence_id"],
+                                },
+                            )
+                        )
+                    else:
+                        if demand:
+                            plan = MaterializationPlan(
+                                demand_id=demand.demand_id,
+                                kernel_id=kernel_id,
+                                receipt_ids=[receipt["evidence_id"]],
+                                acquisition_requests=[
+                                    {"capability": capability, "arguments": arguments}
+                                ],
+                                expansion_reason="Additional fields from a retained receipt"
+                                if reused
+                                else "New actual source evidence",
+                            )
+                            instantiation_refs.append(
+                                self.store.event(
+                                    run_id,
+                                    "materialization_plan",
+                                    "running",
+                                    "Materialize the selected computation's evidence",
+                                    {
+                                        "flow": "instantiation",
+                                        **plan.model_dump(mode="json"),
+                                    },
+                                )
+                            )
+                        incoming = build_graph(
+                            self.store,
+                            model,
+                            kernel["schema"],
+                            receipt_documents(receipt),
+                            f"ingest.{state['step']}.{count}",
+                            demand=demand,
+                        )
+                        if cache_key:
+                            materializations[cache_key] = self.store.put(
+                                "materialized_graph", incoming
+                            )
                     merged = merge_observations(kernel["schema"], graph, incoming)
                     graph.clear()
                     graph.update(merged)
                     self.store.event(
-                        run_id, "graph_snapshot", "completed", "New observed facts", graph
+                        run_id,
+                        "graph_snapshot",
+                        "completed",
+                        "New observed facts",
+                        merge_observations(kernel["schema"], episode_graph, graph)
+                        if demand_enabled
+                        else graph,
                     )
                     return acquisition_result(
                         kernel["schema"], graph, incoming, receipt["evidence_id"]
@@ -991,6 +1686,41 @@ class SurfaceEngine:
             observation = {"id": f"observation-{state['step']}", "function": decision["function"]}
             try:
                 if kernel:
+                    selected_function = next(
+                        (
+                            function
+                            for function in kernel["functions"]
+                            if function["name"] == decision["function"]
+                        ),
+                        None,
+                    )
+                    if selected_function is None:
+                        raise ValueError("Selected function is absent from the frozen kernel")
+                    if demand_enabled:
+                        demand = derive_demand(
+                            kernel["schema"], selected_function, decision["args"]
+                        )
+                        if any(
+                            step["operator"] == "invoke_capability"
+                            for step in selected_function["steps"]
+                        ):
+                            # Graph reads inside an acquisition function see only
+                            # this invocation's receipts. The episode evidence
+                            # graph accumulates separately for inspection/reuse.
+                            graph = empty_graph()
+                        instantiation_refs.append(
+                            self.store.event(
+                                run_id,
+                                "evidence_demand",
+                                "completed",
+                                "Derived evidence demand from the frozen function",
+                                {
+                                    "flow": "instantiation",
+                                    "demand_id": demand.demand_id,
+                                    **demand.model_dump(mode="json"),
+                                },
+                            )
+                        )
                     result = execute_function(
                         graph,
                         kernel["functions"],
@@ -1012,19 +1742,31 @@ class SurfaceEngine:
                     )
                     observation["output"] = result["value"]
                     observation["execution_id"] = self.store.put("function_execution", result)
+                    observation["working_graph_id"] = self.store.put("function_graph", graph)
                     previous_receipts = [
                         {**self.store.get(identity), "evidence_id": identity}
                         for previous in state["observations"]
                         for identity in previous.get("receipt_ids", [])
                     ]
-                    selected_function = next(
-                        function
-                        for function in kernel["functions"]
-                        if function["name"] == decision["function"]
-                    )
                     observation["acquisition_evidence_ids"] = result_acquisition_evidence(
                         selected_function, result, graph, previous_receipts + acquired
                     )
+                    if demand:
+                        scope = assess_sufficiency(kernel["schema"], graph, demand)
+                        observation["evidence_scope"] = scope.model_dump(mode="json")
+                        instantiation_refs.append(
+                            self.store.event(
+                                run_id,
+                                "evidence_scope",
+                                "completed",
+                                "Recorded evidence scope for autonomous planning",
+                                {
+                                    "flow": "instantiation",
+                                    "nonblocking": True,
+                                    **scope.model_dump(mode="json"),
+                                },
+                            )
+                        )
                 else:
                     observation["output"] = acquire(
                         capability=decision["function"], arguments=decision["args"]
@@ -1046,6 +1788,17 @@ class SurfaceEngine:
                         },
                     )
             observation["receipt_ids"] = [r["evidence_id"] for r in acquired]
+            if demand_enabled:
+                try:
+                    graph = merge_observations(kernel["schema"], episode_graph, graph)
+                except ValueError as exc:
+                    observation.update(
+                        status="failed", error=f"Conflicting source snapshots: {exc}"
+                    )
+                    observation["conflicting_graph_id"] = self.store.put("conflicting_graph", graph)
+                    graph = episode_graph
+            if instantiation_refs:
+                observation["instantiation_evidence_ids"] = instantiation_refs
             if acquired:
                 observation.update(
                     receipt_id=acquired[-1]["evidence_id"],
@@ -1069,10 +1822,18 @@ class SurfaceEngine:
                 "observations": state["observations"] + [observation],
                 "graph_id": self.store.put("episode_graph", graph),
                 "invocation_attempts": count,
+                "receipt_cache": receipt_cache,
+                "materializations": materializations,
                 "tool_calls": state["tool_calls"]
-                + sum(bool(receipt["tool_call_attempted"]) for receipt in acquired),
+                + sum(
+                    bool(receipt["tool_call_attempted"]) and not receipt.get("reused")
+                    for receipt in acquired
+                ),
                 "completed_tool_calls": state["completed_tool_calls"]
-                + sum(receipt["status"] == "completed" for receipt in acquired),
+                + sum(
+                    receipt["status"] == "completed" and not receipt.get("reused")
+                    for receipt in acquired
+                ),
             }
 
         builder = StateGraph(EpisodeState)
@@ -1103,6 +1864,8 @@ class SurfaceEngine:
                         "tool_calls": 0,
                         "completed_tool_calls": 0,
                         "graph_id": initial_graph_id,
+                        "receipt_cache": {},
+                        "materializations": {},
                     },
                     {
                         "configurable": {"thread_id": run_id},

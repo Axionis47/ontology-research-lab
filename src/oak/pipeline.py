@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import uuid
+from collections.abc import Callable
 from pathlib import Path
 from typing import TypedDict
 
@@ -11,6 +12,7 @@ from langgraph.graph import END, START, StateGraph
 
 from oak.construction_prompts import prompt_manifest
 from oak.functions import FunctionSpec, execute_function, validate_functions
+from oak.materialization import EvidenceDemand, assess_sufficiency, derive_demand, slice_graph
 from oak.model import GeminiCLI, ModelOutputError, runtime_config
 from oak.ontology import parse_schema, schema_json_schema, validate_graph_records, validate_ontology
 from oak.operators import operator_contracts
@@ -92,6 +94,49 @@ def _chunk_documents(documents: list[dict], limit: int) -> list[list[dict]]:
     return chunks
 
 
+def assemble_extracted_relations(
+    schema: dict,
+    relation_candidates: list[dict],
+    source_records: dict,
+    demand: EvidenceDemand | None = None,
+) -> tuple[list[dict], list[dict]]:
+    """Assemble declared in-demand edges without inventing missing endpoints.
+
+    Callers retain raw extraction and still validate every materialized endpoint.
+    Excluded relations are returned for an explicit scoped-extraction receipt.
+    """
+    spec = parse_schema(schema)
+    edges_by_identity = {}
+    excluded_relations = []
+    for relation in relation_candidates:
+        if relation["relation"] not in spec.relations:
+            raise ValueError(f"Undeclared extracted relation {relation['relation']}")
+        if demand is not None and relation["relation"] not in demand.relation_types:
+            # The unmodified model output is already saved above. Relations
+            # outside this materialization must not require unrelated endpoints.
+            excluded_relations.append(relation)
+            continue
+        source = hashlib.sha256(
+            canonical([relation["source_type"], relation["source_key"]])
+        ).hexdigest()
+        target = hashlib.sha256(
+            canonical([relation["target_type"], relation["target_key"]])
+        ).hexdigest()
+        key = (source, target, relation["relation"])
+        edge = edges_by_identity.setdefault(
+            key,
+            {"source": source, "target": target, "relation": relation["relation"], "sources": []},
+        )
+        edge["sources"] = list(
+            {
+                entry["document_id"]: entry
+                for entry in edge["sources"]
+                + [source_records[source] for source in relation["source_ids"]]
+            }.values()
+        )
+    return list(edges_by_identity.values()), excluded_relations
+
+
 def build_graph(
     store: Store,
     model: GeminiCLI,
@@ -102,12 +147,23 @@ def build_graph(
     *,
     extraction_instruction: str | None = None,
     prompt_manifest_id: str | None = None,
+    demand: EvidenceDemand | None = None,
 ) -> dict:
     """Extract real records through Gemini, merge by typed primary key, and reject omissions."""
     if extraction_instruction is None:
         prompts = prompt_manifest()
         prompt_manifest_id = store.put("construction_prompts", prompts)
         extraction_instruction = prompts["stages"]["extraction"]["instruction"]
+    if demand is not None:
+        extraction_instruction += (
+            "\nAn executor-derived evidence_demand bounds this materialization. Extract only "
+            "demanded entity types, selectors, fields and relations, including primary keys, "
+            "schema-required fields, provenance and relation endpoints. Do not populate unrelated "
+            "parts of the schema. Scan supplied source evidence as needed to find all relevant "
+            "records. Mark out-of-scope documents ignored with a reason. Missing data is not null: "
+            "emit null only when the source explicitly supports null. Never claim population "
+            "completeness from your extraction. An empty scoped result is allowed but cannot prove absence."
+        )
     spec = parse_schema(schema)
     node_map, relation_candidates, ignored = {}, [], []
     source_records = {
@@ -135,7 +191,12 @@ def build_graph(
             model,
             f"{stage}.{index}",
             extraction_instruction,
-            {"schema": schema, "documents": prompt_docs, "previous_validation_error": feedback},
+            {
+                "schema": schema,
+                "documents": prompt_docs,
+                "previous_validation_error": feedback,
+                **({"evidence_demand": demand.model_dump(mode="json")} if demand else {}),
+            },
         )
         if not isinstance(payload, dict):
             raise ValueError("Extractor output must be an object")
@@ -219,34 +280,34 @@ def build_graph(
                 "citation_aliases": aliases,
                 "document_count": len(chunk),
                 "prompt_manifest_id": prompt_manifest_id,
+                **({"flow": "instantiation", "demand_id": demand.demand_id} if demand else {}),
             },
         )
-    edges_by_identity = {}
-    for relation in relation_candidates:
-        source = hashlib.sha256(
-            canonical([relation["source_type"], relation["source_key"]])
-        ).hexdigest()
-        target = hashlib.sha256(
-            canonical([relation["target_type"], relation["target_key"]])
-        ).hexdigest()
-        key = (source, target, relation["relation"])
-        edge = edges_by_identity.setdefault(
-            key,
-            {"source": source, "target": target, "relation": relation["relation"], "sources": []},
-        )
-        edge["sources"] = list(
-            {
-                entry["document_id"]: entry
-                for entry in edge["sources"]
-                + [source_records[source] for source in relation["source_ids"]]
-            }.values()
-        )
+    edges, excluded_relations = assemble_extracted_relations(
+        schema, relation_candidates, source_records, demand
+    )
     graph = {
         "nodes": sorted(node_map.values(), key=lambda item: item["id"]),
-        "edges": list(edges_by_identity.values()),
+        "edges": edges,
         "ignored_documents": ignored,
-        "source_document_count": len(documents),
+        "source_document_ids": sorted(source_records),
+        "source_document_count": len(source_records),
+        "source_document_count_basis": "unique_recorded_ids",
     }
+    if demand is not None and excluded_relations:
+        store.event(
+            model.run_id,
+            stage + ".scope",
+            "completed",
+            "Excluded relations outside the materialization demand",
+            {
+                "flow": "instantiation",
+                "demand_id": demand.demand_id,
+                "excluded_relation_count": len(excluded_relations),
+                "excluded_relations": excluded_relations,
+                "reason": "Declared relation types outside the demand; raw extraction retained unchanged.",
+            },
+        )
     report = validate_graph_records(schema, graph["nodes"], graph["edges"])
     store.event(
         model.run_id,
@@ -257,13 +318,19 @@ def build_graph(
     )
     if not report["valid"]:
         raise ValueError(f"Graph integrity failed: {report['errors']}")
-    if documents and not graph["nodes"]:
+    if documents and not graph["nodes"] and demand is None:
         raise ValueError("No evidence entities were extracted from a nonempty corpus")
-    return graph
+    return slice_graph(schema, graph, demand) if demand is not None else graph
 
 
 def answer(
-    store: Store, model: GeminiCLI, revision: dict, query: str, *, stage: str = "answer"
+    store: Store,
+    model: GeminiCLI,
+    revision: dict,
+    query: str,
+    *,
+    stage: str = "answer",
+    materialize: Callable[[EvidenceDemand], dict] | None = None,
 ) -> dict:
     """Execute a dynamic bounded ReAct loop over a frozen function catalog.
 
@@ -334,8 +401,39 @@ def answer(
             "args": decision.get("args", {}),
         }
         try:
+            demand = None
+            working_graph = graph
+            if materialize is not None:
+                from oak.bootstrap import merge_observations
+
+                selected = next(
+                    (
+                        function
+                        for function in functions
+                        if function["name"] == decision["function"]
+                    ),
+                    None,
+                )
+                if selected is None:
+                    raise ValueError("Selected function is absent from the frozen kernel")
+                demand = derive_demand(schema, selected, decision["args"])
+                incoming = materialize(demand)
+                graph = merge_observations(schema, graph, incoming)
+                revision["graph"] = graph
+                working_graph = slice_graph(schema, graph, demand)
+                store.event(
+                    model.run_id,
+                    "graph_snapshot",
+                    "completed",
+                    "Expanded actual corpus evidence",
+                    graph,
+                )
+                observation["evidence_scope"] = assess_sufficiency(
+                    schema, working_graph, demand
+                ).model_dump(mode="json")
+                observation["working_graph_id"] = store.put("function_graph", working_graph)
             output = execute_function(
-                graph,
+                working_graph,
                 functions,
                 decision["function"],
                 decision["args"],
@@ -825,6 +923,8 @@ def construction_graph(
             "run_id": state["run_id"],
             "runtime_config": config,
             "implementation_sha256": IMPLEMENTATION_SHA256,
+            "construction_profile": "corpus_v1",
+            "instantiation_profile": "demand_v1",
         }
         identity = store.put("kernel_revision", revision)
         with store.connect() as connection:

@@ -17,8 +17,9 @@ names the proposed function_names intended to support that obligation, or gives
 an unsupported_reason when no proposed function can support it. Use names from
 this proposal only. These are declared mappings, not task-success assessments.
 Do not conceal missing capability behind an unrelated mapping. The application
-checks references and rejects unmapped or explicitly unsupported obligations;
-valid mappings still require independent execution and outcome evidence.
+checks reference integrity. Unsupported behavior remains visible and does not
+require a custom domain verifier or block an otherwise executable candidate.
+Mappings alone never establish task correctness.
 
 At least one useful composition must invoke a real capability and compute over
 its extracted evidence. invoke_capability takes capability (the literal exact
@@ -53,3 +54,34 @@ When execution_feedback is supplied, repair the reported contract or execution
 defect while retaining required behavior. A successful probe establishes only
 that the supplied call executed and met its output contract. It does not prove
 that the agent selects the right function or answers the full task correctly.
+
+The task_ir bank is frozen before any schema/function candidate. Cover every
+mandatory literal and mechanically derived subtask obligation supplied. Return
+records before lossy aggregation through a callable function, so a smaller
+question can retrieve its requested facts. Exploration entries are optional and
+remain unverified. Retain input-domain flexibility. Do not create a raw-source
+escape hatch. The executor derives evidence demands from your actual operators
+and materializes only demanded types/fields plus schema-required dependencies.
+The planner sees the recorded evidence scope and autonomously decides whether
+to expand or answer. Processing every text chunk does not prove complete
+extraction, and unknown scope is not an execution permission gate.
+
+Generate useful generated_checks when the task and observed evidence support
+them. A check contains its id, obligation_id, description, a pure left FunctionSpec
+and left_args, relation equal/subset/length_equals/nonempty, and an optional pure
+right FunctionSpec/right_args for binary relations. Programs must depend on real
+graph reads. Compare actual computations, such as a list length and its count;
+never insert an expected answer, arbitrary code, a model call or MCP acquisition.
+The executor runs these generated checks on genuine evidence. They are internal
+consistency evidence, not independent assessment of task truth. A failed check
+can guide repair; absent hand-authored evaluators must not stop autonomy.
+When frozen_generated_check_bank is supplied, those check programs and source
+graphs remain the campaign comparison bank. New proposals are retained as
+exploration only; do not remove or rewrite a failing frozen check.
+Prefer left/right references {function:actual_candidate_function_name} to pure
+functions in your proposed catalog when testing candidate behavior. A reference
+executes that candidate's actual implementation. Pure retrieval and computation
+helpers over already materialized evidence are useful reusable subtask entry
+points alongside acquisition functions. Standalone generated FunctionSpecs can
+check internal relationships, but do not earn candidate-function improvement
+credit. Checks never replay effectful acquisition functions.

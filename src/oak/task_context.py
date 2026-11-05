@@ -129,7 +129,7 @@ class SamplingReceipt(StrictContract):
     """Reproduce a fresh seeded draw from the immutable construction pool."""
 
     format_version: Literal[1] = 1
-    strategy: Literal["seeded_random_without_replacement_per_round"] = (
+    strategy: Literal["seeded_random_without_replacement_per_round", "seeded_unseen_first"] = (
         "seeded_random_without_replacement_per_round"
     )
     seed: int
@@ -140,9 +140,12 @@ class SamplingReceipt(StrictContract):
     pool_size: int
     sample_size: int
     selected_query_ids: list[str]
+    previously_executed_query_ids: list[str] = Field(default_factory=list)
 
 
-def sample_construction(surface: TaskSurface, round_index: int) -> SamplingReceipt:
+def sample_construction(
+    surface: TaskSurface, round_index: int, *, seen_query_ids: list[str] | None = None
+) -> SamplingReceipt:
     """Draw ceil(fraction * pool size), at least one, with no held-out access.
 
     ``round_index`` is zero-based. Draws are without replacement within a round;
@@ -163,7 +166,17 @@ def sample_construction(surface: TaskSurface, round_index: int) -> SamplingRecei
         {"seed": surface.seed, "round_index": round_index, "pool_sha256": pool_hash}
     )
     size = max(1, math.ceil(surface.sampling_fraction * len(pool)))
-    selected = random.Random(int(round_seed, 16)).sample(pool, size)
+    randomizer = random.Random(int(round_seed, 16))
+    seen = set(seen_query_ids or [])
+    if seen_query_ids is None:
+        selected = randomizer.sample(pool, size)
+    else:
+        if not seen.issubset({query.id for query in pool}):
+            raise ValueError("sampling history contains a non-construction query")
+        unseen = [query for query in pool if query.id not in seen]
+        repeated = [query for query in pool if query.id in seen]
+        selected = randomizer.sample(unseen, min(size, len(unseen)))
+        selected += randomizer.sample(repeated, size - len(selected))
     return SamplingReceipt(
         seed=surface.seed,
         round_index=round_index,
@@ -173,6 +186,10 @@ def sample_construction(surface: TaskSurface, round_index: int) -> SamplingRecei
         pool_size=len(pool),
         sample_size=size,
         selected_query_ids=[query.id for query in selected],
+        strategy="seeded_unseen_first"
+        if seen_query_ids is not None
+        else "seeded_random_without_replacement_per_round",
+        previously_executed_query_ids=sorted(seen),
     )
 
 

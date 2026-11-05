@@ -23,3 +23,14 @@ behavior implied by the scope. Such a gap is advisory, not a new approved test
 case or proof that the complete task family has been covered. Interpretation
 completeness is checked against the supplied obligations by the application;
 semantic correctness and actual task success remain independently unverified.
+
+When the requested behavior has a supported computational interpretation,
+include program with semantic fields (id, description, value_type, unit, grain,
+source_capability_ids), ordered operations, result, input_domain, and
+observation_contract. Operations use read/filter/project/traverse/aggregate/
+arithmetic with prior operation inputs, semantic field IDs, result_kind, and
+parameters. These are task roles before any ontology exists, not candidate
+class/property names. Keep input domains parameterized and preserve identity,
+units, multiplicity, temporal scope and observable intermediate records. If the
+meaning cannot be represented honestly, return program:null and explain the gap.
+This is a proposed interpretation, never an oracle or a correct-answer claim.

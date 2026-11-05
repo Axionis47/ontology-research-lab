@@ -16,6 +16,7 @@ from typing import Annotated, Any, Literal
 
 from pydantic import Field, field_validator, model_validator
 
+from oak.learning_contracts import TaskProgram
 from oak.task_context import QuerySpec, StrictContract
 
 ObligationID = Annotated[str, Field(pattern=r"^r_[0-9a-f]{18}$")]
@@ -49,6 +50,7 @@ class RequirementInterpretation(StrictContract):
     required_outputs: list[str] = Field(min_length=1)
     capability_ids: list[str] = Field(default_factory=list)
     gaps: list[str] = Field(default_factory=list)
+    program: TaskProgram | None = None
 
     @field_validator("case_id", "interpretation")
     @classmethod
@@ -200,6 +202,12 @@ def validate_requirement_analysis(
             raise ValueError(f"analysis references an unknown capability for {item.obligation_id}")
         if len(item.capability_ids) != len(set(item.capability_ids)):
             raise ValueError(f"analysis repeats a capability for {item.obligation_id}")
+        if item.program is not None:
+            for field in item.program.fields:
+                if not set(field.source_capability_ids).issubset(allowed):
+                    raise ValueError(
+                        f"semantic field references an unknown capability for {item.obligation_id}"
+                    )
     return result
 
 

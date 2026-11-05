@@ -23,3 +23,9 @@ representation.
 When previous_validation_error is supplied, correct that extraction defect
 using the same schema and source evidence. Missing evidence remains missing;
 do not invent a value or endpoint to satisfy a validator.
+
+Choose compact stable semantic primary keys from the declared identity fields,
+such as source-native entity identity and record scope. Do not copy a long
+receipt hash into every primary key unless that hash is explicitly required by
+the frozen schema. Cite source evidence with the supplied short document aliases;
+the executor restores original receipt provenance without repeated model output.
