@@ -55,8 +55,8 @@ def parameter_references(value) -> set[str]:
     return set()
 
 
-def validate_task_semantics(program) -> None:
-    """Check the supported operator fragment, including numeric units/grain.
+def _semantic_operation_states(program) -> dict:
+    """Validate and propagate types, available fields, units and entity grain.
 
     Underspecified parameter details remain uncompiled rather than guessed.
     This preserves honest interpretation gaps while rejecting contradictions.
@@ -172,6 +172,22 @@ def validate_task_semantics(program) -> None:
         raise ValueError("parameter_fields references an undeclared input parameter")
     if not set(program.source_parameters).issubset(declared):
         raise ValueError("source_parameters references an undeclared input parameter")
+    return states
+
+
+def validate_task_semantics(program) -> None:
+    """Reject semantic contradictions using the authoritative propagation rules."""
+    _semantic_operation_states(program)
+
+
+def output_field_ids(program, operation_id: str | None = None) -> frozenset[str]:
+    """Return fields still available at an operation's actual output boundary.
+
+    Program declarations include fields needed by upstream dependencies.
+    Projection removes fields from its result; filtering retains its input
+    fields. Derivation and validation share exactly these propagation rules.
+    """
+    return frozenset(_semantic_operation_states(program)[operation_id or program.result]["fields"])
 
 
 def canonical_program(program) -> dict:

@@ -18,6 +18,7 @@ from pydantic import Field, field_validator, model_validator
 
 from oak.learning_contracts import TaskProgram
 from oak.task_context import QuerySpec, StrictContract
+from oak.task_semantics import input_schema, parameter_references
 
 ObligationID = Annotated[str, Field(pattern=r"^r_[0-9a-f]{18}$")]
 
@@ -187,7 +188,9 @@ def validate_requirement_analysis(
 
     Passing checks confirms that the model addressed each declared obligation
     exactly once. It cannot establish that the interpretation is semantically
-    correct or that the supplied task scope is complete.
+    correct or that the supplied task scope is complete. Direct operation
+    inputs must be required because JSON Schema defaults do not insert values.
+    Optional fields inside an opaque source-argument object remain optional.
     """
     result = RequirementAnalysis.model_validate(analysis)
     expected = _obligation_index(obligations)
@@ -203,6 +206,17 @@ def validate_requirement_analysis(
         if len(item.capability_ids) != len(set(item.capability_ids)):
             raise ValueError(f"analysis repeats a capability for {item.obligation_id}")
         if item.program is not None:
+            domain = input_schema(item.program.input_domain)
+            required = set(domain.get("required", []))
+            for operation in item.program.operations:
+                optional = parameter_references(operation.parameters) - required
+                if optional:
+                    raise ValueError(
+                        f"operation {operation.id} directly references optional input parameters "
+                        f"for {item.obligation_id}: {', '.join(sorted(optional))}; "
+                        "referenced parameters must be required; JSON Schema defaults "
+                        "do not insert missing values"
+                    )
             for field in item.program.fields:
                 if not set(field.source_capability_ids).issubset(allowed):
                     raise ValueError(

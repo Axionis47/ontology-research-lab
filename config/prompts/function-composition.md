@@ -7,8 +7,11 @@ executes the proposal separately.
 Return only functions, probes, and behavior_bindings. functions and probes may
 be empty when the supplied behavior bindings compile every needed operation.
 
-Prioritize behavior_bindings for the whole supplied behavior_bank. Each binding
-has behavior_id, entity_type, field_map from semantic field ID to actual schema
+Prioritize behavior_bindings for mandatory behaviors in the supplied behavior_bank.
+The callable catalog is bounded to 64 functions. Exploratory behaviors are
+optional and must not displace required retrieval, point access or computation.
+Unbound entries remain explicit gaps in the frozen bank; do not redefine them.
+Each binding has behavior_id, entity_type, field_map from semantic field ID to actual schema
 property, optional relation_map, optional function_name, and optional acquisition.
 Omit function_name to request deterministic compilation of the frozen behavior
 into an actual pure callable. If supplied, function_name must identify a real

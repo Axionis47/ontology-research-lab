@@ -13,6 +13,7 @@ from copy import deepcopy
 from oak.construction_contracts import RequirementAnalysis, RequirementObligation
 from oak.learning_contracts import TaskIR, TaskObligation, TaskOperation, TaskProgram
 from oak.store import canonical
+from oak.task_semantics import output_field_ids
 
 
 def _hash(value) -> str:
@@ -122,7 +123,10 @@ def freeze_task_ir(
                     )
                 ]
             ]
+            available = output_field_ids(base)
             for field in base.fields:
+                if field.id not in available:
+                    continue
                 projection = TaskOperation(
                     id="explore_project",
                     operator="project",

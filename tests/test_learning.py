@@ -7,6 +7,7 @@ independent statements that a weather question was answered correctly.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -16,7 +17,9 @@ from pydantic import ValidationError
 from oak.construction_contracts import (
     RequirementAnalysis,
     RequirementInterpretation,
+    RequirementObligation,
     requirement_inputs,
+    validate_requirement_analysis,
 )
 from oak.learning import (
     actionable_learning_gaps,
@@ -26,6 +29,7 @@ from oak.learning import (
 )
 from oak.learning_contracts import SemanticField, TaskOperation, TaskProgram
 from oak.task_context import TaskSurface, sample_construction
+from oak.task_semantics import output_field_ids
 
 PROJECT = Path(__file__).parents[1]
 
@@ -200,3 +204,96 @@ def test_missing_independent_oracle_does_not_hide_actionable_generated_learning(
         ]
     }
     assert actionable_learning_gaps(independent_gap_only) == []
+
+
+def test_exploration_respects_projected_fields_in_the_genuine_live_interpretation():
+    """Replay the actual accepted model proposal that exposed derivation failure."""
+    root = PROJECT / ".local/artifacts"
+
+    def retained(identity):
+        path = root / f"{identity}.json"
+        if not path.is_file():
+            pytest.skip("Genuine semantic campaign interpretation is unavailable")
+        raw = path.read_bytes()
+        assert hashlib.sha256(raw).hexdigest() == identity
+        return json.loads(raw)["data"]
+
+    model_receipt = retained("9401f8e35543e3273cfb622d4540d8b5b6af8f90e5119cf479eacf8fa1b256d2")
+    inputs = retained("2ec9e760169dedf2dca31bea233d7a3f6022cd67e04c800037daf3b77ab3281a")
+    assert model_receipt["validated_success"] is True
+    obligations = [RequirementObligation.model_validate(item) for item in inputs["obligations"]]
+    # Preserve the exact historical interpretation even though newer stage
+    # acceptance rejects its direct reads of optional selector parameters.
+    analysis = RequirementAnalysis.model_validate(model_receipt["validated_value"])
+    with pytest.raises(
+        ValueError, match="directly references optional input parameters"
+    ) as failure:
+        validate_requirement_analysis(
+            analysis, obligations, [item["id"] for item in inputs["capabilities"]]
+        )
+    assert "source, temperature_unit" in str(failure.value)
+    bank = freeze_task_ir(inputs["surface"], obligations, analysis)
+    literals = {
+        item.obligation_id: item
+        for item in bank.obligations
+        if item.derivation_rule == "literal_requirement"
+    }
+    assert set(literals) == {item.obligation_id for item in obligations}
+    for interpretation in analysis.interpretations:
+        assert literals[interpretation.obligation_id].program == interpretation.program
+        if interpretation.program is not None:
+            expected = {operation.id for operation in interpretation.program.operations} - {
+                interpretation.program.result
+            }
+            actual = {
+                item.program.result
+                for item in bank.obligations
+                if item.derivation_rule == "observable_dependency_closure"
+                and item.parent_requirement_ids == [interpretation.obligation_id]
+            }
+            assert actual == expected
+    assert sum(item.mandatory for item in bank.obligations) == 7
+    projected = next(
+        item.program
+        for item in bank.obligations
+        if item.mandatory
+        and item.derivation_rule == "observable_dependency_closure"
+        and item.program.result == "op_project_high"
+    )
+    assert {field.id for field in projected.fields} == {
+        "date",
+        "high",
+        "city_name",
+        "source",
+        "temperature_unit",
+    }
+    assert output_field_ids(projected) == {"high"}
+    generated_projections = {}
+    for obligation in bank.obligations:
+        if obligation.mandatory:
+            continue
+        TaskProgram.model_validate(obligation.program.model_dump(mode="json"))
+        for operation in obligation.program.operations:
+            if operation.id == "explore_project":
+                generated_projections.setdefault(operation.inputs[0], set()).update(
+                    operation.fields
+                )
+    assert generated_projections["op_project_high"] == {"high"}
+    assert generated_projections["op_project_details"] == {"date", "high", "low"}
+    assert len([item for item in bank.obligations if not item.mandatory]) <= 128
+    # A deliberately invalid derivation of this same genuine program must
+    # still fail. Only the generator changed, never the validation rule.
+    invalid = projected.model_dump(mode="json")
+    invalid["operations"].append(
+        {
+            "id": "invalid_projection",
+            "operator": "project",
+            "inputs": ["op_project_high"],
+            "fields": ["city_name"],
+            "result_kind": "records",
+            "parameters": {},
+        }
+    )
+    invalid["result"] = "invalid_projection"
+    with pytest.raises(ValidationError, match="field absent from its input"):
+        TaskProgram.model_validate(invalid)

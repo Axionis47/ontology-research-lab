@@ -22,6 +22,7 @@ from oak.construction_contracts import (
     validate_function_coverage,
     validate_requirement_analysis,
 )
+from oak.learning_contracts import SemanticField, TaskOperation, TaskProgram
 from oak.task_context import TaskSurface
 
 PROJECT = Path(__file__).resolve().parents[1]
@@ -136,6 +137,52 @@ def test_analysis_references_only_authorized_capabilities(surface, functions):
     analysis.interpretations[0].capability_ids.append(capability)
     with pytest.raises(ValueError, match="repeats a capability"):
         validate_requirement_analysis(analysis, obligations, [capability])
+
+
+def test_requirement_acceptance_preserves_optional_native_contract_fields(surface):
+    """The genuine native contract stays opaque, including its optional fields."""
+    kernel = json.loads(KERNEL.read_text())["data"]
+    function = kernel["functions"][0]
+    acquisition = function["steps"][0]["args"]
+    assert acquisition["arguments"] == {"$arg": "native_arguments"}
+    capability = next(
+        item for item in kernel["catalog"]["tools"] if item["id"] == acquisition["capability"]
+    )
+    native_schema = capability["input_schema"]
+    assert "source" not in native_schema["required"]
+    assert "temperature_unit" not in native_schema["required"]
+    inputs = {
+        **function["inputs"],
+        "properties": {"native_arguments": native_schema},
+    }
+    high = kernel["schema"]["entity_types"]["DailyForecast"]["properties"]["high_temperature"]
+    program = TaskProgram(
+        fields=[
+            SemanticField(
+                id="high",
+                description=high["description"],
+                value_type=high["type"],
+                grain="daily forecast",
+            )
+        ],
+        operations=[
+            TaskOperation(id="records", operator="read", fields=["high"], result_kind="records")
+        ],
+        result="records",
+        input_domain=inputs,
+        source_parameters=["native_arguments"],
+        observation_contract="Return daily high values over the acquired scope.",
+    )
+    obligations = requirement_inputs([surface.queries[0]])
+    analysis = declared_analysis(obligations)
+    analysis.interpretations[0].program = program
+    analysis.interpretations[0].capability_ids = [capability["id"]]
+    accepted = validate_requirement_analysis(analysis, obligations, [capability["id"]])
+    assert accepted.interpretations[0].program.input_domain == inputs
+    assert (
+        accepted.interpretations[0].program.input_domain["properties"]["native_arguments"]
+        == native_schema
+    )
 
 
 def test_mapping_references_never_claim_task_success(surface, functions):

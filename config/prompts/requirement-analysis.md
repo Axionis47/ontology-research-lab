@@ -35,6 +35,12 @@ units, multiplicity, temporal scope and observable intermediate records. If the
 meaning cannot be represented honestly, return program:null and explain the gap.
 This is a proposed interpretation, never an oracle or a correct-answer claim.
 
+Each read produces one record grain. Its fields describe facts on those records,
+not a mixture of parent entities and their children. A projection exposes only
+its listed fields to later operations. Filters retain the input record fields.
+Use explicit traversal for relationships between grains. Do not change a field's
+meaning or invent repeated facts simply to satisfy a shared grain.
+
 Interpret task semantics, not the order or wording of a sampled ReAct trace.
 Retain reusable inputs instead of copying example locations, dates, thresholds
 or answers into the program. input_domain is an object JSON Schema with named
@@ -44,6 +50,25 @@ authorized acquisition, which smaller pure computations must retain. Include
 identity and selector fields needed to ask smaller point questions, even when
 the requested result is an aggregate. Mark each field role as value, identity,
 selector or context, with its type, unit and entity grain.
+
+Keep acquisition parameters separate from graph predicates. A source search
+string, provider choice, response format or unit option does not automatically
+become an entity property or an equality selector. source_parameters preserves
+the inputs needed to acquire the population. parameter_fields and read selectors
+apply only when the requirement and source contract establish a corresponding
+record field and comparison. A search term need not equal the canonical name
+returned by a source. Do not duplicate acquisition scoping as a guessed graph
+filter. When native alternatives or optional arguments are significant, declare
+a required native_arguments object copying the actual capability input_schema,
+and list native_arguments in source_parameters. Preserve its optional fields
+and alternatives instead of flattening or narrowing the source contract.
+
+Every input directly referenced by an operation must be supplied by the caller.
+List such inputs in input_domain.required; JSON Schema defaults are annotations,
+not values inserted by the executor. Preserve optional acquisition arguments
+inside native_arguments when they are not read by pure computation. Selectors
+must name fields actually included by the read, and later operators can use
+only fields still present in their immediate input.
 
 Use explicit operator semantics: read.parameters.selectors maps semantic field
 IDs to literal declared constraints or "$input.parameter" references. A filter
