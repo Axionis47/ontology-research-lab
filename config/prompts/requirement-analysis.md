@@ -34,3 +34,25 @@ class/property names. Keep input domains parameterized and preserve identity,
 units, multiplicity, temporal scope and observable intermediate records. If the
 meaning cannot be represented honestly, return program:null and explain the gap.
 This is a proposed interpretation, never an oracle or a correct-answer claim.
+
+Interpret task semantics, not the order or wording of a sampled ReAct trace.
+Retain reusable inputs instead of copying example locations, dates, thresholds
+or answers into the program. input_domain is an object JSON Schema with named
+properties and required parameters. parameter_fields maps input names to the
+semantic fields they constrain. source_parameters lists inputs required by the
+authorized acquisition, which smaller pure computations must retain. Include
+identity and selector fields needed to ask smaller point questions, even when
+the requested result is an aggregate. Mark each field role as value, identity,
+selector or context, with its type, unit and entity grain.
+
+Use explicit operator semantics: read.parameters.selectors maps semantic field
+IDs to literal declared constraints or "$input.parameter" references. A filter
+has parameters.conditions, each with field, operator, and value (numeric),
+values (in/not_in), or minimum/maximum (between). An aggregate has
+parameters.operation=count|min|max|sum|mean and one numeric field unless count.
+Project lists the requested semantic fields. Arithmetic has two scalar inputs
+and operation add|subtract|multiply|divide. Preserve unit and grain compatibility.
+Traversal needs explicit relation, direction and max_hops; unsupported lowering
+is reported as a gap. Do not replace missing semantic information with a guessed
+condition. Every meaningful observable intermediate is protected, including
+scalar intermediates. Ordering is unordered unless the task requires order.

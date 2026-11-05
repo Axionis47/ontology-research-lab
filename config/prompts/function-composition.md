@@ -1,8 +1,45 @@
-Compose only a function catalog, real-input probes, and obligation mappings.
+Bind the frozen semantic behavior bank to the proposed ontology and authorized
+sources. Optionally compose additional functions with real-input probes.
 Return FunctionProposal matching the supplied output schema. Use the supplied
 requirement analysis, schema, observed graph, capability contracts, operator
 contracts, and parent functions when present. The application validates and
 executes the proposal separately.
+Return only functions, probes, and behavior_bindings. functions and probes may
+be empty when the supplied behavior bindings compile every needed operation.
+
+Prioritize behavior_bindings for the whole supplied behavior_bank. Each binding
+has behavior_id, entity_type, field_map from semantic field ID to actual schema
+property, optional relation_map, optional function_name, and optional acquisition.
+Omit function_name to request deterministic compilation of the frozen behavior
+into an actual pure callable. If supplied, function_name must identify a real
+pure function in the proposed functions catalog; the checker executes that exact
+implementation. A mapping to an aggregate does not satisfy a record or property
+getter. The generated __identity role maps to the schema's actual primary key.
+
+For MCP tasks, supply acquisition:{capability_id,native_arguments} so each helper
+can acquire evidence when inference begins with an empty graph. Prefer
+native_arguments:{$arg:'native_arguments'} to preserve the entire real tool input
+schema, including alternative routes. The compiler adds that input to the pure
+callable and freezes source binding separately; source dispatch is executor-owned.
+Other native argument expressions may use {$arg:'input'} or
+{$arg_path:['input','nested_field']}. Use only authorized capability IDs. Do not
+invent selectors the native tool contract lacks. Point helpers retain their
+semantic select_<field> inputs for scoped materialization even when the tool
+returns a broader response.
+If TaskIR declares separate source_parameters, map them explicitly into native
+arguments with {$arg:'name'} or {$arg_path:['name','field']}. Actual receipt
+arguments can then ground probes through that exact template. Do not expect
+the application to guess that a task input name corresponds to a source field.
+Use the whole native_arguments object when TaskIR uses that object as its source
+input. Preserve alternative native routes rather than narrowing them to a sample.
+
+The bank and its checks precede this candidate. Do not rewrite a behavior to fit
+the sample, copy a complete trajectory, or generate a separate function for each
+question. Actual outputs, parameter domains and meaningful subtask access are
+compared, never ReAct wording, operator ordering, or trajectory similarity.
+If schema mapping is impossible, leave that binding absent and describe the
+limitation in the supplied feedback fields when available. Missing behaviors
+remain visible; do not map a semantic field to an unrelated property.
 
 Choose enough reusable, parameterized functions to expose the required
 behaviors. Avoid redundant copies for alternate native inputs, but do not
@@ -12,17 +49,13 @@ property projection may be needed alongside aggregate compositions. Do not
 force every question through an aggregate that discards its requested facts.
 Function descriptions must state when to use the function and what it returns.
 
-Return exactly one coverage entry for every supplied obligation_id. An entry
-names the proposed function_names intended to support that obligation, or gives
-an unsupported_reason when no proposed function can support it. Use names from
-this proposal only. These are declared mappings, not task-success assessments.
-Do not conceal missing capability behind an unrelated mapping. The application
-checks reference integrity. Unsupported behavior remains visible and does not
-require a custom domain verifier or block an otherwise executable candidate.
-Mappings alone never establish task correctness.
+The application derives obligation links from compiled behavior entry points.
+Mappings alone never establish task correctness. Unsupported behavior remains
+visible and does not require a custom domain verifier or block an otherwise
+executable candidate.
 
-At least one useful composition must invoke a real capability and compute over
-its extracted evidence. invoke_capability takes capability (the literal exact
+Custom effectful compositions may invoke real capabilities and compute over
+their extracted evidence. invoke_capability takes capability (the literal exact
 catalog ID) and arguments (native MCP arguments). The executor extracts the
 response into the current episode G and returns
 {entities,entities_by_type,receipt_id}. entities_by_type maps every declared
@@ -41,7 +74,9 @@ comparisons use {property,operator,value}; minimum/maximum apply only to
 between. aggregate_values takes items and request:{operation,...}, not
 operation as a top-level argument. Follow the actual operator contracts.
 
-Provide one probe on real task inputs for every function. Preserve native
+Provide one probe on real task inputs for every custom function. Compiled pure
+behavior probes are derived by the application from genuine retained records,
+with no fresh MCP dispatch for each helper. Preserve native
 parameter flexibility and valid alternative acquisition routes. Documented
 literal numeric API defaults are allowed; request-specific thresholds and
 locations must be inputs. For alternate native input routes, prefer a required
@@ -66,22 +101,11 @@ The planner sees the recorded evidence scope and autonomously decides whether
 to expand or answer. Processing every text chunk does not prove complete
 extraction, and unknown scope is not an execution permission gate.
 
-Generate useful generated_checks when the task and observed evidence support
-them. A check contains its id, obligation_id, description, a pure left FunctionSpec
-and left_args, relation equal/subset/length_equals/nonempty, and an optional pure
-right FunctionSpec/right_args for binary relations. Programs must depend on real
-graph reads. Compare actual computations, such as a list length and its count;
-never insert an expected answer, arbitrary code, a model call or MCP acquisition.
-The executor runs these generated checks on genuine evidence. They are internal
-consistency evidence, not independent assessment of task truth. A failed check
-can guide repair; absent hand-authored evaluators must not stop autonomy.
-When frozen_generated_check_bank is supplied, those check programs and source
-graphs remain the campaign comparison bank. New proposals are retained as
-exploration only; do not remove or rewrite a failing frozen check.
-Prefer left/right references {function:actual_candidate_function_name} to pure
-functions in your proposed catalog when testing candidate behavior. A reference
-executes that candidate's actual implementation. Pure retrieval and computation
-helpers over already materialized evidence are useful reusable subtask entry
-points alongside acquisition functions. Standalone generated FunctionSpecs can
-check internal relationships, but do not earn candidate-function improvement
-credit. Checks never replay effectful acquisition functions.
+The frozen semantic interpreter and bounded program mutations provide the
+comparison bank. Do not return test programs or expected answers. The executor
+compares actual bound functions on genuine evidence with these generated task
+semantics and probes sensitivity to bounded code defects. Scores count fixed
+behavior/input strata, not duplicate checks, function count, or copied traces.
+These checks are generated consistency evidence, not independent assessment of
+task truth. A failed check can guide repair; absent hand-authored evaluators must
+not stop autonomy. Checks never replay effectful acquisition functions.

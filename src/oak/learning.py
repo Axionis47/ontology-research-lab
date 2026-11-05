@@ -39,6 +39,11 @@ def _program_slice(program: TaskProgram, result: str) -> TaskProgram:
         operations=selected,
         result=result,
         input_domain=program.input_domain,
+        parameter_fields={
+            key: value for key, value in program.parameter_fields.items() if value in fields
+        },
+        source_parameters=program.source_parameters,
+        ordering=program.ordering,
         observation_contract=f"Observable {operations[result].result_kind} at {result}; "
         "retain entity identity, multiplicity, units, temporal scope and provenance.",
     )
@@ -80,7 +85,7 @@ def freeze_task_ir(
         # Every observable record/path intermediate is retained. In particular
         # this includes inputs to lossy aggregates and predicate-bearing views.
         for operation in program.operations:
-            if operation.id == program.result or operation.result_kind == "scalar":
+            if operation.id == program.result:
                 continue
             sliced = _program_slice(program, operation.id)
             rule = "observable_dependency_closure"
@@ -153,6 +158,9 @@ def freeze_task_ir(
                     operations=[*base.operations, *suffix],
                     result=suffix[-1].id,
                     input_domain=base.input_domain,
+                    parameter_fields=base.parameter_fields,
+                    source_parameters=base.source_parameters,
+                    ordering=base.ordering,
                     observation_contract="Exploratory typed composition; scope and correctness unverified.",
                 )
                 key = _hash({"parent": source.obligation_id, "program": expanded.model_dump()})
@@ -193,7 +201,20 @@ def candidate_rank(report: dict, kernel: dict, *, measured_cost: float = 0.0) ->
             for value in (group if isinstance(group, list) else [group])
         ]
     results = [item for item in results if isinstance(item, dict)]
-    failures = sum(item.get("status") == "failed" for item in results)
+    # Duplicated evidence rows or alternate traces cannot change the objective.
+    behavior = report.get("behavior_evaluation") or None
+    failures = len(
+        {
+            (
+                item.get("dimension"),
+                item.get("obligation_id", item.get("behavior_id")),
+                item.get("group"),
+            )
+            for item in results
+            if item.get("status") == "failed"
+            and (behavior is None or item.get("dimension") not in {"generated", "behavior"})
+        }
+    )
     unresolved = len(report.get("unresolved_obligation_ids", report.get("unresolved_ids", [])))
     groups: dict[str, Counter] = {}
     for item in results:
@@ -205,8 +226,58 @@ def candidate_rank(report: dict, kernel: dict, *, measured_cost: float = 0.0) ->
     rates = [group["passed"] / group["total"] for group in groups.values()]
     passed = sum(group["passed"] for group in groups.values())
     total = sum(group["total"] for group in groups.values())
-    size = len(canonical({"schema": kernel["schema"], "functions": kernel["functions"]}))
-    generated = report.get("generated_coverage_by_group", {})
+    # Reusable aliases do not pay for identical implementation bodies twice.
+    # Canonical lowering is a size normalization, not a preservation claim.
+    from oak.preservation import lower_function
+
+    bodies = set()
+    for function in kernel["functions"]:
+        try:
+            body = lower_function(function, kernel["schema"]).model_dump(mode="json")
+        except ValueError:
+            body = {
+                key: value for key, value in function.items() if key not in {"name", "description"}
+            }
+        bodies.add(canonical(body))
+    size = len(canonical(kernel["schema"])) + sum(len(body) for body in bodies)
+    unknown_behaviors = unknown_strata = evaluated_strata = 0
+    if behavior is not None:
+        # A measured generated failure is an unresolved behavior, not a cost
+        # that can be removed by omitting its implementation. Prefer retained
+        # measurement before penalties/description size when pass counts tie.
+        mandatory = {
+            item["behavior_id"]: item
+            for item in behavior.get("checks", [])
+            if item.get("mandatory", True)
+        }
+        unknown_behaviors = sum(
+            item.get("status") not in {"passed", "failed"} for item in mandatory.values()
+        )
+        evaluated_strata = len(
+            {
+                (identity, stratum.get("index", index))
+                for identity, item in mandatory.items()
+                for index, stratum in enumerate(item.get("strata", []))
+                if stratum.get("status") in {"passed", "failed"}
+            }
+        )
+        unknown_strata = sum(
+            max(
+                0,
+                item.get("total_strata", 0)
+                - sum(
+                    stratum.get("status") in {"passed", "failed"}
+                    for stratum in item.get("strata", [])
+                ),
+            )
+            for item in mandatory.values()
+        )
+        unresolved = len(set(behavior.get("unresolved_behavior_ids", [])))
+    generated = (
+        behavior.get("behavior_coverage_by_group", {})
+        if behavior is not None
+        else report.get("generated_coverage_by_group", {})
+    )
     generated_rates = [
         group["passed"] / group["total"] for group in generated.values() if group["total"]
     ]
@@ -220,6 +291,17 @@ def candidate_rank(report: dict, kernel: dict, *, measured_cost: float = 0.0) ->
         -(passed / total if total else 0.0),
         -min(generated_rates, default=0.0),
         -(generated_passed / generated_total if generated_total else 0.0),
+        float(unknown_behaviors),
+        float(unknown_strata),
+        -float(evaluated_strata),
+        float(
+            len(
+                {
+                    (item.get("behavior_id"), item.get("reason"))
+                    for item in (behavior or {}).get("penalties", [])
+                }
+            )
+        ),
         float(size),
         float(measured_cost),
     )
@@ -229,7 +311,16 @@ def repair_feedback(report: dict) -> dict:
     """Expose attributable verifier failures without admitting evaluator answers."""
     return {
         "verification_status": report.get("disposition", "incomplete"),
-        "counterexamples": deepcopy(report.get("counterexamples", [])),
+        "counterexamples": deepcopy(
+            [
+                *report.get("counterexamples", []),
+                *report.get("behavior_evaluation", {}).get("counterexamples", []),
+            ]
+        ),
+        "behavior_penalties": deepcopy(report.get("behavior_evaluation", {}).get("penalties", [])),
+        "unresolved_behavior_ids": list(
+            report.get("behavior_evaluation", {}).get("unresolved_behavior_ids", [])
+        ),
         "unresolved_obligation_ids": list(report.get("unresolved_obligation_ids", [])),
         "actionable_learning_gaps": actionable_learning_gaps(report),
         "instruction": "Repair the evidenced boundary, retaining all frozen obligations and inherited functions.",
@@ -239,6 +330,15 @@ def repair_feedback(report: dict) -> dict:
 def actionable_learning_gaps(report: dict) -> list[str]:
     """Separate improvable generated behavior from absent independent oracles."""
     checks = report.get("checks", [])
+    if report.get("behavior_evaluation"):
+        behavior = report["behavior_evaluation"]
+        return [
+            f"Frozen behavior remains unresolved:{identity}"
+            for identity in behavior.get("unresolved_behavior_ids", [])
+        ] + [
+            f"Repair semantic input contract:{item['behavior_id']}:{item['reason']}"
+            for item in behavior.get("penalties", [])
+        ]
     mandatory_unresolved = set(report.get("unresolved_obligation_ids", []))
     gaps = [
         f"Callable implementation missing for {item['obligation_id']}"

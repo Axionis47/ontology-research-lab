@@ -20,6 +20,14 @@ edge endpoint available only in an earlier response. Task-specific completeness
 obligations are distinct from general schema rules and are not enforced by this
 fragment extractor.
 
+S describes the reusable task family, while each query materializes a demanded
+slice. Keep distinctions required by point getters, record access and aggregate
+computations. A field appearing in one larger task is not automatically required
+on every materialized entity. Reserve required properties for genuine identity
+or validation invariants, so a smaller question can retrieve its own facts
+without populating unrelated properties. Do not weaken an actual invariant to
+hide missing evidence. No sampled ReAct trajectory defines the ontology shape.
+
 Represent only constraints supported by task requirements or independent
 evidence. A repeated call order is not proof of a prerequisite. Descriptions do
 not create executable OWL axioms. The application validates the supported

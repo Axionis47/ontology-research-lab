@@ -22,6 +22,7 @@ class SemanticField(StrictContract):
     unit: str | None = None
     grain: str = Field(min_length=1)
     source_capability_ids: list[str] = Field(default_factory=list)
+    role: Literal["value", "identity", "selector", "context"] = "value"
 
 
 class TaskOperation(StrictContract):
@@ -47,6 +48,9 @@ class TaskProgram(StrictContract):
     result: str = Field(min_length=1)
     input_domain: dict[str, JsonValue] = Field(default_factory=dict)
     observation_contract: str = Field(min_length=1)
+    parameter_fields: dict[str, str] = Field(default_factory=dict)
+    source_parameters: list[str] = Field(default_factory=list)
+    ordering: Literal["unordered", "ordered"] = "unordered"
 
     @model_validator(mode="after")
     def check_program(self) -> TaskProgram:
@@ -65,6 +69,11 @@ class TaskProgram(StrictContract):
             prior.add(operation.id)
         if self.result not in prior:
             raise ValueError("task result references an absent operation")
+        if not set(self.parameter_fields.values()).issubset(fields):
+            raise ValueError("parameter_fields references an unknown semantic field")
+        from oak.task_semantics import validate_task_semantics
+
+        validate_task_semantics(self)
         return self
 
 
