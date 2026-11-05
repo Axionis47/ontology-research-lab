@@ -20,6 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, JsonValue
 
 from oak import operators
 from oak.ontology import parse_schema, validate_graph_records
+from oak.store import Store, canonical
 
 
 class FunctionStep(BaseModel):
@@ -46,10 +47,13 @@ class FunctionSpec(BaseModel):
 class FunctionExecutionError(ValueError):
     """Execution failure retaining actual completed steps and dependency evidence."""
 
-    def __init__(self, message: str, *, steps: list[dict], dependencies: dict) -> None:
+    def __init__(
+        self, message: str, *, steps: list[dict], dependencies: dict, capture_id: str | None = None
+    ) -> None:
         super().__init__(message)
         self.steps = steps
         self.dependencies = dependencies
+        self.capture_id = capture_id
 
 
 def _bounded(value: Any, depth: int = 0) -> None:
@@ -357,6 +361,7 @@ def execute_function(
     capability_invoker: Callable[..., dict[str, Any]] | None = None,
     step_observer: Callable[[dict[str, Any]], None] | None = None,
     before_step: Callable[..., None] | None = None,
+    artifact_store: Store | None = None,
 ) -> dict[str, Any]:
     """Execute a validated typed function and retain actual inputs, outputs, and dependencies.
 
@@ -369,21 +374,80 @@ def execute_function(
     It may materialize evidence in the shared graph before the primitive runs.
     Inputs and earlier outputs passed to it are copies. New graph records are
     validated and included in dependency evidence, including when execution fails.
+    With ``artifact_store``, immutable graph snapshots are saved at the initial,
+    pre-operator and final boundaries. A function capture binds those inputs to
+    the real result or failure and exact runtime pins, before any pass assessment.
     """
-    checked = validate_functions(catalog, schema)
-    selected = next((entry for entry in checked if entry.name == name), None)
-    if selected is None:
-        raise ValueError(f"Function {name} is absent from the frozen catalog")
-    Draft202012Validator(selected.inputs, format_checker=FormatChecker()).validate(args)
-    _bounded(args)
-    graph_validation = validate_graph_records(schema, graph["nodes"], graph.get("edges", []))
-    if not graph_validation["valid"]:
-        raise ValueError(f"Invalid graph records: {graph_validation['errors']}")
+    capture_inputs: dict[str, Any] = {}
+    traces: list[dict[str, Any]] = []
+    dependencies: dict[str, Any] = {}
+    if artifact_store is not None:
+        from oak.preservation import runtime_dependencies
+
+        capture_inputs = {
+            "format_version": 1,
+            "function": name,
+            "args": deepcopy(args),
+            "schema_ref": artifact_store.put("function_schema", schema),
+            "functions_ref": artifact_store.put(
+                "function_catalog",
+                [
+                    item.model_dump(mode="json") if isinstance(item, FunctionSpec) else item
+                    for item in catalog
+                ],
+            ),
+            "initial_graph_ref": artifact_store.put("function_input_graph", graph),
+            "runtime_dependencies": {
+                key: value
+                for key, value in runtime_dependencies().items()
+                if key in {"operators", "executor", "ontology", "runtime_lock"}
+            },
+        }
+        capture_inputs["input_manifest_ref"] = artifact_store.put(
+            "function_capture_inputs", capture_inputs
+        )
+
+    def capture_execution(
+        status: str, *, value: Any = None, error: str | None = None
+    ) -> str | None:
+        if artifact_store is None:
+            return None
+        payload = {
+            **capture_inputs,
+            "status": status,
+            "final_graph_ref": artifact_store.put("function_final_graph", graph),
+            "steps": traces,
+            "dependencies": dependencies,
+        }
+        if status == "completed":
+            payload["value"] = value
+        else:
+            payload["error"] = error
+        return artifact_store.put("function_capture", payload)
+
+    try:
+        checked = validate_functions(catalog, schema)
+        selected = next((entry for entry in checked if entry.name == name), None)
+        if selected is None:
+            raise ValueError(f"Function {name} is absent from the frozen catalog")
+        Draft202012Validator(selected.inputs, format_checker=FormatChecker()).validate(args)
+        _bounded(args)
+        graph_validation = validate_graph_records(schema, graph["nodes"], graph.get("edges", []))
+        if not graph_validation["valid"]:
+            raise ValueError(f"Invalid graph records: {graph_validation['errors']}")
+    except Exception as error:
+        if artifact_store is None:
+            raise
+        message = f"{type(error).__name__}: {error}"
+        raise FunctionExecutionError(
+            message,
+            steps=traces,
+            dependencies=dependencies,
+            capture_id=capture_execution("failed", error=message),
+        ) from error
 
     def digest(value: Any) -> str:
-        return hashlib.sha256(
-            json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
-        ).hexdigest()
+        return hashlib.sha256(canonical(value)).hexdigest()
 
     dependencies = {
         "graph_sha256": digest(graph),
@@ -418,7 +482,6 @@ def execute_function(
 
     record_graph_dependencies()
     results: dict[str, Any] = {}
-    traces = []
     for step in selected.steps:
         started = time.monotonic()
         trace: dict[str, Any] = {"id": step.id, "operator": step.operator, "status": "started"}
@@ -429,6 +492,10 @@ def execute_function(
             trace["inputs"] = deepcopy(resolved)
             if before_step is not None:
                 trace["graph_before_sha256"] = digest(graph)
+                if artifact_store is not None:
+                    trace["before_materialization_graph_ref"] = artifact_store.put(
+                        "function_step_graph", graph
+                    )
                 before_step(
                     step_id=step.id,
                     operator=step.operator,
@@ -441,6 +508,8 @@ def execute_function(
                 if not graph_validation["valid"]:
                     raise ValueError(f"Invalid materialized graph: {graph_validation['errors']}")
                 trace["graph_materialized_sha256"] = digest(graph)
+            if artifact_store is not None:
+                trace["input_graph_ref"] = artifact_store.put("function_step_graph", graph)
             _check_membership(resolved, schema, runtime=True)
             _check_evidence_inputs(resolved, graph)
             invocation = dict(resolved)
@@ -461,17 +530,28 @@ def execute_function(
             _bounded(value)
             trace.update(status="completed", output=deepcopy(value))
             results[step.id] = value
+            if artifact_store is not None:
+                trace["graph_after_ref"] = artifact_store.put("function_step_graph", graph)
         except Exception as error:
             record_graph_dependencies()
             trace.update(status="failed", error=f"{type(error).__name__}: {error}")
+            if artifact_store is not None:
+                trace["graph_after_ref"] = artifact_store.put("function_step_graph", graph)
             trace["duration_seconds"] = round(time.monotonic() - started, 6)
+            if artifact_store is not None:
+                trace["step_result_ref"] = artifact_store.put("function_step_execution", trace)
             traces.append(trace)
             if step_observer is not None:
                 step_observer(deepcopy(trace))
             raise FunctionExecutionError(
-                f"{name}/{step.id}: {error}", steps=traces, dependencies=dependencies
+                f"{name}/{step.id}: {error}",
+                steps=traces,
+                dependencies=dependencies,
+                capture_id=capture_execution("failed", error=trace["error"]),
             ) from error
         trace["duration_seconds"] = round(time.monotonic() - started, 6)
+        if artifact_store is not None:
+            trace["step_result_ref"] = artifact_store.put("function_step_execution", trace)
         traces.append(trace)
         if step_observer is not None:
             step_observer(deepcopy(trace))
@@ -483,6 +563,13 @@ def execute_function(
         )
     except Exception as error:
         raise FunctionExecutionError(
-            f"{name} output contract: {error}", steps=traces, dependencies=dependencies
+            f"{name} output contract: {error}",
+            steps=traces,
+            dependencies=dependencies,
+            capture_id=capture_execution("failed", error=f"{type(error).__name__}: {error}"),
         ) from error
-    return {"value": output, "steps": traces, "dependencies": dependencies}
+    result = {"value": output, "steps": traces, "dependencies": dependencies}
+    capture_id = capture_execution("completed", value=output)
+    if capture_id is not None:
+        result["capture_id"] = capture_id
+    return result
