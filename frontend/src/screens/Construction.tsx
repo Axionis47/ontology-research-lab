@@ -65,6 +65,9 @@ export function Construction({ taskId }: { taskId: string }) {
       .map((node) => String(node.id));
   });
   const caseLinks = attempt?.case_links ?? [];
+  const historicalReplay = stream.events
+    .filter((event) => event.flow_evidence?.historical_replay)
+    .at(-1)?.flow_evidence?.historical_replay;
   return (
     <>
       <header className="page-header">
@@ -355,6 +358,24 @@ export function Construction({ taskId }: { taskId: string }) {
                               </small>
                             </span>
                           </summary>
+                          {(kernel.data?.acquisition_bindings ?? [])
+                            .filter(
+                              (binding) => binding.function_name === fn.name,
+                            )
+                            .map((binding, index) => (
+                              <button
+                                className="text-button"
+                                key={index}
+                                onClick={() =>
+                                  setInspection({
+                                    title: "Frozen source binding",
+                                    data: binding,
+                                  })
+                                }
+                              >
+                                Source: {binding.capability_id}
+                              </button>
+                            ))}
                           <Json value={fn} />
                         </details>
                       ))
@@ -373,7 +394,10 @@ export function Construction({ taskId }: { taskId: string }) {
                       {["ontology", "functions", "task", "regression"].map(
                         (key) => {
                           const check = object(
-                            attempt.validation?.[key] ??
+                            (key === "regression"
+                              ? historicalReplay
+                              : undefined) ??
+                              attempt.validation?.[key] ??
                               attempt.validation?.[`${key}_validation`] ??
                               object(kernel.data?.assessment)[key],
                           );
@@ -391,6 +415,11 @@ export function Construction({ taskId }: { taskId: string }) {
                                             ? "Not checked"
                                             : "Not run",
                                       },
+                                  artifactId:
+                                    key === "regression"
+                                      ? (historicalReplay?.report_id ??
+                                        undefined)
+                                      : undefined,
                                 })
                               }
                             >
@@ -401,7 +430,7 @@ export function Construction({ taskId }: { taskId: string }) {
                                     ? "Function probes"
                                     : key === "task"
                                       ? "Task evaluation"
-                                      : "Regression evidence"}
+                                      : "Historical replay"}
                               </span>
                               <Status
                                 kind="assessment"
@@ -422,7 +451,8 @@ export function Construction({ taskId }: { taskId: string }) {
                     <p className="muted small">
                       Passing ontology and function checks makes a candidate
                       eligible to execute. Task correctness requires independent
-                      assessment.
+                      assessment. Replacement also requires the protected
+                      historical case bank to pass.
                     </p>
                     <details>
                       <summary>All recorded validation details</summary>
