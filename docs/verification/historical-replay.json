@@ -1,0 +1,225 @@
+{
+  "status": "passed",
+  "active_plan": "docs/historical-execution-replay-plan.md",
+  "receipts": {
+    "authored_chain": {
+      "path": ".local/verification/historical-replay/chain/run-a137b6411c714df9ba2a78cf73c9c4ee/acceptance.json",
+      "sha256": "6ac3f5edb0d94c6f29606a15fb009150dfed784b896c448fe8f9cd49bbc2086f"
+    },
+    "model_generated_adapters_and_repair": {
+      "path": ".local/verification/historical-replay/model-proposals/run-07b0881e41d645be88ac199a1e895e0f/receipt-resume-b49e6e7292994a4280f21d834d84cc58.json",
+      "sha256": "f36e8bc92fdc085d77a29dcf3c7144ae9694f6a2029d633ef57106f60c73fcb6"
+    },
+    "initial_script_failure": {
+      "path": ".local/verification/historical-replay/model-proposals/run-07b0881e41d645be88ac199a1e895e0f/receipt.json",
+      "sha256": "338dc9bfb55457d8019e3f0eb07c030b0425cf67d140cd3a29d7271873240386"
+    },
+    "browser": {
+      "path": ".local/verification/historical-replay-ui/browser-receipt.json",
+      "sha256": "85ca5fe1ade3343560767894c62eaedafaeb09f117a15627dcdcac1d75fd51b5"
+    },
+    "suite": {
+      "path": ".local/verification/historical-replay-suite.log",
+      "sha256": "c619fd3f3bbe07a35c15b8d3e396a38df4ef0371b5bbdfd9ab39987a90c18f15"
+    },
+    "final_offline_reverification": {
+      "path": ".local/verification/historical-replay/model-proposals/run-07b0881e41d645be88ac199a1e895e0f/offline-reverification-28b3db6f98904c668bbf5e49170cb319.json",
+      "sha256": "1da196c38c64c58a9d38a19910996bcfbe68044d8f0073e1226462e3d439e28c"
+    },
+    "final_suite": {
+      "path": ".local/verification/historical-replay-suite-final.log",
+      "sha256": "8092f12fb053b1777553a8589d30c7a474ed5a0bd3f8567c37f1d389aec9a3dd"
+    },
+    "strict_docs": {
+      "path": ".local/verification/historical-replay-docs-final.log",
+      "sha256": "3d9d6e9746831f193d46d9e4aac681300e6de783ef36f2b01a058d098767d1e8"
+    },
+    "coordinated_live_integration": {
+      "path": ".local/verification/selective-learning/semantic-v3-compact/final-receipt.json",
+      "sha256": "60a4b5f5b90938a2e21515b9f13af06d4f088e89f480fb0691756189714c5e85"
+    }
+  },
+  "authored_chain_checks": {
+    "all_three_revisions_preserved": true,
+    "older_case_regression_caught": true,
+    "newer_case_still_preserved": true,
+    "repair_preserved_original_bank": true,
+    "two_edges_executed_for_old_cases": true,
+    "zero_model_and_live_mcp_calls": true,
+    "winner_retained_then_repaired": true
+  },
+  "model_generated_reports": [
+    {
+      "kernel_id": "6e9bf8cf4c552cfff55cdd7aad77188fc9b473207b3dbb4e4568765a557ba1f7",
+      "status": "preserved",
+      "report_id": "d8cafb71fc348bc1c5ed4a1c33c29b2db5db0568b1bab6007a2d289038734aa1",
+      "case_count": 4
+    },
+    {
+      "kernel_id": "87090ef50c8655de03542ce76a5a3e06eb46b224454d45688f40d2b6750c3869",
+      "status": "preserved",
+      "report_id": "3c196c4bb221aa987fe7b36c6acd50681fee5228846bb795248f6737f2bbd710",
+      "case_count": 4
+    },
+    {
+      "kernel_id": "2ec26eaeafcd0f26b7d7babfee02139bcbf7bb769d67f1f88a434f8526c1e295",
+      "status": "regressed",
+      "report_id": "e36542a588421d332559a2d3cd3cec3f67873f7e5ff1f4511741e6dffbc74cc6",
+      "case_count": 4
+    },
+    {
+      "kernel_id": "697cdf4ab32918135f1fbef7068a989c0c0713b3cadd399b93cb17dfc1c49879",
+      "status": "preserved",
+      "report_id": "fef6a7b99398424a4a9e52ca39abadbb5e99158ecfb9db7b600ffc1ab4ed3e92",
+      "case_count": 4
+    },
+    {
+      "kernel_id": "697cdf4ab32918135f1fbef7068a989c0c0713b3cadd399b93cb17dfc1c49879",
+      "status": "preserved",
+      "report_id": "876f213d3638da80fd33e71d1f363af49b3c2cbf46b93f81c56c9b367059d2f2",
+      "case_count": 4
+    }
+  ],
+  "model_run_id": "6d8bb1058a93497d9be822210cec9973",
+  "model_calls": 3,
+  "estimated_generation_cost_usd": 0.01574175,
+  "replay_model_calls": 0,
+  "replay_live_mcp_calls": 0,
+  "tests": {
+    "passed": 276,
+    "skipped": 6,
+    "skip_reason": "Explicit opt-in live USGS and MCP checks",
+    "warnings": 1
+  },
+  "other_checks": [
+    "Ruff",
+    "git diff --check",
+    "generated frontend type check",
+    "frontend build",
+    "strict offline MkDocs",
+    "real Chromium replay inspection"
+  ],
+  "limitations": [
+    "Protected captured computations only, not a universal preservation proof or fresh planner guarantee",
+    "Incomplete old logs cannot authorize a new candidate",
+    "Unsupported or ambiguous migrations block adoption",
+    "Independent task correctness remains the original case assessment category"
+  ],
+  "script_recovery": "Initial paid verification stopped on an adapter child ID mismatch in the verification script. The runtime correctly rejected it. Resume reused the two settled generation receipts, retained the original failed receipt, and made one repair call.",
+  "final_offline_reverification": {
+    "status": "passed",
+    "original_cases_unchanged": true,
+    "original_banks_unchanged": true,
+    "reports": [
+      {
+        "kernel_id": "76fee79b2e47cbe64e76c621dcf824010e6287fadd21c9ec2847bf7a127a6fad",
+        "report_id": "01aee0bf59389b44fd3c961db4339bb260e4c54debe2da61ee361545caf81dc0",
+        "status": "preserved",
+        "case_count": 3,
+        "allowed": true,
+        "admission": {
+          "allowed": true,
+          "reason": "Every inherited protected computation passed"
+        }
+      },
+      {
+        "kernel_id": "6e9bf8cf4c552cfff55cdd7aad77188fc9b473207b3dbb4e4568765a557ba1f7",
+        "report_id": "62e91e9e1a2274f49deff284edb57fae7369dc5e81a66186c61508d680b1d0b5",
+        "status": "preserved",
+        "case_count": 4,
+        "allowed": true,
+        "admission": {
+          "allowed": true,
+          "reason": "Every inherited protected computation passed"
+        }
+      },
+      {
+        "kernel_id": "87090ef50c8655de03542ce76a5a3e06eb46b224454d45688f40d2b6750c3869",
+        "report_id": "d43514e2871688a78278c38ca7e8149f04416422c017a52c06e36bcde72b60b4",
+        "status": "preserved",
+        "case_count": 4,
+        "allowed": true,
+        "admission": {
+          "allowed": true,
+          "reason": "Every inherited protected computation passed"
+        }
+      },
+      {
+        "kernel_id": "2ec26eaeafcd0f26b7d7babfee02139bcbf7bb769d67f1f88a434f8526c1e295",
+        "report_id": "12de2ff540c53176e64052222dd1c2b5177360f4b2b6e24d2c3e0df84deb1e3b",
+        "status": "regressed",
+        "case_count": 4,
+        "allowed": false,
+        "admission": {
+          "allowed": false,
+          "reason": "Current protected bank lacks a complete passing replay under current dependencies"
+        }
+      },
+      {
+        "kernel_id": "697cdf4ab32918135f1fbef7068a989c0c0713b3cadd399b93cb17dfc1c49879",
+        "report_id": "3b2933e8ef90856141a3d778ba53f28f202c168b97980056b2a200c46902882d",
+        "status": "preserved",
+        "case_count": 4,
+        "allowed": true,
+        "admission": {
+          "allowed": true,
+          "reason": "Every inherited protected computation passed"
+        }
+      }
+    ],
+    "runtime_dependencies": {
+      "operators": "86496940f9bff85a16148803d508715b69db80ad1aff730969586b726dc03198",
+      "executor": "93e8cf6d563e9697002601884ea501960151c118c1f9d7e4e2dc661e26d9f8bd",
+      "ontology": "db39570df39e88cf4741c6b87711aee3e328f1e05a174f403a1799c8a3431723",
+      "runtime_lock": "20b7111f9039d7551c33674981fd0fe66cb3bda20bf78410df3a077a7bebdf2a",
+      "historical_replay.py": "fa21e8ed76bbc217c1e5fe91ff4862aaf4a5991aaf6cf89b11904178a345bbb8",
+      "migration.py": "efe57445562707b59a93bb7d3e8fd00e924205d3aaf6677659c8bdfc6b59c8ef",
+      "regression.py": "065b135777f7a9b129e21a70195ae95611a281f48c1d0372bc6a61c8ea031379",
+      "replay_contracts.py": "eab42ab0820c0e1276fec1614be6d214afe74a9b8a1ee497ab094b7b29110d01",
+      "java_lock": "5fcff18cf8f90fb869ac39cc7ccfe6485d637781fe97f96cd48b3464f996c8db",
+      "java_binary": "0f642542ea1f0be6957557c0db96653ec128113bb5a4aaa7c2534d1d72ddb51f",
+      "hermit_jar": "97e53f519720a0a2e328556e03b806aa239347c85e57637a935e6433ed2ad3a8"
+    }
+  },
+  "source_closure": "Original and target captures validate exact nested corpus/document/receipt references, actual dispatch/contracts and frozen bound acquisition requests. Old baseline manifests remain unchanged.",
+  "commits": {
+    "capture_and_migration": "b3fcc6e",
+    "replay_integration": "5d4a2cd",
+    "replay_ui": "ab01f76"
+  },
+  "coordinated_live_integration": {
+    "accepted_kernel_id": "77690c1643152649c7969ef29b9bae7d42a88138a28ad6c944fa8e0f7f9ee5bc",
+    "reverification_run_id": "2b2d02681c554608a07b75f4e2a58957",
+    "protected_cases_per_kernel": [
+      14,
+      14
+    ],
+    "replay_statuses": [
+      "preserved",
+      "preserved"
+    ],
+    "model_calls_during_reverification": 0,
+    "live_mcp_calls_during_reverification": 0,
+    "fresh_run_ids": [
+      "eaa5d363765340a1a4819d53175a01d0",
+      "3db8ccb53484419b826e67bcc9336624"
+    ],
+    "final_shared_suite": {
+      "command": ".venv/bin/pytest -q",
+      "passed": 297,
+      "skipped": 6,
+      "warnings": 1,
+      "elapsed_seconds": 66.84,
+      "skip_reason": "Explicit opt-in live USGS/MCP checks",
+      "warning": "Existing Pydantic KernelCandidate.schema field shadowing"
+    },
+    "limitations": [
+      "Two public requirements remain uninterpreted: 28 of 32 mandatory generated strata passed, 4 unknown. Construction target remains incomplete.",
+      "Generated consistency and historical preservation are not independent task correctness; both fresh answers remain Not checked.",
+      "Evidence scope is unknown. No independent complete-source assertion is established by extraction.",
+      "The broader live query chose one broad retrieval, so live within-run receipt reuse or a second extraction was not exercised. Retained-evidence component checks cover that path.",
+      "The final lossless feedback encoding was checked against recorded payloads and the full suite, without another paid whole campaign.",
+      "Automatic bounded traversal lowering remains unsupported in the semantic compiler; separate runtime traversal checks do not imply generated traversal support."
+    ]
+  }
+}

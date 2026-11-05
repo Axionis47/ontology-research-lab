@@ -14,12 +14,10 @@ node_modules/
 .local/
 site/
 
-# Local documentation, agent instructions, and tool configuration.
-/docs/
-/.agents/
-/AGENTS.md
-/mkdocs.yml
-/.claude/
+# Machine-specific agent settings and dependency-generated skill links.
+/.claude/settings.local.json
+/.claude/skills/developing-with-streamlit
+/.agents/skills/developing-with-streamlit
 
 # Reproducible Python packaging and coverage outputs.
 /build/

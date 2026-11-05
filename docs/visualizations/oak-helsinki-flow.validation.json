@@ -1,0 +1,1123 @@
+{
+  "status": "passed",
+  "checked_at": "2026-11-03T23:55:35.346556+00:00",
+  "page_source": "/Users/sid47/Desktop/Oak/docs/visualizations/oak-helsinki-flow.html",
+  "scope": "Standalone report UI and evidence integrity only. No model, MCP, or runtime tests rerun.",
+  "layout_checks": [
+    {
+      "width": 320,
+      "step_index": 0,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 1,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 1,
+      "mode": "exact_payloads_expanded",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 2,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 3,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 4,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 5,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 5,
+      "mode": "exact_payloads_expanded",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 6,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 7,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 8,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 9,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 9,
+      "mode": "exact_payloads_expanded",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 10,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 11,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 0,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 1,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 1,
+      "mode": "exact_payloads_expanded",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 2,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 3,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 4,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 5,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 5,
+      "mode": "exact_payloads_expanded",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 6,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 7,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 8,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 9,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 9,
+      "mode": "exact_payloads_expanded",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 10,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 11,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 0,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 1,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 1,
+      "mode": "exact_payloads_expanded",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 2,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 3,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 4,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 5,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 5,
+      "mode": "exact_payloads_expanded",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 6,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 7,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 8,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 9,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 9,
+      "mode": "exact_payloads_expanded",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 10,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 11,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 0,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 1,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 1,
+      "mode": "exact_payloads_expanded",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 2,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 3,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 4,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 5,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 5,
+      "mode": "exact_payloads_expanded",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 6,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 7,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 8,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 9,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 9,
+      "mode": "exact_payloads_expanded",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 10,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 11,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 0,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 1,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 1,
+      "mode": "exact_payloads_expanded",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 2,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 3,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 4,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 5,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 5,
+      "mode": "exact_payloads_expanded",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 6,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 7,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 8,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 9,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 9,
+      "mode": "exact_payloads_expanded",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 10,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 11,
+      "mode": "collapsed",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "step_index": 7,
+      "mode": "node_selected",
+      "horizontal_overflow": false
+    }
+  ],
+  "step_checks": [
+    {
+      "width": 320,
+      "step_index": 0,
+      "title": "Load the question and frozen kernel"
+    },
+    {
+      "width": 320,
+      "step_index": 1,
+      "title": "LLM 1 chooses a typed function"
+    },
+    {
+      "width": 320,
+      "step_index": 2,
+      "title": "The executor enters F"
+    },
+    {
+      "width": 320,
+      "step_index": 3,
+      "title": "F invokes the real weather MCP"
+    },
+    {
+      "width": 320,
+      "step_index": 4,
+      "title": "Package the forecast as Cq"
+    },
+    {
+      "width": 320,
+      "step_index": 5,
+      "title": "LLM 2 extracts facts under S"
+    },
+    {
+      "width": 320,
+      "step_index": 6,
+      "title": "Instantiate and validate Gq"
+    },
+    {
+      "width": 320,
+      "step_index": 7,
+      "title": "F filters the records and counts"
+    },
+    {
+      "width": 320,
+      "step_index": 8,
+      "title": "Save a compact tool observation"
+    },
+    {
+      "width": 320,
+      "step_index": 9,
+      "title": "LLM 3 decides to finish"
+    },
+    {
+      "width": 320,
+      "step_index": 10,
+      "title": "Validate completion and expose the answer"
+    },
+    {
+      "width": 320,
+      "step_index": 11,
+      "title": "Independently score the saved answer"
+    },
+    {
+      "width": 390,
+      "step_index": 0,
+      "title": "Load the question and frozen kernel"
+    },
+    {
+      "width": 390,
+      "step_index": 1,
+      "title": "LLM 1 chooses a typed function"
+    },
+    {
+      "width": 390,
+      "step_index": 2,
+      "title": "The executor enters F"
+    },
+    {
+      "width": 390,
+      "step_index": 3,
+      "title": "F invokes the real weather MCP"
+    },
+    {
+      "width": 390,
+      "step_index": 4,
+      "title": "Package the forecast as Cq"
+    },
+    {
+      "width": 390,
+      "step_index": 5,
+      "title": "LLM 2 extracts facts under S"
+    },
+    {
+      "width": 390,
+      "step_index": 6,
+      "title": "Instantiate and validate Gq"
+    },
+    {
+      "width": 390,
+      "step_index": 7,
+      "title": "F filters the records and counts"
+    },
+    {
+      "width": 390,
+      "step_index": 8,
+      "title": "Save a compact tool observation"
+    },
+    {
+      "width": 390,
+      "step_index": 9,
+      "title": "LLM 3 decides to finish"
+    },
+    {
+      "width": 390,
+      "step_index": 10,
+      "title": "Validate completion and expose the answer"
+    },
+    {
+      "width": 390,
+      "step_index": 11,
+      "title": "Independently score the saved answer"
+    },
+    {
+      "width": 768,
+      "step_index": 0,
+      "title": "Load the question and frozen kernel"
+    },
+    {
+      "width": 768,
+      "step_index": 1,
+      "title": "LLM 1 chooses a typed function"
+    },
+    {
+      "width": 768,
+      "step_index": 2,
+      "title": "The executor enters F"
+    },
+    {
+      "width": 768,
+      "step_index": 3,
+      "title": "F invokes the real weather MCP"
+    },
+    {
+      "width": 768,
+      "step_index": 4,
+      "title": "Package the forecast as Cq"
+    },
+    {
+      "width": 768,
+      "step_index": 5,
+      "title": "LLM 2 extracts facts under S"
+    },
+    {
+      "width": 768,
+      "step_index": 6,
+      "title": "Instantiate and validate Gq"
+    },
+    {
+      "width": 768,
+      "step_index": 7,
+      "title": "F filters the records and counts"
+    },
+    {
+      "width": 768,
+      "step_index": 8,
+      "title": "Save a compact tool observation"
+    },
+    {
+      "width": 768,
+      "step_index": 9,
+      "title": "LLM 3 decides to finish"
+    },
+    {
+      "width": 768,
+      "step_index": 10,
+      "title": "Validate completion and expose the answer"
+    },
+    {
+      "width": 768,
+      "step_index": 11,
+      "title": "Independently score the saved answer"
+    },
+    {
+      "width": 1280,
+      "step_index": 0,
+      "title": "Load the question and frozen kernel"
+    },
+    {
+      "width": 1280,
+      "step_index": 1,
+      "title": "LLM 1 chooses a typed function"
+    },
+    {
+      "width": 1280,
+      "step_index": 2,
+      "title": "The executor enters F"
+    },
+    {
+      "width": 1280,
+      "step_index": 3,
+      "title": "F invokes the real weather MCP"
+    },
+    {
+      "width": 1280,
+      "step_index": 4,
+      "title": "Package the forecast as Cq"
+    },
+    {
+      "width": 1280,
+      "step_index": 5,
+      "title": "LLM 2 extracts facts under S"
+    },
+    {
+      "width": 1280,
+      "step_index": 6,
+      "title": "Instantiate and validate Gq"
+    },
+    {
+      "width": 1280,
+      "step_index": 7,
+      "title": "F filters the records and counts"
+    },
+    {
+      "width": 1280,
+      "step_index": 8,
+      "title": "Save a compact tool observation"
+    },
+    {
+      "width": 1280,
+      "step_index": 9,
+      "title": "LLM 3 decides to finish"
+    },
+    {
+      "width": 1280,
+      "step_index": 10,
+      "title": "Validate completion and expose the answer"
+    },
+    {
+      "width": 1280,
+      "step_index": 11,
+      "title": "Independently score the saved answer"
+    },
+    {
+      "width": 1440,
+      "step_index": 0,
+      "title": "Load the question and frozen kernel"
+    },
+    {
+      "width": 1440,
+      "step_index": 1,
+      "title": "LLM 1 chooses a typed function"
+    },
+    {
+      "width": 1440,
+      "step_index": 2,
+      "title": "The executor enters F"
+    },
+    {
+      "width": 1440,
+      "step_index": 3,
+      "title": "F invokes the real weather MCP"
+    },
+    {
+      "width": 1440,
+      "step_index": 4,
+      "title": "Package the forecast as Cq"
+    },
+    {
+      "width": 1440,
+      "step_index": 5,
+      "title": "LLM 2 extracts facts under S"
+    },
+    {
+      "width": 1440,
+      "step_index": 6,
+      "title": "Instantiate and validate Gq"
+    },
+    {
+      "width": 1440,
+      "step_index": 7,
+      "title": "F filters the records and counts"
+    },
+    {
+      "width": 1440,
+      "step_index": 8,
+      "title": "Save a compact tool observation"
+    },
+    {
+      "width": 1440,
+      "step_index": 9,
+      "title": "LLM 3 decides to finish"
+    },
+    {
+      "width": 1440,
+      "step_index": 10,
+      "title": "Validate completion and expose the answer"
+    },
+    {
+      "width": 1440,
+      "step_index": 11,
+      "title": "Independently score the saved answer"
+    }
+  ],
+  "model_inspector_checks": [
+    {
+      "width": 320,
+      "step_index": 1,
+      "expanded_payloads": 1
+    },
+    {
+      "width": 320,
+      "step_index": 5,
+      "expanded_payloads": 1
+    },
+    {
+      "width": 320,
+      "step_index": 9,
+      "expanded_payloads": 1
+    },
+    {
+      "width": 390,
+      "step_index": 1,
+      "expanded_payloads": 1
+    },
+    {
+      "width": 390,
+      "step_index": 5,
+      "expanded_payloads": 1
+    },
+    {
+      "width": 390,
+      "step_index": 9,
+      "expanded_payloads": 1
+    },
+    {
+      "width": 768,
+      "step_index": 1,
+      "expanded_payloads": 1
+    },
+    {
+      "width": 768,
+      "step_index": 5,
+      "expanded_payloads": 1
+    },
+    {
+      "width": 768,
+      "step_index": 9,
+      "expanded_payloads": 1
+    },
+    {
+      "width": 1280,
+      "step_index": 1,
+      "expanded_payloads": 1
+    },
+    {
+      "width": 1280,
+      "step_index": 5,
+      "expanded_payloads": 1
+    },
+    {
+      "width": 1280,
+      "step_index": 9,
+      "expanded_payloads": 1
+    },
+    {
+      "width": 1440,
+      "step_index": 1,
+      "expanded_payloads": 1
+    },
+    {
+      "width": 1440,
+      "step_index": 5,
+      "expanded_payloads": 1
+    },
+    {
+      "width": 1440,
+      "step_index": 9,
+      "expanded_payloads": 1
+    }
+  ],
+  "graph_selection_checks": [
+    {
+      "width": 320,
+      "node_id": "b69b46066c85f31dc8c23ca4743714d8e3d0bc846aafd0589ae23c6c9acfd73b",
+      "detail_matches": true
+    },
+    {
+      "width": 320,
+      "node_id": "cec4bcc7fbac5090cd29bf577dd42a624263dbb7fb4044870375ec38f0af064b",
+      "detail_matches": true
+    },
+    {
+      "width": 320,
+      "node_id": "ba4efecf225d1bc2f9fad7b23297941079adeea7a258fd8fd31c1b741964a110",
+      "detail_matches": true
+    },
+    {
+      "width": 320,
+      "node_id": "cc87584cac97d3da649b2b9af94a05c56a82302e9f15235ded06a7e4941b35b4",
+      "detail_matches": true
+    },
+    {
+      "width": 390,
+      "node_id": "b69b46066c85f31dc8c23ca4743714d8e3d0bc846aafd0589ae23c6c9acfd73b",
+      "detail_matches": true
+    },
+    {
+      "width": 390,
+      "node_id": "cec4bcc7fbac5090cd29bf577dd42a624263dbb7fb4044870375ec38f0af064b",
+      "detail_matches": true
+    },
+    {
+      "width": 390,
+      "node_id": "ba4efecf225d1bc2f9fad7b23297941079adeea7a258fd8fd31c1b741964a110",
+      "detail_matches": true
+    },
+    {
+      "width": 390,
+      "node_id": "cc87584cac97d3da649b2b9af94a05c56a82302e9f15235ded06a7e4941b35b4",
+      "detail_matches": true
+    },
+    {
+      "width": 768,
+      "node_id": "b69b46066c85f31dc8c23ca4743714d8e3d0bc846aafd0589ae23c6c9acfd73b",
+      "detail_matches": true
+    },
+    {
+      "width": 768,
+      "node_id": "cec4bcc7fbac5090cd29bf577dd42a624263dbb7fb4044870375ec38f0af064b",
+      "detail_matches": true
+    },
+    {
+      "width": 768,
+      "node_id": "ba4efecf225d1bc2f9fad7b23297941079adeea7a258fd8fd31c1b741964a110",
+      "detail_matches": true
+    },
+    {
+      "width": 768,
+      "node_id": "cc87584cac97d3da649b2b9af94a05c56a82302e9f15235ded06a7e4941b35b4",
+      "detail_matches": true
+    },
+    {
+      "width": 1280,
+      "node_id": "b69b46066c85f31dc8c23ca4743714d8e3d0bc846aafd0589ae23c6c9acfd73b",
+      "detail_matches": true
+    },
+    {
+      "width": 1280,
+      "node_id": "cec4bcc7fbac5090cd29bf577dd42a624263dbb7fb4044870375ec38f0af064b",
+      "detail_matches": true
+    },
+    {
+      "width": 1280,
+      "node_id": "ba4efecf225d1bc2f9fad7b23297941079adeea7a258fd8fd31c1b741964a110",
+      "detail_matches": true
+    },
+    {
+      "width": 1280,
+      "node_id": "cc87584cac97d3da649b2b9af94a05c56a82302e9f15235ded06a7e4941b35b4",
+      "detail_matches": true
+    },
+    {
+      "width": 1440,
+      "node_id": "b69b46066c85f31dc8c23ca4743714d8e3d0bc846aafd0589ae23c6c9acfd73b",
+      "detail_matches": true
+    },
+    {
+      "width": 1440,
+      "node_id": "cec4bcc7fbac5090cd29bf577dd42a624263dbb7fb4044870375ec38f0af064b",
+      "detail_matches": true
+    },
+    {
+      "width": 1440,
+      "node_id": "ba4efecf225d1bc2f9fad7b23297941079adeea7a258fd8fd31c1b741964a110",
+      "detail_matches": true
+    },
+    {
+      "width": 1440,
+      "node_id": "cc87584cac97d3da649b2b9af94a05c56a82302e9f15235ded06a7e4941b35b4",
+      "detail_matches": true
+    }
+  ],
+  "navigation_checks": [
+    "first boundary and forward/backward controls passed",
+    "last boundary and backward/forward controls passed"
+  ],
+  "screenshots": [
+    "/Users/sid47/Desktop/Oak/.local/report-inputs/flow-top.png",
+    "/Users/sid47/Desktop/Oak/.local/report-inputs/flow-step7.png",
+    "/Users/sid47/Desktop/Oak/.local/report-inputs/flow-mobile.png"
+  ],
+  "javascript_errors": [],
+  "browser": "HeadlessChrome/156.0.8078.4",
+  "self_contained_resources": "passed",
+  "evidence_download": {
+    "status": "passed",
+    "path": "/Users/sid47/Desktop/Oak/.local/report-inputs/downloads/oak-helsinki-flow-evidence.json",
+    "exact_embedded_data_match": true
+  },
+  "tested_steps": 12,
+  "visual_inspection": {
+    "status": "passed",
+    "screenshots_reviewed": [
+      "flow-top.png",
+      "flow-step7.png",
+      "flow-mobile.png"
+    ],
+    "observations": "Desktop route, filtering graph, and mobile header/query view are readable without clipping or overlaps."
+  },
+  "final_refresh": {
+    "status": "passed",
+    "checked_at": "2026-11-03T23:57:27.462011+00:00",
+    "layout_checks": [
+      {
+        "width": 320,
+        "overview_details_expanded": true,
+        "horizontal_overflow": false
+      },
+      {
+        "width": 390,
+        "overview_details_expanded": true,
+        "horizontal_overflow": false
+      },
+      {
+        "width": 1440,
+        "overview_details_expanded": true,
+        "horizontal_overflow": false
+      }
+    ],
+    "javascript_errors": [],
+    "unchanged_from_full_qa": {
+      "embedded_DATA_semantically_unchanged": true,
+      "executable_JavaScript_byte_identical": true,
+      "prior_60_step_checks_remain_valid": true
+    },
+    "final_evidence_matches_embedded_DATA": true,
+    "html_sha256": "1db7341267c792fc0e7c42cee3121345f724c09b61a46636fcd1c9a66f823bdb",
+    "evidence_json_sha256": "9ee95deb751fc447369a912d47745d7a609f0b31b12cee66b673835a8ae79027",
+    "executable_javascript_sha256": "cc012996e68974ccc31027dc495cbfa00604cf98cfe1a723877a98e199b43f9a",
+    "browser_close_command": "accepted",
+    "isolated_browser_closed": true
+  },
+  "final_html_sha256": "1db7341267c792fc0e7c42cee3121345f724c09b61a46636fcd1c9a66f823bdb",
+  "final_evidence_json_sha256": "9ee95deb751fc447369a912d47745d7a609f0b31b12cee66b673835a8ae79027",
+  "verified_source_artifacts": 20,
+  "final_evidence_sha256": "9ee95deb751fc447369a912d47745d7a609f0b31b12cee66b673835a8ae79027"
+}

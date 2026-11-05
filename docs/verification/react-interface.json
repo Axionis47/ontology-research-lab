@@ -1,0 +1,438 @@
+{
+  "kind": "react_interface_verification",
+  "recorded_at": "2026-11-04T18:05:24.792549+00:00",
+  "task_id": "mcp:ff06c917df5a4687a12345d7b0c62971",
+  "construction_run_id": "1389d11d8344460e94a58aa1d37ca642",
+  "inference_run_id": "0ef76335325c41239c97eeaf415c3330",
+  "surface_artifact_id": "65efd6f004f0a021c175380522e129c289eedfb26735cd388a9c1bcc7ec2433d",
+  "kernel_id": "bb248ce1d966e1223db8aa02cf3f572eb9ecc8efefbc28256a2a8e3de292cb10",
+  "source_configuration_sha256": "305f2158f17876ecf38a3e4baee2e6ae80034e26add1e7575ce43e8d85fb91aa",
+  "curated_cases": [
+    "ui-construction-oslo"
+  ],
+  "construction": {
+    "status": "completed",
+    "sampled_cases": [
+      {
+        "id": "ui-construction-oslo",
+        "split": "construction",
+        "episode_id": "7aced1bf62ece21a3cfeeec3614ff877a8aa114a752fc3456a0b0aeebc9a5926",
+        "query": "Using the current Open-Meteo daily forecast for Oslo, Norway, what is the maximum displayed daily high temperature across the first three local forecast dates, including today? Use the displayed whole-degree Celsius values. Return only the number.",
+        "episode_run_id": "d842cae72e3f4c53af11bd296d848e35"
+      }
+    ],
+    "ontology": "passed",
+    "function_probes": "passed",
+    "outer_rounds": 1
+  },
+  "inference": {
+    "status": "completed",
+    "outcome": "complete",
+    "answer": "10",
+    "assessment": {
+      "status": "not_checked",
+      "evaluator": null,
+      "evaluator_version": null,
+      "result": null,
+      "scope": null,
+      "evidence_refs": [],
+      "details": {
+        "recorded": {}
+      }
+    },
+    "split": "inference",
+    "graph": {
+      "version": 1,
+      "id": "695781657147f43cece5039f9a8ac0aed7fc0ac6075a8d80ba74db40fc52411e",
+      "source_artifact_id": "695781657147f43cece5039f9a8ac0aed7fc0ac6075a8d80ba74db40fc52411e",
+      "nodes": [
+        {
+          "id": "4e90524980b3517427dae050371cab71b2154a3c7c29a43326258d96020f1a70",
+          "properties": {
+            "conditions": "Overcast",
+            "daily_forecast_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11_2026-11-04",
+            "day_order": 1,
+            "daylight_duration": "8h 23m",
+            "feels_like_high_celsius": 8,
+            "feels_like_low_celsius": 1,
+            "forecast_date": "2026-11-04",
+            "high_temperature_celsius": 9,
+            "low_temperature_celsius": 3,
+            "precipitation_chance_pct": 0,
+            "sunrise": "08:10",
+            "sunset": "16:33",
+            "uv_index": 0.8,
+            "wind_gusts_kmh": 9,
+            "wind_speed_kmh": 6
+          },
+          "sources": [
+            {
+              "document_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11-0",
+              "source_ref": "mcp:weather_ui/get_forecast#characters=0:2500"
+            }
+          ],
+          "type": "DailyForecast",
+          "label": "Daily Forecast"
+        },
+        {
+          "id": "62af4c919917720b08c64a54477a9c2c7505478dcdb14e9ea6c973602319a7ac",
+          "properties": {
+            "elevation_m": 0,
+            "forecast_days": 3,
+            "granularity": "daily",
+            "provider": "Open-Meteo (Global)",
+            "report_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11",
+            "timezone": "Europe/Oslo"
+          },
+          "sources": [
+            {
+              "document_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11-0",
+              "source_ref": "mcp:weather_ui/get_forecast#characters=0:2500"
+            }
+          ],
+          "type": "ForecastReport",
+          "label": "Forecast Report"
+        },
+        {
+          "id": "7d3fe6035ba9b736919c9a23a046a20daedc8a40cc72e9e3ae1864ef6ed63ccc",
+          "properties": {
+            "conditions": "Overcast",
+            "daily_forecast_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11_2026-11-06",
+            "day_order": 3,
+            "daylight_duration": "8h 12m",
+            "feels_like_high_celsius": 8,
+            "feels_like_low_celsius": 1,
+            "forecast_date": "2026-11-06",
+            "high_temperature_celsius": 10,
+            "low_temperature_celsius": 4,
+            "precipitation_chance_pct": 3,
+            "sunrise": "08:15",
+            "sunset": "16:28",
+            "uv_index": 0.8,
+            "wind_gusts_kmh": 30,
+            "wind_speed_kmh": 17
+          },
+          "sources": [
+            {
+              "document_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11-0",
+              "source_ref": "mcp:weather_ui/get_forecast#characters=0:2500"
+            }
+          ],
+          "type": "DailyForecast",
+          "label": "Daily Forecast"
+        },
+        {
+          "id": "7e8d45887b9d95db06bf9be5d51647bc4cd5f2072657c2b627efaa885b84a912",
+          "properties": {
+            "city_name": "Bergen, Vestland, Norway",
+            "latitude": 60.3943,
+            "location_id": "loc_bergen_norway",
+            "longitude": 5.3259
+          },
+          "sources": [
+            {
+              "document_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11-0",
+              "source_ref": "mcp:weather_ui/get_forecast#characters=0:2500"
+            }
+          ],
+          "type": "Location",
+          "label": "Bergen, Vestland, Norway"
+        },
+        {
+          "id": "a05bb2e05e728528f93f72c3bec1d5b3453b7c27685cc0f8f1de01cc5097f210",
+          "properties": {
+            "conditions": "Overcast",
+            "daily_forecast_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11_2026-11-05",
+            "day_order": 2,
+            "daylight_duration": "8h 18m",
+            "feels_like_high_celsius": 8,
+            "feels_like_low_celsius": 2,
+            "forecast_date": "2026-11-05",
+            "high_temperature_celsius": 10,
+            "low_temperature_celsius": 4,
+            "precipitation_chance_pct": 0,
+            "sunrise": "08:12",
+            "sunset": "16:30",
+            "uv_index": 1,
+            "wind_gusts_kmh": 19,
+            "wind_speed_kmh": 10
+          },
+          "sources": [
+            {
+              "document_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11-0",
+              "source_ref": "mcp:weather_ui/get_forecast#characters=0:2500"
+            }
+          ],
+          "type": "DailyForecast",
+          "label": "Daily Forecast"
+        }
+      ],
+      "edges": [
+        {
+          "relation": "applies_to_location",
+          "source": "62af4c919917720b08c64a54477a9c2c7505478dcdb14e9ea6c973602319a7ac",
+          "sources": [
+            {
+              "document_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11-0",
+              "source_ref": "mcp:weather_ui/get_forecast#characters=0:2500"
+            }
+          ],
+          "target": "7e8d45887b9d95db06bf9be5d51647bc4cd5f2072657c2b627efaa885b84a912",
+          "id": "edge:0",
+          "label": "Applies to location"
+        },
+        {
+          "relation": "has_forecast_report",
+          "source": "7e8d45887b9d95db06bf9be5d51647bc4cd5f2072657c2b627efaa885b84a912",
+          "sources": [
+            {
+              "document_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11-0",
+              "source_ref": "mcp:weather_ui/get_forecast#characters=0:2500"
+            }
+          ],
+          "target": "62af4c919917720b08c64a54477a9c2c7505478dcdb14e9ea6c973602319a7ac",
+          "id": "edge:1",
+          "label": "Has forecast report"
+        },
+        {
+          "relation": "has_daily_forecast",
+          "source": "62af4c919917720b08c64a54477a9c2c7505478dcdb14e9ea6c973602319a7ac",
+          "sources": [
+            {
+              "document_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11-0",
+              "source_ref": "mcp:weather_ui/get_forecast#characters=0:2500"
+            }
+          ],
+          "target": "4e90524980b3517427dae050371cab71b2154a3c7c29a43326258d96020f1a70",
+          "id": "edge:2",
+          "label": "Has daily forecast"
+        },
+        {
+          "relation": "included_in_report",
+          "source": "4e90524980b3517427dae050371cab71b2154a3c7c29a43326258d96020f1a70",
+          "sources": [
+            {
+              "document_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11-0",
+              "source_ref": "mcp:weather_ui/get_forecast#characters=0:2500"
+            }
+          ],
+          "target": "62af4c919917720b08c64a54477a9c2c7505478dcdb14e9ea6c973602319a7ac",
+          "id": "edge:3",
+          "label": "Included in report"
+        },
+        {
+          "relation": "has_daily_forecast",
+          "source": "62af4c919917720b08c64a54477a9c2c7505478dcdb14e9ea6c973602319a7ac",
+          "sources": [
+            {
+              "document_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11-0",
+              "source_ref": "mcp:weather_ui/get_forecast#characters=0:2500"
+            }
+          ],
+          "target": "a05bb2e05e728528f93f72c3bec1d5b3453b7c27685cc0f8f1de01cc5097f210",
+          "id": "edge:4",
+          "label": "Has daily forecast"
+        },
+        {
+          "relation": "included_in_report",
+          "source": "a05bb2e05e728528f93f72c3bec1d5b3453b7c27685cc0f8f1de01cc5097f210",
+          "sources": [
+            {
+              "document_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11-0",
+              "source_ref": "mcp:weather_ui/get_forecast#characters=0:2500"
+            }
+          ],
+          "target": "62af4c919917720b08c64a54477a9c2c7505478dcdb14e9ea6c973602319a7ac",
+          "id": "edge:5",
+          "label": "Included in report"
+        },
+        {
+          "relation": "has_daily_forecast",
+          "source": "62af4c919917720b08c64a54477a9c2c7505478dcdb14e9ea6c973602319a7ac",
+          "sources": [
+            {
+              "document_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11-0",
+              "source_ref": "mcp:weather_ui/get_forecast#characters=0:2500"
+            }
+          ],
+          "target": "7d3fe6035ba9b736919c9a23a046a20daedc8a40cc72e9e3ae1864ef6ed63ccc",
+          "id": "edge:6",
+          "label": "Has daily forecast"
+        },
+        {
+          "relation": "included_in_report",
+          "source": "7d3fe6035ba9b736919c9a23a046a20daedc8a40cc72e9e3ae1864ef6ed63ccc",
+          "sources": [
+            {
+              "document_id": "b452d3dbd856e2dae59d61269160bf6d73451096d068f9ff7a56939ab479dd11-0",
+              "source_ref": "mcp:weather_ui/get_forecast#characters=0:2500"
+            }
+          ],
+          "target": "62af4c919917720b08c64a54477a9c2c7505478dcdb14e9ea6c973602319a7ac",
+          "id": "edge:7",
+          "label": "Included in report"
+        }
+      ],
+      "total_nodes": 5,
+      "total_edges": 8,
+      "shown_nodes": 5,
+      "shown_edges": 8,
+      "omitted_nodes": 0,
+      "omitted_edges": 0,
+      "scope": "Bounded view of recorded graph entities",
+      "limitations": [
+        "Selection highlights do not modify the saved graph. Relationships are explicit recorded edges."
+      ]
+    }
+  },
+  "runs": [
+    {
+      "id": "1389d11d8344460e94a58aa1d37ca642",
+      "kind": "mcp_construct",
+      "status": "completed",
+      "parent_run_id": null,
+      "root_run_id": "1389d11d8344460e94a58aa1d37ca642",
+      "input_id": "21dd414109c1514656b5d90dad46506893f163c09ff1abad07d352c81c3b7af7",
+      "result_id": "08e9d2a338018d77cbc13560839b99eec2199d801cdf3a44c26ea8e01bc00b46"
+    },
+    {
+      "id": "d842cae72e3f4c53af11bd296d848e35",
+      "kind": "mcp_episode",
+      "status": "completed",
+      "parent_run_id": "1389d11d8344460e94a58aa1d37ca642",
+      "root_run_id": "1389d11d8344460e94a58aa1d37ca642",
+      "input_id": "0f633324f8aa31c39afe074a6b266513c027d7cbab7616fa9792b6e4d8e08b15",
+      "result_id": "9650c2206e4628e6d665626b0b2114fcc1897564f2da466a3b21f2d022c8a503"
+    },
+    {
+      "id": "0ef76335325c41239c97eeaf415c3330",
+      "kind": "mcp_episode",
+      "status": "completed",
+      "parent_run_id": null,
+      "root_run_id": "0ef76335325c41239c97eeaf415c3330",
+      "input_id": "049dad50efe512ada222ae8c18f750ae5ee9d84f97514b2092c067d6a49b9a81",
+      "result_id": "1d1176564ddb5701771f847873bf6b21e343924f7fb7fceb2536797ccd93dba1"
+    }
+  ],
+  "model_calls": [
+    {
+      "id": "63b451a8b30b4081b1a059bcac605a34",
+      "run_id": "d842cae72e3f4c53af11bd296d848e35",
+      "status": "settled",
+      "reserved": 0.5912325,
+      "estimated": 0.003678,
+      "evidence_id": "4c4363fa6b9a852d071635d47bae0767e01039661d71c6a6e40c8ac4b2897952"
+    },
+    {
+      "id": "c486bc5f6476479ea2058fe17b7df09f",
+      "run_id": "d842cae72e3f4c53af11bd296d848e35",
+      "status": "settled",
+      "reserved": 0.6028125,
+      "estimated": 0.00426675,
+      "evidence_id": "9fd62e9e5182e6e2cd1deaced0d94a5eda763aae7d9d7d770759c7552bc1e376"
+    },
+    {
+      "id": "43e68ef2fc484c31875819a1bbdb95ba",
+      "run_id": "1389d11d8344460e94a58aa1d37ca642",
+      "status": "settled",
+      "reserved": 0.6032325,
+      "estimated": 0.01063875,
+      "evidence_id": "dc3df7e6733c975d4494f922bf6f7623cb23355d4d127679393b612a939eb27f"
+    },
+    {
+      "id": "392da93b911e4033ac0ce56d00a0b535",
+      "run_id": "1389d11d8344460e94a58aa1d37ca642",
+      "status": "settled",
+      "reserved": 0.5217825,
+      "estimated": 0.0069225,
+      "evidence_id": "c1d1d662490c07fd4902983dfe3f240754e47e747cc78dc88a7c44b59c99a476"
+    },
+    {
+      "id": "870f20ea9aa34190ae181c0467e4b77f",
+      "run_id": "1389d11d8344460e94a58aa1d37ca642",
+      "status": "settled",
+      "reserved": 0.72219,
+      "estimated": 0.009627,
+      "evidence_id": "37035330684357dd4f256be29bea3ba1ed7d0c8472657332674edf898ad0cd60"
+    },
+    {
+      "id": "20180065999b4d6fb36a6652be4e4fa0",
+      "run_id": "1389d11d8344460e94a58aa1d37ca642",
+      "status": "settled",
+      "reserved": 0.521775,
+      "estimated": 0.00680625,
+      "evidence_id": "346e9161820150c84f903c249bf08afa8589d594a2160c603f007d32ceca6976"
+    },
+    {
+      "id": "319a22d0dbf540acaaf07d94e3d08f06",
+      "run_id": "0ef76335325c41239c97eeaf415c3330",
+      "status": "settled",
+      "reserved": 0.6098325,
+      "estimated": 0.00417225,
+      "evidence_id": "2d9816b8705db417250b33e2ae6d4df2a0ef272aeda2e9a019f4ddb50bc11c0c"
+    },
+    {
+      "id": "e8dea08899fa4bf1a1186bff595d3761",
+      "run_id": "0ef76335325c41239c97eeaf415c3330",
+      "status": "settled",
+      "reserved": 0.5217675,
+      "estimated": 0.00898575,
+      "evidence_id": "c4916e93b5ad9040d7503ed927e792242716c1a07c5390cb584701f3c9710339"
+    },
+    {
+      "id": "c8d7f900933148e2ac40afc0d0743ff1",
+      "run_id": "0ef76335325c41239c97eeaf415c3330",
+      "status": "settled",
+      "reserved": 0.613425,
+      "estimated": 0.00427725,
+      "evidence_id": "f77331f540bdaad9b5eee0440328fa7e0b961f2c4a9e24a2b704e1d2a6d1d96c"
+    }
+  ],
+  "campaign": {
+    "ceiling_usd": 2,
+    "estimated_new_usd": 0.0593745,
+    "new_unknown_reservations_usd": 0,
+    "calls": 9,
+    "global_baseline": {
+      "estimated_usd": 2.54443725,
+      "reserved_usd": 2.24412,
+      "calls": 264
+    },
+    "global_final": {
+      "limit_usd": 40.0,
+      "estimated_usd": 2.60381175,
+      "reserved_usd": 2.24412,
+      "remaining_usd": 35.15206825,
+      "calls": 273
+    }
+  },
+  "limitations": [
+    "The new ad hoc answer has no independent task assessment.",
+    "No automatic outer refinement was added.",
+    "Cloud LangSmith delivery remains unverified."
+  ],
+  "connector_checks": {
+    "root": ".local/web-interface-checks",
+    "microsoft_read_receipt": "772f6214cf0fe7fa0a89b862c89f631cafc98eb5d6536824081d4821c13009bb",
+    "weather_discovery_run": "bc1f7d7e2f1541dd84de06d46872903c"
+  },
+  "verification": {
+    "python_suite": {
+      "passed": 99,
+      "skipped": 6
+    },
+    "browser_local": {
+      "passed": 5
+    },
+    "browser_portable": {
+      "passed": 3,
+      "skipped": 2
+    },
+    "typescript_drift": "passed",
+    "frontend_build": "passed",
+    "dependency_audit": "zero findings",
+    "environment_receipt": ".local/verification/react-environment.json",
+    "screenshot": ".local/verification/react-inference.png",
+    "docs_strict_build": "passed"
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "format_version": 1,
+  "started_at": "2026-11-03T21:40:48.125Z",
+  "package": "@dangahagan/weather-mcp",
+  "package_version": "1.35.7",
+  "calls": [
+    {
+      "tool": "search_location",
+      "arguments": {
+        "query": "Berlin, Germany",
+        "limit": 2
+      },
+      "started_at": "2026-11-03T21:40:48.352Z",
+      "output": {
+        "content": [
+          {
+            "type": "text",
+            "text": "# Location Search Results\n\n**Query:** \"Berlin, Germany\"\n**Found:** 1 location\n\n---\n\n## 1. Berlin\n\n**Full Name:** Berlin, Germany\n**Coordinates:** 52.5174°, 13.3951°\n**Country Code:** DE\n**Type:** First-order administrative division\n**Confidence:** ✅ High\n**Data Source:** OpenStreetMap Nominatim\n\n*To get weather for this location, use these coordinates:*\n*Latitude: 52.5173885, Longitude: 13.3951309*\n\n---\n*Multi-service geocoding with automatic fallback (Census.gov, Nominatim, Open-Meteo)*\n"
+          }
+        ]
+      },
+      "status": "completed",
+      "finished_at": "2026-11-03T21:40:49.155Z"
+    },
+    {
+      "tool": "get_forecast",
+      "arguments": {
+        "latitude": 52.52,
+        "longitude": 13.405,
+        "days": 3,
+        "granularity": "daily",
+        "source": "openmeteo",
+        "units": "metric",
+        "detail": "standard",
+        "include_precipitation_probability": false
+      },
+      "started_at": "2026-11-03T21:40:49.155Z",
+      "output": {
+        "content": [
+          {
+            "type": "text",
+            "text": "# Weather Forecast (Daily)\n\n**Location:** 52.5200, 13.4050\n**Elevation:** 37m\n**Timezone:** Europe/Berlin\n**Forecast Days:** 3\n\n## Tuesday, November 3\n**Temperature:** High 10°C / Low 4°C\n**Feels Like:** High 7°C / Low 1°C\n**Sunrise:** 07:06\n**Sunset:** 16:33\n**Daylight Duration:** 9h 27m\n**Wind:** 11 km/h NE\n**Wind Gusts:** 25 km/h\n**Conditions:** Overcast\n**UV Index:** 1.9\n\n## Wednesday, November 4\n**Temperature:** High 10°C / Low 5°C\n**Feels Like:** High 6°C / Low 2°C\n**Sunrise:** 07:07\n**Sunset:** 16:31\n**Daylight Duration:** 9h 23m\n**Wind:** 11 km/h ENE\n**Wind Gusts:** 24 km/h\n**Conditions:** Light drizzle\n**UV Index:** 1.9\n\n## Thursday, November 5\n**Temperature:** High 9°C / Low 4°C\n**Feels Like:** High 6°C / Low 1°C\n**Sunrise:** 07:09\n**Sunset:** 16:29\n**Daylight Duration:** 9h 19m\n**Wind:** 10 km/h E\n**Wind Gusts:** 23 km/h\n**Conditions:** Overcast\n**UV Index:** 1.9\n\n---\n*Data source: Open-Meteo (Global)*\n"
+          }
+        ]
+      },
+      "status": "completed",
+      "finished_at": "2026-11-03T21:40:49.402Z"
+    }
+  ],
+  "server_info": {
+    "name": "weather-mcp",
+    "version": "1.35.7"
+  },
+  "catalog": {
+    "tools": [
+      {
+        "name": "get_forecast",
+        "description": "Get future weather forecast for a location. Use this for upcoming weather predictions (e.g., \"tomorrow\", \"this week\", \"next 7 days\", \"hourly forecast\"). Automatically selects the best data source: NOAA for US locations (more detailed), Open-Meteo for international locations. For current weather, use get_current_conditions. For past weather, use get_historical_weather.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "latitude": {
+              "type": "number",
+              "description": "Latitude (-90 to 90). Not required if location_name or city_name is provided.",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "longitude": {
+              "type": "number",
+              "description": "Longitude (-180 to 180). Not required if location_name or city_name is provided.",
+              "minimum": -180,
+              "maximum": 180
+            },
+            "location_name": {
+              "type": "string",
+              "description": "A saved location alias, e.g. \"home\". List them with list_saved_locations."
+            },
+            "city_name": {
+              "type": "string",
+              "description": "A place name to geocode, e.g. \"Paris, France\". Include state or country to disambiguate."
+            },
+            "days": {
+              "type": "number",
+              "description": "Number of days to include in forecast (1-16 for global, 1-7 for US NOAA, default: 7)",
+              "minimum": 1,
+              "maximum": 16,
+              "default": 7
+            },
+            "granularity": {
+              "type": "string",
+              "description": "Forecast granularity: \"daily\" for day/night periods, \"hourly\" for hour-by-hour detail, or \"minutely\" for a 2-hour precipitation nowcast in 15-minute steps (contiguous US, Central Europe) (default: \"daily\")",
+              "enum": [
+                "daily",
+                "hourly",
+                "minutely"
+              ],
+              "default": "daily"
+            },
+            "include_precipitation_probability": {
+              "type": "boolean",
+              "description": "Include precipitation probability in the forecast output (default: true)",
+              "default": true
+            },
+            "include_severe_weather": {
+              "type": "boolean",
+              "description": "Include severe weather probabilities such as thunderstorm chance, wind gust probabilities, and tropical storm/hurricane risks (default: false, US/NOAA only)",
+              "default": false
+            },
+            "include_normals": {
+              "type": "boolean",
+              "description": "Include climate normals (30-year averages) for comparison with forecasted temperatures, plus US daily records (default: false, daily forecasts only).",
+              "default": false
+            },
+            "include_astronomy": {
+              "type": "boolean",
+              "description": "Include astronomy details for each forecast day (default: false, daily forecasts only). Use when asked about the moon phase, a full moon or new moon, moonrise/moonset, golden hour, twilight, or \"when does it get dark\".",
+              "default": false
+            },
+            "source": {
+              "type": "string",
+              "description": "Data source: \"auto\" (default, selects NOAA for US or Open-Meteo for international), \"noaa\" (US only), or \"openmeteo\" (global)",
+              "enum": [
+                "auto",
+                "noaa",
+                "openmeteo"
+              ],
+              "default": "auto"
+            },
+            "compare_models": {
+              "type": "boolean",
+              "default": false,
+              "description": "Compare 5 global weather models (GFS, ECMWF, ICON, GEM, UKMO) and summarize their agreement/divergence instead of a single forecast. Use when asked how confident or certain a forecast is, or whether models agree. Daily granularity only; always Open-Meteo (default: false)."
+            },
+            "ensemble_spread": {
+              "type": "boolean",
+              "description": "Show one model's ensemble spread (ECMWF ENS, 50 members) instead of a single forecast — how confident the model itself is, day by day. Use when asked how certain/uncertain the forecast is. Daily only; always Open-Meteo (default: false).",
+              "default": false
+            },
+            "detail": {
+              "type": "string",
+              "description": "Output verbosity: \"summary\" (shortest), \"standard\" (default, balanced), or \"full\" (everything the source provides).",
+              "enum": [
+                "summary",
+                "standard",
+                "full"
+              ]
+            },
+            "units": {
+              "type": "string",
+              "description": "Unit system for output. Defaults to the server setting; individual *_unit overrides take precedence.",
+              "enum": [
+                "imperial",
+                "metric"
+              ]
+            },
+            "temperature_unit": {
+              "type": "string",
+              "description": "Override the temperature unit.",
+              "enum": [
+                "F",
+                "C"
+              ]
+            },
+            "wind_speed_unit": {
+              "type": "string",
+              "description": "Override the wind speed unit (\"kn\" is knots).",
+              "enum": [
+                "mph",
+                "kmh",
+                "ms",
+                "kn"
+              ]
+            },
+            "precipitation_unit": {
+              "type": "string",
+              "description": "Override the precipitation unit.",
+              "enum": [
+                "inch",
+                "mm"
+              ]
+            },
+            "pressure_unit": {
+              "type": "string",
+              "description": "Override the pressure unit.",
+              "enum": [
+                "inHg",
+                "hPa"
+              ]
+            },
+            "distance_unit": {
+              "type": "string",
+              "description": "Override the distance, visibility and elevation unit.",
+              "enum": [
+                "mi",
+                "km"
+              ]
+            },
+            "time_format": {
+              "type": "string",
+              "description": "Clock format for times.",
+              "enum": [
+                "12h",
+                "24h"
+              ]
+            }
+          },
+          "required": []
+        }
+      },
+      {
+        "name": "search_location",
+        "description": "Search for locations by name and get their coordinates. Uses Nominatim (OpenStreetMap) for coverage of cities, towns, villages and hamlets worldwide. The weather tools geocode city_name themselves, so use this to disambiguate an ambiguous place name or to show the candidate matches (e.g., \"Springfield\", \"San Francisco, CA\", \"Small Village, County\") — not as a required first step before a weather call.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Location name to search for (e.g., \"Paris\", \"New York, NY\", \"Tokyo\")"
+            },
+            "limit": {
+              "type": "integer",
+              "description": "Maximum number of results to return (1-50, default: 5)",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 5
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      }
+    ]
+  },
+  "finished_at": "2026-11-03T21:40:49.410Z"
+}

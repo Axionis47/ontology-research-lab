@@ -1,0 +1,109 @@
+{
+  "kind": "genuine_focused_construction_verification",
+  "construction_receipt": ".local/verification/focused-construction/receipt.json",
+  "inference_receipt": ".local/verification/focused-construction/inference-v2.json",
+  "receipt_sha256": {
+    "receipt.json": "6e6f04d290d97d2d1957fcff0b361a7367ca0f64f096032228c4f3db578760fb",
+    "inference-v2.json": "d68d1eb96f8079493ec29b527e6f7d5c4fe457fe050475ca7afdc00794d3b96a"
+  },
+  "task_id": "mcp:97b6dfd20cae4a73b55530deaa0bd06d",
+  "construction_run_id": "8b4dc8330b4849cf82e8b1c4e566eb1f",
+  "inference_run_id": "33b9a5958e174523af5b501989495183",
+  "kernel_id": "f4a1e125213871abcc638cec1288bdbde2d5c069f15328791c12cc18d1a7fb89",
+  "evidence": {
+    "coverage_id": "5bcc63164ee6cd5df0e5588d89ec93fa0043fb101243c4fdac7e732166bed1ce",
+    "documents_id": "c5f9ed1fecb983b2e1c6ea847cee84553d26a497d4a41c2208d0ac1a5a2bc066",
+    "episodes_id": "d65a487a43f5a2dffb6b06703f58565d0cc215191c75f1f8779db5eb33bf836b",
+    "functions_id": "09564f9a9dcd30548120f5c27b35df47214faf986b46d662864d80310e9d8f35",
+    "graph_id": "683c77d8714bf29e3b899bb1540459490f10da2f482baf10b07177c468b423db",
+    "probes_id": "5d8dac42c957c4526925e04d00fc1d6911a9b8c9d8dca091da1ab3c61e47797d",
+    "prompt_manifest_id": "6e3231d52cb742a53a4389624d695108add26c9d3b09ebee467e61cd35e5c14a",
+    "requirements_id": "2aa6489f7523cb97378a296a65c14fbe1632d93daad3542a154a278a0ad3f9aa",
+    "requirements_input_id": "7069c23665a271537eb6984699568c90111dc03bc4b82ce27d2b5cb45f45a904",
+    "schema_id": "78f817ed260f33714206a126d33907184164b394942cf462114077e397f2b980",
+    "validation_id": "e57543dfb7fe7f319601296cf76650f1152f92eff8bd728fb0c156eb1c004efc"
+  },
+  "functions": [
+    {
+      "name": "get_forecast_details",
+      "operators": [
+        "invoke_capability",
+        "project_properties"
+      ]
+    },
+    {
+      "name": "get_forecast_maximum_high",
+      "operators": [
+        "invoke_capability",
+        "aggregate_values"
+      ]
+    }
+  ],
+  "coverage": {
+    "valid": true,
+    "structurally_complete": true,
+    "outcome_status": "not_checked",
+    "counts": {
+      "function_count": 2,
+      "invalid": 0,
+      "mapped": 4,
+      "missing": 0,
+      "obligations": 4,
+      "unsupported": 0
+    },
+    "limitations": [
+      "Function mappings do not establish semantic coverage, executability, or task correctness.",
+      "This report covers only the supplied construction obligations, not an entire task family."
+    ]
+  },
+  "ontology_valid": true,
+  "inference_status": "complete",
+  "independent_assessment": {
+    "status": "unmeasured"
+  },
+  "graph_counts": {
+    "nodes": 4,
+    "edges": 3
+  },
+  "budget": {
+    "verification_ceiling_usd": 2.0,
+    "before": {
+      "limit_usd": 40.0,
+      "estimated_usd": 2.607792,
+      "reserved_usd": 3.907635,
+      "remaining_usd": 33.484573,
+      "calls": 277
+    },
+    "after": {
+      "limit_usd": 40.0,
+      "estimated_usd": 2.678724,
+      "reserved_usd": 3.907635,
+      "remaining_usd": 33.413641,
+      "calls": 290
+    },
+    "new_calls": 13,
+    "estimated_new_usd": 0.070932,
+    "unknown_reservations_unchanged": true
+  },
+  "local_verification": {
+    "pytest": {
+      "passed": 114,
+      "skipped": 6
+    },
+    "ruff_check": "passed",
+    "ruff_format_check": "passed",
+    "mkdocs_strict": "passed",
+    "browser": [
+      "Construction stages and exact coverage evidence visible through actual API",
+      "Fresh Bergen inference shows saved projection call, four nodes and three edges",
+      "Answer and Not checked independent assessment displayed separately"
+    ]
+  },
+  "limitations": [
+    "No independent evaluator for the new free-form questions",
+    "One construction round with bounded repairs; no automatic outer refinement or regression acceptance",
+    "Coverage validates references and accounting, not semantic completeness",
+    "Prior CLI long-output interruption remains separate runtime work",
+    "construction_inputs observability event added after paid construction and covered by default checks, not a second paid construction"
+  ]
+}

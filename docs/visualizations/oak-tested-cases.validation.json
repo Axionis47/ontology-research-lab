@@ -1,0 +1,96 @@
+{
+  "status": "passed",
+  "browser": "Chromium headless shell 1248",
+  "tested_cases": 34,
+  "case_selection_checks": 34,
+  "layout_checks": [
+    {
+      "width": 320,
+      "domain": "coffee",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "domain": "usgs",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 320,
+      "domain": "weather",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "domain": "coffee",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "domain": "usgs",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 390,
+      "domain": "weather",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "domain": "coffee",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "domain": "usgs",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 768,
+      "domain": "weather",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "domain": "coffee",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "domain": "usgs",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1280,
+      "domain": "weather",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "domain": "coffee",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "domain": "usgs",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1440,
+      "domain": "weather",
+      "horizontal_overflow": false
+    }
+  ],
+  "evidence_download": "passed",
+  "javascript_errors": [],
+  "page_source": "docs/visualizations/oak-tested-cases.html",
+  "scope": "UI and report integrity only; no model runs or domain tests rerun",
+  "report_version": 2,
+  "snapshot_date": "2026-11-03",
+  "evidence_source_files_verified": 84,
+  "report_sha256": "ddcb99be9b01ccb67f22a5d1b72e387aa1bf3b0f4c645f948166c56813d360c2",
+  "evidence_index_sha256": "5bd46480a366a2ea2e34696281d5366294c420b09d6046f15240d4ea79468e48",
+  "visual_inspection": [
+    "Updated weather execution path with F, MCP, extraction, graph, and typed result"
+  ],
+  "verification_scope": "Report UI, exact evidence download, and source-file integrity. No new model or service calls."
+}
