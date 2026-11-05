@@ -49,6 +49,32 @@ def test_observer_empty_workspace_does_not_create_files(tmp_path: Path) -> None:
     assert not root.exists()
 
 
+def test_genuine_generated_flows_remain_separate_and_inspectable(observer: Observer) -> None:
+    """Read the actual two-flow campaign without dispatching or assessing a task."""
+    task_id = "mcp:a3a582974dc04fae9708af91e612c396"
+    inference_id = "8b2d74aac05b4018b6366266d492ac71"
+    try:
+        run = observer.run(inference_id)
+        history = observer.history(task_id)
+    except LookupError:
+        pytest.skip("The genuine two-flow verification campaign is unavailable")
+    before = observer.workspace()
+    assert run["outcome"] == "complete"
+    assert run["assessment"]["status"] == "not_checked"
+    assert observer.graph(run["graph_id"])["total_nodes"] == 2
+    assert len(history["attempts"]) == 1  # The campaign wrapper is not another attempt.
+    events = observer.events(inference_id, limit=200)["items"]
+    for stage in ("evidence_demand", "materialization_plan", "evidence_scope"):
+        event = next(item for item in events if item["stage"] == stage)
+        assert event["flow"] == "instantiation"
+        evidence = observer.artifact(event["artifact_refs"][0]["id"])
+        assert evidence["typed_data"] is not None
+        assert evidence["data"]["flow"] == "instantiation"
+    scope = next(item for item in events if item["stage"] == "evidence_scope")
+    assert scope["payload"]["nonblocking"] is True
+    assert observer.workspace() == before
+
+
 def test_real_portable_artifact_hash_is_preserved_and_tampering_fails(tmp_path: Path) -> None:
     fixture = ROOT / "tests/fixtures/weather/mcp-preflight.json"
     source = json.loads(fixture.read_text())

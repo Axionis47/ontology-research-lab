@@ -26,14 +26,13 @@ import { EvidenceDrawer, type Inspection } from "../components/EvidenceDrawer";
 import { GraphView } from "../components/GraphView";
 import { SplitView } from "../components/SplitView";
 import { Trajectory } from "../components/Trajectory";
+import { ConstructionFlows } from "../components/FlowEvidence";
 export function Construction({ taskId }: { taskId: string }) {
   const history = useHistory(taskId);
   const [params, setParams] = useSearchParams();
   const attempts = history.data?.attempts ?? [];
   const requested = params.get("attempt");
-  const attempt =
-    attempts.find((a) => a.run_id === requested) ??
-    attempts[0];
+  const attempt = attempts.find((a) => a.run_id === requested) ?? attempts[0];
   const kernel = useKernel(attempt?.kernel_id);
   const stream = useEvents(
     attempt?.run_id ?? "",
@@ -108,9 +107,11 @@ export function Construction({ taskId }: { taskId: string }) {
               </span>
             </div>
             <span className="muted small">
-              One construction round per submitted job
+              {kernel.data?.construction_profile ??
+                "Historical construction profile"}
             </span>
           </div>
+          <ConstructionFlows events={stream.events} onInspect={setInspection} />
           <SplitView
             left={
               <>

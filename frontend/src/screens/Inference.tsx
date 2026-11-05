@@ -35,6 +35,7 @@ import { EvidenceDrawer, type Inspection } from "../components/EvidenceDrawer";
 import { GraphView } from "../components/GraphView";
 import { Playback, Trajectory } from "../components/Trajectory";
 import { SplitView } from "../components/SplitView";
+import { MaterializationEvidence } from "../components/FlowEvidence";
 type Accepted = components["schemas"]["AcceptedRun"];
 function snapshot(events: Event[], initial: string | null | undefined) {
   let current = initial;
@@ -83,8 +84,13 @@ export function Inference({ taskId }: { taskId: string }) {
       pinnedTask.current = taskId;
       setKernelId("");
     }
-    if (!kernelId && eligible.length) setKernelId(eligible[0].id);
-  }, [taskId, eligible, kernelId]);
+    if (!kernelId && eligible.length) {
+      const selected = eligible.find(
+        (item) => item.id === task.data?.selected_kernel_id,
+      );
+      setKernelId(selected?.id ?? eligible[0].id);
+    }
+  }, [taskId, eligible, kernelId, task.data?.selected_kernel_id]);
   useEffect(() => {
     setPlaying(false);
     setReplay(null);
@@ -407,6 +413,10 @@ export function Inference({ taskId }: { taskId: string }) {
                                 : "No snapshot"}
                             </Badge>
                           </div>
+                          <MaterializationEvidence
+                            events={events.slice(0, selected + 1)}
+                            onInspect={setInspection}
+                          />
                           {graph.isFetching ? (
                             <Loading text="Loading graph snapshot" />
                           ) : graph.error ? (

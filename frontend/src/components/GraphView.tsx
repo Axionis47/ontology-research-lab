@@ -237,7 +237,8 @@ export function GraphView({
           {graph.shown_edges.toLocaleString()} of{" "}
           {graph.total_edges.toLocaleString()} edges.{" "}
           {graph.omitted_nodes.toLocaleString()} nodes and{" "}
-          {graph.omitted_edges.toLocaleString()} edges omitted.
+          {graph.omitted_edges.toLocaleString()} edges omitted from this
+          display.
         </div>
       )}
     </div>

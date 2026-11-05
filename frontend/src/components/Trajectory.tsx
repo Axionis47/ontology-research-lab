@@ -155,6 +155,7 @@ export function Trajectory({
                 <strong>{event.summary}</strong>
                 <span className="event-type">
                   {event.type}
+                  {event.flow ? ` · ${label(event.flow)}` : ""}
                   {event.parent_run_id ? " · Episode" : ""}
                 </span>
               </span>

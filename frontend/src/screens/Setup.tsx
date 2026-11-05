@@ -402,7 +402,8 @@ export function Setup() {
                 <div>
                   <h2>Execution settings</h2>
                   <p>
-                    One construction round with the backend's bounded repairs.
+                    Bounded construction rounds with generated checks and
+                    independent verification.
                   </p>
                 </div>
               </div>

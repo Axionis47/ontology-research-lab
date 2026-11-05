@@ -2074,3 +2074,28 @@ main {
     scroll-behavior: auto !important;
   }
 }
+/* Candidate generation and verification remain separate observation surfaces. */
+.flow-evidence-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-block: 1rem;
+}
+.flow-evidence {
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.65rem;
+  min-width: 0;
+}
+.flow-evidence h3 {
+  font-size: 0.95rem;
+  margin: 0;
+}
+.flow-evidence p {
+  margin-block: 0.5rem;
+}
+@media (max-width: 700px) {
+  .flow-evidence-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -15,6 +15,9 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
+from pydantic import ValidationError
+
+from oak import api_contracts as contracts
 from oak.api_contracts import (
     ArtifactResponse,
     ConstructionAttempt,
@@ -312,6 +315,16 @@ class Observer:
         row, record = self._task_record(kind, raw)
         configuration = record.get("configuration", {}) if kind == "mcp" else record
         ids = self._kernel_ids(kind, raw)
+        selected_kernel_id = None
+        if kind == "mcp":
+            for run in self._rows(
+                "SELECT result_id FROM runs WHERE task_id=? AND kind='mcp_construct' AND status='completed' ORDER BY created_at DESC",
+                (raw,),
+            ):
+                result = self._data(run["result_id"], {})
+                if result.get("selection_id"):
+                    selected_kernel_id = result.get("kernel_id")
+                    break
         count = self._rows("SELECT COUNT(*) AS count FROM runs WHERE task_id=?", (raw,))[0]["count"]
         data, _ = sanitize_public(
             {
@@ -326,6 +339,7 @@ class Observer:
                 else ("candidate_available" if ids else "configured"),
                 "active_kernel_id": row.get("active_revision"),
                 "latest_kernel_id": ids[0] if ids else None,
+                "selected_kernel_id": selected_kernel_id,
                 "run_count": count,
                 "query_count": len(
                     configuration.get("queries", configuration.get("example_queries", []))
@@ -667,6 +681,37 @@ class Observer:
             raise LookupError("Kernel is not available")
         task = data.get("surface_id") or data.get("task_id")
         kind = "mcp" if data.get("surface_id") else "corpus"
+        flow_evidence = {
+            flow: [
+                value
+                for name in names
+                if isinstance(value := data.get("evidence", {}).get(name), str)
+                and _ARTIFACT_ID.fullmatch(value)
+            ]
+            for flow, names in {
+                "learning": ("task_ir_id", "learning_id", "demands_id"),
+                "verification": ("verification_id", "preservation_id"),
+                "instantiation": ("materialization_id", "coverage_id", "sufficiency_id"),
+            }.items()
+        }
+        # Post-candidate checks cannot be embedded in the candidate they hash.
+        # Resolve recorded relationships without rewriting frozen artifacts.
+        for row in self._rows(
+            "SELECT e.stage,e.artifact_id FROM events e JOIN runs r ON r.id=e.run_id "
+            "WHERE r.task_id=? AND e.stage IN ('candidate_verification','candidate_selection') ORDER BY e.id",
+            (task,),
+        ):
+            evidence = self._data(row["artifact_id"], {})
+            if row["stage"] == "candidate_verification" and evidence.get("kernel_id") == identity:
+                reference = evidence.get("verification_id")
+                if isinstance(reference, str) and _ARTIFACT_ID.fullmatch(reference):
+                    flow_evidence["verification"].append(reference)
+            if row["stage"] == "candidate_selection" and identity in evidence.get(
+                "candidate_ids", []
+            ):
+                reference = evidence.get("selection_id")
+                if isinstance(reference, str) and _ARTIFACT_ID.fullmatch(reference):
+                    flow_evidence["learning"].append(reference)
         result, _ = sanitize_public(
             {
                 "id": identity,
@@ -691,6 +736,10 @@ class Observer:
                 "schema_id": data.get("evidence", {}).get("schema_id"),
                 "graph_id": data.get("evidence", {}).get("graph_id")
                 or (identity if "graph" in data else None),
+                "construction_profile": data.get("construction_profile"),
+                "flow_evidence": {
+                    key: list(dict.fromkeys(refs)) for key, refs in flow_evidence.items()
+                },
             }
         )
         return KernelSummary(**result).model_dump()
@@ -848,6 +897,7 @@ class Observer:
                 self._attempt(row, kernels)
                 for row in rows
                 if row["kind"] in {"construct", "revise", "mcp_construct"}
+                and not self._data(row.get("result_id"), {}).get("selection_id")
             ],
         ).model_dump()
 
@@ -857,6 +907,10 @@ class Observer:
             return "run.lifecycle"
         if stage == "kernel_candidate":
             return "kernel.candidate"
+        if any(word in stage for word in ("verification", "preservation", "sufficiency")):
+            return "validation.recorded"
+        if any(word in stage for word in ("learning", "materialization", "evidence_demand")):
+            return "evidence.recorded"
         if stage in {"operator", "observation"}:
             return "observation.recorded"
         if "usage" in stage:
@@ -1061,6 +1115,10 @@ class Observer:
                     if isinstance(data, dict) and data.get("id")
                     else None,
                     parent_step_id=None,
+                    flow=data.get("flow")
+                    if isinstance(data, dict)
+                    and data.get("flow") in {"learning", "verification", "instantiation"}
+                    else None,
                     type=self._event_type(event["stage"]),
                     stage=event["stage"],
                     summary=summary,
@@ -1268,6 +1326,37 @@ class Observer:
         """Inspect a sanitized data view while preserving its stored identity."""
         source = self._source(identity)
         data, redacted = sanitize_public(source["data"])
+        models = {
+            "task_ir": contracts.TaskIR,
+            "candidate_selection": contracts.CandidateSelection,
+            "evidence_demand": contracts.EvidenceDemand,
+            "materialization_plan": contracts.MaterializationPlan,
+            "coverage_receipt": contracts.CoverageReceipt,
+            "sufficiency": contracts.SufficiencyResult,
+            "evidence_scope": contracts.SufficiencyResult,
+            "candidate_verification": contracts.VerificationReport,
+            "preservation_certificate": contracts.PreservationCertificate,
+        }
+        typed = None
+        model = models.get(source.get("kind"))
+        if model is not None:
+            try:
+                # Events attach attribution to the authoritative artifact body.
+                # Keep those bytes in data; only unwrap known event metadata for
+                # the typed product projection.
+                metadata = {"flow", "nonblocking", "kernel_id", "verification_id", "demand_id"}
+                typed = model.model_validate(
+                    {
+                        key: value
+                        for key, value in data.items()
+                        if key not in metadata or key in model.model_fields
+                    }
+                    if isinstance(data, dict)
+                    else data
+                )
+            except ValidationError:
+                # Older or redacted evidence remains inspectable as recorded.
+                pass
         return ArtifactResponse(
             id=identity,
             kind=source.get("kind", "unknown"),
@@ -1276,6 +1365,7 @@ class Observer:
             redacted=bool(redacted),
             redacted_fields=redacted,
             data=data,
+            typed_data=typed,
             provenance=self._artifact_provenance(identity),
             limitations=[
                 "The source hash identifies the unchanged stored artifact. The projection hash identifies this sanitized data view."

@@ -320,6 +320,17 @@ export interface components {
       redacted_fields: string[];
       /** Data */
       data: unknown;
+      /** Typed Data */
+      typed_data?:
+        | components["schemas"]["TaskIR"]
+        | components["schemas"]["CandidateSelection"]
+        | components["schemas"]["EvidenceDemand"]
+        | components["schemas"]["MaterializationPlan"]
+        | components["schemas"]["CoverageReceipt"]
+        | components["schemas"]["SufficiencyResult"]
+        | components["schemas"]["VerificationReport"]
+        | components["schemas"]["PreservationCertificate"]
+        | null;
       /** Provenance */
       provenance?: {
         [key: string]: unknown;
@@ -368,6 +379,49 @@ export interface components {
       remaining_usd: number;
       /** Calls */
       calls: number;
+    };
+    /**
+     * CandidateSelection
+     * @description Selection records independent verifier evidence and explicit cost ties.
+     */
+    CandidateSelection: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /** Task Ir Id */
+      task_ir_id: string;
+      /** Candidate Ids */
+      candidate_ids: string[];
+      /** Selected Kernel Id */
+      selected_kernel_id: string | null;
+      /** Verification Ids */
+      verification_ids: string[];
+      /**
+       * Disposition
+       * @enum {string}
+       */
+      disposition: "target_met" | "incomplete" | "rejected";
+      /** Stop Reason */
+      stop_reason: string;
+      /** Ranks */
+      ranks?: {
+        [key: string]: number[];
+      };
+    };
+    /**
+     * CanonicalInstruction
+     * @description A deterministic primitive call with de Bruijn-like positional step references.
+     */
+    CanonicalInstruction: {
+      /** Operator */
+      operator: string;
+      /** Arguments */
+      arguments: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
     };
     /**
      * ConnectionConfig
@@ -494,6 +548,74 @@ export interface components {
       limitations?: string[];
     };
     /**
+     * CoverageReceipt
+     * @description Independent coverage evidence supplied by trusted executor-side adapters.
+     *
+     *     This DTO is not an authorization token. Only checker-produced artifacts,
+     *     resolved by the owning executor, may enter ``assess_sufficiency``. A candidate
+     *     cannot turn its declaration into a trusted receipt. Snapshot completeness
+     *     deliberately cannot establish source-population completeness.
+     */
+    CoverageReceipt: {
+      /**
+       * Format Version
+       * @default 1
+       * @constant
+       */
+      format_version: 1;
+      /** Demand Id */
+      demand_id: string;
+      /** Schema Sha256 */
+      schema_sha256: string;
+      /** Graph Sha256 */
+      graph_sha256: string;
+      /** Source Receipt Ids */
+      source_receipt_ids?: string[];
+      /** Evidence Refs */
+      evidence_refs?: string[];
+      /** Checker Id */
+      checker_id?: string | null;
+      /** Checker Version */
+      checker_version?: string | null;
+      /**
+       * Basis
+       * @default observed_only
+       * @enum {string}
+       */
+      basis:
+        | "adapter_verified"
+        | "deterministic_source_mapping"
+        | "observed_only"
+        | "model_claim"
+        | "generated_check";
+      /**
+       * Scope
+       * @default materialized_snapshot
+       * @enum {string}
+       */
+      scope: "source_population" | "materialized_snapshot";
+      /**
+       * Population Complete
+       * @default false
+       */
+      population_complete: boolean;
+      /**
+       * Adjacency Complete
+       * @default false
+       */
+      adjacency_complete: boolean;
+      /** Fields Checked */
+      fields_checked?: {
+        [key: string]: string[];
+      };
+      /** Pagination Exhausted */
+      pagination_exhausted?: boolean | null;
+      /** Frontier Exhausted */
+      frontier_exhausted?: boolean | null;
+      /** Missing */
+      missing?: components["schemas"]["MissingFact"][];
+    };
+    /**
      * DiscoveryRequest
      * @description Explicit connection configuration for one real discovery job.
      */
@@ -529,6 +651,24 @@ export interface components {
       artifact_refs?: string[];
       /** Error */
       error?: string | null;
+    };
+    /**
+     * EntitySelector
+     * @description Exact lookup conditions, using the runtime's existing lookup semantics.
+     */
+    EntitySelector: {
+      /** Entity Types */
+      entity_types?: string[];
+      /** Entity Ids */
+      entity_ids?: string[] | null;
+      /** Primary Key */
+      primary_key?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+      /** Property Filters */
+      property_filters?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
     };
     /**
      * ErrorResponse
@@ -577,6 +717,8 @@ export interface components {
       step_id?: string | null;
       /** Parent Step Id */
       parent_step_id?: string | null;
+      /** Flow */
+      flow?: ("learning" | "verification" | "instantiation") | null;
       /**
        * Type
        * @enum {string}
@@ -624,6 +766,55 @@ export interface components {
       through: string;
       /** Has More */
       has_more: boolean;
+    };
+    /**
+     * EvidenceDemand
+     * @description Frozen-computation evidence needs after binding one invocation's arguments.
+     */
+    EvidenceDemand: {
+      /**
+       * Format Version
+       * @default 1
+       * @constant
+       */
+      format_version: 1;
+      /**
+       * Derivation Version
+       * @default demand-v1
+       */
+      derivation_version: string;
+      /** Function Name */
+      function_name: string;
+      /** Schema Sha256 */
+      schema_sha256: string;
+      /** Function Sha256 */
+      function_sha256: string;
+      /** Arguments Sha256 */
+      arguments_sha256: string;
+      /** Entity Types */
+      entity_types: string[];
+      /** Required Fields */
+      required_fields: {
+        [key: string]: string[];
+      };
+      /** Relation Types */
+      relation_types?: string[];
+      /** Selectors */
+      selectors?: components["schemas"]["EntitySelector"][];
+      /** Traversals */
+      traversals?: components["schemas"]["TraversalDemand"][];
+      /** Acquisitions */
+      acquisitions?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      }[];
+      /**
+       * Coverage Mode
+       * @default complete_scope
+       * @enum {string}
+       */
+      coverage_mode: "witness" | "complete_scope" | "complete_adjacency";
+      /** Unknowns */
+      unknowns?: string[];
     };
     /**
      * GraphResponse
@@ -757,6 +948,12 @@ export interface components {
       schema_id?: string | null;
       /** Graph Id */
       graph_id?: string | null;
+      /** Construction Profile */
+      construction_profile?: string | null;
+      /** Flow Evidence */
+      flow_evidence?: {
+        [key: string]: string[];
+      };
       /** Schema */
       schema: {
         [key: string]: unknown;
@@ -815,6 +1012,139 @@ export interface components {
       schema_id?: string | null;
       /** Graph Id */
       graph_id?: string | null;
+      /** Construction Profile */
+      construction_profile?: string | null;
+      /** Flow Evidence */
+      flow_evidence?: {
+        [key: string]: string[];
+      };
+    };
+    /**
+     * MaterializationPlan
+     * @description Executor-owned plan; native capability arguments are never invented here.
+     */
+    MaterializationPlan: {
+      /**
+       * Format Version
+       * @default 1
+       * @constant
+       */
+      format_version: 1;
+      /** Demand Id */
+      demand_id: string;
+      /** Kernel Id */
+      kernel_id: string;
+      /** Receipt Ids */
+      receipt_ids?: string[];
+      /** Acquisition Requests */
+      acquisition_requests?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      }[];
+      /**
+       * Extractor Version
+       * @default demand-v1
+       */
+      extractor_version: string;
+      /** Expansion Reason */
+      expansion_reason?: string | null;
+    };
+    /**
+     * MissingFact
+     * @description Absence is attributed rather than silently converted to a null value.
+     */
+    MissingFact: {
+      /** Entity Id */
+      entity_id: string;
+      /** Property */
+      property: string;
+      /**
+       * State
+       * @enum {string}
+       */
+      state:
+        | "unmaterialized"
+        | "source_absent"
+        | "explicit_null"
+        | "extraction_failure";
+      /** Evidence Refs */
+      evidence_refs?: string[];
+    };
+    /**
+     * PlanIR
+     * @description Finite eager pure plan; external JSON validation contracts remain exact.
+     */
+    PlanIR: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /** Inputs */
+      inputs: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+      /** Output Schema */
+      output_schema: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+      /** Steps */
+      steps: components["schemas"]["CanonicalInstruction"][];
+      result: components["schemas"]["JsonValue"];
+    };
+    /**
+     * PreservationCertificate
+     * @description Evidence for one adjacent revision pair, conditional on the runtime bridge.
+     */
+    PreservationCertificate: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /**
+       * Status
+       * @enum {string}
+       */
+      status: "certified" | "unknown" | "counterexample" | "invalid_evidence";
+      /** Parent Id */
+      parent_id: string;
+      /** Candidate Id */
+      candidate_id: string;
+      /** Parent Sha256 */
+      parent_sha256: string;
+      /** Candidate Sha256 */
+      candidate_sha256: string;
+      /** Schema Sha256 */
+      schema_sha256: string;
+      /** Protected Functions */
+      protected_functions: string[];
+      /** Rules */
+      rules?: string[];
+      /** Plans */
+      plans?: {
+        [key: string]: {
+          [key: string]: components["schemas"]["PlanIR"];
+        };
+      };
+      /** Dependencies */
+      dependencies?: {
+        [key: string]: string;
+      };
+      /** Assumptions */
+      assumptions?: string[];
+      /** Summary */
+      summary: string;
+      /** Proof Receipt */
+      proof_receipt?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      } | null;
+      /**
+       * Certificate Sha256
+       * @default
+       */
+      certificate_sha256: string;
     };
     /**
      * QuerySpec
@@ -839,7 +1169,7 @@ export interface components {
     };
     /**
      * RunCreateRequest
-     * @description Start one construction attempt or inference against a chosen kernel.
+     * @description Start bounded construction or inference against a chosen kernel.
      */
     RunCreateRequest: {
       /**
@@ -986,6 +1316,62 @@ export interface components {
       assessment?: components["schemas"]["Assessment"];
     };
     /**
+     * SemanticField
+     * @description A semantic role independent of the ontology a candidate later proposes.
+     */
+    SemanticField: {
+      /** Id */
+      id: string;
+      /** Description */
+      description: string;
+      /**
+       * Value Type
+       * @enum {string}
+       */
+      value_type:
+        "string" | "number" | "boolean" | "date" | "entity" | "unknown";
+      /** Unit */
+      unit?: string | null;
+      /** Grain */
+      grain: string;
+      /** Source Capability Ids */
+      source_capability_ids?: string[];
+    };
+    /**
+     * SufficiencyResult
+     * @description Nonblocking evidence-scope assessment, separate from execution and task success.
+     */
+    SufficiencyResult: {
+      /**
+       * Format Version
+       * @default 1
+       * @constant
+       */
+      format_version: 1;
+      /** Demand Id */
+      demand_id: string;
+      /**
+       * Status
+       * @enum {string}
+       */
+      status: "satisfied" | "needs_evidence" | "unknown" | "incompatible";
+      /**
+       * Coverage Mode
+       * @enum {string}
+       */
+      coverage_mode: "witness" | "complete_scope" | "complete_adjacency";
+      /** Unmet Demands */
+      unmet_demands?: string[];
+      /** Missing */
+      missing?: components["schemas"]["MissingFact"][];
+      /** Evidence Refs */
+      evidence_refs?: string[];
+      /** Node Count */
+      node_count: number;
+      /** Edge Count */
+      edge_count: number;
+    };
+    /**
      * TaskCreateRequest
      * @description Curator-owned task inputs reusing the authoritative task contracts.
      */
@@ -1035,6 +1421,51 @@ export interface components {
       kind: "mcp";
     };
     /**
+     * TaskIR
+     * @description Frozen campaign bank derived from construction inputs only.
+     */
+    TaskIR: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /**
+       * Profile
+       * @default demand-driven-v1
+       * @constant
+       */
+      profile: "demand-driven-v1";
+      /** Source Sha256 */
+      source_sha256: string;
+      /** Analysis Sha256 */
+      analysis_sha256: string;
+      /** Analysis Id */
+      analysis_id?: string | null;
+      /** Scope */
+      scope: string;
+      /** Obligations */
+      obligations: components["schemas"]["TaskObligation"][];
+      /**
+       * Exploration Limit
+       * @default 128
+       */
+      exploration_limit: number;
+      /**
+       * Exploration Extra Operators
+       * @default 2
+       */
+      exploration_extra_operators: number;
+      /**
+       * Exploration Omitted
+       * @default 0
+       */
+      exploration_omitted: number;
+      /** Interpretation Gaps */
+      interpretation_gaps?: string[];
+    };
+    /**
      * TaskListResponse
      * @description Configured tasks, newest first when dates were recorded.
      */
@@ -1047,6 +1478,89 @@ export interface components {
       version: 1;
       /** Items */
       items: components["schemas"]["TaskSummary"][];
+    };
+    /**
+     * TaskObligation
+     * @description Literal or mechanically derived behavior with no candidate-produced score.
+     */
+    TaskObligation: {
+      /** Obligation Id */
+      obligation_id: string;
+      /** Case Id */
+      case_id: string;
+      /** Text */
+      text: string;
+      /** Parent Requirement Ids */
+      parent_requirement_ids: string[];
+      /** Derivation Rule */
+      derivation_rule: string;
+      program?: components["schemas"]["TaskProgram"] | null;
+      /**
+       * Group
+       * @enum {string}
+       */
+      group: "retrieval" | "subtask" | "composition";
+      /**
+       * Mandatory
+       * @default true
+       */
+      mandatory: boolean;
+      /**
+       * Semantic Status
+       * @default proposed
+       * @enum {string}
+       */
+      semantic_status: "proposed" | "grounded";
+      /** Oracle Ref */
+      oracle_ref?: string | null;
+    };
+    /**
+     * TaskOperation
+     * @description One typed task operation, with explicit dependencies and semantic fields.
+     *
+     *     This is a task interpretation, not an executable function body. Source
+     *     acquisition and candidate ontology names do not enter the operation graph.
+     */
+    TaskOperation: {
+      /** Id */
+      id: string;
+      /**
+       * Operator
+       * @enum {string}
+       */
+      operator:
+        "read" | "filter" | "project" | "traverse" | "aggregate" | "arithmetic";
+      /** Inputs */
+      inputs?: string[];
+      /** Fields */
+      fields?: string[];
+      /**
+       * Result Kind
+       * @enum {string}
+       */
+      result_kind: "records" | "scalar" | "path";
+      /** Parameters */
+      parameters?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+    };
+    /**
+     * TaskProgram
+     * @description Finite interpretation whose references are checked before S/F exists.
+     */
+    TaskProgram: {
+      /** Fields */
+      fields?: components["schemas"]["SemanticField"][];
+      /** Operations */
+      operations: components["schemas"]["TaskOperation"][];
+      /** Result */
+      result: string;
+      /** Input Domain */
+      input_domain?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+      /** Observation Contract */
+      observation_contract: string;
     };
     /**
      * TaskResponse
@@ -1078,6 +1592,8 @@ export interface components {
       active_kernel_id?: string | null;
       /** Latest Kernel Id */
       latest_kernel_id?: string | null;
+      /** Selected Kernel Id */
+      selected_kernel_id?: string | null;
       /**
        * Run Count
        * @default 0
@@ -1147,6 +1663,8 @@ export interface components {
       active_kernel_id?: string | null;
       /** Latest Kernel Id */
       latest_kernel_id?: string | null;
+      /** Selected Kernel Id */
+      selected_kernel_id?: string | null;
       /**
        * Run Count
        * @default 0
@@ -1162,6 +1680,113 @@ export interface components {
        * @default false
        */
       legacy: boolean;
+    };
+    /**
+     * TraversalDemand
+     * @description A bounded adjacency request whose seeds are already resolved identities.
+     */
+    TraversalDemand: {
+      /** Start Entity Ids */
+      start_entity_ids: string[];
+      /** Relation Types */
+      relation_types: string[];
+      /**
+       * Direction
+       * @default outgoing
+       * @enum {string}
+       */
+      direction: "outgoing" | "incoming" | "both";
+      /**
+       * Max Hops
+       * @default 1
+       */
+      max_hops: number;
+    };
+    /**
+     * VerificationCheck
+     * @description One checked evidence dimension, never a composite success score.
+     */
+    VerificationCheck: {
+      /** Obligation Id */
+      obligation_id?: string | null;
+      /**
+       * Dimension
+       * @enum {string}
+       */
+      dimension:
+        | "structure"
+        | "ontology"
+        | "graph"
+        | "execution"
+        | "generated"
+        | "coverage"
+        | "task"
+        | "preservation";
+      /**
+       * Status
+       * @enum {string}
+       */
+      status: "passed" | "failed" | "unknown";
+      /** Summary */
+      summary: string;
+      /** Evidence Refs */
+      evidence_refs?: string[];
+      /** Details */
+      details?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      };
+    };
+    /**
+     * VerificationReport
+     * @description Decision and provenance for one candidate, independent of learner utility.
+     */
+    VerificationReport: {
+      /**
+       * Version
+       * @default 1
+       * @constant
+       */
+      version: 1;
+      /** Candidate Id */
+      candidate_id: string;
+      /** Parent Id */
+      parent_id?: string | null;
+      /**
+       * Disposition
+       * @enum {string}
+       */
+      disposition:
+        "execution_eligible" | "target_met" | "incomplete" | "rejected";
+      /** Execution Eligible */
+      execution_eligible: boolean;
+      /** Target Met */
+      target_met: boolean;
+      /** Checks */
+      checks: components["schemas"]["VerificationCheck"][];
+      /** Counterexamples */
+      counterexamples?: {
+        [key: string]: components["schemas"]["JsonValue"];
+      }[];
+      /** Unresolved Obligation Ids */
+      unresolved_obligation_ids?: string[];
+      /** Coverage By Group */
+      coverage_by_group?: {
+        [key: string]: {
+          [key: string]: number;
+        };
+      };
+      /** Generated Coverage By Group */
+      generated_coverage_by_group?: {
+        [key: string]: {
+          [key: string]: number;
+        };
+      };
+      /**
+       * Known Regressions
+       * @default 0
+       */
+      known_regressions: number;
+      preservation?: components["schemas"]["PreservationCertificate"] | null;
     };
     /**
      * WorkspaceResponse

@@ -284,7 +284,7 @@ class WebJobs:
         requirements: list[str] | None = None,
         query_id: str | None = None,
     ) -> dict:
-        """Queue one construction round or fresh frozen inference idempotently."""
+        """Queue bounded construction or fresh frozen inference idempotently."""
         surface_id = self._surface_id(task_id)
         data = self._surface(surface_id)
         surface = TaskSurface.model_validate(data["configuration"])

@@ -10,8 +10,17 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from oak.learning_contracts import CandidateSelection, TaskIR
+from oak.materialization import (
+    CoverageReceipt,
+    EvidenceDemand,
+    MaterializationPlan,
+    SufficiencyResult,
+)
 from oak.mcp_bridge import ConnectionConfig
+from oak.preservation import PreservationCertificate
 from oak.task_context import QuerySpec, RunLimits
+from oak.verification import VerificationReport
 
 API_VERSION = 1
 
@@ -57,6 +66,7 @@ class TaskSummary(PublicResponse):
     created_at: str | None = None
     active_kernel_id: str | None = None
     latest_kernel_id: str | None = None
+    selected_kernel_id: str | None = None
     run_count: int = 0
     query_count: int = 0
     legacy: bool = False
@@ -139,6 +149,8 @@ class KernelSummary(PublicResponse):
     case_links: list[dict[str, Any]] = Field(default_factory=list)
     schema_id: str | None = None
     graph_id: str | None = None
+    construction_profile: str | None = None
+    flow_evidence: dict[str, list[str]] = Field(default_factory=dict)
 
 
 class ConstructionAttempt(PublicResponse):
@@ -186,6 +198,7 @@ class EventEnvelope(PublicResponse):
     parent_run_id: str | None = None
     step_id: str | None = None
     parent_step_id: str | None = None
+    flow: Literal["learning", "verification", "instantiation"] | None = None
     type: Literal[
         "run.lifecycle",
         "stage.status",
@@ -264,6 +277,17 @@ class ArtifactResponse(PublicResponse):
     redacted: bool
     redacted_fields: list[str]
     data: Any
+    typed_data: (
+        TaskIR
+        | CandidateSelection
+        | EvidenceDemand
+        | MaterializationPlan
+        | CoverageReceipt
+        | SufficiencyResult
+        | VerificationReport
+        | PreservationCertificate
+        | None
+    ) = None
     provenance: dict[str, Any] | None = None
     limitations: list[str] = Field(default_factory=list)
 
@@ -352,7 +376,7 @@ class TaskCreateRequest(BaseModel):
 
 
 class RunCreateRequest(BaseModel):
-    """Start one construction attempt or inference against a chosen kernel."""
+    """Start bounded construction or inference against a chosen kernel."""
 
     model_config = ConfigDict(extra="forbid")
     operation: Literal["construct", "infer"]

@@ -116,7 +116,9 @@ export function useKernel(kernelId?: string | null) {
     queryKey: ["kernel", kernelId],
     queryFn: () => request<Kernel>(`/kernels/${id(kernelId!)}`),
     enabled: !!kernelId,
-    staleTime: Infinity,
+    // Definitions are immutable, but later checks add evidence references.
+    staleTime: 5000,
+    refetchInterval: 10000,
   });
 }
 export function useGraph(graphId?: string | null, focus?: string) {

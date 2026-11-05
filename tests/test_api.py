@@ -27,6 +27,17 @@ def test_openapi_generation_does_not_initialize_storage(tmp_path):
         "properties"
     ].keys()
     assert "Replay" not in json.dumps(schema)
+    assert {
+        "TaskIR",
+        "CandidateSelection",
+        "EvidenceDemand",
+        "MaterializationPlan",
+        "CoverageReceipt",
+        "SufficiencyResult",
+        "VerificationReport",
+        "PreservationCertificate",
+    } <= schema["components"]["schemas"].keys()
+    assert "flow" in envelope["properties"]
 
 
 def test_empty_workspace_and_security_do_not_execute(tmp_path):
