@@ -6,6 +6,36 @@ on:
     branches: [main]
 
 jobs:
+  preservation:
+    name: Pinned Lean preservation proofs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      OAK_REQUIRE_LEAN: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.12.0"
+      - name: Install checksum-pinned Lean 4.35.0
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/lean.tar.zst" \
+            https://github.com/leanprover/lean4/releases/download/v4.35.0/lean-4.35.0-linux.tar.zst
+          printf '%s  %s\n' \
+            7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d \
+            "$RUNNER_TEMP/lean.tar.zst" | sha256sum --check --strict
+          mkdir -p "$RUNNER_TEMP/oak-lean"
+          tar --zstd -xf "$RUNNER_TEMP/lean.tar.zst" -C "$RUNNER_TEMP/oak-lean" --strip-components=1
+          echo "$RUNNER_TEMP/oak-lean/bin" >> "$GITHUB_PATH"
+          echo "OAK_LEAN_BINARY=$RUNNER_TEMP/oak-lean/bin/lean" >> "$GITHUB_ENV"
+      - run: uv sync --locked
+      - name: Build the pinned proof package
+        working-directory: proofs
+        run: lake build
+      - name: Require actual certificate compilation and axiom audit
+        run: uv run --locked pytest tests/test_preservation_smoke.py -q
   contracts:
     runs-on: ubuntu-latest
     steps:

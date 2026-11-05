@@ -1,0 +1,6 @@
+name = "oak-preservation"
+version = "0.1.0"
+defaultTargets = ["OakPreservation"]
+
+[[lean_lib]]
+name = "OakPreservation"

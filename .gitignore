@@ -35,3 +35,6 @@ site/
 /frontend/test-results/
 /frontend/playwright-report/
 /frontend/*.tsbuildinfo
+
+# Reproducible Lean build artifacts.
+/proofs/.lake/
