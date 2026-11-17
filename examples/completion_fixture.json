@@ -1,0 +1,34 @@
+{
+  "synthetic_example": true,
+  "binding_authority": "engineer_authored_fixture",
+  "contract": {
+    "version": 1,
+    "goal": "Mark every open ticket belonging to a customer in the west region as reviewed. Leave all other records, fields and relationships unchanged.",
+    "scope": "synthetic:completion:tickets",
+    "selector": {
+      "entity_type": "Ticket",
+      "where": {"status": "open"},
+      "related": {"relation_type": "belongs_to", "direction": "out", "entity_type": "Customer", "where": {"region": "west"}}
+    },
+    "update": {"kind": "set_property", "property": "reviewed", "value": true}
+  },
+  "before": {
+    "scope": "synthetic:completion:tickets",
+    "revision": "0",
+    "complete": true,
+    "entities": [
+      {"id": "customer:west", "type": "Customer", "properties": {"region": "west"}},
+      {"id": "customer:east", "type": "Customer", "properties": {"region": "east"}},
+      {"id": "ticket:1", "type": "Ticket", "properties": {"status": "open", "reviewed": false}},
+      {"id": "ticket:2", "type": "Ticket", "properties": {"status": "open", "reviewed": false}},
+      {"id": "ticket:3", "type": "Ticket", "properties": {"status": "open", "reviewed": false}},
+      {"id": "ticket:4", "type": "Ticket", "properties": {"status": "closed", "reviewed": false}}
+    ],
+    "relations": [
+      {"source": "ticket:1", "type": "belongs_to", "target": "customer:west"},
+      {"source": "ticket:2", "type": "belongs_to", "target": "customer:west"},
+      {"source": "ticket:3", "type": "belongs_to", "target": "customer:east"},
+      {"source": "ticket:4", "type": "belongs_to", "target": "customer:west"}
+    ]
+  }
+}

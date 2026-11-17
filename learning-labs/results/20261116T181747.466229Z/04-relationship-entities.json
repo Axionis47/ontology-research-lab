@@ -1,0 +1,16 @@
+{
+  "project": "04-relationship-entities",
+  "exit_code": 0,
+  "json_result": true,
+  "passed": true,
+  "check_count": 3,
+  "status": "EXECUTED",
+  "source_sha256": {
+    "run.py": "9671dec93125c1a43de0446bc56f8c53213c5c4a5f78a47f14893c483049c116",
+    "input.json": "035c8195159772fa0fee262922835c590b0a944de559330210b4ca26a93f1d1b",
+    "README.md": "19d9335cb2d3b218a579e554006cba23b4cb92922de9162fa323b70a7211a9f9",
+    "graph.ttl": "27277c35c80c4d629116da392833ed40bc9fc563d8d036c8d4fad3d167110062"
+  },
+  "stdout": "{\n  \"kind\": \"synthetic_component_experiment\",\n  \"engine\": \"explicit_python_not_standards_engine\",\n  \"inputs\": {\n    \"input.json\": {\n      \"at\": \"2026-11-16\",\n      \"assignments\": [\n        {\n          \"id\": \"Assignment17\",\n          \"person\": \"Maya\",\n          \"service\": \"LoginService\",\n          \"role\": \"Maintainer\",\n          \"environment\": \"Staging\",\n          \"validFrom\": \"2026-11-01\",\n          \"validUntil\": \"2026-11-20\"\n        }\n      ]\n    }\n  },\n  \"source_sha256\": \"9671dec93125c1a43de0446bc56f8c53213c5c4a5f78a47f14893c483049c116\",\n  \"observations\": {\n    \"staging\": [\n      \"Maya\"\n    ],\n    \"production\": [],\n    \"at_expiry\": [],\n    \"empty_result_meaning\": \"no supported assignment in this fixture\"\n  },\n  \"checks\": {\n    \"staging_qualified\": true,\n    \"production_not_inferred\": true,\n    \"expiry_excluded\": true\n  },\n  \"passed\": true\n}\n",
+  "stderr": ""
+}

@@ -1,0 +1,13 @@
+{
+  "experiment": "10-semantic-version-change",
+  "status": "PREPARED_NOT_RUN",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"10\",\n  \"title\": \"Changed meaning and pinned versions\",\n  \"terms\": {\n    \"semantic change\": \"Changing what a rule means.\",\n    \"pinned version\": \"The package an episode uses consistently.\",\n    \"regression\": \"A required behavior broken by a candidate.\"\n  },\n  \"instruction\": \"Compute project-only approval under each version. Candidate v2 has already passed the external release gate. Active episodes remain pinned unless explicitly stopped or migrated. Select the package for each episode. This exercise is not permission to disregard an urgent revocation.\",\n  \"input\": {\n    \"v1\": \"Project or service approval permits deployment.\",\n    \"v2\": \"Only service-specific approval permits deployment.\",\n    \"approval\": \"project\",\n    \"active_episode\": {\n      \"pinned\": \"v1\"\n    },\n    \"accepted_for_new_episodes\": \"v2\"\n  },\n  \"output_shape\": {\n    \"v1_permits\": \"boolean\",\n    \"v2_permits\": \"boolean\",\n    \"active_episode_version\": \"string\",\n    \"new_episode_version\": \"string\"\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "v1_permits": true,
+    "v2_permits": false,
+    "active_episode_version": "v1",
+    "new_episode_version": "v2"
+  },
+  "reported_models": [],
+  "passed": null
+}

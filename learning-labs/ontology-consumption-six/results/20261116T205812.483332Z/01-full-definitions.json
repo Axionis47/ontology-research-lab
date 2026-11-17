@@ -1,0 +1,237 @@
+{
+  "experiment": "01-full-definitions",
+  "mode": "full",
+  "status": "PREPARED_NOT_RUN",
+  "initial_payload": {
+    "task": {
+      "service": "LoginService",
+      "environment": "Production",
+      "deployment_id": "d1",
+      "at": "2026-11-16"
+    },
+    "task_instruction": "Choose an eligible approver for this deployment using the pinned ontology.",
+    "facts": {
+      "revision": 1,
+      "source": "synthetic://service-catalog/snapshot-1",
+      "deployment": {
+        "id": "d1",
+        "author": "Maya",
+        "service": "LoginService"
+      },
+      "assignments": [
+        {
+          "id": "a-maya",
+          "person": "Maya",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-noah",
+          "person": "Noah",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-rin",
+          "person": "Rin",
+          "service": "LoginService",
+          "environment": "Staging",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-tao",
+          "person": "Tao",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-10-01",
+          "validUntil": "2026-11-15",
+          "active": true
+        }
+      ]
+    },
+    "coverage": "All relevant fixture facts are present; date comparisons use YYYY-MM-DD.",
+    "ontology_version": "approval-ontology-v1",
+    "finish_shape": {
+      "type": "finish",
+      "person": "name or null",
+      "evidence_ids": [
+        "supporting record IDs"
+      ],
+      "ontology_version": "pinned version",
+      "graph_revision": "integer",
+      "rule_ids": [
+        "all applied eligibility rule IDs"
+      ]
+    },
+    "definitions": {
+      "Person": {
+        "kind": "type",
+        "meaning": "An identified human."
+      },
+      "Service": {
+        "kind": "type",
+        "meaning": "A software service."
+      },
+      "Assignment": {
+        "kind": "type",
+        "meaning": "An observed role of a person for a service, with environment and validity interval.",
+        "properties": [
+          "id",
+          "person",
+          "service",
+          "environment",
+          "role",
+          "validFrom",
+          "validUntil",
+          "active"
+        ],
+        "requires": [
+          "Person",
+          "Service",
+          "heldBy",
+          "forService"
+        ]
+      },
+      "Deployment": {
+        "kind": "type",
+        "meaning": "A proposed deployment of a service, with an author.",
+        "properties": [
+          "id",
+          "service",
+          "author"
+        ],
+        "requires": [
+          "Person",
+          "Service"
+        ]
+      },
+      "heldBy": {
+        "kind": "relation",
+        "meaning": "Assignment.person identifies the person holding this assignment; it is not the deployment author."
+      },
+      "forService": {
+        "kind": "relation",
+        "meaning": "Assignment.service identifies the service to which that assignment applies."
+      },
+      "eligibility": {
+        "kind": "rule_set",
+        "meaning": "All six rules must hold. Missing evidence is UNKNOWN and never establishes eligibility.",
+        "rules": [
+          {
+            "id": "R1",
+            "meaning": "Assignment service must equal task service."
+          },
+          {
+            "id": "R2",
+            "meaning": "Assignment environment must equal task environment."
+          },
+          {
+            "id": "R3",
+            "meaning": "Assignment role must be DeploymentApprover."
+          },
+          {
+            "id": "R4",
+            "meaning": "Assignment active must be true."
+          },
+          {
+            "id": "R5",
+            "meaning": "Assignment validFrom <= task at < assignment validUntil; the end is exclusive. All dates here use YYYY-MM-DD."
+          },
+          {
+            "id": "R6",
+            "meaning": "Assignment person must differ from the deployment author."
+          }
+        ],
+        "requires": [
+          "Assignment",
+          "Deployment"
+        ]
+      },
+      "Invoice": {
+        "kind": "type",
+        "meaning": "A billing record."
+      },
+      "Warehouse": {
+        "kind": "type",
+        "meaning": "A storage location."
+      },
+      "Shipment": {
+        "kind": "type",
+        "meaning": "A movement of goods."
+      },
+      "Subscription": {
+        "kind": "type",
+        "meaning": "A recurring service agreement."
+      },
+      "Asset": {
+        "kind": "type",
+        "meaning": "An item tracked for accounting."
+      },
+      "PurchaseOrder": {
+        "kind": "type",
+        "meaning": "A request to purchase goods."
+      },
+      "Payment": {
+        "kind": "type",
+        "meaning": "A transfer to settle an obligation."
+      },
+      "Refund": {
+        "kind": "type",
+        "meaning": "A reversal of a payment."
+      },
+      "TaxRate": {
+        "kind": "type",
+        "meaning": "A jurisdiction-specific rate."
+      },
+      "Expense": {
+        "kind": "type",
+        "meaning": "A recorded cost."
+      },
+      "Supplier": {
+        "kind": "type",
+        "meaning": "An organization providing goods."
+      },
+      "Inventory": {
+        "kind": "type",
+        "meaning": "A quantity of stocked goods."
+      }
+    }
+  },
+  "calls": [],
+  "history": [],
+  "passed": null,
+  "successful_interface_calls": 0,
+  "definition_names_exposed": [
+    "Asset",
+    "Assignment",
+    "Deployment",
+    "Expense",
+    "Inventory",
+    "Invoice",
+    "Payment",
+    "Person",
+    "PurchaseOrder",
+    "Refund",
+    "Service",
+    "Shipment",
+    "Subscription",
+    "Supplier",
+    "TaxRate",
+    "Warehouse",
+    "eligibility",
+    "forService",
+    "heldBy"
+  ]
+}

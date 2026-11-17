@@ -1,0 +1,275 @@
+{
+  "requests": [
+    {
+      "request_id": "raw:07b42fd_1",
+      "episode": {
+        "status": "NO_PROGRESS",
+        "answer": null,
+        "steps": 4,
+        "tool_attempts": 0,
+        "compactions": 0,
+        "kernel_version": null,
+        "kernel_handoff": null,
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/87719c50632715bb5a33/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/87719c50632715bb5a33/react/exports/e8ba15de-329c-4126-acb9-ef76dcb2267e/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "4510ab93eaf0be9c466f9b797175aeacadc513e32d9d93c5d9f26427d2000087",
+      "task_state": "FALSE",
+      "recovered": false,
+      "repair_route": "POLICY_BINDING",
+      "repair_case": null,
+      "native": {
+        "success": false,
+        "evaluation": "caf160be9242d90aa668d3ffb8278bdf83da9bfe5d686e12ba7154b06971412e",
+        "mcp_segments": [
+          "4595c1b522d320b41c8cd51c9c8d1c5647ed2042d39fdeba4028cf7d2d2e3cc0"
+        ],
+        "mcp_events": 16,
+        "task_id": "07b42fd_1",
+        "scope": "appworld:07b42fd_1:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    {
+      "request_id": "raw:07b42fd_2",
+      "episode": {
+        "status": "NO_PROGRESS",
+        "answer": null,
+        "steps": 4,
+        "tool_attempts": 0,
+        "compactions": 0,
+        "kernel_version": null,
+        "kernel_handoff": null,
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/f81593e85934ad0cb3fb/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/f81593e85934ad0cb3fb/react/exports/afc81c15-7b5e-4ed4-9f5a-3bd17a6d6353/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "fd6285ad8df853b2f6c4a7ca84fee3d7dcd2621580bf188572b0781c9304b3f9",
+      "task_state": "FALSE",
+      "recovered": false,
+      "repair_route": "POLICY_BINDING",
+      "repair_case": null,
+      "native": {
+        "success": false,
+        "evaluation": "2b0e5ccd98d945099d0bee907563d3207332ccda4e6dd617b3688e349ced30c0",
+        "mcp_segments": [
+          "95b2f1714ab407da5174c0948f78210e8020763a18bca6ab878b8836be18086d"
+        ],
+        "mcp_events": 16,
+        "task_id": "07b42fd_2",
+        "scope": "appworld:07b42fd_2:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    {
+      "request_id": "raw:07b42fd_3",
+      "episode": {
+        "status": "NO_PROGRESS",
+        "answer": null,
+        "steps": 4,
+        "tool_attempts": 0,
+        "compactions": 0,
+        "kernel_version": null,
+        "kernel_handoff": null,
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/1106fde774ae283ba47b/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/1106fde774ae283ba47b/react/exports/f460abcb-d175-4c97-a646-f9de2587605a/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "3fb988e70c5836a3f6befa185588cf35d46f1ffbfaa3603955a4b3c3033e08ec",
+      "task_state": "FALSE",
+      "recovered": false,
+      "repair_route": "POLICY_BINDING",
+      "repair_case": null,
+      "native": {
+        "success": false,
+        "evaluation": "b5039d841e9c13adf1f330951193809fd7045eae28cee5e22c8e8189b08a28c1",
+        "mcp_segments": [
+          "be805debb587d1d369f8358773e0537feee8ed54d7f4492adb507cf55b7f2347"
+        ],
+        "mcp_events": 16,
+        "task_id": "07b42fd_3",
+        "scope": "appworld:07b42fd_3:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    {
+      "request_id": "seed-recovery:07b42fd_1",
+      "episode": {
+        "status": "NO_PROGRESS",
+        "answer": null,
+        "steps": 5,
+        "tool_attempts": 0,
+        "compactions": 0,
+        "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "kernel_handoff": {
+          "reason": "CAPABILITY_GAP",
+          "pending_work": "The learned selection would change protected records. Its plan was refused before dispatch; use the original conditions and current evidence.",
+          "evidence_ids": [
+            "7915fe12-5bb4-47c8-a57f-680575fa77a7"
+          ],
+          "step": 1,
+          "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+        },
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/6c26cc077a02b4522024/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/6c26cc077a02b4522024/react/exports/8e440e18-816c-47c6-b386-72348fec117d/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "1fd84ee7c60129a0eed7d78a598ca44f97a4d3f80e886532c94ac39841c5182f",
+      "task_state": "FALSE",
+      "recovered": false,
+      "repair_route": "POLICY_BINDING",
+      "repair_case": null,
+      "native": {
+        "success": false,
+        "evaluation": "edc81ab79e2336122c6304e5fa6bb4f79a9babdf64c4bf11de273a4d4826c8d1",
+        "mcp_segments": [
+          "4595c1b522d320b41c8cd51c9c8d1c5647ed2042d39fdeba4028cf7d2d2e3cc0",
+          "b3b219cc8d6ab79342698084c8f28d459e39d6e8a71e4bedae45f95821250a3d"
+        ],
+        "mcp_events": 22,
+        "task_id": "07b42fd_1",
+        "scope": "appworld:07b42fd_1:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    {
+      "request_id": "seed-recovery:07b42fd_2",
+      "episode": {
+        "status": "NO_PROGRESS",
+        "answer": null,
+        "steps": 5,
+        "tool_attempts": 0,
+        "compactions": 0,
+        "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "kernel_handoff": {
+          "reason": "CAPABILITY_GAP",
+          "pending_work": "The learned selection would change protected records. Its plan was refused before dispatch; use the original conditions and current evidence.",
+          "evidence_ids": [
+            "959bd9d4-da6f-4467-a1df-5e875fbdf1ae"
+          ],
+          "step": 1,
+          "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+        },
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/998f7a5ed748c9654619/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/998f7a5ed748c9654619/react/exports/0597bc14-44ee-43bf-8466-871b8fa74f97/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "832a0d794afb988cccf923145a94d5eae289231a6d6c41ac8b6adbc69b3b74b2",
+      "task_state": "FALSE",
+      "recovered": false,
+      "repair_route": "POLICY_BINDING",
+      "repair_case": null,
+      "native": {
+        "success": false,
+        "evaluation": "6de223255556118dac5348967108e7c4e77f8454193c28a88bb70c85aad395d0",
+        "mcp_segments": [
+          "95b2f1714ab407da5174c0948f78210e8020763a18bca6ab878b8836be18086d",
+          "64a7b329c1b37629549f05cd8f1e8caf8d1d5df64901283240e66e434e4d97d3"
+        ],
+        "mcp_events": 22,
+        "task_id": "07b42fd_2",
+        "scope": "appworld:07b42fd_2:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    {
+      "request_id": "seed-recovery:07b42fd_3",
+      "episode": {
+        "status": "NO_PROGRESS",
+        "answer": null,
+        "steps": 5,
+        "tool_attempts": 0,
+        "compactions": 0,
+        "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "kernel_handoff": {
+          "reason": "CAPABILITY_GAP",
+          "pending_work": "The learned selection would change protected records. Its plan was refused before dispatch; use the original conditions and current evidence.",
+          "evidence_ids": [
+            "0497fb9a-b7cd-4c04-a618-91807654d7fc"
+          ],
+          "step": 1,
+          "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+        },
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/1e64167fa70f3a27e6dc/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/1e64167fa70f3a27e6dc/react/exports/a93b7484-624a-4007-bad8-2fcc24a3b19c/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "1524ffd193c2d9d8be705f8efe1bc3133c13a9927b6a0c0c0f2ff3a85b392403",
+      "task_state": "FALSE",
+      "recovered": false,
+      "repair_route": "POLICY_BINDING",
+      "repair_case": null,
+      "native": {
+        "success": false,
+        "evaluation": "b8a992737868ef4a56db69d17fefb20f18fbad57e621e00214c8bf99ca930317",
+        "mcp_segments": [
+          "be805debb587d1d369f8358773e0537feee8ed54d7f4492adb507cf55b7f2347",
+          "251328d87b6ba08a0d364997ae86c3341c1978e4f86c9384dea3f8af64251acf"
+        ],
+        "mcp_events": 22,
+        "task_id": "07b42fd_3",
+        "scope": "appworld:07b42fd_3:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    }
+  ],
+  "archive": {
+    "active": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+    "generation": 0,
+    "active_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+    "policy_decisions": [],
+    "proposals_spent": 0,
+    "cycles_spent": 0,
+    "cases": {},
+    "decisions": [],
+    "native_performance_claimed": false
+  },
+  "audit": {
+    "complete": true,
+    "event_head": "aa28cc3d35edbcf3dd1ea11667685081f3d8781a68b5b6e68b000ddbc459d5f6"
+  },
+  "demo_actor": null
+}

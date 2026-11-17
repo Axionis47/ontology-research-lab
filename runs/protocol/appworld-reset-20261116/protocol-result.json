@@ -1,0 +1,110 @@
+{
+  "recorded_at": "2026-11-16T15:23:05.613566+00:00",
+  "status": "BLOCKED",
+  "full_protocol_demonstrated": false,
+  "new_improvement_demonstrated": false,
+  "scope": "One fresh diagnostic restart on previously exposed AppWorld train task 07b42fd_1, not a full acceptance batch.",
+  "stages": [
+    {
+      "stage": "reset",
+      "status": "PASS",
+      "evidence": "manifest.json",
+      "detail": "Fresh archive, original seed package and legacy policy; no prior accepted package imported."
+    },
+    {
+      "stage": "task_setup",
+      "status": "PASS_NARROW_ADAPTER",
+      "evidence": "task-representation.json",
+      "detail": {
+        "task": "07b42fd_1",
+        "entities": {
+          "Account": 1,
+          "Artist": 36
+        },
+        "initial_follows_edges": 0,
+        "ontology_extension_demonstrated": false
+      }
+    },
+    {
+      "stage": "task_execution",
+      "status": "TASK_FAILED",
+      "evidence": "native-audit.json",
+      "detail": {
+        "actor": "qwen3:8b-q4_K_M",
+        "model_calls": 3,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "actor_tool_attempts": 0,
+        "stop": "NO_PROGRESS",
+        "official_success": false,
+        "official_checks": {
+          "total": 5,
+          "passed": 1,
+          "failed": 4
+        },
+        "trace_complete": true,
+        "goals_pinned": true,
+        "wire_receipts_valid": true
+      }
+    },
+    {
+      "stage": "gemini_diagnosis",
+      "status": "JUDGE_UNAVAILABLE",
+      "evidence": "gemini-judge-result.json",
+      "detail": "Gemini CLI default call was rejected by Google: UNSUPPORTED_CLIENT for the existing saved login"
+    },
+    {
+      "stage": "gemini_proposal",
+      "status": "NOT_RUN",
+      "detail": "No valid Gemini diagnosis; no substitute invoked."
+    },
+    {
+      "stage": "candidate_comparison_and_regression",
+      "status": "NOT_RUN",
+      "detail": "No candidate produced."
+    },
+    {
+      "stage": "activation",
+      "status": "NOT_RUN",
+      "evidence": "default-learning-guard.json",
+      "detail": "Original package and policy unchanged; zero proposals and acceptances."
+    }
+  ],
+  "wins": [
+    "Fresh native task, actual Qwen calls, original goal and version pinned, complete integrity-checked trace.",
+    "Invalid discovery arguments rejected before dispatch.",
+    "Default repair fallback prevented; no candidate or package change without the missing diagnosis.",
+    "132 unit tests passed; CLI learning guard returns exit 2."
+  ],
+  "losses": [
+    "Native task failed: three invalid discover_tools strategy arguments followed by NO_PROGRESS.",
+    "Gemini rejected the real evidence before inference, so no diagnostic model identity or verdict was produced.",
+    "Separate proposer, comparison and activation did not run."
+  ],
+  "implementation_gaps": [
+    "No automatic Gemini diagnosis-to-proposer coordinator.",
+    "Installed Gemini CLI authentication rejected by Google with UNSUPPORTED_CLIENT.",
+    "Native task actor repeatedly supplies an invalid discovery argument.",
+    "Ontology is a narrow trusted adapter and observed definition index; general semantic reuse and extension are not implemented.",
+    "Low-level engine.work still defaults to search for legacy component callers; it is not the agreed protocol entry point."
+  ],
+  "cleanup_diff": "cleanup.diff",
+  "unit_tests": {
+    "passed": 132,
+    "failed": 0,
+    "seconds": 135.323,
+    "evidence": "unit-tests.log"
+  },
+  "cli_guard_check": "cli-guard-check.json",
+  "sources_unchanged_during_native_run": true,
+  "historical_results": {
+    "withdrawn_role_mismatch": "../../learning/appworld-gemini-review-20261115/role-correction.json",
+    "prior_retention": "../../learning/appworld-gemini-review-20261115/appworld-results.json",
+    "included_in_current_score": false
+  },
+  "next_required_steps": [
+    "Restore the existing Gemini CLI connection so a real diagnostic response is possible.",
+    "Connect validated Gemini diagnosis to a distinct Gemini proposer call; default role guards alone do not do this.",
+    "Measure a proposed bounded change against the failed AppWorld task and preserved cases in fresh worlds before claiming improvement."
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "question": "Who has established authority to approve a production deployment of LoginService?",
+  "definitions": {
+    "Person": "An identified human.",
+    "Service": "An identified software service.",
+    "Assignment": "An association between a person, role, service, environment, and current validity.",
+    "rule": "Authority is established only by an assignment whose role is DeploymentApprover, service is LoginService, environment is Production, and current is true. Project membership alone is insufficient. If no such assignment is observed, return unknown, not a guess."
+  },
+  "cases": [
+    {
+      "id": "valid",
+      "records": [
+        {"evidence_id": "e1", "person": "Maya", "role": "ProjectManager", "project": "Atlas"},
+        {"evidence_id": "e2", "person": "Noah", "role": "DeploymentApprover", "service": "LoginService", "environment": "Production", "current": true}
+      ],
+      "expected": "Noah"
+    },
+    {
+      "id": "wrong-environment",
+      "records": [
+        {"evidence_id": "e1", "person": "Maya", "role": "ProjectManager", "project": "Atlas"},
+        {"evidence_id": "e2", "person": "Noah", "role": "DeploymentApprover", "service": "LoginService", "environment": "Staging", "current": true}
+      ],
+      "expected": "unknown"
+    }
+  ]
+}

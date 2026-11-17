@@ -1,0 +1,107 @@
+{
+  "registered_at": "2026-11-16T02:54:46.658391+00:00",
+  "scope": "synthetic local selective updates, no external writes",
+  "primary_requirement": "Gemini CLI judge plus real LLM improvements; control does not satisfy this",
+  "control": {
+    "actor": "scripted reference",
+    "proposer": "bounded-program-search",
+    "judge": "deterministic whole-ledger assessment",
+    "purpose": "measure existing repair, retention and protection mechanisms separately from Gemini availability"
+  },
+  "workloads": [
+    {
+      "id": "old-work",
+      "tickets": 12
+    },
+    {
+      "id": "new-age-rule",
+      "tickets": 24
+    },
+    {
+      "id": "fresh-age-batch",
+      "tickets": 96
+    },
+    {
+      "id": "new-customer-rule",
+      "tickets": 48
+    },
+    {
+      "id": "fresh-customer-batch",
+      "tickets": 128
+    },
+    {
+      "id": "larger-age-batch",
+      "tickets": 256
+    },
+    {
+      "id": "larger-customer-batch",
+      "tickets": 256
+    },
+    {
+      "id": "combined-new-rule",
+      "tickets": 48
+    },
+    {
+      "id": "combined-larger-batch",
+      "tickets": 256
+    },
+    {
+      "id": "old-work-after-three-repairs",
+      "tickets": 12
+    }
+  ],
+  "holdout_cases": 96,
+  "holdout_families": [
+    "numeric",
+    "relationship",
+    "combined"
+  ],
+  "holdout_policy": "Frozen before repair; not registered as repair cases; evaluated only after final package",
+  "sources": {
+    "appworld_runtime/__init__.py": "fd4c10fcd8655c99c2e8d23ddc50480f7e1e8f626405229b0164d5eb772f2f24",
+    "appworld_runtime/batch.py": "655897b3ba5f6c505516560d8a13591606ddd4dbb837db6a1b8d8c0d374fb967",
+    "appworld_runtime/catalog.py": "180d21ad0c60d9a8437c9c896d4010bdc42ec9f86a6b78dda69d366fa41547b5",
+    "appworld_runtime/credentials.py": "be027522fb128f57f4eb634d873d5bbb12ed0d90a4ce45cef17d7ef0ff5723aa",
+    "appworld_runtime/inference.py": "109e10ca2a31be3fb38d93ac32e04252947d9eb92aa02a9053a583ff2b397016",
+    "appworld_runtime/rpc.py": "d2148470a63ad7e2c7cfc385b4ad3bbc523c17f878d17b601f221e2679345478",
+    "appworld_runtime/session.py": "f3743ee3249efc5025c25a5d6035b497d473998dd4274be2de1668d676ddbc21",
+    "appworld_runtime/surface.py": "81ad0096907375fd19b8b3274acc2ab54a3342d7e5d66bfe42f64678510f2ff5",
+    "appworld_runtime/tool_client.py": "bea7b93ae420ac034457dbde2e2a93637d8b842140fadd034b92f21872f72b15",
+    "appworld_runtime/worker.py": "efc76cc22bedab61b3eae2aecd4c9926436c0d7d2e8f94dc8e8071b0615608e6",
+    "config/models.toml": "b6f5c6488dff99cac8afff35eab0ca62abccaaf3340872dc5b152b91f170adff",
+    "oak-nine-operators.md": "fc2c10d083ad211ce2f82e244a0f6d370b5b55e6d52a4d112c76c3c3638ec258",
+    "react_runtime/__init__.py": "37e1a78a78deb07782d5592aee2795d6eb61e90acf3ebdbd9ed83e5da9c4ff63",
+    "react_runtime/completion.py": "03338e566ca030bb03a7c3f19304d42d0c028ee94ce6914dbed34dd894b6242d",
+    "react_runtime/fixtures.py": "81451af558f7c961b347567e4e33bc1fc0100d4524727dccc44da617dc8ddcbb",
+    "react_runtime/loop.py": "c4b4d81842dc828704f1f67be9768a929fcfb5cddcc5a3925ebe04a0567cc954",
+    "react_runtime/ollama.py": "153a741791a385f07eb0c41893801f17678a76aabd1e64daca77e225ef5fff2e",
+    "react_runtime/policy.py": "abfade16d7c8409d368588fdfd7f257f87d525075f51bbdbd3dfd0b2f26dc228",
+    "react_runtime/process.py": "8ed9ca89fad7df78956ce80de7d07267fc6507993c79b645fe9561e87e2124ab",
+    "react_runtime/provenance.py": "395e8e38963554d9c332a79d95dec942e15742eb73bcc919c8d69926b59e7315",
+    "react_runtime/query.py": "565e1d36a79f3c0c762a28240bc79e8ce9ecc46f216054972e1839c16b19d8be",
+    "react_runtime/repair_scoring.py": "d5474509b0cd5173b97ac738e095af2ba36bd1a5229b770293fd8553fa6ba4c3",
+    "react_runtime/store.py": "e2c456c5eea112e961f033fa4a2699a6ca39e52c79990791a8eb09df211a9e93",
+    "react_runtime/trace_audit.py": "1d5d8ae0f87e4c24a36c88b6c28b59909e10c36f38b97a4f70c05bb0e01e39f8",
+    "react_runtime/working.py": "e2216547748b20e10e1a8a176978f5f2c5f25c8520cfe419dae374dd4caccd38",
+    "repair_runtime/__init__.py": "b34deb32dcca9ca308076caba14f49c2875f2850af4d2cbf3e207d9e9744433d",
+    "repair_runtime/admission.py": "1c827a6285f7dc19f40ad535351fc7db5e36f51bfc5d4d44ff678e3f6c2163a7",
+    "repair_runtime/controller.py": "02146c3be002815285ec21b113270a9a4623d2e89726d8216702392aee0a7a8a",
+    "repair_runtime/engine.py": "fe8a367e6fce72957b0ad1794da07c08c917c5ffaa24f73bdaafb3c1ccd75f40",
+    "repair_runtime/episode.py": "dbc7dca9ab6cddc341dbb2e9d1d1d595f78f2a6645250326b2c396509343c5ee",
+    "repair_runtime/evaluation.py": "4230b373006c86823ffd788402ea598da8405930666a797007c316e202191241",
+    "repair_runtime/inference.py": "22507f6bc8bec0b5f9efe7c274c6aa2e1a31fe12050e09f6848866714955a4fe",
+    "repair_runtime/judge.py": "0e0fce2ddbea9f6dbaffc21fe1784c7ba4d913eb1e4b949fcc5877e608896968",
+    "repair_runtime/policy_evaluation.py": "4f201414504895f33af652d71d01cc4cc13a9ddfe7f08eb5e303fb6631d1fcc5",
+    "repair_runtime/policy_proposer.py": "13e3bb6a1ae28b4e492419863fda268b91e634550f316cc34ce82a068c03f798",
+    "repair_runtime/policy_repair.py": "6cdd1420b3e254bffe6788811f356ab4f426b93b52e34efa67213f8672697774",
+    "repair_runtime/program.py": "6894fde8b3a137ad51a0e06db2271919c9821c4fa31dd0ab5bbf5701a447241e",
+    "repair_runtime/proposer.py": "767a416e079445169412189533e4bdba39d39cd1b6ebe3bb7a385474d4dd354c",
+    "repair_runtime/store.py": "2ef9980193631a23b81a19c0200f7875acd78dd61107db0c524020452cb645ba",
+    "scripts/inference.py": "745fcbed7c5e9da15feaad63fff272c7ee65af816df91b1240203b9214248eb2",
+    "scripts/prove_inference.py": "1a913a3fc72596d046ea7e3d06bd14dac8d2c4be1ba54ed188261fe891015c2c",
+    "scripts/prove_policy.py": "ba77bbc1f0b956f2912ed8ac8300a68bdddaea50cc232cc917375479c61be053",
+    "scripts/repair.py": "b4652d6cb4efd7a516e514f41144fd18886a167cff6e19721e15c07172040aee"
+  },
+  "request_sha256": "317f758734df23c59aa1560189c1db13749462bd32a868376934b59126f928a5",
+  "holdout_sha256": "106d858f45f8b1cd810137ccd5dfee7776ad0c7616e3ee57463c84806b6f1dd0"
+}

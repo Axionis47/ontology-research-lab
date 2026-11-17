@@ -1,0 +1,21 @@
+{
+  "task_hash": "6d5095d12978595d1fe77b4ecacb4339688cf770e2b578aa5357a9fd6730f5c4",
+  "initial_facts_hash": "c6c6573da8c741ead2fda4989720703585dc402b201c7856d5e2b75f9f841f51",
+  "sources": {
+    "learning-labs/ontology-consumption-complex/combined-recovery/run.py": "bf31a61ba08b9b63696d55de79a0ea187c114a3b577ca2070289e1ec8e1e1ede",
+    "learning-labs/ontology-consumption-complex/engine.py": "995e49d46df28c58362fd17435cc22998bb34ee53a119ac0604128c1ee07fb6c",
+    "learning-labs/ontology-consumption-complex/facts.json": "b5c83d419547c9c0c267b65615504347b5b0f0b7474b73d50f244036d332fe1e",
+    "learning-labs/ontology-consumption-complex/ontology.json": "686ca3d11e4b84e5f161f194380cd25b011028c3ad9eb6b833edf871ae5f054b",
+    "learning-labs/ontology-consumption-complex/oracle.json": "63182a6f29b27df729a51727ad7daffc6076fa0f6505925d1fac455177c1ed65",
+    "config/models.toml": "b6f5c6488dff99cac8afff35eab0ca62abccaaf3340872dc5b152b91f170adff",
+    "config/gemini-no-tools.toml": "406702e019a25be380e93ffa7ffb1c4b17c5857e429574cef3dde17887a0ab0f"
+  },
+  "max_calls": 12,
+  "timeout_seconds": 180,
+  "model": "configured CLI, no override",
+  "retries": 0,
+  "appworld_runs": 0,
+  "mutation": "revoke del-Vera exactly once after first correct initial proposal, before execution",
+  "initial_facts_in_context": "unchanged revision 7 snapshot; newer observations supersede it",
+  "cli_version": null
+}

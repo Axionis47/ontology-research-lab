@@ -1,0 +1,62 @@
+{
+  "revision": 1,
+  "source": "synthetic://service-catalog/snapshot-1",
+  "task": {
+    "service": "LoginService",
+    "environment": "Production",
+    "deployment_id": "d1",
+    "at": "2026-11-16"
+  },
+  "deployment": {
+    "id": "d1",
+    "author": "Maya",
+    "service": "LoginService"
+  },
+  "assignments": [
+    {
+      "id": "a-maya",
+      "person": "Maya",
+      "service": "LoginService",
+      "environment": "Production",
+      "role": "DeploymentApprover",
+      "validFrom": "2026-11-01",
+      "validUntil": "2026-12-01",
+      "active": true
+    },
+    {
+      "id": "a-noah",
+      "person": "Noah",
+      "service": "LoginService",
+      "environment": "Production",
+      "role": "DeploymentApprover",
+      "validFrom": "2026-11-01",
+      "validUntil": "2026-12-01",
+      "active": true
+    },
+    {
+      "id": "a-rin",
+      "person": "Rin",
+      "service": "LoginService",
+      "environment": "Staging",
+      "role": "DeploymentApprover",
+      "validFrom": "2026-11-01",
+      "validUntil": "2026-12-01",
+      "active": true
+    },
+    {
+      "id": "a-tao",
+      "person": "Tao",
+      "service": "LoginService",
+      "environment": "Production",
+      "role": "DeploymentApprover",
+      "validFrom": "2026-10-01",
+      "validUntil": "2026-11-15",
+      "active": true
+    }
+  ],
+  "intervening_change": {
+    "assignment_id": "a-noah",
+    "active": false,
+    "new_revision": 2
+  }
+}

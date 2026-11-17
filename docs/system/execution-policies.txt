@@ -1,0 +1,105 @@
+Execution policies around the existing operators
+
+Policy bundles are immutable JSON assets with version, discovery, binding and
+context fields. Version 1 retains legacy strategy compatibility. Version 2
+contains model-authored ordered instruction lists and bounded parameters. The
+instruction grammar lives in react_runtime/policy.py. These lists execute in
+the harness interpreter and are not inserted into the executor's prompt. New
+archives start with the legacy bundle. Inference pins the active kernel and
+policy hashes once per request. Reusing a request ID never repeats its effects.
+
+Discovery ranks exact word tokens from tool names, descriptions and the goal.
+The catalogue caches results under its revision, query and strategy. A policy
+shortlist is inspected through the normal tool broker before model dispatch.
+Tools outside the permitted application surface remain inaccessible.
+For adapters without remote catalogue discovery, the weighted strategy first
+executes a trusted tool explicitly declared as a bootstrap state reader. Such a
+tool must be READ-only and accept empty arguments. It observes records without
+choosing targets, changing arguments or performing an update.
+
+The observed binding strategy validates the original inspected schema and
+requires mutation IDs to have appeared in episode evidence. It returns a precise
+error instead of modifying arguments. A rejected call permits two further
+argument attempts. A successful call resets that tool's recovery counter.
+Invalid evidence pointers report available fields and use the same repair cap.
+The constrained binding strategy additionally invokes the existing fixed
+preflight check when a trusted adapter provides a bound update projection. It
+rejects proposed IDs that would change protected records and checks the observed
+revision. It never returns replacement target IDs or rewrites a mutation.
+Transport faults and uncertain effects stop execution without automatic replay.
+
+Working state lives in each episode's SQLite working table. It indexes tools,
+schemas, entities, bindings, evidence pointers, returned effects and pending
+corrections. Entity pages retain observed relationship edges. The bounded view
+keeps the actual state revision and at most three correction facts for each of
+two pending tools. Derived retrieval metadata is not treated as entity evidence.
+Returned effects explicitly require readback; the independent
+verifier establishes task completion. read_working and read_output page through
+older evidence. Each model call retains the original goal, a bounded state view,
+recent observations and at most four older references. The context policy checks
+the rendered provider payload, including function schemas, against the original
+character limit. Repeated semantic observations detect alternating calls and
+empty pagination; previously unseen pages remain progress.
+
+Automatic repair
+
+repair_runtime/judge.py separates component defects from operator comparison,
+adapter/checker mismatches, unknown evidence and infrastructure failures.
+policy_repair.register_episode extracts a component counterexample with original
+evidence references. Discovery diagnosis is lexical, not a domain semantics
+judgment. Unreproduced or unsupported diagnoses do not authorize promotion.
+
+policy_repair.work invokes PolicyModelProposer using the configured Qwen model.
+There is no strategy enumeration or handwritten candidate fallback. The model
+authors one component's instructions. Each proposal permits four model calls
+and bounded reads of original evidence. Every call has an immutable input and
+output receipt. The response maps operation names to typed parameter objects;
+a deterministic compiler orders them and checks dependencies. Both provider
+schema constraints and local validation enforce this contract. Each failure
+group permits at most three proposal sessions and
+three candidate evaluations, including interrupted ones. Search is also bounded
+by the existing archive proposal budget. Evidence
+views contain at most two original excerpts and two redacted rejection receipts,
+each limited to 3,000 characters. Sealed case inputs are evaluator-only.
+
+The promotion path runs target reproduction, target improvement, sealed
+nonregression, component conformance, and structural checks first. Only then
+does it replay all retained cases in fresh environments with fallback disabled.
+Inference and worker locks, pinned source revisions, generation checks and a
+compare-and-swap on both active versions protect activation between episodes.
+Rejected candidates retain their receipts and do not change either version.
+
+Commands, run from the repository root with the existing environment:
+
+  .venv/appworld/bin/python -m unittest discover -s tests -q
+  .venv/appworld/bin/python scripts/prove_policy.py --archive runs/learning/NEW_NAME
+  .venv/appworld/bin/python scripts/inference.py run --archive ARCHIVE --requests REQUESTS.json
+
+The inference CLI freezes kernel repair by default. An explicit
+--allow-kernel-repair opts into the separate older operator experiment. In the
+policy loop, fresh failures are judged, reproduced, proposed to the model,
+gated, and recorded before the next request pins its versions. Transport faults
+and missing capabilities produce explicit terminal receipts rather than manual
+replacement proposals or unbounded retries. A consumed request ID is never
+replayed against its original world.
+
+The proof command imports the verified old experiment read-only, freezes 12
+additional synthetic cases and reuses its 100 structural checks and five retained
+cases. It tests three fresh real-model repetitions of each of the seven failed
+raw/fallback cases before accepting the final context policy. It also submits a
+regressing candidate through the same promotion path. Fallback replays force the
+original deficient kernel so the accepted kernel cannot hide the recovery path.
+Use a new archive name;
+source changes deliberately prevent reopening an experiment under new code.
+
+Manual work versus automatic learning
+
+The strategy interpreters, provider schema projection, persistent index, session
+error handling, evaluator and promotion machinery are manual implementation.
+Automatic learning composes and parameterizes registered mechanism instructions
+using reproduced failures and recorded comparisons. Earlier enum-search runs
+remain archived as engineering experiments, not model-driven repairs. Learning
+does not write Python, add operators,
+change model weights, permissions, checks or hard budgets. The inherited kernel
+and the Qwen model remain fixed in this policy experiment. The native cases are
+previously exposed AppWorld training variants, not a generalization benchmark.

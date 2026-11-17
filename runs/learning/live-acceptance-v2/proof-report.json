@@ -1,0 +1,1902 @@
+{
+  "passed": false,
+  "conditions": {
+    "all_scheduled_finished": true,
+    "all_tasks_passed": false,
+    "live_model_used": true,
+    "kernel_gaps_recovered": false,
+    "learned_inference_needs_no_fallback": true,
+    "two_automatic_repairs": true,
+    "every_regression_gate_passed": true,
+    "all_frozen_stress_cases_passed": true,
+    "regression_negative_control_rejected": true,
+    "protected_sources_unchanged": true,
+    "archive_integrity": true
+  },
+  "model": {
+    "provider": "ollama",
+    "requested_model": "qwen3:8b-q4_K_M",
+    "local_model_id_prefix": "500a1f067a9f",
+    "resolved_model": "qwen3:8b-q4_K_M",
+    "transport": "ollama-http/1",
+    "applied_options": {
+      "num_ctx": 8192,
+      "num_predict": 512,
+      "temperature": 0,
+      "think": false
+    },
+    "benchmark": true,
+    "weights_changed": false
+  },
+  "episodes": [
+    {
+      "phase": "raw",
+      "request_id": "raw:07b42fd_1",
+      "audit": {
+        "passed": false,
+        "native_success": false,
+        "native_checks": 5,
+        "model_calls": 22,
+        "kernel_calls": 0,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "7dfd8ac0060c8557c2532f0a830d6b7244ad14f594ed7e69648d17aff3b0627e",
+        "task_state": "FALSE",
+        "execution_stop": "NO_PROGRESS",
+        "steps": 23,
+        "tool_attempts": 17,
+        "compactions": 17,
+        "judge": "1e16e903dd2ba74a557e0ce8cf1f2e2dec058692b5813c61ae74d2c06d03dd5b",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/87719c50632715bb5a33/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 3,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1006,
+            "output_tokens": 35,
+            "duration_ms": 8956
+          },
+          {
+            "event": 8,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1075,
+            "output_tokens": 29,
+            "duration_ms": 3545
+          },
+          {
+            "event": 15,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1481,
+            "output_tokens": 25,
+            "duration_ms": 5543
+          },
+          {
+            "event": 22,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2027,
+            "output_tokens": 59,
+            "duration_ms": 11416
+          },
+          {
+            "event": 30,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2203,
+            "output_tokens": 36,
+            "duration_ms": 8970
+          },
+          {
+            "event": 43,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1812,
+            "output_tokens": 48,
+            "duration_ms": 7584
+          },
+          {
+            "event": 50,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2155,
+            "output_tokens": 31,
+            "duration_ms": 8174
+          },
+          {
+            "event": 58,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2581,
+            "output_tokens": 25,
+            "duration_ms": 9995
+          },
+          {
+            "event": 66,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2830,
+            "output_tokens": 57,
+            "duration_ms": 13346
+          },
+          {
+            "event": 72,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2639,
+            "output_tokens": 46,
+            "duration_ms": 11874
+          },
+          {
+            "event": 80,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3136,
+            "output_tokens": 40,
+            "duration_ms": 14273
+          },
+          {
+            "event": 93,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2695,
+            "output_tokens": 59,
+            "duration_ms": 13596
+          },
+          {
+            "event": 101,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3075,
+            "output_tokens": 36,
+            "duration_ms": 14716
+          },
+          {
+            "event": 114,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3059,
+            "output_tokens": 49,
+            "duration_ms": 16140
+          },
+          {
+            "event": 122,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3863,
+            "output_tokens": 40,
+            "duration_ms": 19485
+          },
+          {
+            "event": 135,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3447,
+            "output_tokens": 59,
+            "duration_ms": 19674
+          },
+          {
+            "event": 143,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3835,
+            "output_tokens": 36,
+            "duration_ms": 23825
+          },
+          {
+            "event": 156,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3815,
+            "output_tokens": 59,
+            "duration_ms": 20996
+          },
+          {
+            "event": 164,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4208,
+            "output_tokens": 36,
+            "duration_ms": 22203
+          },
+          {
+            "event": 177,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4190,
+            "output_tokens": 56,
+            "duration_ms": 27128
+          },
+          {
+            "event": 185,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4229,
+            "output_tokens": 60,
+            "duration_ms": 27636
+          },
+          {
+            "event": 193,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4338,
+            "output_tokens": 45,
+            "duration_ms": 28364
+          }
+        ]
+      }
+    },
+    {
+      "phase": "raw",
+      "request_id": "raw:07b42fd_2",
+      "audit": {
+        "passed": false,
+        "native_success": false,
+        "native_checks": 5,
+        "model_calls": 34,
+        "kernel_calls": 0,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "5791e55d2b4a331fb281c1d33450f6727ebc88ece1ebe88ea7b8371b228e01c5",
+        "task_state": "FALSE",
+        "execution_stop": "CONTEXT_OVERFLOW",
+        "steps": 35,
+        "tool_attempts": 33,
+        "compactions": 23,
+        "judge": "4ca77f8e720742a8c3980011afc88a62105c937846741a36738cca833e649fae",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/f81593e85934ad0cb3fb/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 3,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1011,
+            "output_tokens": 35,
+            "duration_ms": 9696
+          },
+          {
+            "event": 8,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1075,
+            "output_tokens": 29,
+            "duration_ms": 4051
+          },
+          {
+            "event": 15,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1263,
+            "output_tokens": 30,
+            "duration_ms": 4067
+          },
+          {
+            "event": 22,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1448,
+            "output_tokens": 30,
+            "duration_ms": 5060
+          },
+          {
+            "event": 29,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1635,
+            "output_tokens": 30,
+            "duration_ms": 6376
+          },
+          {
+            "event": 36,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1824,
+            "output_tokens": 30,
+            "duration_ms": 7086
+          },
+          {
+            "event": 43,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2009,
+            "output_tokens": 30,
+            "duration_ms": 9442
+          },
+          {
+            "event": 50,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2198,
+            "output_tokens": 30,
+            "duration_ms": 12147
+          },
+          {
+            "event": 57,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2376,
+            "output_tokens": 30,
+            "duration_ms": 12004
+          },
+          {
+            "event": 65,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2286,
+            "output_tokens": 30,
+            "duration_ms": 11348
+          },
+          {
+            "event": 72,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2467,
+            "output_tokens": 30,
+            "duration_ms": 10831
+          },
+          {
+            "event": 79,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2656,
+            "output_tokens": 31,
+            "duration_ms": 12305
+          },
+          {
+            "event": 87,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2683,
+            "output_tokens": 31,
+            "duration_ms": 11923
+          },
+          {
+            "event": 94,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2869,
+            "output_tokens": 31,
+            "duration_ms": 13879
+          },
+          {
+            "event": 102,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2954,
+            "output_tokens": 31,
+            "duration_ms": 13728
+          },
+          {
+            "event": 110,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3086,
+            "output_tokens": 31,
+            "duration_ms": 14754
+          },
+          {
+            "event": 118,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3215,
+            "output_tokens": 31,
+            "duration_ms": 17579
+          },
+          {
+            "event": 126,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3349,
+            "output_tokens": 31,
+            "duration_ms": 16809
+          },
+          {
+            "event": 134,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3486,
+            "output_tokens": 31,
+            "duration_ms": 17266
+          },
+          {
+            "event": 142,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3618,
+            "output_tokens": 31,
+            "duration_ms": 17694
+          },
+          {
+            "event": 150,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3749,
+            "output_tokens": 31,
+            "duration_ms": 19907
+          },
+          {
+            "event": 158,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3885,
+            "output_tokens": 31,
+            "duration_ms": 19748
+          },
+          {
+            "event": 166,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4017,
+            "output_tokens": 31,
+            "duration_ms": 20606
+          },
+          {
+            "event": 174,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4154,
+            "output_tokens": 31,
+            "duration_ms": 21891
+          },
+          {
+            "event": 182,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4282,
+            "output_tokens": 31,
+            "duration_ms": 22947
+          },
+          {
+            "event": 190,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4420,
+            "output_tokens": 31,
+            "duration_ms": 24983
+          },
+          {
+            "event": 198,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4557,
+            "output_tokens": 31,
+            "duration_ms": 26777
+          },
+          {
+            "event": 206,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4701,
+            "output_tokens": 31,
+            "duration_ms": 27149
+          },
+          {
+            "event": 214,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4838,
+            "output_tokens": 31,
+            "duration_ms": 26595
+          },
+          {
+            "event": 222,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4969,
+            "output_tokens": 31,
+            "duration_ms": 26522
+          },
+          {
+            "event": 230,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 5098,
+            "output_tokens": 31,
+            "duration_ms": 31098
+          },
+          {
+            "event": 238,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 5177,
+            "output_tokens": 31,
+            "duration_ms": 28062
+          },
+          {
+            "event": 246,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 5259,
+            "output_tokens": 22,
+            "duration_ms": 29686
+          },
+          {
+            "event": 254,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 5398,
+            "output_tokens": 22,
+            "duration_ms": 29922
+          }
+        ]
+      }
+    },
+    {
+      "phase": "raw",
+      "request_id": "raw:07b42fd_3",
+      "audit": {
+        "passed": false,
+        "native_success": false,
+        "native_checks": 5,
+        "model_calls": 34,
+        "kernel_calls": 0,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "f8dd4e23c516d9a9f0678191f72508cbd32f50fbb34b98d681732fb971c6ba48",
+        "task_state": "FALSE",
+        "execution_stop": "CONTEXT_OVERFLOW",
+        "steps": 35,
+        "tool_attempts": 33,
+        "compactions": 23,
+        "judge": "7dfcc4a4a9d7c5bd83efdbe5712c2c3dddb700d133607420a30f507059af8a77",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/1106fde774ae283ba47b/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 3,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1008,
+            "output_tokens": 35,
+            "duration_ms": 7174
+          },
+          {
+            "event": 8,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1081,
+            "output_tokens": 29,
+            "duration_ms": 2894
+          },
+          {
+            "event": 15,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1263,
+            "output_tokens": 30,
+            "duration_ms": 3796
+          },
+          {
+            "event": 22,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1454,
+            "output_tokens": 30,
+            "duration_ms": 4741
+          },
+          {
+            "event": 29,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1637,
+            "output_tokens": 30,
+            "duration_ms": 5568
+          },
+          {
+            "event": 36,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1826,
+            "output_tokens": 30,
+            "duration_ms": 7646
+          },
+          {
+            "event": 43,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2009,
+            "output_tokens": 30,
+            "duration_ms": 8896
+          },
+          {
+            "event": 50,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2195,
+            "output_tokens": 30,
+            "duration_ms": 9043
+          },
+          {
+            "event": 57,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2378,
+            "output_tokens": 30,
+            "duration_ms": 9684
+          },
+          {
+            "event": 65,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2289,
+            "output_tokens": 30,
+            "duration_ms": 9271
+          },
+          {
+            "event": 72,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2477,
+            "output_tokens": 30,
+            "duration_ms": 9973
+          },
+          {
+            "event": 79,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2660,
+            "output_tokens": 31,
+            "duration_ms": 10905
+          },
+          {
+            "event": 87,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2695,
+            "output_tokens": 31,
+            "duration_ms": 12198
+          },
+          {
+            "event": 94,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2884,
+            "output_tokens": 31,
+            "duration_ms": 13482
+          },
+          {
+            "event": 102,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2969,
+            "output_tokens": 31,
+            "duration_ms": 15839
+          },
+          {
+            "event": 110,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3103,
+            "output_tokens": 31,
+            "duration_ms": 15780
+          },
+          {
+            "event": 118,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3240,
+            "output_tokens": 31,
+            "duration_ms": 16952
+          },
+          {
+            "event": 126,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3380,
+            "output_tokens": 31,
+            "duration_ms": 20123
+          },
+          {
+            "event": 134,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3519,
+            "output_tokens": 31,
+            "duration_ms": 21617
+          },
+          {
+            "event": 142,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3660,
+            "output_tokens": 31,
+            "duration_ms": 17755
+          },
+          {
+            "event": 150,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3791,
+            "output_tokens": 31,
+            "duration_ms": 19255
+          },
+          {
+            "event": 158,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3926,
+            "output_tokens": 31,
+            "duration_ms": 20105
+          },
+          {
+            "event": 166,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4060,
+            "output_tokens": 31,
+            "duration_ms": 23352
+          },
+          {
+            "event": 174,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4194,
+            "output_tokens": 31,
+            "duration_ms": 22278
+          },
+          {
+            "event": 182,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4315,
+            "output_tokens": 31,
+            "duration_ms": 22877
+          },
+          {
+            "event": 190,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4452,
+            "output_tokens": 31,
+            "duration_ms": 23665
+          },
+          {
+            "event": 198,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4576,
+            "output_tokens": 31,
+            "duration_ms": 24765
+          },
+          {
+            "event": 206,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4711,
+            "output_tokens": 31,
+            "duration_ms": 26746
+          },
+          {
+            "event": 214,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4843,
+            "output_tokens": 31,
+            "duration_ms": 27160
+          },
+          {
+            "event": 222,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4978,
+            "output_tokens": 31,
+            "duration_ms": 28115
+          },
+          {
+            "event": 230,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 5113,
+            "output_tokens": 31,
+            "duration_ms": 28410
+          },
+          {
+            "event": 238,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 5189,
+            "output_tokens": 31,
+            "duration_ms": 31023
+          },
+          {
+            "event": 246,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 5276,
+            "output_tokens": 21,
+            "duration_ms": 31203
+          },
+          {
+            "event": 254,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 5410,
+            "output_tokens": 21,
+            "duration_ms": 30597
+          }
+        ]
+      }
+    },
+    {
+      "phase": "recovery",
+      "request_id": "recovery:07b42fd_1",
+      "audit": {
+        "passed": false,
+        "native_success": false,
+        "native_checks": 5,
+        "model_calls": 24,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "bd1785ccef1a3a96cc5b9d4618085844d20badc13c820cd2affac3660e9ca048",
+        "task_state": "FALSE",
+        "execution_stop": "CONTEXT_OVERFLOW",
+        "steps": 26,
+        "tool_attempts": 19,
+        "compactions": 20,
+        "judge": "5804f6dc872d5eb73a7eceacaa8904ecaa10b1df63789a7ed8201b5a9776b0ac",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/5ac7992729e40e7803fd/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 9,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1305,
+            "output_tokens": 33,
+            "duration_ms": 11680
+          },
+          {
+            "event": 14,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1375,
+            "output_tokens": 27,
+            "duration_ms": 3883
+          },
+          {
+            "event": 21,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1778,
+            "output_tokens": 28,
+            "duration_ms": 6316
+          },
+          {
+            "event": 28,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2154,
+            "output_tokens": 28,
+            "duration_ms": 8589
+          },
+          {
+            "event": 36,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2321,
+            "output_tokens": 28,
+            "duration_ms": 9777
+          },
+          {
+            "event": 44,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2524,
+            "output_tokens": 28,
+            "duration_ms": 10148
+          },
+          {
+            "event": 52,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2633,
+            "output_tokens": 28,
+            "duration_ms": 13851
+          },
+          {
+            "event": 60,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2760,
+            "output_tokens": 28,
+            "duration_ms": 14099
+          },
+          {
+            "event": 68,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2907,
+            "output_tokens": 28,
+            "duration_ms": 13280
+          },
+          {
+            "event": 76,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3037,
+            "output_tokens": 28,
+            "duration_ms": 13441
+          },
+          {
+            "event": 84,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3117,
+            "output_tokens": 28,
+            "duration_ms": 14368
+          },
+          {
+            "event": 92,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3197,
+            "output_tokens": 24,
+            "duration_ms": 14424
+          },
+          {
+            "event": 100,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3676,
+            "output_tokens": 56,
+            "duration_ms": 23646
+          },
+          {
+            "event": 106,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3514,
+            "output_tokens": 46,
+            "duration_ms": 17448
+          },
+          {
+            "event": 114,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3916,
+            "output_tokens": 42,
+            "duration_ms": 19405
+          },
+          {
+            "event": 127,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3459,
+            "output_tokens": 33,
+            "duration_ms": 19535
+          },
+          {
+            "event": 135,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3510,
+            "output_tokens": 49,
+            "duration_ms": 19098
+          },
+          {
+            "event": 143,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3730,
+            "output_tokens": 42,
+            "duration_ms": 18178
+          },
+          {
+            "event": 155,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3943,
+            "output_tokens": 33,
+            "duration_ms": 18635
+          },
+          {
+            "event": 163,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3995,
+            "output_tokens": 42,
+            "duration_ms": 21450
+          },
+          {
+            "event": 176,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4288,
+            "output_tokens": 33,
+            "duration_ms": 21687
+          },
+          {
+            "event": 184,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4336,
+            "output_tokens": 42,
+            "duration_ms": 26103
+          },
+          {
+            "event": 197,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4616,
+            "output_tokens": 42,
+            "duration_ms": 23252
+          },
+          {
+            "event": 210,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4893,
+            "output_tokens": 42,
+            "duration_ms": 26622
+          }
+        ]
+      }
+    },
+    {
+      "phase": "recovery",
+      "request_id": "recovery:07b42fd_2",
+      "audit": {
+        "passed": false,
+        "native_success": false,
+        "native_checks": 5,
+        "model_calls": 26,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "545d96418fed3d2e0d6a7172525fc5b3ae25afe5c8091b70ecf5512d39d56ac7",
+        "task_state": "FALSE",
+        "execution_stop": "CONTEXT_OVERFLOW",
+        "steps": 28,
+        "tool_attempts": 21,
+        "compactions": 23,
+        "judge": "05bf0e95c38a78cdc6ba8c4426e857f6be621c7026d5a57810bb04145240d1d2",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/9536d7a1c66313e3d72f/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 9,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1310,
+            "output_tokens": 35,
+            "duration_ms": 8528
+          },
+          {
+            "event": 14,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1376,
+            "output_tokens": 29,
+            "duration_ms": 4074
+          },
+          {
+            "event": 21,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1783,
+            "output_tokens": 30,
+            "duration_ms": 6631
+          },
+          {
+            "event": 28,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2164,
+            "output_tokens": 30,
+            "duration_ms": 8476
+          },
+          {
+            "event": 36,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2341,
+            "output_tokens": 30,
+            "duration_ms": 8953
+          },
+          {
+            "event": 44,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2542,
+            "output_tokens": 30,
+            "duration_ms": 9721
+          },
+          {
+            "event": 52,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2650,
+            "output_tokens": 30,
+            "duration_ms": 10705
+          },
+          {
+            "event": 60,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2781,
+            "output_tokens": 30,
+            "duration_ms": 11250
+          },
+          {
+            "event": 68,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2923,
+            "output_tokens": 30,
+            "duration_ms": 12597
+          },
+          {
+            "event": 76,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3049,
+            "output_tokens": 30,
+            "duration_ms": 12864
+          },
+          {
+            "event": 84,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3127,
+            "output_tokens": 30,
+            "duration_ms": 14221
+          },
+          {
+            "event": 92,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3059,
+            "output_tokens": 24,
+            "duration_ms": 13717
+          },
+          {
+            "event": 100,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3290,
+            "output_tokens": 49,
+            "duration_ms": 19664
+          },
+          {
+            "event": 108,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3799,
+            "output_tokens": 33,
+            "duration_ms": 19922
+          },
+          {
+            "event": 116,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3575,
+            "output_tokens": 24,
+            "duration_ms": 17408
+          },
+          {
+            "event": 129,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3344,
+            "output_tokens": 56,
+            "duration_ms": 17229
+          },
+          {
+            "event": 135,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3426,
+            "output_tokens": 46,
+            "duration_ms": 17161
+          },
+          {
+            "event": 143,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4072,
+            "output_tokens": 24,
+            "duration_ms": 21971
+          },
+          {
+            "event": 156,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3811,
+            "output_tokens": 56,
+            "duration_ms": 20982
+          },
+          {
+            "event": 162,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3895,
+            "output_tokens": 46,
+            "duration_ms": 20669
+          },
+          {
+            "event": 170,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4564,
+            "output_tokens": 24,
+            "duration_ms": 23016
+          },
+          {
+            "event": 183,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4284,
+            "output_tokens": 56,
+            "duration_ms": 24751
+          },
+          {
+            "event": 189,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4367,
+            "output_tokens": 46,
+            "duration_ms": 24812
+          },
+          {
+            "event": 197,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4567,
+            "output_tokens": 28,
+            "duration_ms": 28607
+          },
+          {
+            "event": 210,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4767,
+            "output_tokens": 28,
+            "duration_ms": 26289
+          },
+          {
+            "event": 223,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 5052,
+            "output_tokens": 49,
+            "duration_ms": 27713
+          }
+        ]
+      }
+    },
+    {
+      "phase": "recovery",
+      "request_id": "recovery:07b42fd_3",
+      "audit": {
+        "passed": false,
+        "native_success": false,
+        "native_checks": 5,
+        "model_calls": 22,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "a1e7634a2c1607f7b96bcaf5399fd4b2d9bf2cedd4e8f6539f223d323ad59ad4",
+        "task_state": "FALSE",
+        "execution_stop": "CONTEXT_OVERFLOW",
+        "steps": 24,
+        "tool_attempts": 21,
+        "compactions": 12,
+        "judge": "dc83988e6ae12a9065f4119e801de467ec09eb819ae693c01fb3cb8699738917",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/1774b989a214cedef422/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 9,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1309,
+            "output_tokens": 35,
+            "duration_ms": 11323
+          },
+          {
+            "event": 14,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1378,
+            "output_tokens": 29,
+            "duration_ms": 3555
+          },
+          {
+            "event": 21,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1564,
+            "output_tokens": 30,
+            "duration_ms": 4762
+          },
+          {
+            "event": 28,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1751,
+            "output_tokens": 31,
+            "duration_ms": 6168
+          },
+          {
+            "event": 35,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1937,
+            "output_tokens": 30,
+            "duration_ms": 7324
+          },
+          {
+            "event": 42,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2122,
+            "output_tokens": 29,
+            "duration_ms": 7295
+          },
+          {
+            "event": 49,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2303,
+            "output_tokens": 30,
+            "duration_ms": 9991
+          },
+          {
+            "event": 57,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2271,
+            "output_tokens": 30,
+            "duration_ms": 10556
+          },
+          {
+            "event": 64,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2453,
+            "output_tokens": 29,
+            "duration_ms": 11879
+          },
+          {
+            "event": 71,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2637,
+            "output_tokens": 30,
+            "duration_ms": 11173
+          },
+          {
+            "event": 79,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2661,
+            "output_tokens": 30,
+            "duration_ms": 11783
+          },
+          {
+            "event": 86,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2847,
+            "output_tokens": 29,
+            "duration_ms": 14937
+          },
+          {
+            "event": 94,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2928,
+            "output_tokens": 30,
+            "duration_ms": 13354
+          },
+          {
+            "event": 102,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3065,
+            "output_tokens": 31,
+            "duration_ms": 14491
+          },
+          {
+            "event": 110,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3201,
+            "output_tokens": 29,
+            "duration_ms": 14727
+          },
+          {
+            "event": 118,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3337,
+            "output_tokens": 29,
+            "duration_ms": 15844
+          },
+          {
+            "event": 126,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3601,
+            "output_tokens": 24,
+            "duration_ms": 16023
+          },
+          {
+            "event": 134,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3718,
+            "output_tokens": 58,
+            "duration_ms": 21224
+          },
+          {
+            "event": 146,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4027,
+            "output_tokens": 48,
+            "duration_ms": 22909
+          },
+          {
+            "event": 159,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4155,
+            "output_tokens": 57,
+            "duration_ms": 22573
+          },
+          {
+            "event": 172,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4391,
+            "output_tokens": 57,
+            "duration_ms": 23530
+          },
+          {
+            "event": 185,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 4627,
+            "output_tokens": 34,
+            "duration_ms": 23103
+          }
+        ]
+      }
+    },
+    {
+      "phase": "after",
+      "request_id": "after:0:07b42fd_1",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 0,
+        "kernel_calls": 2,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "28bcc5dbbf3fc242bc8a370bd3e5332bc78d42aaf8eaa5617a937a9a344a194b",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "judge": "fc9c93830849d3dc0b9e5977f0f68599d9489af8b13d665b1b4d6e49c132dfad",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/5ddf299acf8472d5f57b/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": []
+      }
+    },
+    {
+      "phase": "after",
+      "request_id": "after:0:07b42fd_2",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 0,
+        "kernel_calls": 2,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "6590a1e168d4abf50a48c5997c01278eeff5bb033b06e833a07a39bddaef84b4",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "judge": "be9a649af73a154afb08aab35f8c0c72f94f1fb54a18304c3d62eee5f6e8cea5",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/82a8a41a1df9cc7c7d28/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": []
+      }
+    },
+    {
+      "phase": "after",
+      "request_id": "after:0:07b42fd_3",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 0,
+        "kernel_calls": 2,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "b93f3b072758d6ef0487a0c09513e5ca0adecc5acd592d8dbf4ccbf9b4819d2f",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "judge": "77c40b86faeb99190eb14d9ea8c0ca98e414bf5184a72b5f9b82a099540f9bad",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/04a63a4f2fde867ae2f9/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": []
+      }
+    },
+    {
+      "phase": "after",
+      "request_id": "after:1:07b42fd_1",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 0,
+        "kernel_calls": 2,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "9bdfee9e3f61e817e779bb070c1dcb48cdefa46debf604976b50ab723a13cdc2",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "judge": "2e2cf6d1cbd31058d5c15a008a84681ebc3a50e7c6df51799ecae7cf950cbeab",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/0e71341acc28d79f6f24/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": []
+      }
+    },
+    {
+      "phase": "after",
+      "request_id": "after:1:07b42fd_2",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 0,
+        "kernel_calls": 2,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "2b75268fbc4360542ae85153d2af40650e0eef6b852502c121023ba06100b301",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "judge": "2cc479067412cdf9c3bbe12693fd3faafb8f8413d7de08420ae6da85467a60b8",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/aede3299beef0d46099f/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": []
+      }
+    },
+    {
+      "phase": "after",
+      "request_id": "after:1:07b42fd_3",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 0,
+        "kernel_calls": 2,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "d494b9b1fc01152f22d6243f2d9c965a9557977dac4dcd89c17c271525014fc3",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "judge": "c77242af3b30e802d5bda57a7fd5b77ccecc743a74a16c4d7d57dc8f47bcf294",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/c1dbce12c604ab0a1ea7/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": []
+      }
+    },
+    {
+      "phase": "after",
+      "request_id": "after:2:07b42fd_1",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 0,
+        "kernel_calls": 2,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "024c72f244b71e7961e5f8e7448247f2a93d21bd9d4939aed4c03361c0757766",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "judge": "3bcebae1bdffc0f0e16bbf88a38578873c39ef03c3805436815623192531a772",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/3b8be6ee8a087edaa095/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": []
+      }
+    },
+    {
+      "phase": "after",
+      "request_id": "after:2:07b42fd_2",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 0,
+        "kernel_calls": 2,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "2c2331eb24895a1b920332e842e210af73bbf8ab56b7c8eff791618844ce9ba4",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "judge": "ef129ef21249e483b6e6e02f274fbe523dc99b3221cd1d658f2f23d93d3fb759",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/5b163fae86c059889193/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": []
+      }
+    },
+    {
+      "phase": "after",
+      "request_id": "after:2:07b42fd_3",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 0,
+        "kernel_calls": 2,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "9a57a2f0e60201c790c25952a474f8d7c1eae4475c6ca6463bee1c5763d41e94",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "judge": "86f1a511119b625f92a8056f6f5876a4f557ff8a54684b372d0bb8166f2ef795",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/fd84b5fa172a78e0cb1d/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": []
+      }
+    },
+    {
+      "phase": "relationship_recovery",
+      "request_id": "relationship_recovery",
+      "audit": {
+        "passed": false,
+        "native_success": null,
+        "native_checks": null,
+        "model_calls": 9,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "d91121b5c0526f076278044ba856c7a22a88f8b14d81f545f0927dfd756082b0",
+        "task_state": "FALSE",
+        "execution_stop": "NO_PROGRESS",
+        "steps": 11,
+        "tool_attempts": 0,
+        "compactions": 0,
+        "judge": "cb607b739fba9c3855eea46041f030ffd525c970ddd0b4561c1c722fd2bbb81a",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/2c918cf52558378df025/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 9,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 881,
+            "output_tokens": 56,
+            "duration_ms": 15326
+          },
+          {
+            "event": 16,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 944,
+            "output_tokens": 38,
+            "duration_ms": 5850
+          },
+          {
+            "event": 23,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1003,
+            "output_tokens": 33,
+            "duration_ms": 4836
+          },
+          {
+            "event": 28,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1068,
+            "output_tokens": 21,
+            "duration_ms": 3887
+          },
+          {
+            "event": 33,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1125,
+            "output_tokens": 20,
+            "duration_ms": 4468
+          },
+          {
+            "event": 38,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1181,
+            "output_tokens": 19,
+            "duration_ms": 4361
+          },
+          {
+            "event": 43,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1238,
+            "output_tokens": 20,
+            "duration_ms": 4690
+          },
+          {
+            "event": 48,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1297,
+            "output_tokens": 20,
+            "duration_ms": 4959
+          },
+          {
+            "event": 53,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1351,
+            "output_tokens": 20,
+            "duration_ms": 5512
+          }
+        ]
+      }
+    },
+    {
+      "phase": "relationship_transfer",
+      "request_id": "relationship_transfer",
+      "audit": {
+        "passed": true,
+        "native_success": null,
+        "native_checks": null,
+        "model_calls": 0,
+        "kernel_calls": 2,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "39965c81e3fd5d5e7a0c74c23675b0cd575554a864ad143926288f8b3c4d491e",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "judge": "59288c1fb0e4f3407abcdaf2818761ad76be5d3d77f6471596d8f657aa2c915a",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/36d2621b06098b2c02e9/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": []
+      }
+    },
+    {
+      "phase": "old_native_after_second_repair",
+      "request_id": "old-native-final",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 0,
+        "kernel_calls": 2,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "232848694d44f0955637ed897c16a26746f03e02d6154ce6215f61cb4c652325",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "judge": "4819fdd96b7499f63ced8a10aa006ff1ae28c8e7542d7060b4fa4cbfabacffaf",
+        "run": "<workspace>/runs/learning/live-acceptance-v2/inference/7733bc8a23a6a92aaef2/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": []
+      }
+    }
+  ],
+  "phase_counts": {
+    "raw": 3,
+    "recovery": 3,
+    "after": 9,
+    "relationship_recovery": 1,
+    "relationship_transfer": 1,
+    "old_native_after_second_repair": 1
+  },
+  "promotions": [
+    {
+      "id": 1,
+      "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+      "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "receipt": "45b20e1523e1500dc4de28ac9eef479eb1472dc550fe45a8da245ce1fb0265d0",
+      "accepted": 1,
+      "at": "2026-11-13T23:45:31.483876+00:00"
+    },
+    {
+      "id": 2,
+      "parent": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "candidate": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+      "receipt": "faeb2076c173ddc12df6f627f70168e86582baea0d83020266cd4ff350a57e2a",
+      "accepted": 1,
+      "at": "2026-11-13T23:49:57.064770+00:00"
+    }
+  ],
+  "regression_suite_sizes": [
+    1,
+    4
+  ],
+  "stress": {
+    "scheduled": 100,
+    "passed": 100,
+    "receipt": "526d685eae5d4a3926e802b7d6ac07e8a8bf79e7ef7e93ab7d5a270b34677d3b"
+  },
+  "negative_control": {
+    "state": "FALSE",
+    "receipt": "fa1f6ab68d1286f51400ab8674cf2101e5cfcf34a6598a99cdd4ed1bf7d71e0b",
+    "active_unchanged": true
+  },
+  "limitations": [
+    "The three native tasks are previously exposed training variants, not sealed held-out tasks.",
+    "Generated structural cases are not additional native benchmark tasks."
+  ]
+}

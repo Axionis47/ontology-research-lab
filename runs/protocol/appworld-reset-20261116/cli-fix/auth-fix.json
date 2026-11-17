@@ -1,0 +1,16 @@
+{
+  "auth_before": "oauth-personal",
+  "auth_after": "vertex-ai",
+  "settings_backup": "<workspace>/runs/protocol/appworld-reset-20261116/cli-fix/gemini-settings.original.json",
+  "settings_sha256": "ab56fe9223c581bb7a2a4b1cb516051075f0e5bf351a0b0560b2a4bffab79ca7",
+  "environment_file": "<user-home>/.gemini/.env",
+  "environment_sha256": "284beb5941e5929cf6373472511bdd57716b89f74ce1cc4f1274c6b103441753",
+  "environment_names": [
+    "GOOGLE_GENAI_USE_VERTEXAI",
+    "GOOGLE_CLOUD_PROJECT",
+    "GOOGLE_CLOUD_LOCATION"
+  ],
+  "new_service_enabled": false,
+  "new_credentials_created": false,
+  "model_override": false
+}

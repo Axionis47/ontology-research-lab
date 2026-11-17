@@ -1,0 +1,18 @@
+{
+  "initial": {
+    "calls": 3,
+    "main_input": 29167,
+    "main_generated": 7392,
+    "router": 16248,
+    "total": 52807,
+    "reported_calls": 3
+  },
+  "recovery": {
+    "calls": 2,
+    "main_input": 21049,
+    "main_generated": 14323,
+    "router": 13245,
+    "total": 48617,
+    "reported_calls": 2
+  }
+}

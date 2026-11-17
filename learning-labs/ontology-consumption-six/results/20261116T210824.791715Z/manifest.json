@@ -1,0 +1,32 @@
+{
+  "kind": "same_task_ontology_consumption",
+  "cli_version": "0.68.0",
+  "live": true,
+  "facts_sha256": "d77c22252b55ad27558896c17ff243a966ac0c8fb665f57d120ce46604aa71ab",
+  "ontology_sha256": "da7e0683f49af3b1db5cdfbdfae69aa67b954da620d45f68776195ef5e3b1dc8",
+  "runner_sha256": "37c37d7ac1b462206ca611d1dc90b4a7d48dccc7b84a4d084ed4f50d7daa96bc",
+  "helper_sha256": "24960174ffb79bea5fb746c90611e29cd8d0d507105b97b152347debbf4ed2d6",
+  "config_sha256": "b6f5c6488dff99cac8afff35eab0ca62abccaaf3340872dc5b152b91f170adff",
+  "policy_sha256": "406702e019a25be380e93ffa7ffb1c4b17c5857e429574cef3dde17887a0ab0f",
+  "max_calls_each": 5,
+  "max_total_cli_calls": 5,
+  "task_hashes": {
+    "03-schema-inspection": "186643f3221ec1312973c753f6b0bc2490f0de68360b9104515eac5fcf0675cf"
+  },
+  "initial_fact_hashes": {
+    "03-schema-inspection": "2656479bcddfd05dc5bad528508b89e8f2584717a004bcb38511f525402ba7a2"
+  },
+  "protocol_hashes": {
+    "03-schema-inspection": "3e9295bb72e1f30df7a05055254eae4afa3a04e786d31ca482e271de72c1856a"
+  },
+  "appworld_runs": 0,
+  "rules": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6"
+  ],
+  "model_selection": "configured CLI routing; no override"
+}

@@ -1,0 +1,40 @@
+{
+  "experiment": "06",
+  "title": "Request evidence through an interface",
+  "terms": {
+    "tool contract": "A named operation and its allowed arguments.",
+    "proposal": "A request, not an executed effect."
+  },
+  "instruction": "Choose the single documented read tool to obtain the missing value. Return the tool request only; do not invent an owner. No tool is actually executed in this lesson.",
+  "input": {
+    "known": {
+      "LoginService": {
+        "type": "Service",
+        "owner": "UNKNOWN"
+      }
+    },
+    "task": "Identify the owner of LoginService.",
+    "tools": {
+      "get_service": {
+        "arguments": {
+          "service_id": "string"
+        },
+        "returns": [
+          "service_id",
+          "owner"
+        ]
+      },
+      "set_owner": {
+        "arguments": {
+          "service_id": "string",
+          "person_id": "string"
+        },
+        "effect": "changes owner"
+      }
+    }
+  },
+  "output_shape": {
+    "name": "tool name",
+    "arguments": "object"
+  }
+}

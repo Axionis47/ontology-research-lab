@@ -1,0 +1,5 @@
+PREFIX ex: <https://example.org/learning/>
+SELECT ?project ?service WHERE {
+  ex:Maya ex:belongsTo ?project .
+  ?service ex:belongsTo ?project ; a ex:Service .
+}

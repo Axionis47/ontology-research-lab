@@ -1,0 +1,6 @@
+{
+  "mode": "inspect",
+  "title": "Model inspects definitions",
+  "mechanism": "Initially sees names and kinds, then requests definitions through inspect_schema.",
+  "limitation": "The model can request too little, misunderstand definitions, or spend extra calls inspecting."
+}

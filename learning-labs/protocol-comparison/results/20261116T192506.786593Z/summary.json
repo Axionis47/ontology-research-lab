@@ -1,0 +1,42 @@
+{
+  "complete": true,
+  "results": [
+    {
+      "mode": "full_text",
+      "status": "MEASURED",
+      "correct_at_observation": true,
+      "cli_calls": 1,
+      "submitted_user_chars": 11238
+    },
+    {
+      "mode": "full_structured",
+      "status": "MEASURED",
+      "correct_at_observation": true,
+      "cli_calls": 1,
+      "submitted_user_chars": 9354
+    },
+    {
+      "mode": "retrieved_fragment",
+      "status": "MEASURED",
+      "correct_at_observation": true,
+      "cli_calls": 1,
+      "submitted_user_chars": 1904
+    },
+    {
+      "mode": "graph_queries",
+      "status": "MEASURED",
+      "correct_at_observation": true,
+      "cli_calls": 3,
+      "submitted_user_chars": 6070
+    },
+    {
+      "mode": "typed_function",
+      "status": "MEASURED",
+      "correct_at_observation": true,
+      "cli_calls": 2,
+      "submitted_user_chars": 3518
+    }
+  ],
+  "kind": "synthetic_comparison",
+  "appworld_runs": 0
+}

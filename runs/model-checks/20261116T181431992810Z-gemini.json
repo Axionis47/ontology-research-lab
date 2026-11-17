@@ -1,0 +1,204 @@
+{
+  "started_at": "2026-11-16T18:14:05.851711+00:00",
+  "checks": [
+    {
+      "provider": "gemini",
+      "check": "cli_version",
+      "passed": true,
+      "version": "0.68.0",
+      "executable": "<user-home>/.nvm/versions/node/v24.5.0/bin/gemini",
+      "model_selection": "inherited from CLI; no model override"
+    },
+    {
+      "provider": "gemini",
+      "check": "authenticated_inference",
+      "passed": true,
+      "response": "MODEL_OK",
+      "stats": {
+        "models": {
+          "gemini-3.5-flash-lite": {
+            "api": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 6427,
+              "errorsByType": {}
+            },
+            "tokens": {
+              "input": 2887,
+              "prompt": 2887,
+              "candidates": 26,
+              "total": 3672,
+              "cached": 0,
+              "thoughts": 759,
+              "tool": 0
+            },
+            "roles": {
+              "utility_router": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 6427,
+                "tokens": {
+                  "input": 2887,
+                  "prompt": 2887,
+                  "candidates": 26,
+                  "total": 3672,
+                  "cached": 0,
+                  "thoughts": 759,
+                  "tool": 0
+                }
+              }
+            }
+          },
+          "gemini-3.8-flash": {
+            "api": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 2026,
+              "errorsByType": {}
+            },
+            "tokens": {
+              "input": 7833,
+              "prompt": 7833,
+              "candidates": 3,
+              "total": 7878,
+              "cached": 0,
+              "thoughts": 42,
+              "tool": 0
+            },
+            "roles": {
+              "main": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 2026,
+                "tokens": {
+                  "input": 7833,
+                  "prompt": 7833,
+                  "candidates": 3,
+                  "total": 7878,
+                  "cached": 0,
+                  "thoughts": 42,
+                  "tool": 0
+                }
+              }
+            }
+          }
+        },
+        "tools": {
+          "totalCalls": 0,
+          "totalSuccess": 0,
+          "totalFail": 0,
+          "totalDurationMs": 0,
+          "totalDecisions": {
+            "accept": 0,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 0
+          },
+          "byName": {}
+        },
+        "files": {
+          "totalLinesAdded": 0,
+          "totalLinesRemoved": 0
+        }
+      }
+    },
+    {
+      "provider": "gemini",
+      "check": "structured_code_repair",
+      "passed": true,
+      "code": "def within_limit(amount, limit):\n    return amount <= limit",
+      "validation": "Exact expected Python AST; generated code not executed",
+      "stats": {
+        "models": {
+          "gemini-3.5-flash-lite": {
+            "api": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 4679,
+              "errorsByType": {}
+            },
+            "tokens": {
+              "input": 2956,
+              "prompt": 2956,
+              "candidates": 27,
+              "total": 3841,
+              "cached": 0,
+              "thoughts": 858,
+              "tool": 0
+            },
+            "roles": {
+              "utility_router": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 4679,
+                "tokens": {
+                  "input": 2956,
+                  "prompt": 2956,
+                  "candidates": 27,
+                  "total": 3841,
+                  "cached": 0,
+                  "thoughts": 858,
+                  "tool": 0
+                }
+              }
+            }
+          },
+          "gemini-3.8-flash": {
+            "api": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 10192,
+              "errorsByType": {}
+            },
+            "tokens": {
+              "input": 7902,
+              "prompt": 7902,
+              "candidates": 20,
+              "total": 8338,
+              "cached": 0,
+              "thoughts": 416,
+              "tool": 0
+            },
+            "roles": {
+              "main": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 10192,
+                "tokens": {
+                  "input": 7902,
+                  "prompt": 7902,
+                  "candidates": 20,
+                  "total": 8338,
+                  "cached": 0,
+                  "thoughts": 416,
+                  "tool": 0
+                }
+              }
+            }
+          }
+        },
+        "tools": {
+          "totalCalls": 0,
+          "totalSuccess": 0,
+          "totalFail": 0,
+          "totalDurationMs": 0,
+          "totalDecisions": {
+            "accept": 0,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 0
+          },
+          "byName": {}
+        },
+        "files": {
+          "totalLinesAdded": 0,
+          "totalLinesRemoved": 0
+        }
+      }
+    }
+  ],
+  "passed": true,
+  "elapsed_seconds": {
+    "gemini": 26.14
+  }
+}

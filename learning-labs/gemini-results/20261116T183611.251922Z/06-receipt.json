@@ -1,0 +1,123 @@
+{
+  "experiment": "06-model-consumption",
+  "status": "MEASURED",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"06\",\n  \"title\": \"Request evidence through an interface\",\n  \"terms\": {\n    \"tool contract\": \"A named operation and its allowed arguments.\",\n    \"proposal\": \"A request, not an executed effect.\"\n  },\n  \"instruction\": \"Choose the single documented read tool to obtain the missing value. Return the tool request only; do not invent an owner. No tool is actually executed in this lesson.\",\n  \"input\": {\n    \"known\": {\n      \"LoginService\": {\n        \"type\": \"Service\",\n        \"owner\": \"UNKNOWN\"\n      }\n    },\n    \"task\": \"Identify the owner of LoginService.\",\n    \"tools\": {\n      \"get_service\": {\n        \"arguments\": {\n          \"service_id\": \"string\"\n        },\n        \"returns\": [\n          \"service_id\",\n          \"owner\"\n        ]\n      },\n      \"set_owner\": {\n        \"arguments\": {\n          \"service_id\": \"string\",\n          \"person_id\": \"string\"\n        },\n        \"effect\": \"changes owner\"\n      }\n    }\n  },\n  \"output_shape\": {\n    \"name\": \"tool name\",\n    \"arguments\": \"object\"\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "name": "get_service",
+    "arguments": {
+      "service_id": "LoginService"
+    }
+  },
+  "reported_models": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash"
+  ],
+  "passed": true,
+  "exit_code": 0,
+  "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+  "cli_response": {
+    "session_id": "1aef1d0c-f1ca-4b7c-a3ee-d58e6fbe7b06",
+    "response": "{\n  \"name\": \"get_service\",\n  \"arguments\": {\n    \"service_id\": \"LoginService\"\n  }\n}",
+    "stats": {
+      "models": {
+        "gemini-3.5-flash-lite": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 6162,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 1271,
+            "prompt": 1271,
+            "candidates": 28,
+            "total": 2141,
+            "cached": 0,
+            "thoughts": 842,
+            "tool": 0
+          },
+          "roles": {
+            "utility_router": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 6162,
+              "tokens": {
+                "input": 1271,
+                "prompt": 1271,
+                "candidates": 28,
+                "total": 2141,
+                "cached": 0,
+                "thoughts": 842,
+                "tool": 0
+              }
+            }
+          }
+        },
+        "gemini-3.8-flash": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 5607,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 6213,
+            "prompt": 6213,
+            "candidates": 33,
+            "total": 6711,
+            "cached": 0,
+            "thoughts": 465,
+            "tool": 0
+          },
+          "roles": {
+            "main": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 5607,
+              "tokens": {
+                "input": 6213,
+                "prompt": 6213,
+                "candidates": 33,
+                "total": 6711,
+                "cached": 0,
+                "thoughts": 465,
+                "tool": 0
+              }
+            }
+          }
+        }
+      },
+      "tools": {
+        "totalCalls": 0,
+        "totalSuccess": 0,
+        "totalFail": 0,
+        "totalDurationMs": 0,
+        "totalDecisions": {
+          "accept": 0,
+          "reject": 0,
+          "modify": 0,
+          "auto_accept": 0
+        },
+        "byName": {}
+      },
+      "files": {
+        "totalLinesAdded": 0,
+        "totalLinesRemoved": 0
+      }
+    }
+  },
+  "checks": {
+    "exact_keys": true,
+    "fields": {
+      "name": true,
+      "arguments": true
+    },
+    "passed": true
+  },
+  "answer": {
+    "name": "get_service",
+    "arguments": {
+      "service_id": "LoginService"
+    }
+  }
+}

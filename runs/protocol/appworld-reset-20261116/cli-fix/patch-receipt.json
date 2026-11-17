@@ -1,0 +1,8 @@
+{
+  "file": "<user-home>/.nvm/versions/node/v24.5.0/lib/node_modules/@google/gemini-cli/bundle/chunk-RCB6BI5H.js",
+  "backup": "<workspace>/runs/protocol/appworld-reset-20261116/cli-fix/chunk-RCB6BI5H.js.original",
+  "before_sha256": "8cddc5b439108f43e41692d8a534e2a76e61151376e33d121e5b1cc2895423ff",
+  "after_sha256": "53713a5fe00c37b08d37d42fea32a9f76a70413c44e0540c531002df7ec06857",
+  "modified_statements": 3,
+  "purpose": "Omit empty function declaration containers when no tools are enabled; preserve deny-all execution policy."
+}

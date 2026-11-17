@@ -1,0 +1,140 @@
+{
+  "experiment": "03-constraints-provenance",
+  "status": "MEASURED",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"03\",\n  \"title\": \"Valid does not mean evidenced\",\n  \"terms\": {\n    \"constraint\": \"An explicit acceptance condition.\",\n    \"provenance\": \"The source supporting a claim.\"\n  },\n  \"instruction\": \"For this closed fixture maintains requires an explicitly typed Person subject and Service object. Admit only if the source receipt exactly supports the claim. This is a validation policy, not RDFS inference.\",\n  \"input\": {\n    \"types\": {\n      \"Maya\": \"Person\",\n      \"LoginService\": \"Service\"\n    },\n    \"candidates\": {\n      \"A\": {\n        \"triple\": [\n          \"Maya\",\n          \"maintains\",\n          \"LoginService\"\n        ],\n        \"receipt\": null\n      },\n      \"B\": {\n        \"triple\": [\n          \"LoginService\",\n          \"maintains\",\n          \"Maya\"\n        ],\n        \"receipt\": null\n      },\n      \"C\": {\n        \"triple\": [\n          \"Maya\",\n          \"maintains\",\n          \"LoginService\"\n        ],\n        \"receipt\": [\n          \"Maya\",\n          \"maintains\",\n          \"LoginService\"\n        ]\n      }\n    }\n  },\n  \"output_shape\": {\n    \"A\": {\n      \"structure_valid\": \"boolean\",\n      \"admitted\": \"boolean\"\n    },\n    \"B\": {\n      \"structure_valid\": \"boolean\",\n      \"admitted\": \"boolean\"\n    },\n    \"C\": {\n      \"structure_valid\": \"boolean\",\n      \"admitted\": \"boolean\"\n    }\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "A": {
+      "structure_valid": true,
+      "admitted": false
+    },
+    "B": {
+      "structure_valid": false,
+      "admitted": false
+    },
+    "C": {
+      "structure_valid": true,
+      "admitted": true
+    }
+  },
+  "reported_models": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash"
+  ],
+  "passed": true,
+  "exit_code": 0,
+  "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+  "cli_response": {
+    "session_id": "af1006bd-0a92-4f36-b8b8-c1023706d3b8",
+    "response": "{\n  \"A\": {\n    \"structure_valid\": true,\n    \"admitted\": false\n  },\n  \"B\": {\n    \"structure_valid\": false,\n    \"admitted\": false\n  },\n  \"C\": {\n    \"structure_valid\": true,\n    \"admitted\": true\n  }\n}",
+    "stats": {
+      "models": {
+        "gemini-3.5-flash-lite": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 6958,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 1358,
+            "prompt": 1358,
+            "candidates": 34,
+            "total": 2149,
+            "cached": 0,
+            "thoughts": 757,
+            "tool": 0
+          },
+          "roles": {
+            "utility_router": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 6958,
+              "tokens": {
+                "input": 1358,
+                "prompt": 1358,
+                "candidates": 34,
+                "total": 2149,
+                "cached": 0,
+                "thoughts": 757,
+                "tool": 0
+              }
+            }
+          }
+        },
+        "gemini-3.8-flash": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 5825,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 6300,
+            "prompt": 6300,
+            "candidates": 78,
+            "total": 7141,
+            "cached": 0,
+            "thoughts": 763,
+            "tool": 0
+          },
+          "roles": {
+            "main": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 5825,
+              "tokens": {
+                "input": 6300,
+                "prompt": 6300,
+                "candidates": 78,
+                "total": 7141,
+                "cached": 0,
+                "thoughts": 763,
+                "tool": 0
+              }
+            }
+          }
+        }
+      },
+      "tools": {
+        "totalCalls": 0,
+        "totalSuccess": 0,
+        "totalFail": 0,
+        "totalDurationMs": 0,
+        "totalDecisions": {
+          "accept": 0,
+          "reject": 0,
+          "modify": 0,
+          "auto_accept": 0
+        },
+        "byName": {}
+      },
+      "files": {
+        "totalLinesAdded": 0,
+        "totalLinesRemoved": 0
+      }
+    }
+  },
+  "checks": {
+    "exact_keys": true,
+    "fields": {
+      "A": true,
+      "B": true,
+      "C": true
+    },
+    "passed": true
+  },
+  "answer": {
+    "A": {
+      "structure_valid": true,
+      "admitted": false
+    },
+    "B": {
+      "structure_valid": false,
+      "admitted": false
+    },
+    "C": {
+      "structure_valid": true,
+      "admitted": true
+    }
+  }
+}

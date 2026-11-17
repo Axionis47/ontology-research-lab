@@ -1,0 +1,31 @@
+{
+  "experiment": "09",
+  "title": "Extend without inventing facts",
+  "terms": {
+    "migration": "Transforming records into a new representation.",
+    "unknown": "An unsupported value, represented as null here.",
+    "extension": "Adding representational capacity."
+  },
+  "instruction": "Migrate the legacy relation to the new Assignment shape. Use null for unsupported fields. Preserve evidence and do not default an unknown environment to Production.",
+  "input": {
+    "legacy": {
+      "person": "Maya",
+      "service": "LoginService",
+      "source": "receipt1"
+    },
+    "new_shape": {
+      "person": "string",
+      "service": "string",
+      "environment": "string or null",
+      "validUntil": "date or null",
+      "source": "string"
+    }
+  },
+  "output_shape": {
+    "person": "string",
+    "service": "string",
+    "environment": "string or null",
+    "validUntil": "date or null",
+    "source": "string"
+  }
+}

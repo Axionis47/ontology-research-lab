@@ -1,0 +1,58 @@
+{
+  "recorded_at": "2026-11-16T03:02:57.054131+00:00",
+  "requested_gemini_llm_loop": {
+    "passed": false,
+    "status": "BLOCKED_AND_NOT_FULLY_INTEGRATED",
+    "judge_provider": "installed Gemini CLI only",
+    "judge_result": "JUDGE_UNAVAILABLE",
+    "judge_error": "Gemini CLI default call was rejected by Google: UNSUPPORTED_CLIENT for the existing saved login",
+    "model_verdicts_returned": 0,
+    "automatic_gemini_diagnosis_to_proposer_wiring": false
+  },
+  "control": {
+    "actor": "scripted reference",
+    "proposer": "bounded-program-search",
+    "judge": "deterministic",
+    "initial_requests_passed": 8,
+    "adjusted_requests_passed": 10,
+    "request_count": 10,
+    "unique_cases": 9,
+    "accepted_repairs": 3,
+    "rejected_candidates": 71,
+    "frozen_generated_checks": {
+      "passed_before": 42,
+      "passed_after": 96,
+      "total": 96
+    },
+    "final_fresh_replays": {
+      "passed": 10,
+      "total": 10
+    },
+    "largest_ticket_workload": 256,
+    "same_final_package_after_adjustment": true,
+    "package": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+    "adjustments": "Per-request max_context_chars=32768 and inline_output_chars=20000 for two previously failed scripted recovery cases; exposed development rerun"
+  },
+  "validation": {
+    "unit_tests_passed": 131,
+    "unit_test_seconds": 155.139,
+    "specification_check_passed": true,
+    "runtime_sources_unchanged": true,
+    "frozen_inputs_unchanged": true,
+    "initial_archive_audit": {
+      "complete": true,
+      "event_head": "96504a3b5c4d23c3ce320d163eac15719c408ead55df68fbbca9fb309be0d417"
+    },
+    "adjusted_archive_audit": {
+      "complete": true,
+      "event_head": "766046fd762a282b7f4b16997c17a85891268999ccf653552f5e2d99dd12c6ee"
+    }
+  },
+  "limitations": [
+    "Control improvements were not authored or judged by an LLM.",
+    "Synthetic local selective updates only; generated checks are not native benchmark scores.",
+    "No live Qwen actor or proposer was rerun in this review. Prior six proposal experiments remain unsuccessful.",
+    "No application code, global model settings, or authentication settings changed.",
+    "Learning reached the default 20-cycle budget; additional learning requires an explicit budget increase."
+  ]
+}

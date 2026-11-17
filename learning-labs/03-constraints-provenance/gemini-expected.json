@@ -1,0 +1,14 @@
+{
+  "A": {
+    "structure_valid": true,
+    "admitted": false
+  },
+  "B": {
+    "structure_valid": false,
+    "admitted": false
+  },
+  "C": {
+    "structure_valid": true,
+    "admitted": true
+  }
+}

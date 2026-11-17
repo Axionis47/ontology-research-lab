@@ -1,0 +1,15 @@
+{
+  "project": "10-semantic-version-change",
+  "exit_code": 0,
+  "json_result": true,
+  "passed": true,
+  "check_count": 7,
+  "status": "EXECUTED",
+  "source_sha256": {
+    "run.py": "c01445eabfb187ccde242223d53a5d9ec3731060502c32f3e9cfa6bebe89d894",
+    "input.json": "5bc94886d772c1354dff35b1cb64b04c8e342f161634ae9039157d95f9b11d03",
+    "README.md": "df8fd9aacdfe36c1661d38129b2f28f871b06035a7a6a8d8e1d9e4550c85d3c5"
+  },
+  "stdout": "{\n  \"experiment\": \"10\",\n  \"kind\": \"synthetic_deterministic_fixture\",\n  \"candidate_author\": \"assistant_teaching_fixture\",\n  \"model_calls\": 0,\n  \"native_appworld_runs\": 0,\n  \"gemini_judgment\": \"NOT_RUN\",\n  \"gemini_proposal\": \"NOT_RUN\",\n  \"input_sha256\": \"5bc94886d772c1354dff35b1cb64b04c8e342f161634ae9039157d95f9b11d03\",\n  \"results\": {\n    \"v1\": [\n      {\n        \"case\": \"targeted_gap\",\n        \"actual\": true,\n        \"expected\": false,\n        \"passed\": false\n      },\n      {\n        \"case\": \"preserve_service_approval\",\n        \"actual\": true,\n        \"expected\": true,\n        \"passed\": true\n      },\n      {\n        \"case\": \"preserve_denial_without_approval\",\n        \"actual\": false,\n        \"expected\": false,\n        \"passed\": true\n      }\n    ],\n    \"v2\": [\n      {\n        \"case\": \"targeted_gap\",\n        \"actual\": false,\n        \"expected\": false,\n        \"passed\": true\n      },\n      {\n        \"case\": \"preserve_service_approval\",\n        \"actual\": true,\n        \"expected\": true,\n        \"passed\": true\n      },\n      {\n        \"case\": \"preserve_denial_without_approval\",\n        \"actual\": false,\n        \"expected\": false,\n        \"passed\": true\n      }\n    ],\n    \"bad\": [\n      {\n        \"case\": \"targeted_gap\",\n        \"actual\": false,\n        \"expected\": false,\n        \"passed\": true\n      },\n      {\n        \"case\": \"preserve_service_approval\",\n        \"actual\": false,\n        \"expected\": true,\n        \"passed\": false\n      },\n      {\n        \"case\": \"preserve_denial_without_approval\",\n        \"actual\": false,\n        \"expected\": false,\n        \"passed\": true\n      }\n    ]\n  },\n  \"candidate_decisions\": {\n    \"v2\": true,\n    \"bad\": false\n  },\n  \"active_episode\": {\n    \"id\": \"episode-already-running\",\n    \"pinned_package\": \"v1\"\n  },\n  \"new_episode\": {\n    \"id\": \"new-episode\",\n    \"pinned_package\": \"v2\"\n  },\n  \"checks\": {\n    \"same_evidence_changes_answer_under_new_meaning\": true,\n    \"parent_failure_exposed\": true,\n    \"supported_candidate_accepted_in_fixture\": true,\n    \"deny_everything_candidate_rejected\": true,\n    \"negative_candidate_has_regression\": true,\n    \"active_episode_stays_pinned\": true,\n    \"new_episode_uses_new_version\": true\n  },\n  \"passed\": true\n}\n",
+  "stderr": ""
+}

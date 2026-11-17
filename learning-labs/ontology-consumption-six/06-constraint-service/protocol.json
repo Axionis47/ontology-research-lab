@@ -1,0 +1,6 @@
+{
+  "mode": "check",
+  "title": "Candidate constraint service",
+  "mechanism": "Relevant definitions plus check_candidates; model proposes people, checker returns satisfied or violated rules.",
+  "limitation": "Checking proposed candidates does not guarantee all candidates were considered; rules and source completeness must be correct."
+}

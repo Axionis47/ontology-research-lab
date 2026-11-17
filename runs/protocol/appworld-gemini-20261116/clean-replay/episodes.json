@@ -1,0 +1,398 @@
+[
+  {
+    "phase": "baseline_and_learning",
+    "task": "07b42fd_1",
+    "result": {
+      "request_id": "0:07b42fd_1",
+      "episode": {
+        "status": "NO_PROGRESS",
+        "answer": null,
+        "steps": 5,
+        "tool_attempts": 0,
+        "compactions": 0,
+        "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "kernel_handoff": {
+          "reason": "CAPABILITY_GAP",
+          "pending_work": "The learned selection would change protected records. Its plan was refused before dispatch; use the original conditions and current evidence.",
+          "evidence_ids": [
+            "60219561-19b0-409f-a454-d941d2c4fd83"
+          ],
+          "step": 1,
+          "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+        },
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/protocol/appworld-gemini-20261116/clean-replay/native/inference/19add8dd31a0ef441b22/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/protocol/appworld-gemini-20261116/clean-replay/native/inference/19add8dd31a0ef441b22/react/exports/dabc58cd-ba4c-405e-994f-a5ea8478dc34/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "3361237bab2d89d16af47d4fee76793236d78d31c62cc0a42771114bb4d57228",
+      "task_state": "FALSE",
+      "recovered": false,
+      "repair_route": "POLICY_BINDING",
+      "repair_case": null,
+      "native": {
+        "success": false,
+        "evaluation": "0f3b1e0a1b18e96593e17475bce3508243de110b2b21b7a5b0f7c7baf83002d0",
+        "mcp_segments": [
+          "4595c1b522d320b41c8cd51c9c8d1c5647ed2042d39fdeba4028cf7d2d2e3cc0",
+          "b3b219cc8d6ab79342698084c8f28d459e39d6e8a71e4bedae45f95821250a3d"
+        ],
+        "mcp_events": 22,
+        "task_id": "07b42fd_1",
+        "scope": "appworld:07b42fd_1:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "learning": {
+        "completed": [
+          {
+            "case": "3858738db4833e6ac75b67e73a931e6cec8ecd9b47f1baf45fb8ee117ea28471",
+            "outcome": "ACCEPTED"
+          }
+        ],
+        "active": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "generation": 1,
+        "active_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "policy_decisions": [],
+        "proposals_spent": 1,
+        "cycles_spent": 1,
+        "cases": {
+          "RESOLVED": 1
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "receipt": "094f42e4550b89a5aa65df3f990e20060a9aac3dea9c3e274818334e80a35923",
+            "accepted": 1,
+            "at": "2026-11-16T18:50:47.752618+00:00"
+          }
+        ],
+        "native_performance_claimed": false,
+        "status": "IMPROVED",
+        "diagnosis": "5f44979dbd596f6f769e9f14fd025c34cfb3dee6e7ce6bf1c8c0e59b7cccfafc",
+        "diagnosed_case": "3858738db4833e6ac75b67e73a931e6cec8ecd9b47f1baf45fb8ee117ea28471",
+        "unaddressed_findings": [
+          {
+            "severity": "CRITICAL",
+            "criterion": "ACTION_SELECTION",
+            "status": "SUPPORTED",
+            "component": "ACTOR",
+            "symptom": "During recovery, the actor repeatedly invoked discover_tools with invalid arguments ('strategy': {}, 'limit': 100), triggering repeated ARGUMENT_SCHEMA_INVALID denials and stalling execution.",
+            "hypothesis": "The actor model repeatedly violated the discover_tools input schema by passing an empty object for strategy (which requires an enum or weighted object) and limit exceeding the schema maximum of 10, failing to recover after receiving validation error feedback.",
+            "citations": [
+              {
+                "evidence_id": "d84212c0-e108-5198-a99e-8fdf6ca5eee4",
+                "locator": {
+                  "kind": "WHOLE",
+                  "path": null,
+                  "start": null,
+                  "end": null
+                },
+                "relationship": "SUPPORTS"
+              },
+              {
+                "evidence_id": "c4299c57-416a-5817-9a19-d597f1896b16",
+                "locator": {
+                  "kind": "WHOLE",
+                  "path": null,
+                  "start": null,
+                  "end": null
+                },
+                "relationship": "SUPPORTS"
+              },
+              {
+                "evidence_id": "cf0d01ce-eb84-5b10-b56c-faa19b2c0901",
+                "locator": {
+                  "kind": "WHOLE",
+                  "path": null,
+                  "start": null,
+                  "end": null
+                },
+                "relationship": "SUPPORTS"
+              }
+            ],
+            "confidence": 0.95,
+            "evidence_gaps": [],
+            "repair_class": "TRAINING_EXAMPLE",
+            "distinguishing_test": "Evaluate the actor in recovery mode with tool discovery schemas; verify it produces valid arguments satisfying limit <= 10 and valid strategy oneOf variants without repeating rejected argument structures.",
+            "preserve_behavior": "Preserve the actor's intent to discover tools when handed off from kernel due to a capability gap."
+          }
+        ]
+      },
+      "next_package": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "next_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    "audit": {
+      "passed": false,
+      "native_success": false,
+      "native_checks": 5,
+      "model_calls": 3,
+      "kernel_calls": 1,
+      "handoffs": 1,
+      "goals_pinned": true,
+      "scripted_actor": false,
+      "trace_complete": true,
+      "event_head": "13269be84afa0a3a8f340f73af21346a2d157503150a1d12907678d96a2e46ac",
+      "task_state": "FALSE",
+      "execution_stop": "NO_PROGRESS",
+      "steps": 5,
+      "tool_attempts": 0,
+      "compactions": 0,
+      "judge": "3361237bab2d89d16af47d4fee76793236d78d31c62cc0a42771114bb4d57228",
+      "run": "<workspace>/runs/protocol/appworld-gemini-20261116/clean-replay/native/inference/19add8dd31a0ef441b22/react",
+      "wire_receipts_valid": true,
+      "wire_receipts": [
+        {
+          "event": 9,
+          "valid": true,
+          "context_length": 8192,
+          "prompt_tokens": 1315,
+          "output_tokens": 41,
+          "duration_ms": 16116
+        },
+        {
+          "event": 14,
+          "valid": true,
+          "context_length": 8192,
+          "prompt_tokens": 1403,
+          "output_tokens": 39,
+          "duration_ms": 5209
+        },
+        {
+          "event": 19,
+          "valid": true,
+          "context_length": 8192,
+          "prompt_tokens": 1490,
+          "output_tokens": 35,
+          "duration_ms": 5226
+        }
+      ]
+    }
+  },
+  {
+    "phase": "subsequent_work",
+    "task": "07b42fd_2",
+    "result": {
+      "request_id": "1:07b42fd_2",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "kernel_version": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "kernel_handoff": null,
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/protocol/appworld-gemini-20261116/clean-replay/native/inference/faf1868bc388c595d3f8/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/protocol/appworld-gemini-20261116/clean-replay/native/inference/faf1868bc388c595d3f8/react/exports/3f57dead-89c9-4958-aea7-f1307ce4f3af/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "9f6e239baa1737cc566ba234c87c3647c77514604dcf973d41bae3e384703680",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "9d5ddff998a54bd81cbaa105ca22788e618eb1a296152a04fe7143e4a45b4cee",
+      "native": {
+        "success": true,
+        "evaluation": "f86fbce800e536d6f7f035f642325da4316ab61948c59d0d0e2f2a5ca8b00260",
+        "mcp_segments": [
+          "95b2f1714ab407da5174c0948f78210e8020763a18bca6ab878b8836be18086d",
+          "aad0514f49c12235b8607c13e68745c9c140521843117c5e602dfe48559159d1"
+        ],
+        "mcp_events": 32,
+        "task_id": "07b42fd_2",
+        "scope": "appworld:07b42fd_2:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "learning": {
+        "status": "IDLE",
+        "active": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "decisions": [],
+        "policy_decisions": [],
+        "detail": "No reproduced program failure requires a new proposal."
+      },
+      "next_package": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "next_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    "audit": {
+      "passed": true,
+      "native_success": true,
+      "native_checks": 5,
+      "model_calls": 0,
+      "kernel_calls": 2,
+      "handoffs": 0,
+      "goals_pinned": true,
+      "scripted_actor": false,
+      "trace_complete": true,
+      "event_head": "17050895d02fa56b0917ca2c37b481e67da2b6d63c9e3fedbf2246c21d28f465",
+      "task_state": "TRUE",
+      "execution_stop": "VERIFIED_SUCCESS",
+      "steps": 2,
+      "tool_attempts": 1,
+      "compactions": 0,
+      "judge": "9f6e239baa1737cc566ba234c87c3647c77514604dcf973d41bae3e384703680",
+      "run": "<workspace>/runs/protocol/appworld-gemini-20261116/clean-replay/native/inference/faf1868bc388c595d3f8/react",
+      "wire_receipts_valid": true,
+      "wire_receipts": []
+    }
+  },
+  {
+    "phase": "subsequent_work",
+    "task": "07b42fd_3",
+    "result": {
+      "request_id": "2:07b42fd_3",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "kernel_version": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "kernel_handoff": null,
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/protocol/appworld-gemini-20261116/clean-replay/native/inference/58f7622c9d01a5f0d9bb/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/protocol/appworld-gemini-20261116/clean-replay/native/inference/58f7622c9d01a5f0d9bb/react/exports/ee63c493-df9c-4df7-926c-f50f31c5ebd4/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "41b20ff1e2931538d237d0ffdca9e356b6e65908109c830f15d8c56f8c7f2bce",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "5815408aedaba8e4bf13744ed988a80b4af6c9dae0b384122d6f5c4cae3981b0",
+      "native": {
+        "success": true,
+        "evaluation": "f4b58521f8f8b6f6fb352f4e5c68e7f6ad5c50a5373975565fa769120590cca0",
+        "mcp_segments": [
+          "be805debb587d1d369f8358773e0537feee8ed54d7f4492adb507cf55b7f2347",
+          "4f964b321983cae1bb7cf01c41bee4e41cbe8df898df3773b6f13677faf15f7b"
+        ],
+        "mcp_events": 32,
+        "task_id": "07b42fd_3",
+        "scope": "appworld:07b42fd_3:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "learning": {
+        "status": "IDLE",
+        "active": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "decisions": [],
+        "policy_decisions": [],
+        "detail": "No reproduced program failure requires a new proposal."
+      },
+      "next_package": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "next_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    "audit": {
+      "passed": true,
+      "native_success": true,
+      "native_checks": 5,
+      "model_calls": 0,
+      "kernel_calls": 2,
+      "handoffs": 0,
+      "goals_pinned": true,
+      "scripted_actor": false,
+      "trace_complete": true,
+      "event_head": "969a32f900031b47a02c4e6be9fae0e7aa6f49f27634c7d21f40cb6903ef2d58",
+      "task_state": "TRUE",
+      "execution_stop": "VERIFIED_SUCCESS",
+      "steps": 2,
+      "tool_attempts": 1,
+      "compactions": 0,
+      "judge": "41b20ff1e2931538d237d0ffdca9e356b6e65908109c830f15d8c56f8c7f2bce",
+      "run": "<workspace>/runs/protocol/appworld-gemini-20261116/clean-replay/native/inference/58f7622c9d01a5f0d9bb/react",
+      "wire_receipts_valid": true,
+      "wire_receipts": []
+    }
+  },
+  {
+    "phase": "subsequent_work",
+    "task": "07b42fd_1",
+    "result": {
+      "request_id": "3:07b42fd_1",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "kernel_version": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "kernel_handoff": null,
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/protocol/appworld-gemini-20261116/clean-replay/native/inference/5aa7922e78fc56b343c1/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/protocol/appworld-gemini-20261116/clean-replay/native/inference/5aa7922e78fc56b343c1/react/exports/6db84f37-0161-4a85-8c7a-8656a6ae957d/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "1bcb61b11632f67d204a160097044babdc37ba8840e1ba4e06442f1bb0a32998",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "3858738db4833e6ac75b67e73a931e6cec8ecd9b47f1baf45fb8ee117ea28471",
+      "native": {
+        "success": true,
+        "evaluation": "1483f289261f28c9af35f01b9002bc3ce01e6ba725efb8ff9a12b1a8318b1404",
+        "mcp_segments": [
+          "4595c1b522d320b41c8cd51c9c8d1c5647ed2042d39fdeba4028cf7d2d2e3cc0",
+          "7b3467281f68e9706e9bb8109d3d5ced62829c8147d1d193ce1319e0766a308b"
+        ],
+        "mcp_events": 32,
+        "task_id": "07b42fd_1",
+        "scope": "appworld:07b42fd_1:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "learning": {
+        "status": "IDLE",
+        "active": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "decisions": [],
+        "policy_decisions": [],
+        "detail": "No reproduced program failure requires a new proposal."
+      },
+      "next_package": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "next_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    "audit": {
+      "passed": true,
+      "native_success": true,
+      "native_checks": 5,
+      "model_calls": 0,
+      "kernel_calls": 2,
+      "handoffs": 0,
+      "goals_pinned": true,
+      "scripted_actor": false,
+      "trace_complete": true,
+      "event_head": "2c139e02154983431443880a436af3c57d14faeece8926b4ce1b74810b03050f",
+      "task_state": "TRUE",
+      "execution_stop": "VERIFIED_SUCCESS",
+      "steps": 2,
+      "tool_attempts": 1,
+      "compactions": 0,
+      "judge": "1bcb61b11632f67d204a160097044babdc37ba8840e1ba4e06442f1bb0a32998",
+      "run": "<workspace>/runs/protocol/appworld-gemini-20261116/clean-replay/native/inference/5aa7922e78fc56b343c1/react",
+      "wire_receipts_valid": true,
+      "wire_receipts": []
+    }
+  }
+]

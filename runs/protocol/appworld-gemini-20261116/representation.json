@@ -1,0 +1,156 @@
+{
+  "tasks": [
+    {
+      "case": "9d5ddff998a54bd81cbaa105ca22788e618eb1a296152a04fe7143e4a45b4cee",
+      "task": "Follow all the edm artists on Spotify that have at least 23 followers.",
+      "task_contract": {
+        "goal": "Follow all the edm artists on Spotify that have at least 23 followers.",
+        "scope": "appworld:07b42fd_2:spotify-following",
+        "selector": {
+          "entity_type": "Artist",
+          "numeric": [
+            {
+              "op": "gte",
+              "property": "baseline_adjusted_follower_count",
+              "value": 23
+            }
+          ],
+          "where": {
+            "genre": "edm"
+          }
+        },
+        "update": {
+          "anchor_id": "self",
+          "direction": "out",
+          "kind": "ensure_relation",
+          "relation_type": "follows"
+        },
+        "version": 1
+      },
+      "scope": "appworld:07b42fd_2:spotify-following",
+      "graph_revision": "54d44579353ef259cfc5a363e485bce494a143e99e7b014a90305eff863eb1aa",
+      "complete_observation": true,
+      "entity_counts": {
+        "Account": 1,
+        "Artist": 36
+      },
+      "relation_count": 0,
+      "observation_input_ref": "9d5ddff998a54bd81cbaa105ca22788e618eb1a296152a04fe7143e4a45b4cee",
+      "origin_ref": "0d2760421b555950170b6c4b6acfd8a461a3c8ea1d8dc76e901ea1e11b826437",
+      "definitions": [
+        {
+          "kind": "entity_type",
+          "name": "Account",
+          "definition_ref": "2a102cc5f586afb33b57ed7d32d8d781f1629985e42c4b6adc8a7655aead131a"
+        },
+        {
+          "kind": "entity_type",
+          "name": "Artist",
+          "definition_ref": "fb585ffe31705eadf180a14b87fbc07e51e55570d274bf8ae5ce8f8431afabdf"
+        }
+      ]
+    },
+    {
+      "case": "3858738db4833e6ac75b67e73a931e6cec8ecd9b47f1baf45fb8ee117ea28471",
+      "task": "Follow all the classical artists on Spotify that have at least 22 followers.",
+      "task_contract": {
+        "goal": "Follow all the classical artists on Spotify that have at least 22 followers.",
+        "scope": "appworld:07b42fd_1:spotify-following",
+        "selector": {
+          "entity_type": "Artist",
+          "numeric": [
+            {
+              "op": "gte",
+              "property": "baseline_adjusted_follower_count",
+              "value": 22
+            }
+          ],
+          "where": {
+            "genre": "classical"
+          }
+        },
+        "update": {
+          "anchor_id": "self",
+          "direction": "out",
+          "kind": "ensure_relation",
+          "relation_type": "follows"
+        },
+        "version": 1
+      },
+      "scope": "appworld:07b42fd_1:spotify-following",
+      "graph_revision": "9dfa78a96053731e2516c40fa6dd22ac165f01ca350153489629f44b190ae68c",
+      "complete_observation": true,
+      "entity_counts": {
+        "Account": 1,
+        "Artist": 36
+      },
+      "relation_count": 0,
+      "observation_input_ref": "3858738db4833e6ac75b67e73a931e6cec8ecd9b47f1baf45fb8ee117ea28471",
+      "origin_ref": "bebe0a94decc37a5dc996271dcd640cc4e800f762ed6aec2a3ae5197d74e6826",
+      "definitions": [
+        {
+          "kind": "entity_type",
+          "name": "Account",
+          "definition_ref": "81779a50cb7d53ae4b0b691fd94cb6c82e6b3178e95f342e5c9aeaca71ebf252"
+        },
+        {
+          "kind": "entity_type",
+          "name": "Artist",
+          "definition_ref": "696e921fa62cb106fe3991e501375e5ccab408351a80bf31ce9e50e439ab5480"
+        }
+      ]
+    },
+    {
+      "case": "5815408aedaba8e4bf13744ed988a80b4af6c9dae0b384122d6f5c4cae3981b0",
+      "task": "Follow all the reggae artists on Spotify that have at least 21 followers.",
+      "task_contract": {
+        "goal": "Follow all the reggae artists on Spotify that have at least 21 followers.",
+        "scope": "appworld:07b42fd_3:spotify-following",
+        "selector": {
+          "entity_type": "Artist",
+          "numeric": [
+            {
+              "op": "gte",
+              "property": "baseline_adjusted_follower_count",
+              "value": 21
+            }
+          ],
+          "where": {
+            "genre": "reggae"
+          }
+        },
+        "update": {
+          "anchor_id": "self",
+          "direction": "out",
+          "kind": "ensure_relation",
+          "relation_type": "follows"
+        },
+        "version": 1
+      },
+      "scope": "appworld:07b42fd_3:spotify-following",
+      "graph_revision": "3c47ea02170930bb25cbad21137f6a17b240831d12c4c2c1875094c6cd961f26",
+      "complete_observation": true,
+      "entity_counts": {
+        "Account": 1,
+        "Artist": 36
+      },
+      "relation_count": 0,
+      "observation_input_ref": "5815408aedaba8e4bf13744ed988a80b4af6c9dae0b384122d6f5c4cae3981b0",
+      "origin_ref": "d3cd6d1880da78fcd8430cccc56dd636f0dcc701032fbc2821de6e80e81bce43",
+      "definitions": [
+        {
+          "kind": "entity_type",
+          "name": "Account",
+          "definition_ref": "e52cf6a7d0d66a9438a1131bc7812a8af89d130ccc27770da250e29cd7aa3a44"
+        },
+        {
+          "kind": "entity_type",
+          "name": "Artist",
+          "definition_ref": "6e29a3e5384d477191e39dfd5c6caa554c2cc396f8658ffb4332f79afd375c53"
+        }
+      ]
+    }
+  ],
+  "boundary": "Trusted narrow Spotify adapter and actual API observations. Observed property definitions are indexed per task. Broad automatic ontology generation and semantic reuse are not demonstrated.",
+  "learning_surface": "Existing direct program function, using generic task-bound slots. No new ontology class, property or API is authored by the actor."
+}

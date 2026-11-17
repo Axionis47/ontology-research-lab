@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.venv/
+.appworld/
+node_modules/
+.env
+.env.*
+!.env.example
+.DS_Store
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+**/credential-binding.json
+**/adapter-binding.json
+**/mcp-transcript.jsonl

@@ -1,0 +1,48 @@
+{
+  "complete": true,
+  "experiments": [
+    {
+      "experiment": "01-full-definitions",
+      "status": "MEASURED",
+      "passed": true,
+      "calls": 1,
+      "interface_calls": 0
+    },
+    {
+      "experiment": "03-schema-inspection",
+      "status": "MEASURED",
+      "passed": true,
+      "calls": 2,
+      "interface_calls": 1
+    },
+    {
+      "experiment": "05-typed-function",
+      "status": "MEASURED",
+      "passed": true,
+      "calls": 2,
+      "interface_calls": 1
+    },
+    {
+      "experiment": "04-graph-queries",
+      "status": "MEASURED",
+      "passed": false,
+      "calls": 1,
+      "interface_calls": 0
+    },
+    {
+      "experiment": "06-constraint-service",
+      "status": "MEASURED",
+      "passed": true,
+      "calls": 2,
+      "interface_calls": 1
+    },
+    {
+      "experiment": "02-retrieved-definitions",
+      "status": "MEASURED",
+      "passed": true,
+      "calls": 1,
+      "interface_calls": 0
+    }
+  ],
+  "appworld_runs": 0
+}

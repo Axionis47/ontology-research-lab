@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-16",
+  "assignments": [
+    {
+      "id": "Assignment17",
+      "person": "Maya",
+      "service": "LoginService",
+      "role": "Maintainer",
+      "environment": "Staging",
+      "validFrom": "2026-11-01",
+      "validUntil": "2026-11-20"
+    }
+  ]
+}

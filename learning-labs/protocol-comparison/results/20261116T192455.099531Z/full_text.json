@@ -1,0 +1,80 @@
+{
+  "mode": "full_text",
+  "status": "PREPARED_NOT_RUN",
+  "initial_payload": {
+    "task": {
+      "service": "LoginService",
+      "environment": "Production",
+      "deployment_id": "d1",
+      "at": "2026-11-16"
+    },
+    "definitions": {
+      "Person": "An identified human.",
+      "Assignment": "A directed association from person to service, qualified by role, environment and validity.",
+      "Deployment": "A deployment of a service with an author.",
+      "eligible": "A matching active DeploymentApprover assignment with validFrom <= at < validUntil, covering the service and environment. The person must differ from the deployment author.",
+      "unknown": "Evidence is insufficient; absence from an incomplete fragment is not proof of absence."
+    },
+    "final_response_shape": {
+      "type": "finish",
+      "person": "person name or null",
+      "evidence_ids": [
+        "supporting record IDs"
+      ],
+      "revision": "integer"
+    },
+    "observations": [
+      "Revision: 1",
+      "Source: synthetic://service-catalog/snapshot-1",
+      "Deployment: {\"id\": \"d1\", \"author\": \"Maya\", \"service\": \"LoginService\"}",
+      "Assignment a-maya: id = \"a-maya\"; person = \"Maya\"; service = \"LoginService\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-noah: id = \"a-noah\"; person = \"Noah\"; service = \"LoginService\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-rin: id = \"a-rin\"; person = \"Rin\"; service = \"LoginService\"; environment = \"Staging\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-tao: id = \"a-tao\"; person = \"Tao\"; service = \"LoginService\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-10-01\"; validUntil = \"2026-11-15\"; active = true",
+      "Assignment a-extra-0: id = \"a-extra-0\"; person = \"Person0\"; service = \"OtherService0\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-1: id = \"a-extra-1\"; person = \"Person1\"; service = \"OtherService1\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-2: id = \"a-extra-2\"; person = \"Person2\"; service = \"OtherService2\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-3: id = \"a-extra-3\"; person = \"Person3\"; service = \"OtherService3\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-4: id = \"a-extra-4\"; person = \"Person4\"; service = \"OtherService4\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-5: id = \"a-extra-5\"; person = \"Person5\"; service = \"OtherService5\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-6: id = \"a-extra-6\"; person = \"Person6\"; service = \"OtherService6\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-7: id = \"a-extra-7\"; person = \"Person7\"; service = \"OtherService7\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-8: id = \"a-extra-8\"; person = \"Person8\"; service = \"OtherService8\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-9: id = \"a-extra-9\"; person = \"Person9\"; service = \"OtherService9\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-10: id = \"a-extra-10\"; person = \"Person10\"; service = \"OtherService10\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-11: id = \"a-extra-11\"; person = \"Person11\"; service = \"OtherService11\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-12: id = \"a-extra-12\"; person = \"Person12\"; service = \"OtherService12\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-13: id = \"a-extra-13\"; person = \"Person13\"; service = \"OtherService13\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-14: id = \"a-extra-14\"; person = \"Person14\"; service = \"OtherService14\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-15: id = \"a-extra-15\"; person = \"Person15\"; service = \"OtherService15\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-16: id = \"a-extra-16\"; person = \"Person16\"; service = \"OtherService16\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-17: id = \"a-extra-17\"; person = \"Person17\"; service = \"OtherService17\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-18: id = \"a-extra-18\"; person = \"Person18\"; service = \"OtherService18\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-19: id = \"a-extra-19\"; person = \"Person19\"; service = \"OtherService19\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-20: id = \"a-extra-20\"; person = \"Person20\"; service = \"OtherService20\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-21: id = \"a-extra-21\"; person = \"Person21\"; service = \"OtherService21\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-22: id = \"a-extra-22\"; person = \"Person22\"; service = \"OtherService22\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-23: id = \"a-extra-23\"; person = \"Person23\"; service = \"OtherService23\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-24: id = \"a-extra-24\"; person = \"Person24\"; service = \"OtherService24\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-25: id = \"a-extra-25\"; person = \"Person25\"; service = \"OtherService25\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-26: id = \"a-extra-26\"; person = \"Person26\"; service = \"OtherService26\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-27: id = \"a-extra-27\"; person = \"Person27\"; service = \"OtherService27\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-28: id = \"a-extra-28\"; person = \"Person28\"; service = \"OtherService28\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-29: id = \"a-extra-29\"; person = \"Person29\"; service = \"OtherService29\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-30: id = \"a-extra-30\"; person = \"Person30\"; service = \"OtherService30\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-31: id = \"a-extra-31\"; person = \"Person31\"; service = \"OtherService31\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-32: id = \"a-extra-32\"; person = \"Person32\"; service = \"OtherService32\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-33: id = \"a-extra-33\"; person = \"Person33\"; service = \"OtherService33\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-34: id = \"a-extra-34\"; person = \"Person34\"; service = \"OtherService34\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-35: id = \"a-extra-35\"; person = \"Person35\"; service = \"OtherService35\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-36: id = \"a-extra-36\"; person = \"Person36\"; service = \"OtherService36\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-37: id = \"a-extra-37\"; person = \"Person37\"; service = \"OtherService37\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-38: id = \"a-extra-38\"; person = \"Person38\"; service = \"OtherService38\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true",
+      "Assignment a-extra-39: id = \"a-extra-39\"; person = \"Person39\"; service = \"OtherService39\"; environment = \"Production\"; role = \"DeploymentApprover\"; validFrom = \"2026-11-01\"; validUntil = \"2026-12-01\"; active = true"
+    ],
+    "coverage": "complete fixture"
+  },
+  "calls": [],
+  "history": [],
+  "correct_at_observation": null
+}

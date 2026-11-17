@@ -1,0 +1,125 @@
+{
+  "experiment": "08-fact-invalidation",
+  "status": "MEASURED",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"08\",\n  \"title\": \"Invalidate a stale conclusion\",\n  \"terms\": {\n    \"revision\": \"An identity for an observed state version.\",\n    \"dependency\": \"Evidence a conclusion relies on.\",\n    \"invalidation\": \"Marking a dependent result as stale.\"\n  },\n  \"instruction\": \"Return all transitively stale nodes excluding the changed source itself. Do not invalidate unrelated nodes. A plan based on a revoked assignment must not execute.\",\n  \"input\": {\n    \"change\": {\n      \"node\": \"assignment17\",\n      \"revision_before\": 1,\n      \"revision_after\": 2,\n      \"active_after\": false\n    },\n    \"depends_on\": {\n      \"decision8\": [\n        \"assignment17\"\n      ],\n      \"plan3\": [\n        \"decision8\"\n      ],\n      \"display_name\": [\n        \"profile1\"\n      ]\n    }\n  },\n  \"output_shape\": {\n    \"stale_nodes\": \"array of node IDs\",\n    \"execute_plan3\": \"boolean\"\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "stale_nodes": [
+      "decision8",
+      "plan3"
+    ],
+    "execute_plan3": false
+  },
+  "reported_models": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash"
+  ],
+  "passed": true,
+  "exit_code": 0,
+  "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+  "cli_response": {
+    "session_id": "422f7643-d293-4391-8e8d-7c376c8bc182",
+    "response": "{\n  \"stale_nodes\": [\n    \"decision8\",\n    \"plan3\"\n  ],\n  \"execute_plan3\": false\n}",
+    "stats": {
+      "models": {
+        "gemini-3.5-flash-lite": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 6464,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 1238,
+            "prompt": 1238,
+            "candidates": 32,
+            "total": 2263,
+            "cached": 0,
+            "thoughts": 993,
+            "tool": 0
+          },
+          "roles": {
+            "utility_router": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 6464,
+              "tokens": {
+                "input": 1238,
+                "prompt": 1238,
+                "candidates": 32,
+                "total": 2263,
+                "cached": 0,
+                "thoughts": 993,
+                "tool": 0
+              }
+            }
+          }
+        },
+        "gemini-3.8-flash": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 5219,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 6180,
+            "prompt": 6180,
+            "candidates": 36,
+            "total": 6791,
+            "cached": 0,
+            "thoughts": 575,
+            "tool": 0
+          },
+          "roles": {
+            "main": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 5219,
+              "tokens": {
+                "input": 6180,
+                "prompt": 6180,
+                "candidates": 36,
+                "total": 6791,
+                "cached": 0,
+                "thoughts": 575,
+                "tool": 0
+              }
+            }
+          }
+        }
+      },
+      "tools": {
+        "totalCalls": 0,
+        "totalSuccess": 0,
+        "totalFail": 0,
+        "totalDurationMs": 0,
+        "totalDecisions": {
+          "accept": 0,
+          "reject": 0,
+          "modify": 0,
+          "auto_accept": 0
+        },
+        "byName": {}
+      },
+      "files": {
+        "totalLinesAdded": 0,
+        "totalLinesRemoved": 0
+      }
+    }
+  },
+  "checks": {
+    "exact_keys": true,
+    "fields": {
+      "stale_nodes": true,
+      "execute_plan3": true
+    },
+    "passed": true
+  },
+  "answer": {
+    "stale_nodes": [
+      "decision8",
+      "plan3"
+    ],
+    "execute_plan3": false
+  }
+}

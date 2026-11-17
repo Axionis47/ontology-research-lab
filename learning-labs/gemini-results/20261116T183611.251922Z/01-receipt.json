@@ -1,0 +1,131 @@
+{
+  "experiment": "01-triples",
+  "status": "MEASURED",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"01\",\n  \"title\": \"Sentence to triples\",\n  \"terms\": {\n    \"entity\": \"An identified thing.\",\n    \"triple\": \"A subject, predicate and object.\",\n    \"predicate\": \"A directed named relationship.\"\n  },\n  \"instruction\": \"Translate only explicitly asserted positive relationships into triples. Do not reverse edges or invent a positive assertion from a denial.\",\n  \"input\": {\n    \"sentences\": {\n      \"positive\": \"Maya maintains LoginService.\",\n      \"negative\": \"Maya does not maintain BillingService.\"\n    },\n    \"vocabulary\": [\n      \"Maya\",\n      \"LoginService\",\n      \"BillingService\",\n      \"maintains\"\n    ]\n  },\n  \"output_shape\": {\n    \"positive_triples\": \"array of [subject,predicate,object]\",\n    \"negative_sentence_positive_triples\": \"array of [subject,predicate,object]\"\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "positive_triples": [
+      [
+        "Maya",
+        "maintains",
+        "LoginService"
+      ]
+    ],
+    "negative_sentence_positive_triples": []
+  },
+  "reported_models": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash"
+  ],
+  "passed": true,
+  "exit_code": 0,
+  "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+  "cli_response": {
+    "session_id": "d1b7efdd-e88a-4c9c-a4d0-43d8f7e09e4a",
+    "response": "{\n  \"positive_triples\": [\n    [\"Maya\", \"maintains\", \"LoginService\"]\n  ],\n  \"negative_sentence_positive_triples\": []\n}",
+    "stats": {
+      "models": {
+        "gemini-3.5-flash-lite": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 5679,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 1194,
+            "prompt": 1194,
+            "candidates": 35,
+            "total": 1993,
+            "cached": 0,
+            "thoughts": 764,
+            "tool": 0
+          },
+          "roles": {
+            "utility_router": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 5679,
+              "tokens": {
+                "input": 1194,
+                "prompt": 1194,
+                "candidates": 35,
+                "total": 1993,
+                "cached": 0,
+                "thoughts": 764,
+                "tool": 0
+              }
+            }
+          }
+        },
+        "gemini-3.8-flash": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 5387,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 6136,
+            "prompt": 6136,
+            "candidates": 41,
+            "total": 6779,
+            "cached": 0,
+            "thoughts": 602,
+            "tool": 0
+          },
+          "roles": {
+            "main": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 5387,
+              "tokens": {
+                "input": 6136,
+                "prompt": 6136,
+                "candidates": 41,
+                "total": 6779,
+                "cached": 0,
+                "thoughts": 602,
+                "tool": 0
+              }
+            }
+          }
+        }
+      },
+      "tools": {
+        "totalCalls": 0,
+        "totalSuccess": 0,
+        "totalFail": 0,
+        "totalDurationMs": 0,
+        "totalDecisions": {
+          "accept": 0,
+          "reject": 0,
+          "modify": 0,
+          "auto_accept": 0
+        },
+        "byName": {}
+      },
+      "files": {
+        "totalLinesAdded": 0,
+        "totalLinesRemoved": 0
+      }
+    }
+  },
+  "checks": {
+    "exact_keys": true,
+    "fields": {
+      "positive_triples": true,
+      "negative_sentence_positive_triples": true
+    },
+    "passed": true
+  },
+  "answer": {
+    "positive_triples": [
+      [
+        "Maya",
+        "maintains",
+        "LoginService"
+      ]
+    ],
+    "negative_sentence_positive_triples": []
+  }
+}

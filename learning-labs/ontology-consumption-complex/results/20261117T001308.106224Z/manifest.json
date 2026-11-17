@@ -1,0 +1,63 @@
+{
+  "kind": "same_task_ontology_consumption",
+  "cli_version": null,
+  "live": false,
+  "facts_sha256": "b5c83d419547c9c0c267b65615504347b5b0f0b7474b73d50f244036d332fe1e",
+  "ontology_sha256": "686ca3d11e4b84e5f161f194380cd25b011028c3ad9eb6b833edf871ae5f054b",
+  "runner_sha256": "a43530467937f77aa729706f0bf89ade199a1963da4eda689b7d2c1cdc102b1d",
+  "helper_sha256": "24960174ffb79bea5fb746c90611e29cd8d0d507105b97b152347debbf4ed2d6",
+  "config_sha256": "b6f5c6488dff99cac8afff35eab0ca62abccaaf3340872dc5b152b91f170adff",
+  "policy_sha256": "406702e019a25be380e93ffa7ffb1c4b17c5857e429574cef3dde17887a0ab0f",
+  "max_calls_each": 8,
+  "max_total_cli_calls": 48,
+  "order_seed": 20261116,
+  "execution_order": [
+    "01-full-definitions",
+    "03-schema-inspection",
+    "05-typed-function",
+    "04-graph-queries",
+    "06-constraint-service",
+    "02-retrieved-definitions"
+  ],
+  "engine_sha256": "995e49d46df28c58362fd17435cc22998bb34ee53a119ac0604128c1ee07fb6c",
+  "oracle_sha256": "63182a6f29b27df729a51727ad7daffc6076fa0f6505925d1fac455177c1ed65",
+  "retry_policy": "No automatic retries; attempt every method independently once",
+  "task_hashes": {
+    "01-full-definitions": "6d5095d12978595d1fe77b4ecacb4339688cf770e2b578aa5357a9fd6730f5c4",
+    "03-schema-inspection": "6d5095d12978595d1fe77b4ecacb4339688cf770e2b578aa5357a9fd6730f5c4",
+    "05-typed-function": "6d5095d12978595d1fe77b4ecacb4339688cf770e2b578aa5357a9fd6730f5c4",
+    "04-graph-queries": "6d5095d12978595d1fe77b4ecacb4339688cf770e2b578aa5357a9fd6730f5c4",
+    "06-constraint-service": "6d5095d12978595d1fe77b4ecacb4339688cf770e2b578aa5357a9fd6730f5c4",
+    "02-retrieved-definitions": "6d5095d12978595d1fe77b4ecacb4339688cf770e2b578aa5357a9fd6730f5c4"
+  },
+  "initial_fact_hashes": {
+    "01-full-definitions": "c6c6573da8c741ead2fda4989720703585dc402b201c7856d5e2b75f9f841f51",
+    "03-schema-inspection": "c6c6573da8c741ead2fda4989720703585dc402b201c7856d5e2b75f9f841f51",
+    "05-typed-function": "c6c6573da8c741ead2fda4989720703585dc402b201c7856d5e2b75f9f841f51",
+    "04-graph-queries": "c6c6573da8c741ead2fda4989720703585dc402b201c7856d5e2b75f9f841f51",
+    "06-constraint-service": "c6c6573da8c741ead2fda4989720703585dc402b201c7856d5e2b75f9f841f51",
+    "02-retrieved-definitions": "c6c6573da8c741ead2fda4989720703585dc402b201c7856d5e2b75f9f841f51"
+  },
+  "protocol_hashes": {
+    "01-full-definitions": "05636cc3c25a1ab0cce03c8696f5b0915746245f78bb8fbcf89dfa7917c294cf",
+    "03-schema-inspection": "3e9295bb72e1f30df7a05055254eae4afa3a04e786d31ca482e271de72c1856a",
+    "05-typed-function": "3b7e73c8da9ba98df822a69cc0b1bb0774990c63a83f295b788e1e32fbb7f6ea",
+    "04-graph-queries": "c05de6b2ce6e09b03d026b065c71370591fe9d310480420686623bce84a450b7",
+    "06-constraint-service": "d3438f48bb74749717db06b0e90f859a6c5f97b44c6ac808d67d4309979935ed",
+    "02-retrieved-definitions": "76cab8bf2edd2e0ae971e297499467a298aa6bf52157067090a55b268f468c74"
+  },
+  "appworld_runs": 0,
+  "rules": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6",
+    "R7",
+    "R8",
+    "R9",
+    "R10"
+  ],
+  "model_selection": "configured CLI routing; no override"
+}

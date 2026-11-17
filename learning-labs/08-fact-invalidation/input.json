@@ -1,0 +1,9 @@
+{
+  "ontology_version": "1",
+  "observations": {
+    "assignment17": {"revision": 1, "person": "Maya", "service": "LoginService", "active": true, "source": "fixture://oncall/receipt1"},
+    "service": {"revision": 1, "name": "LoginService", "source": "fixture://catalog/receipt1"}
+  },
+  "dependencies": {"decision8": ["assignment17"], "plan3": ["decision8"], "display_name": ["service"]},
+  "change": {"entity": "assignment17", "revision": 2, "active": false, "source": "fixture://oncall/receipt2"}
+}

@@ -1,0 +1,7 @@
+{
+  "v1": {"version": "1", "types": ["Person", "Service"], "relations": {"maintains": "A person has maintenance responsibility for a service; scope and time unspecified."}},
+  "v2": {"version": "2", "types": ["Person", "Service", "Assignment"], "relations": {"maintains": "A person has maintenance responsibility for a service; scope and time unspecified.", "hasAssignment": "Links a person to a scoped assignment."}},
+  "legacy_fact": {"subject": "Maya", "predicate": "maintains", "object": "LoginService", "source": "fixture://record/1"},
+  "new_observation": {"id": "Assignment17", "person": "Noah", "service": "LoginService", "environment": "staging", "validUntil": "2026-11-20", "source": "fixture://record/2"},
+  "query": {"service": "LoginService", "environment": "staging", "date": "2026-11-16"}
+}

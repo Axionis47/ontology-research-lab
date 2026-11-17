@@ -1,0 +1,761 @@
+{
+  "requests": [
+    {
+      "request_id": "old-work",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "kernel_handoff": null,
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/8e36d6b8808207c84c23/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/8e36d6b8808207c84c23/react/exports/40d2d5d2-bcef-47e0-9fb3-c1208ca9c7d7/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "76cd0885a2de1809b3b9661cada0ecedfce31b5ad31d36055a1b1fd0a1fa6421",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "01082dbbe7fae5a3324301b361c655700dae9cd728744a43a89a90569ccaee63",
+      "native": null,
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "learning": {
+        "completed": [
+          {
+            "case": "01082dbbe7fae5a3324301b361c655700dae9cd728744a43a89a90569ccaee63",
+            "outcome": "RESOLVED"
+          }
+        ],
+        "active": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "generation": 1,
+        "active_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "policy_decisions": [],
+        "proposals_spent": 0,
+        "cycles_spent": 1,
+        "cases": {
+          "RESOLVED": 1
+        },
+        "decisions": [],
+        "native_performance_claimed": false
+      },
+      "next_package": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+      "next_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    {
+      "request_id": "new-age-rule",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested state independently verified",
+        "steps": 3,
+        "tool_attempts": 2,
+        "compactions": 0,
+        "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "kernel_handoff": {
+          "reason": "CAPABILITY_GAP",
+          "pending_work": "The learned selection would change protected records. Its plan was refused before dispatch; use the original conditions and current evidence.",
+          "evidence_ids": [
+            "fc43ccb8-2cb6-49d6-a9e0-85c3742e88d7"
+          ],
+          "step": 1,
+          "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+        },
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/d0fa5529e26d9f990e47/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/d0fa5529e26d9f990e47/react/exports/a774c102-f9e9-4d73-a8be-6f3f608f1b45/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "dcc97865741f285e201869d33f949e14a4adc8cc21e08ff96539d7aa28dfd49e",
+      "task_state": "TRUE",
+      "recovered": true,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "afffb439242dee75678d0cf8458e0237ffa754a325ec255d6a47b69bb0d73669",
+      "native": null,
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "learning": {
+        "completed": [
+          {
+            "case": "afffb439242dee75678d0cf8458e0237ffa754a325ec255d6a47b69bb0d73669",
+            "outcome": "ACCEPTED"
+          },
+          {
+            "case": "01082dbbe7fae5a3324301b361c655700dae9cd728744a43a89a90569ccaee63",
+            "outcome": "RESOLVED"
+          }
+        ],
+        "active": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "generation": 2,
+        "active_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "policy_decisions": [],
+        "proposals_spent": 6,
+        "cycles_spent": 3,
+        "cases": {
+          "RESOLVED": 2
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "receipt": "306324ec75e70c3845670b9447630dd19b293e7d573f071c402a8b75ea8e2fe6",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:27.022823+00:00"
+          }
+        ],
+        "native_performance_claimed": false
+      },
+      "next_package": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "next_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    {
+      "request_id": "fresh-age-batch",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "kernel_version": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "kernel_handoff": null,
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/5170d82ad3355528e596/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/5170d82ad3355528e596/react/exports/b055c13e-072b-4eb2-8c66-c0674fdff617/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "2c238ab9289063a30c2810ac03f46853500af50aa9f52f928c2831e82f4ff9cb",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "394c7d4a5d8a7d6df4261b5ef01c18d5f92eaec802c762a5adccced89b6e1bd8",
+      "native": null,
+      "package_used": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "learning": {
+        "completed": [
+          {
+            "case": "394c7d4a5d8a7d6df4261b5ef01c18d5f92eaec802c762a5adccced89b6e1bd8",
+            "outcome": "RESOLVED"
+          }
+        ],
+        "active": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "generation": 3,
+        "active_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "policy_decisions": [],
+        "proposals_spent": 6,
+        "cycles_spent": 4,
+        "cases": {
+          "RESOLVED": 3
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "receipt": "306324ec75e70c3845670b9447630dd19b293e7d573f071c402a8b75ea8e2fe6",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:27.022823+00:00"
+          }
+        ],
+        "native_performance_claimed": false
+      },
+      "next_package": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "next_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    {
+      "request_id": "new-customer-rule",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested state independently verified",
+        "steps": 3,
+        "tool_attempts": 2,
+        "compactions": 0,
+        "kernel_version": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "kernel_handoff": {
+          "reason": "CAPABILITY_GAP",
+          "pending_work": "The learned selection would change protected records. Its plan was refused before dispatch; use the original conditions and current evidence.",
+          "evidence_ids": [
+            "7fdeb84b-dadb-49ca-aafc-3c971d8a6079"
+          ],
+          "step": 1,
+          "kernel_version": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23"
+        },
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/86201b0a83ebfb81e86c/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/86201b0a83ebfb81e86c/react/exports/6165703e-24a7-4289-a86e-a9c0f2febc6e/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "95730eb504583b2f58039723517941b3758434fab7aace56a38f15873422a91b",
+      "task_state": "TRUE",
+      "recovered": true,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "1686118c4cd72b2a486a588cd9947dd5ac13fb5370432f8ec9a72f282f7dac0d",
+      "native": null,
+      "package_used": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "learning": {
+        "completed": [
+          {
+            "case": "1686118c4cd72b2a486a588cd9947dd5ac13fb5370432f8ec9a72f282f7dac0d",
+            "outcome": "ACCEPTED"
+          },
+          {
+            "case": "01082dbbe7fae5a3324301b361c655700dae9cd728744a43a89a90569ccaee63",
+            "outcome": "RESOLVED"
+          },
+          {
+            "case": "afffb439242dee75678d0cf8458e0237ffa754a325ec255d6a47b69bb0d73669",
+            "outcome": "RESOLVED"
+          },
+          {
+            "case": "394c7d4a5d8a7d6df4261b5ef01c18d5f92eaec802c762a5adccced89b6e1bd8",
+            "outcome": "RESOLVED"
+          }
+        ],
+        "active": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "generation": 4,
+        "active_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "policy_decisions": [],
+        "proposals_spent": 49,
+        "cycles_spent": 8,
+        "cases": {
+          "RESOLVED": 4
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "receipt": "306324ec75e70c3845670b9447630dd19b293e7d573f071c402a8b75ea8e2fe6",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:27.022823+00:00"
+          },
+          {
+            "id": 2,
+            "parent": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "candidate": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+            "receipt": "db3ef423ce60483a1ab696c0abc50c943c600f9c46ece5a43e15f026f5468f8a",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:34.018058+00:00"
+          }
+        ],
+        "native_performance_claimed": false
+      },
+      "next_package": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+      "next_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    {
+      "request_id": "fresh-customer-batch",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "kernel_version": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "kernel_handoff": null,
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/36855b3eb247b3ce1715/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/36855b3eb247b3ce1715/react/exports/36cb2196-a441-4e03-ae3e-8dfe6c90b43c/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "2d68e8a80ecd67915f0514df5b0212594920dceb52b8c4475e138be8e212b0cf",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "3803c4511d007e197680171ed78fdea8fb03aed6394952a7ecf9c0204ad752f1",
+      "native": null,
+      "package_used": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "learning": {
+        "completed": [
+          {
+            "case": "3803c4511d007e197680171ed78fdea8fb03aed6394952a7ecf9c0204ad752f1",
+            "outcome": "RESOLVED"
+          }
+        ],
+        "active": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "generation": 5,
+        "active_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "policy_decisions": [],
+        "proposals_spent": 49,
+        "cycles_spent": 9,
+        "cases": {
+          "RESOLVED": 5
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "receipt": "306324ec75e70c3845670b9447630dd19b293e7d573f071c402a8b75ea8e2fe6",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:27.022823+00:00"
+          },
+          {
+            "id": 2,
+            "parent": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "candidate": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+            "receipt": "db3ef423ce60483a1ab696c0abc50c943c600f9c46ece5a43e15f026f5468f8a",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:34.018058+00:00"
+          }
+        ],
+        "native_performance_claimed": false
+      },
+      "next_package": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+      "next_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    {
+      "request_id": "larger-age-batch",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "kernel_version": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "kernel_handoff": null,
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/fc82f1d3e4003cb1318d/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/fc82f1d3e4003cb1318d/react/exports/1e6d2018-3eb4-492c-9a10-83ef437c43d8/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "be9fb8b46b368a29d3983aa400ca84f8f7a6f7d280a4431f7fe7cabbb6640362",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "07643dce8489c2dd5432c6280e16b9c93fba68c0dfb260d9377215d9100abfd1",
+      "native": null,
+      "package_used": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "learning": {
+        "completed": [
+          {
+            "case": "07643dce8489c2dd5432c6280e16b9c93fba68c0dfb260d9377215d9100abfd1",
+            "outcome": "RESOLVED"
+          }
+        ],
+        "active": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "generation": 6,
+        "active_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "policy_decisions": [],
+        "proposals_spent": 49,
+        "cycles_spent": 10,
+        "cases": {
+          "RESOLVED": 6
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "receipt": "306324ec75e70c3845670b9447630dd19b293e7d573f071c402a8b75ea8e2fe6",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:27.022823+00:00"
+          },
+          {
+            "id": 2,
+            "parent": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "candidate": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+            "receipt": "db3ef423ce60483a1ab696c0abc50c943c600f9c46ece5a43e15f026f5468f8a",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:34.018058+00:00"
+          }
+        ],
+        "native_performance_claimed": false
+      },
+      "next_package": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+      "next_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    {
+      "request_id": "larger-customer-batch",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "kernel_version": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "kernel_handoff": null,
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/b5f7e79201fcacf2b04f/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/b5f7e79201fcacf2b04f/react/exports/4be46d19-6104-4043-ac89-a7ceefdcd0cc/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "b57524b25a63d64aa9e8a0c5d3d74f3313a4893f2ed6836d6ace4a60abd21535",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "412bbb5ebe1b236c61af765821f72a6fa89442b776630d08f577f1d0461e626f",
+      "native": null,
+      "package_used": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "learning": {
+        "completed": [
+          {
+            "case": "412bbb5ebe1b236c61af765821f72a6fa89442b776630d08f577f1d0461e626f",
+            "outcome": "RESOLVED"
+          }
+        ],
+        "active": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "generation": 7,
+        "active_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "policy_decisions": [],
+        "proposals_spent": 49,
+        "cycles_spent": 11,
+        "cases": {
+          "RESOLVED": 7
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "receipt": "306324ec75e70c3845670b9447630dd19b293e7d573f071c402a8b75ea8e2fe6",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:27.022823+00:00"
+          },
+          {
+            "id": 2,
+            "parent": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "candidate": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+            "receipt": "db3ef423ce60483a1ab696c0abc50c943c600f9c46ece5a43e15f026f5468f8a",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:34.018058+00:00"
+          }
+        ],
+        "native_performance_claimed": false
+      },
+      "next_package": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+      "next_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    {
+      "request_id": "combined-new-rule",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested state independently verified",
+        "steps": 3,
+        "tool_attempts": 2,
+        "compactions": 0,
+        "kernel_version": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "kernel_handoff": {
+          "reason": "CAPABILITY_GAP",
+          "pending_work": "The learned selection would change protected records. Its plan was refused before dispatch; use the original conditions and current evidence.",
+          "evidence_ids": [
+            "1c3517b8-39f8-42ac-b0f7-1a3344709816"
+          ],
+          "step": 1,
+          "kernel_version": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc"
+        },
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/9486b388549a81dbc346/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/9486b388549a81dbc346/react/exports/4121b3d3-5dcd-4bd4-a4ee-48fb66eeebb3/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "a550d8af0ff0ff62f393680b25bb597399c7ce8ccea8699510af75039e01a74e",
+      "task_state": "TRUE",
+      "recovered": true,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "23561b0c8d0fc621d67415382bd556dd4e2e04d27a20f6ed3be96e0b3d1f6355",
+      "native": null,
+      "package_used": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "learning": {
+        "completed": [
+          {
+            "case": "23561b0c8d0fc621d67415382bd556dd4e2e04d27a20f6ed3be96e0b3d1f6355",
+            "outcome": "ACCEPTED"
+          },
+          {
+            "case": "01082dbbe7fae5a3324301b361c655700dae9cd728744a43a89a90569ccaee63",
+            "outcome": "RESOLVED"
+          },
+          {
+            "case": "afffb439242dee75678d0cf8458e0237ffa754a325ec255d6a47b69bb0d73669",
+            "outcome": "RESOLVED"
+          },
+          {
+            "case": "394c7d4a5d8a7d6df4261b5ef01c18d5f92eaec802c762a5adccced89b6e1bd8",
+            "outcome": "RESOLVED"
+          },
+          {
+            "case": "1686118c4cd72b2a486a588cd9947dd5ac13fb5370432f8ec9a72f282f7dac0d",
+            "outcome": "RESOLVED"
+          },
+          {
+            "case": "3803c4511d007e197680171ed78fdea8fb03aed6394952a7ecf9c0204ad752f1",
+            "outcome": "RESOLVED"
+          },
+          {
+            "case": "07643dce8489c2dd5432c6280e16b9c93fba68c0dfb260d9377215d9100abfd1",
+            "outcome": "RESOLVED"
+          },
+          {
+            "case": "412bbb5ebe1b236c61af765821f72a6fa89442b776630d08f577f1d0461e626f",
+            "outcome": "RESOLVED"
+          }
+        ],
+        "active": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+        "generation": 8,
+        "active_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "policy_decisions": [],
+        "proposals_spent": 74,
+        "cycles_spent": 19,
+        "cases": {
+          "RESOLVED": 8
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "receipt": "306324ec75e70c3845670b9447630dd19b293e7d573f071c402a8b75ea8e2fe6",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:27.022823+00:00"
+          },
+          {
+            "id": 2,
+            "parent": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "candidate": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+            "receipt": "db3ef423ce60483a1ab696c0abc50c943c600f9c46ece5a43e15f026f5468f8a",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:34.018058+00:00"
+          },
+          {
+            "id": 3,
+            "parent": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+            "candidate": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+            "receipt": "04ca4eed236ca96039ddbe0fb08e8ff9a303d918e7fe5c4edfa10eb967abfab3",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:46.142743+00:00"
+          }
+        ],
+        "native_performance_claimed": false
+      },
+      "next_package": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+      "next_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    {
+      "request_id": "combined-larger-batch",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "kernel_version": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+        "kernel_handoff": null,
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/2f3ed3ed240bdd2b5c13/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/2f3ed3ed240bdd2b5c13/react/exports/4f4c9252-f9c7-4b71-8e94-1bfae6fe9807/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "d70a78271bdbb0968b17f6c3fdef3c46bfbf7bb5a3e7f00b1543dbd26c9481fa",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "41e669fa1da2f7971ecfc96f90fdaeeb05fdf34f9b827fb508fe2a0eb7d6a8ee",
+      "native": null,
+      "package_used": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "learning": {
+        "completed": [
+          {
+            "case": "41e669fa1da2f7971ecfc96f90fdaeeb05fdf34f9b827fb508fe2a0eb7d6a8ee",
+            "outcome": "RESOLVED"
+          }
+        ],
+        "active": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+        "generation": 9,
+        "active_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "policy_decisions": [],
+        "proposals_spent": 74,
+        "cycles_spent": 20,
+        "cases": {
+          "RESOLVED": 9
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "receipt": "306324ec75e70c3845670b9447630dd19b293e7d573f071c402a8b75ea8e2fe6",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:27.022823+00:00"
+          },
+          {
+            "id": 2,
+            "parent": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "candidate": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+            "receipt": "db3ef423ce60483a1ab696c0abc50c943c600f9c46ece5a43e15f026f5468f8a",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:34.018058+00:00"
+          },
+          {
+            "id": 3,
+            "parent": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+            "candidate": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+            "receipt": "04ca4eed236ca96039ddbe0fb08e8ff9a303d918e7fe5c4edfa10eb967abfab3",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:46.142743+00:00"
+          }
+        ],
+        "native_performance_claimed": false
+      },
+      "next_package": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+      "next_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    },
+    {
+      "request_id": "old-work-after-three-repairs",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "kernel_version": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+        "kernel_handoff": null,
+        "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/cff0e752498d9f686922/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/gemini-judge-review-20261115/adjusted-control/inference/cff0e752498d9f686922/react/exports/fdfa9597-a8a1-4009-8a04-9512d80f4f40/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "4e90204e7b83d8df19a9460249bfa66fcfe6cbbe892324b8a50d8a930dffdd3b",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "01082dbbe7fae5a3324301b361c655700dae9cd728744a43a89a90569ccaee63",
+      "native": null,
+      "package_used": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+      "policy_used": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "learning": {
+        "completed": [],
+        "active": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+        "generation": 9,
+        "active_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+        "policy_decisions": [],
+        "proposals_spent": 74,
+        "cycles_spent": 20,
+        "cases": {
+          "RESOLVED": 9
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "receipt": "306324ec75e70c3845670b9447630dd19b293e7d573f071c402a8b75ea8e2fe6",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:27.022823+00:00"
+          },
+          {
+            "id": 2,
+            "parent": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "candidate": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+            "receipt": "db3ef423ce60483a1ab696c0abc50c943c600f9c46ece5a43e15f026f5468f8a",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:34.018058+00:00"
+          },
+          {
+            "id": 3,
+            "parent": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+            "candidate": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+            "receipt": "04ca4eed236ca96039ddbe0fb08e8ff9a303d918e7fe5c4edfa10eb967abfab3",
+            "accepted": 1,
+            "at": "2026-11-16T03:01:46.142743+00:00"
+          }
+        ],
+        "native_performance_claimed": false
+      },
+      "next_package": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+      "next_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3"
+    }
+  ],
+  "archive": {
+    "active": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+    "generation": 9,
+    "active_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+    "policy_decisions": [],
+    "proposals_spent": 74,
+    "cycles_spent": 20,
+    "cases": {
+      "RESOLVED": 9
+    },
+    "decisions": [
+      {
+        "id": 1,
+        "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "receipt": "306324ec75e70c3845670b9447630dd19b293e7d573f071c402a8b75ea8e2fe6",
+        "accepted": 1,
+        "at": "2026-11-16T03:01:27.022823+00:00"
+      },
+      {
+        "id": 2,
+        "parent": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "candidate": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "receipt": "db3ef423ce60483a1ab696c0abc50c943c600f9c46ece5a43e15f026f5468f8a",
+        "accepted": 1,
+        "at": "2026-11-16T03:01:34.018058+00:00"
+      },
+      {
+        "id": 3,
+        "parent": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "candidate": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+        "receipt": "04ca4eed236ca96039ddbe0fb08e8ff9a303d918e7fe5c4edfa10eb967abfab3",
+        "accepted": 1,
+        "at": "2026-11-16T03:01:46.142743+00:00"
+      }
+    ],
+    "native_performance_claimed": false
+  },
+  "audit": {
+    "complete": true,
+    "event_head": "766046fd762a282b7f4b16997c17a85891268999ccf653552f5e2d99dd12c6ee"
+  },
+  "demo_actor": null
+}

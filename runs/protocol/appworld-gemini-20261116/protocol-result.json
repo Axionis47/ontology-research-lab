@@ -1,0 +1,91 @@
+{
+  "status": "PASSED",
+  "finished_at": "2026-11-16T18:47:27.113350+00:00",
+  "conditions": {
+    "three_baselines_recorded": true,
+    "real_qwen_baselines": true,
+    "validated_gemini_diagnosis": true,
+    "separate_gemini_proposer_calls": true,
+    "program_improved": true,
+    "all_acceptance_gates_passed": true,
+    "three_followups_passed": true,
+    "no_unnecessary_proposal": true,
+    "sources_unchanged": true,
+    "archive_integrity": true
+  },
+  "starting_package": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+  "final_package": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+  "baseline_passes": 0,
+  "baseline_tasks": 3,
+  "followup_passes": 3,
+  "followup_tasks": 3,
+  "diagnosis": "cb0deef5c1f16dc8c8ec02bfd4ed433f58a33f4adf0f73aea62bdaaa77f36b3f",
+  "proposer_calls": 11,
+  "decisions": [
+    {
+      "id": 1,
+      "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+      "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "receipt": "86df9a4b6b6f0fe8ae14bcfe4f486bfeb67cc2fb690cf8226cd1e5f9387fb6a6",
+      "accepted": 1,
+      "at": "2026-11-16T18:47:07.491658+00:00"
+    }
+  ],
+  "unaddressed_findings": [
+    {
+      "severity": "CRITICAL",
+      "criterion": "ACTION_SELECTION",
+      "status": "SUPPORTED",
+      "component": "ACTOR",
+      "symptom": "Actor repeatedly called discover_tools with invalid arguments (limit 100 > 10 and strategy as empty object), leading to repeated ARGUMENT_SCHEMA_INVALID denials and progress stall.",
+      "hypothesis": "The actor failed to adhere to discover_tools schema constraints (maximum limit of 10 and strategy requiring a valid string enum or weighted object) and repeated identical invalid requests across multiple steps instead of adjusting arguments.",
+      "citations": [
+        {
+          "evidence_id": "fc02ce8d-8d08-5415-a385-bb5b711647b5",
+          "locator": {
+            "kind": "WHOLE",
+            "path": null,
+            "start": null,
+            "end": null
+          },
+          "relationship": "SUPPORTS"
+        },
+        {
+          "evidence_id": "6814256f-e0ce-5e6e-a302-a36263efabdd",
+          "locator": {
+            "kind": "WHOLE",
+            "path": null,
+            "start": null,
+            "end": null
+          },
+          "relationship": "SUPPORTS"
+        },
+        {
+          "evidence_id": "d84212c0-e108-5198-a99e-8fdf6ca5eee4",
+          "locator": {
+            "kind": "WHOLE",
+            "path": null,
+            "start": null,
+            "end": null
+          },
+          "relationship": "SUPPORTS"
+        }
+      ],
+      "confidence": 0.95,
+      "evidence_gaps": [],
+      "repair_class": "TRAINING_EXAMPLE",
+      "distinguishing_test": "Provide actor with discover_tools schema and verify tool call generates schema-compliant arguments with limit <= 10 and an allowed strategy property.",
+      "preserve_behavior": "Preserve actor's intent to discover tools relevant to Spotify during post-handoff recovery."
+    }
+  ],
+  "archive_integrity": {
+    "complete": true,
+    "event_head": "18a77ca4b76d3df42ff26b1acea399b5216878d9982c640fb3555addd62da54f"
+  },
+  "scope": "One bounded program improvement, three exposed native training tasks; no general ontology or actor-quality claim.",
+  "resume_manifest": "resume-manifest.json",
+  "initial_proposer_transport_failures_retained": 4,
+  "proposal_budget_reset": false,
+  "proposer_transport_failures_retained": 7,
+  "validation_retry": "validation-retry.json"
+}

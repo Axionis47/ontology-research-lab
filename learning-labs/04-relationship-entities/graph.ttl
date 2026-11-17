@@ -1,0 +1,3 @@
+@prefix ex: <https://example.org/learning/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+ex:Assignment17 a ex:Assignment ; ex:person ex:Maya ; ex:service ex:LoginService ; ex:role ex:Maintainer ; ex:environment ex:Staging ; ex:validFrom "2026-11-01"^^xsd:date ; ex:validUntil "2026-11-20"^^xsd:date .

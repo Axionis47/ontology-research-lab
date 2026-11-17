@@ -1,0 +1,29 @@
+{
+  "experiment": "02",
+  "title": "Definition or observation?",
+  "terms": {
+    "ontology": "Definitions of types and relationships.",
+    "instance": "A particular entity.",
+    "graph update": "New observations using existing meanings."
+  },
+  "instruction": "Classify each proposed update as graph or ontology. Existing Person definitions cover all people; a newly named person needs no new class.",
+  "input": {
+    "ontology": {
+      "types": [
+        "Person",
+        "Service"
+      ],
+      "relations": {
+        "maintains": "Person to Service"
+      }
+    },
+    "updates": {
+      "A": "Observe Noah is a Person.",
+      "B": "Add a TemporaryAssignment type with an expiry property."
+    }
+  },
+  "output_shape": {
+    "A": "graph or ontology",
+    "B": "graph or ontology"
+  }
+}

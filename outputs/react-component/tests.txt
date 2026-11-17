@@ -1,0 +1,23 @@
+test_compaction_preserves_originals_and_rereads (test_react_loop.ReactComponentTests.test_compaction_preserves_originals_and_rereads) ... ok
+test_compaction_preserves_remaining_budgets (test_react_loop.ReactComponentTests.test_compaction_preserves_remaining_budgets) ... ok
+test_dispatch_logging_failure_prevents_effect (test_react_loop.ReactComponentTests.test_dispatch_logging_failure_prevents_effect) ... ok
+test_event_edits_and_missing_receipts_are_detected (test_react_loop.ReactComponentTests.test_event_edits_and_missing_receipts_are_detected) ... ok
+test_failed_write_stops_and_retains_both_streams (test_react_loop.ReactComponentTests.test_failed_write_stops_and_retains_both_streams) ... ok
+test_finish_requires_observed_evidence (test_react_loop.ReactComponentTests.test_finish_requires_observed_evidence) ... ok
+test_integrity_audit_detects_deleted_output (test_react_loop.ReactComponentTests.test_integrity_audit_detects_deleted_output) ... ok
+test_invalid_json_is_saved_without_dispatch (test_react_loop.ReactComponentTests.test_invalid_json_is_saved_without_dispatch) ... ok
+test_judge_does_not_silently_resolve_duplicate_json_keys (test_react_loop.ReactComponentTests.test_judge_does_not_silently_resolve_duplicate_json_keys) ... ok
+test_judge_reads_report_exact_coverage_and_source_digest (test_react_loop.ReactComponentTests.test_judge_reads_report_exact_coverage_and_source_digest) ... ok
+test_long_verifier_requires_complete_reread_after_all_records (test_react_loop.ReactComponentTests.test_long_verifier_requires_complete_reread_after_all_records) ... ok
+test_no_verifier_never_claims_verified_success (test_react_loop.ReactComponentTests.test_no_verifier_never_claims_verified_success) ... ok
+test_original_content_corruption_is_detected (test_react_loop.ReactComponentTests.test_original_content_corruption_is_detected) ... ok
+test_pinned_context_overflow_is_explicit (test_react_loop.ReactComponentTests.test_pinned_context_overflow_is_explicit) ... ok
+test_private_sources_are_unavailable_to_actor (test_react_loop.ReactComponentTests.test_private_sources_are_unavailable_to_actor) ... ok
+test_result_logging_failure_stops_without_repeating_effect (test_react_loop.ReactComponentTests.test_result_logging_failure_stops_without_repeating_effect) ... ok
+test_timeout_preserves_partial_stdout (test_react_loop.ReactComponentTests.test_timeout_preserves_partial_stdout) ... ok
+test_unknown_action_never_dispatches (test_react_loop.ReactComponentTests.test_unknown_action_never_dispatches) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 10.734s
+
+OK

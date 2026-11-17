@@ -1,0 +1,6 @@
+@prefix ex: <https://example.org/learning/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+ex:ClaimC a rdf:Statement, prov:Entity ; rdf:subject ex:Maya ; rdf:predicate ex:maintains ; rdf:object ex:LoginService ; prov:wasDerivedFrom ex:Receipt1 .
+ex:Receipt1 a prov:Entity .
+# Describing an rdf:Statement does not itself assert that statement.

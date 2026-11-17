@@ -1,0 +1,37 @@
+[
+  {
+    "seq": 13,
+    "receipt": "e9f78dadb7a5c022ec4da523c4203da6f6214d0bdfb03ffc488fc9dc01e707c8",
+    "call": 0,
+    "command": [
+      "<user-home>/.nvm/versions/node/v24.5.0/bin/gemini",
+      "--extensions",
+      "none",
+      "--allowed-mcp-server-names",
+      "model-check-no-servers",
+      "--policy",
+      "<workspace>/config/gemini-no-tools.toml",
+      "--skip-trust",
+      "--output-format",
+      "json",
+      "--prompt",
+      "{prompt}"
+    ],
+    "execution": {
+      "capture_limit_bytes": 65536,
+      "duration_ms": 27427,
+      "finished_at": "2026-11-16T18:50:41.084155+00:00",
+      "pid": 74155,
+      "returncode": 0,
+      "started_at": "2026-11-16T18:50:13.656914+00:00",
+      "status": "COMPLETE",
+      "stderr_bytes": 342,
+      "stderr_code": null,
+      "stdout_bytes": 3450,
+      "timeout_seconds": 180
+    },
+    "input": "0525dc4cef0862234e76678bc41353ca26655bdb57b33f858f5bbfe24aa6dd39",
+    "output": "{\n  \"session_id\": \"8713988c-951e-446f-b3d5-e0773020c755\",\n  \"response\": \"{\\n  \\\"candidate\\\": {\\n    \\\"functions\\\": {\\n      \\\"direct\\\": {\\n        \\\"nodes\\\": [\\n          {\\n            \\\"op\\\": \\\"lookup_entities\\\",\\n            \\\"type\\\": \\\"selector.entity_type\\\"\\n          },\\n          {\\n            \\\"input\\\": 0,\\n            \\\"op\\\": \\\"filter_property_categorical\\\",\\n            \\\"where\\\": \\\"selector.where\\\"\\n          },\\n          {\\n            \\\"input\\\": 1,\\n            \\\"op\\\": \\\"filter_numeric\\\",\\n            \\\"predicates\\\": \\\"selector.numeric\\\"\\n          }\\n        ],\\n        \\\"return\\\": 2\\n      },\\n      \\\"related\\\": {\\n        \\\"nodes\\\": [\\n          {\\n            \\\"op\\\": \\\"lookup_entities\\\",\\n            \\\"type\\\": \\\"selector.entity_type\\\"\\n          },\\n          {\\n            \\\"input\\\": 0,\\n            \\\"op\\\": \\\"filter_property_categorical\\\",\\n            \\\"where\\\": \\\"selector.where\\\"\\n          },\\n          {\\n            \\\"op\\\": \\\"lookup_entities\\\",\\n            \\\"type\\\": \\\"selector.related.entity_type\\\"\\n          },\\n          {\\n            \\\"input\\\": 2,\\n            \\\"op\\\": \\\"filter_property_categorical\\\",\\n            \\\"where\\\": \\\"selector.related.where\\\"\\n          }\\n        ],\\n        \\\"return\\\": 1\\n      }\\n    },\\n    \\\"version\\\": 1\\n  },\\n  \\\"kind\\\": \\\"candidate\\\",\\n  \\\"reason\\\": \\\"Add filter_numeric operator to direct function pipeline to evaluate selector.numeric predicates after categorical filtering.\\\"\\n}\",\n  \"stats\": {\n    \"models\": {\n      \"gemini-3.5-flash-lite\": {\n        \"api\": {\n          \"totalRequests\": 1,\n          \"totalErrors\": 0,\n          \"totalLatencyMs\": 4778,\n          \"errorsByType\": {}\n        },\n        \"tokens\": {\n          \"input\": 2974,\n          \"prompt\": 2974,\n          \"candidates\": 51,\n          \"total\": 3440,\n          \"cached\": 0,\n          \"thoughts\": 415,\n          \"tool\": 0\n        },\n        \"roles\": {\n          \"utility_router\": {\n            \"totalRequests\": 1,\n            \"totalErrors\": 0,\n            \"totalLatencyMs\": 4778,\n            \"tokens\": {\n              \"input\": 2974,\n              \"prompt\": 2974,\n              \"candidates\": 51,\n              \"total\": 3440,\n              \"cached\": 0,\n              \"thoughts\": 415,\n              \"tool\": 0\n            }\n          }\n        }\n      },\n      \"gemini-3.8-flash\": {\n        \"api\": {\n          \"totalRequests\": 1,\n          \"totalErrors\": 0,\n          \"totalLatencyMs\": 21661,\n          \"errorsByType\": {}\n        },\n        \"tokens\": {\n          \"input\": 7989,\n          \"prompt\": 7989,\n          \"candidates\": 342,\n          \"total\": 11052,\n          \"cached\": 0,\n          \"thoughts\": 2721,\n          \"tool\": 0\n        },\n        \"roles\": {\n          \"main\": {\n            \"totalRequests\": 1,\n            \"totalErrors\": 0,\n            \"totalLatencyMs\": 21661,\n            \"tokens\": {\n              \"input\": 7989,\n              \"prompt\": 7989,\n              \"candidates\": 342,\n              \"total\": 11052,\n              \"cached\": 0,\n              \"thoughts\": 2721,\n              \"tool\": 0\n            }\n          }\n        }\n      }\n    },\n    \"tools\": {\n      \"totalCalls\": 0,\n      \"totalSuccess\": 0,\n      \"totalFail\": 0,\n      \"totalDurationMs\": 0,\n      \"totalDecisions\": {\n        \"accept\": 0,\n        \"reject\": 0,\n        \"modify\": 0,\n        \"auto_accept\": 0\n      },\n      \"byName\": {}\n    },\n    \"files\": {\n      \"totalLinesAdded\": 0,\n      \"totalLinesRemoved\": 0\n    }\n  }\n}",
+    "provider": "gemini"
+  }
+]

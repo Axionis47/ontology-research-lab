@@ -1,0 +1,13 @@
+{
+  "complete": true,
+  "experiments": [
+    {
+      "experiment": "02-retrieved-definitions",
+      "status": "MEASURED",
+      "passed": false,
+      "calls": 1,
+      "interface_calls": 0
+    }
+  ],
+  "appworld_runs": 0
+}

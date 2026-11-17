@@ -1,0 +1,52 @@
+{
+  "date": "2026-11-13",
+  "scope": "Computational data/constraint separation and learning/control protocol consistency; C0 implementation remains a separate component",
+  "result": "PASS",
+  "validator_output": "PASS: 15 documents, 66 schema definitions, 35 boundary cases, 36 event mappings, 42 runtime acceptance scenarios.\nChecked schema references, formats/examples, local links, defaults, operator membership and coverage IDs. Runtime acceptance scenarios remain unexecuted.\nChecked computational ownership, lifecycle/guard references, constraint semantics, learning surfaces and profile bindings. These are specification checks, not runtime enforcement tests.",
+  "schema_definitions": 66,
+  "boundary_cases": 35,
+  "event_mappings": 36,
+  "runtime_scenarios_executed": false,
+  "benchmark_episodes_executed_for_this_task": 0,
+  "file_sha256": {
+    "01-contracts.md": "d599dd3c6201250ab8ea7bfd0c917a38eb147d2fcaf50a957d5e23840f987c4c",
+    "02-inference-and-control.md": "702da0219726e6d9da3595730f4bda8b303d29bc4a2795d9eb32e86c658f2e26",
+    "03-execution-kernel.md": "1adf25e55df05bc2e4abd75c0225801266a5973a40b7d5379488f536bf642de4",
+    "04-domain-and-surfaces.md": "8bbe36356688ad38b6e2f59a00a22c028a2440f700a8233acea034c2c4be4d4c",
+    "05-long-tasks-and-context.md": "3cf343d0511b744d380990a586d4660c3760ca107f2bd890b0ec9e700c5e9393",
+    "06-judge-and-diagnosis.md": "27379366cc9ab968407d548ca65072cf015ee0895793c96d89f5ef548e8ffc5f",
+    "07-repair-and-promotion.md": "18dc9e780a2a1959806458d20335e777bc2c1e0d9cf4f55214fdcabdbda31500",
+    "08-evaluation-and-success.md": "dbc85aebc34a8a5de6a47041fddff7931efa6ec4f8d42b8da52115e939988302",
+    "09-build-and-acceptance.md": "368f0ddccb4b5976329b916e91cde86f230bd0c14ce8498024cc46e503306bc4",
+    "10-worked-lifecycle.md": "64831b3a82510bfe86e638c8882077bca027aa7bdbfec4b64a14974ff8ed51ef",
+    "11-narrow-training-and-inference.md": "9f86637566c178e9b8fe7d9a371d808e2e25cbc67703c9bdd4e53b08a2a5e499",
+    "12-computational-learning-protocol.md": "f73ec5608f19f53d7c344a2f34eeb15a788e0dca6725f23cd73e6fb14dddfafa",
+    "13-react-component.md": "5c7ce2d9c2859a5bbf4ff53fb1d4a1afb03d3036549a76d9962f31fc0df6a4df",
+    "14-judge-evidence.md": "ba8df4f20ad1099818376b3009bf036a1924701a12b434209bc8672bee07b781",
+    "README.md": "8e5acefd64cf6079d9afab6fd5ffdebbd3ba36b6e87ac894241ade17704e1752",
+    "computational-protocol.json": "297afaa0c2f02b409d3d2dcec46405a5319f712e96e0087b0d972b9ee097f170",
+    "contract-cases.json": "f10ab2ff963b31829c75e783e972778d0b7af999de20f8734b44d83cd8fdbadf",
+    "contracts.schema.json": "f0004ba52ad4b1cfd3a3555a4a3a81f4e75fc531f31e39fe11cb829e0f641df3",
+    "event-catalog.json": "ffe2b213227da150c98e793b21e4c6aa98fd23e707ee6f9faec8395bdf32ea24",
+    "future/evaluation-broad-reference.md": "650033285dc32540103521038db08c73cf07f0257faf35d485370eb8c618205e",
+    "future/profile-broad-reference.json": "88891ff66deab0503a4ba1b5b155365aca9e8dd93e963d1044b30b1cd3303d0e",
+    "profile.json": "3023efe7e24957e20c093ed3d63d56aaf24aeb40e87e066332acc7f311859c04",
+    "validate_spec.py": "187705aef4cc5233d5da01e4020624d4c04fa67456d60a0d9ecad4fff7e4c0e2"
+  },
+  "documents": 15,
+  "runtime_acceptance_scenarios": 42,
+  "supplemental_checks": {
+    "negative_protocol_mutations_rejected": 6,
+    "negative_protocol_mutations": [
+      "dispatch bypass",
+      "self-certified finish",
+      "weaken task requirement",
+      "learn through prompt growth",
+      "sealed evidence leak",
+      "missing execution receipt"
+    ],
+    "existing_synthetic_gap_tests_passed": 18,
+    "new_runtime_enforcement_tests_executed": false,
+    "learning_improvement_demonstrated": false
+  }
+}

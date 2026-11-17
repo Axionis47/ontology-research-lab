@@ -1,0 +1,14 @@
+{
+  "started_at": "2026-11-16T03:21:00.908644+00:00",
+  "provider": "installed Gemini CLI",
+  "role": "diagnostic judge",
+  "environment": "AppWorld",
+  "task_id": "07b42fd_1",
+  "input_sha256": "16050bc8132c777c54d03092c7e66bab1d6f0374ef68050eca3f2164615fff2a",
+  "model_response": null,
+  "promotion_allowed": false,
+  "state": "JUDGE_UNAVAILABLE",
+  "error": "Gemini CLI default call was rejected by Google: UNSUPPORTED_CLIENT for the existing saved login",
+  "error_type": "RuntimeError",
+  "elapsed_seconds": 7.9
+}

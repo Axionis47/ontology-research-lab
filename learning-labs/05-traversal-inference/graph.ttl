@@ -1,0 +1,3 @@
+@prefix ex: <https://example.org/learning/> .
+ex:Maya ex:belongsTo ex:Atlas .
+ex:LoginService a ex:Service ; ex:belongsTo ex:Atlas .

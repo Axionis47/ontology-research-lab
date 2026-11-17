@@ -1,0 +1,158 @@
+[
+  {
+    "experiment": "01-full-definitions",
+    "cli_calls": 1,
+    "status": "MEASURED",
+    "passed": true,
+    "score_details": {
+      "shape": true,
+      "panel_correct": true,
+      "proof_complete": true,
+      "versions_correct": true,
+      "rule_coverage": true,
+      "passed": true
+    },
+    "panel": {
+      "ops": "Vera",
+      "security": "Tao"
+    },
+    "main_input": 9562,
+    "main_generated": 5396,
+    "router_tokens": 5207,
+    "total_tokens": 20165,
+    "usage_responses": 1,
+    "gate_before": true,
+    "gate_stale": false,
+    "gate_claimed_fresh": false
+  },
+  {
+    "experiment": "02-retrieved-definitions",
+    "cli_calls": 1,
+    "status": "MEASURED",
+    "passed": true,
+    "score_details": {
+      "shape": true,
+      "panel_correct": true,
+      "proof_complete": true,
+      "versions_correct": true,
+      "rule_coverage": true,
+      "passed": true
+    },
+    "panel": {
+      "ops": "Vera",
+      "security": "Tao"
+    },
+    "main_input": 9391,
+    "main_generated": 7274,
+    "router_tokens": 10895,
+    "total_tokens": 27560,
+    "usage_responses": 1,
+    "gate_before": true,
+    "gate_stale": false,
+    "gate_claimed_fresh": false
+  },
+  {
+    "experiment": "03-schema-inspection",
+    "cli_calls": 2,
+    "status": "MEASURED",
+    "passed": true,
+    "score_details": {
+      "shape": true,
+      "panel_correct": true,
+      "proof_complete": true,
+      "versions_correct": true,
+      "rule_coverage": true,
+      "passed": true
+    },
+    "panel": {
+      "ops": "Vera",
+      "security": "Tao"
+    },
+    "main_input": 18336,
+    "main_generated": 7700,
+    "router_tokens": 9792,
+    "total_tokens": 35828,
+    "usage_responses": 2,
+    "gate_before": true,
+    "gate_stale": false,
+    "gate_claimed_fresh": false
+  },
+  {
+    "experiment": "04-graph-queries",
+    "cli_calls": 1,
+    "status": "MEASURED",
+    "passed": false,
+    "score_details": {
+      "shape": true,
+      "panel_correct": true,
+      "proof_complete": true,
+      "versions_correct": true,
+      "rule_coverage": true,
+      "passed": true
+    },
+    "panel": {
+      "ops": "Vera",
+      "security": "Tao"
+    },
+    "main_input": 9533,
+    "main_generated": 16137,
+    "router_tokens": 5565,
+    "total_tokens": 31235,
+    "usage_responses": 1,
+    "gate_before": true,
+    "gate_stale": false,
+    "gate_claimed_fresh": false
+  },
+  {
+    "experiment": "05-typed-function",
+    "cli_calls": 2,
+    "status": "MEASURED",
+    "passed": true,
+    "score_details": {
+      "shape": true,
+      "panel_correct": true,
+      "proof_complete": true,
+      "versions_correct": true,
+      "rule_coverage": true,
+      "passed": true
+    },
+    "panel": {
+      "ops": "Vera",
+      "security": "Tao"
+    },
+    "main_input": 19327,
+    "main_generated": 9385,
+    "router_tokens": 11338,
+    "total_tokens": 40050,
+    "usage_responses": 2,
+    "gate_before": true,
+    "gate_stale": false,
+    "gate_claimed_fresh": false
+  },
+  {
+    "experiment": "06-constraint-service",
+    "cli_calls": 2,
+    "status": "MEASURED",
+    "passed": true,
+    "score_details": {
+      "shape": true,
+      "panel_correct": true,
+      "proof_complete": true,
+      "versions_correct": true,
+      "rule_coverage": true,
+      "passed": true
+    },
+    "panel": {
+      "ops": "Vera",
+      "security": "Tao"
+    },
+    "main_input": 19518,
+    "main_generated": 13052,
+    "router_tokens": 11078,
+    "total_tokens": 43648,
+    "usage_responses": 2,
+    "gate_before": true,
+    "gate_stale": false,
+    "gate_claimed_fresh": false
+  }
+]

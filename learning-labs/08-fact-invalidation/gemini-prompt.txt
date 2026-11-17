@@ -1,0 +1,35 @@
+You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.
+
+{
+  "experiment": "08",
+  "title": "Invalidate a stale conclusion",
+  "terms": {
+    "revision": "An identity for an observed state version.",
+    "dependency": "Evidence a conclusion relies on.",
+    "invalidation": "Marking a dependent result as stale."
+  },
+  "instruction": "Return all transitively stale nodes excluding the changed source itself. Do not invalidate unrelated nodes. A plan based on a revoked assignment must not execute.",
+  "input": {
+    "change": {
+      "node": "assignment17",
+      "revision_before": 1,
+      "revision_after": 2,
+      "active_after": false
+    },
+    "depends_on": {
+      "decision8": [
+        "assignment17"
+      ],
+      "plan3": [
+        "decision8"
+      ],
+      "display_name": [
+        "profile1"
+      ]
+    }
+  },
+  "output_shape": {
+    "stale_nodes": "array of node IDs",
+    "execute_plan3": "boolean"
+  }
+}

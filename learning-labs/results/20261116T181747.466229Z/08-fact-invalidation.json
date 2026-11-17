@@ -1,0 +1,15 @@
+{
+  "project": "08-fact-invalidation",
+  "exit_code": 0,
+  "json_result": true,
+  "passed": true,
+  "check_count": 7,
+  "status": "EXECUTED",
+  "source_sha256": {
+    "run.py": "781f8a86603ef84d40e69f83a15ba47b5440353cf4865a7dab6377d6b0ccf3d7",
+    "input.json": "46cd225e86941deabd08e529257bdb48b043369e1ecb131e49d4935954dca3c3",
+    "README.md": "024aa2b4c503bb8d722c704cac9aa7ab58945af3541675107ceb57a5fc772725"
+  },
+  "stdout": "{\n  \"experiment\": \"08\",\n  \"kind\": \"synthetic_deterministic_fixture\",\n  \"model_calls\": 0,\n  \"input_sha256\": \"46cd225e86941deabd08e529257bdb48b043369e1ecb131e49d4935954dca3c3\",\n  \"before\": {\n    \"revision\": 1,\n    \"person\": \"Maya\",\n    \"service\": \"LoginService\",\n    \"active\": true,\n    \"source\": \"fixture://oncall/receipt1\"\n  },\n  \"after\": {\n    \"revision\": 2,\n    \"person\": \"Maya\",\n    \"service\": \"LoginService\",\n    \"active\": false,\n    \"source\": \"fixture://oncall/receipt2\"\n  },\n  \"invalidated\": [\n    \"assignment17\",\n    \"decision8\",\n    \"plan3\"\n  ],\n  \"checks\": {\n    \"original_plan_permitted\": true,\n    \"direct_decision_invalidated\": true,\n    \"transitive_plan_invalidated\": true,\n    \"unrelated_display_preserved\": true,\n    \"stale_plan_rejected\": true,\n    \"fresh_recomputation_denies_revoked_assignment\": true,\n    \"ontology_did_not_change\": true\n  },\n  \"passed\": true\n}\n",
+  "stderr": ""
+}

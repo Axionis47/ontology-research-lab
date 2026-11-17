@@ -1,0 +1,6 @@
+{
+  "mode": "function",
+  "title": "Typed domain function",
+  "mechanism": "Relevant definitions plus find_eligible_approvers; domain code combines the rules.",
+  "limitation": "A function only supports its implemented semantics. Smaller reasoning burden transfers trust to domain code."
+}

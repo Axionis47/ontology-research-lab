@@ -1,0 +1,11 @@
+{
+  "surface_id": "appworld_selective_updates_v1",
+  "dataset_split": "train",
+  "minimum_variants": 3,
+  "business_applications_per_scenario": 1,
+  "goal_shape": "Select records by properties or relationships, perform one kind of update, and verify the resulting state.",
+  "interaction": "one_request_per_episode",
+  "ranking": ["native_difficulty", "required_api_count", "scenario_id"],
+  "actor_evidence": "Public task instruction, supervisor identity, documented MCP tools and their observed results only.",
+  "construction": "Deferred until the initial ReAct batch has terminated and been evaluated."
+}

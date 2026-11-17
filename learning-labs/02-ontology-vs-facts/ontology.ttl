@@ -1,0 +1,8 @@
+@prefix ex: <https://example.org/learning/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+ex:Person a rdfs:Class .
+ex:Service a rdfs:Class .
+ex:Project a rdfs:Class .
+ex:maintains a rdf:Property ; rdfs:domain ex:Person ; rdfs:range ex:Service .
+ex:belongsTo a rdf:Property ; rdfs:domain ex:Service ; rdfs:range ex:Project .

@@ -1,0 +1,14 @@
+{
+  "recorded_at": "2026-11-16T14:13:09.808199+00:00",
+  "status": "WITHDRAWN_ROLE_MISMATCH",
+  "reason": "The assistant assigned Qwen an extra schema-repair proposer role. Qwen remains the AppWorld task actor; Gemini remains the diagnostic judge.",
+  "restored_files": [
+    "react_runtime/ollama.py",
+    "tests/test_ollama_transport.py"
+  ],
+  "runtime_restored_to_native_baseline": true,
+  "experiment_processes": "All three observed experiment/test sessions had already exited; none remained running.",
+  "evidence": "All AppWorld traces, model proposal and rejected experiment source snapshots retained.",
+  "native_baseline": "Six real AppWorld attempts completed, zero native successes.",
+  "retention_progress": "Two native retained-program passes; third session timed out during initialization. No three-task success claim."
+}

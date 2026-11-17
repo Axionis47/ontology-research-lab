@@ -1,0 +1,336 @@
+{
+  "mode": "typed_function",
+  "status": "MEASURED",
+  "initial_payload": {
+    "task": {
+      "service": "LoginService",
+      "environment": "Production",
+      "deployment_id": "d1",
+      "at": "2026-11-16"
+    },
+    "definitions": {
+      "Person": "An identified human.",
+      "Assignment": "A directed association from person to service, qualified by role, environment and validity.",
+      "Deployment": "A deployment of a service with an author.",
+      "eligible": "A matching active DeploymentApprover assignment with validFrom <= at < validUntil, covering the service and environment. The person must differ from the deployment author.",
+      "unknown": "Evidence is insufficient; absence from an incomplete fragment is not proof of absence."
+    },
+    "final_response_shape": {
+      "type": "finish",
+      "person": "person name or null",
+      "evidence_ids": [
+        "supporting record IDs"
+      ],
+      "revision": "integer"
+    },
+    "tools": {
+      "find_eligible_approvers": {
+        "arguments": {
+          "service": "string",
+          "environment": "string",
+          "deployment_id": "string",
+          "at": "YYYY-MM-DD"
+        },
+        "returns": "Candidates satisfying all supplied eligibility rules, exclusions with reasons, source, revision and supporting record IDs."
+      }
+    },
+    "call_shape": {
+      "type": "call",
+      "name": "declared tool name",
+      "arguments": {
+        "documented": "arguments"
+      }
+    },
+    "instruction": "Request evidence with one call at a time before finishing. These are application-protocol JSON messages, not Gemini CLI built-in tools."
+  },
+  "calls": [
+    {
+      "step": 0,
+      "submitted_prompt": "Use only supplied evidence and definitions. Choose an eligible approver for the task, or null if no candidate is supported by complete evidence. Return only one JSON object. Do not use CLI tools or access files.\n{\"task_context\":{\"task\":{\"service\":\"LoginService\",\"environment\":\"Production\",\"deployment_id\":\"d1\",\"at\":\"2026-11-16\"},\"definitions\":{\"Person\":\"An identified human.\",\"Assignment\":\"A directed association from person to service, qualified by role, environment and validity.\",\"Deployment\":\"A deployment of a service with an author.\",\"eligible\":\"A matching active DeploymentApprover assignment with validFrom <= at < validUntil, covering the service and environment. The person must differ from the deployment author.\",\"unknown\":\"Evidence is insufficient; absence from an incomplete fragment is not proof of absence.\"},\"final_response_shape\":{\"type\":\"finish\",\"person\":\"person name or null\",\"evidence_ids\":[\"supporting record IDs\"],\"revision\":\"integer\"},\"tools\":{\"find_eligible_approvers\":{\"arguments\":{\"service\":\"string\",\"environment\":\"string\",\"deployment_id\":\"string\",\"at\":\"YYYY-MM-DD\"},\"returns\":\"Candidates satisfying all supplied eligibility rules, exclusions with reasons, source, revision and supporting record IDs.\"}},\"call_shape\":{\"type\":\"call\",\"name\":\"declared tool name\",\"arguments\":{\"documented\":\"arguments\"}},\"instruction\":\"Request evidence with one call at a time before finishing. These are application-protocol JSON messages, not Gemini CLI built-in tools.\"},\"interaction_history\":[]}",
+      "user_prompt_chars": 1505,
+      "status": "RECEIVED",
+      "exit_code": 0,
+      "cli_response": {
+        "session_id": "798dc976-114c-4a83-9733-7d80d7d94956",
+        "response": "{\"type\":\"call\",\"name\":\"find_eligible_approvers\",\"arguments\":{\"service\":\"LoginService\",\"environment\":\"Production\",\"deployment_id\":\"d1\",\"at\":\"2026-11-16\"}}",
+        "stats": {
+          "models": {
+            "gemini-3.5-flash-lite": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 5850,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 1240,
+                "prompt": 1240,
+                "candidates": 39,
+                "total": 2106,
+                "cached": 0,
+                "thoughts": 827,
+                "tool": 0
+              },
+              "roles": {
+                "utility_router": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 5850,
+                  "tokens": {
+                    "input": 1240,
+                    "prompt": 1240,
+                    "candidates": 39,
+                    "total": 2106,
+                    "cached": 0,
+                    "thoughts": 827,
+                    "tool": 0
+                  }
+                }
+              }
+            },
+            "gemini-3.8-flash": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 4403,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 6230,
+                "prompt": 6230,
+                "candidates": 45,
+                "total": 6824,
+                "cached": 0,
+                "thoughts": 549,
+                "tool": 0
+              },
+              "roles": {
+                "main": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 4403,
+                  "tokens": {
+                    "input": 6230,
+                    "prompt": 6230,
+                    "candidates": 45,
+                    "total": 6824,
+                    "cached": 0,
+                    "thoughts": 549,
+                    "tool": 0
+                  }
+                }
+              }
+            }
+          },
+          "tools": {
+            "totalCalls": 0,
+            "totalSuccess": 0,
+            "totalFail": 0,
+            "totalDurationMs": 0,
+            "totalDecisions": {
+              "accept": 0,
+              "reject": 0,
+              "modify": 0,
+              "auto_accept": 0
+            },
+            "byName": {}
+          },
+          "files": {
+            "totalLinesAdded": 0,
+            "totalLinesRemoved": 0
+          }
+        }
+      },
+      "parsed": {
+        "type": "call",
+        "name": "find_eligible_approvers",
+        "arguments": {
+          "service": "LoginService",
+          "environment": "Production",
+          "deployment_id": "d1",
+          "at": "2026-11-16"
+        }
+      }
+    },
+    {
+      "step": 1,
+      "submitted_prompt": "Use only supplied evidence and definitions. Choose an eligible approver for the task, or null if no candidate is supported by complete evidence. Return only one JSON object. Do not use CLI tools or access files.\n{\"task_context\":{\"task\":{\"service\":\"LoginService\",\"environment\":\"Production\",\"deployment_id\":\"d1\",\"at\":\"2026-11-16\"},\"definitions\":{\"Person\":\"An identified human.\",\"Assignment\":\"A directed association from person to service, qualified by role, environment and validity.\",\"Deployment\":\"A deployment of a service with an author.\",\"eligible\":\"A matching active DeploymentApprover assignment with validFrom <= at < validUntil, covering the service and environment. The person must differ from the deployment author.\",\"unknown\":\"Evidence is insufficient; absence from an incomplete fragment is not proof of absence.\"},\"final_response_shape\":{\"type\":\"finish\",\"person\":\"person name or null\",\"evidence_ids\":[\"supporting record IDs\"],\"revision\":\"integer\"},\"tools\":{\"find_eligible_approvers\":{\"arguments\":{\"service\":\"string\",\"environment\":\"string\",\"deployment_id\":\"string\",\"at\":\"YYYY-MM-DD\"},\"returns\":\"Candidates satisfying all supplied eligibility rules, exclusions with reasons, source, revision and supporting record IDs.\"}},\"call_shape\":{\"type\":\"call\",\"name\":\"declared tool name\",\"arguments\":{\"documented\":\"arguments\"}},\"instruction\":\"Request evidence with one call at a time before finishing. These are application-protocol JSON messages, not Gemini CLI built-in tools.\"},\"interaction_history\":[{\"model_proposal\":{\"type\":\"call\",\"name\":\"find_eligible_approvers\",\"arguments\":{\"service\":\"LoginService\",\"environment\":\"Production\",\"deployment_id\":\"d1\",\"at\":\"2026-11-16\"}},\"runtime_observation\":{\"revision\":1,\"source\":\"synthetic://service-catalog/snapshot-1\",\"coverage\":\"complete for bound task\",\"candidates\":[{\"person\":\"Noah\",\"evidence_ids\":[\"a-noah\",\"d1\"]}],\"exclusions\":[{\"person\":\"Maya\",\"failed\":[\"separation_of_duties\"]},{\"person\":\"Rin\",\"failed\":[\"environment\"]},{\"person\":\"Tao\",\"failed\":[\"validity\"]}]}}]}",
+      "user_prompt_chars": 2013,
+      "status": "RECEIVED",
+      "exit_code": 0,
+      "cli_response": {
+        "session_id": "6dc2bd11-3675-4dc0-bd89-73591da16248",
+        "response": "{\"type\":\"finish\",\"person\":\"Noah\",\"evidence_ids\":[\"a-noah\",\"d1\"],\"revision\":1}",
+        "stats": {
+          "models": {
+            "gemini-3.5-flash-lite": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 7171,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 1371,
+                "prompt": 1371,
+                "candidates": 52,
+                "total": 2336,
+                "cached": 0,
+                "thoughts": 913,
+                "tool": 0
+              },
+              "roles": {
+                "utility_router": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 7171,
+                  "tokens": {
+                    "input": 1371,
+                    "prompt": 1371,
+                    "candidates": 52,
+                    "total": 2336,
+                    "cached": 0,
+                    "thoughts": 913,
+                    "tool": 0
+                  }
+                }
+              }
+            },
+            "gemini-3.8-flash": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 4546,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 6361,
+                "prompt": 6361,
+                "candidates": 25,
+                "total": 6994,
+                "cached": 0,
+                "thoughts": 608,
+                "tool": 0
+              },
+              "roles": {
+                "main": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 4546,
+                  "tokens": {
+                    "input": 6361,
+                    "prompt": 6361,
+                    "candidates": 25,
+                    "total": 6994,
+                    "cached": 0,
+                    "thoughts": 608,
+                    "tool": 0
+                  }
+                }
+              }
+            }
+          },
+          "tools": {
+            "totalCalls": 0,
+            "totalSuccess": 0,
+            "totalFail": 0,
+            "totalDurationMs": 0,
+            "totalDecisions": {
+              "accept": 0,
+              "reject": 0,
+              "modify": 0,
+              "auto_accept": 0
+            },
+            "byName": {}
+          },
+          "files": {
+            "totalLinesAdded": 0,
+            "totalLinesRemoved": 0
+          }
+        }
+      },
+      "parsed": {
+        "type": "finish",
+        "person": "Noah",
+        "evidence_ids": [
+          "a-noah",
+          "d1"
+        ],
+        "revision": 1
+      }
+    }
+  ],
+  "history": [
+    {
+      "model_proposal": {
+        "type": "call",
+        "name": "find_eligible_approvers",
+        "arguments": {
+          "service": "LoginService",
+          "environment": "Production",
+          "deployment_id": "d1",
+          "at": "2026-11-16"
+        }
+      },
+      "runtime_observation": {
+        "revision": 1,
+        "source": "synthetic://service-catalog/snapshot-1",
+        "coverage": "complete for bound task",
+        "candidates": [
+          {
+            "person": "Noah",
+            "evidence_ids": [
+              "a-noah",
+              "d1"
+            ]
+          }
+        ],
+        "exclusions": [
+          {
+            "person": "Maya",
+            "failed": [
+              "separation_of_duties"
+            ]
+          },
+          {
+            "person": "Rin",
+            "failed": [
+              "environment"
+            ]
+          },
+          {
+            "person": "Tao",
+            "failed": [
+              "validity"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "correct_at_observation": true,
+  "answer": {
+    "type": "finish",
+    "person": "Noah",
+    "evidence_ids": [
+      "a-noah",
+      "d1"
+    ],
+    "revision": 1
+  },
+  "action_probe": {
+    "event": "Noah assignment revoked after selection, before dispatch",
+    "current_revision": 2,
+    "unguarded_fixture": {
+      "selected_person": "Noah",
+      "constraint_violation": true
+    },
+    "gated_fixture": {
+      "selected_person": null,
+      "admitted": false,
+      "reason": "STALE_OR_INELIGIBLE"
+    },
+    "current_eligible": [],
+    "kind": "deterministic local effect probe, not another model judgment"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "task": "Deploy LoginService to Production only with current scope-matching approval",
+  "request": {"service": "LoginService", "environment": "Production", "evidence_id": "approval-17"},
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {"service": {"type": "string"}, "environment": {"type": "string"}, "evidence_id": {"type": "string"}},
+    "required": ["service", "environment", "evidence_id"],
+    "additionalProperties": false
+  },
+  "approval": {"id": "approval-17", "service": "LoginService", "environment": "Production", "current": true, "source_receipt": "fixture-source-1"}
+}

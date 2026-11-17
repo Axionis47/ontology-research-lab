@@ -1,0 +1,126 @@
+{
+  "experiment": "04-relationship-entities",
+  "status": "MEASURED",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"04\",\n  \"title\": \"A relationship with scope and time\",\n  \"terms\": {\n    \"assignment\": \"An entity describing a relationship and its details.\",\n    \"scope\": \"Where a responsibility applies.\",\n    \"expiry\": \"Exclusive end of validity.\"\n  },\n  \"instruction\": \"Return people supported as maintainers of LoginService. A matching assignment must have role Maintainer, matching environment, and validFrom <= date < validUntil. Empty lists mean no supporting observation.\",\n  \"input\": {\n    \"assignments\": [\n      {\n        \"person\": \"Maya\",\n        \"service\": \"LoginService\",\n        \"role\": \"Maintainer\",\n        \"environment\": \"Staging\",\n        \"validFrom\": \"2026-11-01\",\n        \"validUntil\": \"2026-11-20\"\n      }\n    ],\n    \"queries\": {\n      \"A\": {\n        \"environment\": \"Staging\",\n        \"date\": \"2026-11-16\"\n      },\n      \"B\": {\n        \"environment\": \"Production\",\n        \"date\": \"2026-11-16\"\n      },\n      \"C\": {\n        \"environment\": \"Staging\",\n        \"date\": \"2026-11-20\"\n      }\n    }\n  },\n  \"output_shape\": {\n    \"A\": \"array of people\",\n    \"B\": \"array of people\",\n    \"C\": \"array of people\"\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "A": [
+      "Maya"
+    ],
+    "B": [],
+    "C": []
+  },
+  "reported_models": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash"
+  ],
+  "passed": true,
+  "exit_code": 0,
+  "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+  "cli_response": {
+    "session_id": "d8332cbe-9a20-49e9-a52f-dba0eb424883",
+    "response": "{\"A\": [\"Maya\"], \"B\": [], \"C\": []}",
+    "stats": {
+      "models": {
+        "gemini-3.5-flash-lite": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 6267,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 1340,
+            "prompt": 1340,
+            "candidates": 39,
+            "total": 2192,
+            "cached": 0,
+            "thoughts": 813,
+            "tool": 0
+          },
+          "roles": {
+            "utility_router": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 6267,
+              "tokens": {
+                "input": 1340,
+                "prompt": 1340,
+                "candidates": 39,
+                "total": 2192,
+                "cached": 0,
+                "thoughts": 813,
+                "tool": 0
+              }
+            }
+          }
+        },
+        "gemini-3.8-flash": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 5190,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 6282,
+            "prompt": 6282,
+            "candidates": 15,
+            "total": 6987,
+            "cached": 0,
+            "thoughts": 690,
+            "tool": 0
+          },
+          "roles": {
+            "main": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 5190,
+              "tokens": {
+                "input": 6282,
+                "prompt": 6282,
+                "candidates": 15,
+                "total": 6987,
+                "cached": 0,
+                "thoughts": 690,
+                "tool": 0
+              }
+            }
+          }
+        }
+      },
+      "tools": {
+        "totalCalls": 0,
+        "totalSuccess": 0,
+        "totalFail": 0,
+        "totalDurationMs": 0,
+        "totalDecisions": {
+          "accept": 0,
+          "reject": 0,
+          "modify": 0,
+          "auto_accept": 0
+        },
+        "byName": {}
+      },
+      "files": {
+        "totalLinesAdded": 0,
+        "totalLinesRemoved": 0
+      }
+    }
+  },
+  "checks": {
+    "exact_keys": true,
+    "fields": {
+      "A": true,
+      "B": true,
+      "C": true
+    },
+    "passed": true
+  },
+  "answer": {
+    "A": [
+      "Maya"
+    ],
+    "B": [],
+    "C": []
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "project": "05-traversal-inference",
+  "exit_code": 0,
+  "json_result": true,
+  "passed": true,
+  "source_sha256": {
+    "run.py": "b798cfb12dfbbe0ce1d3ab69850fb31d7e2f0bdc77a7b07ea844068dc000e05c",
+    "input.json": "f87e310b040dc3b90cd4b32daebf75b190f8284a90c55addd726c2148f47c0c6",
+    "README.md": "cb0e944173bf3deb64608a9b93564f5021b85f3bd1e16a04d82101249a73b7eb",
+    "query.rq": "cbbf8f2fb8ecd27826b03338cdfffd27be57e0cedd08293be012c8c56973e3f5",
+    "graph.ttl": "be9a400e4d3e2fba2bd114de88237e54e944d51f91ba95a7435fad3cc9adccfa"
+  },
+  "stdout": "{\n  \"kind\": \"synthetic_component_experiment\",\n  \"engine\": \"explicit_python_not_standards_engine\",\n  \"inputs\": {\n    \"input.json\": {\n      \"at\": \"2026-11-16\",\n      \"triples\": [\n        [\n          \"Maya\",\n          \"belongsTo\",\n          \"Atlas\"\n        ],\n        [\n          \"LoginService\",\n          \"belongsTo\",\n          \"Atlas\"\n        ]\n      ],\n      \"services\": [\n        \"LoginService\"\n      ],\n      \"scenarios\": {\n        \"membership_only\": [],\n        \"matching_assignment\": [\n          {\n            \"id\": \"A1\",\n            \"person\": \"Maya\",\n            \"service\": \"LoginService\",\n            \"role\": \"DeploymentApprover\",\n            \"environment\": \"Production\",\n            \"validFrom\": \"2026-11-01\",\n            \"validUntil\": \"2026-11-20\"\n          }\n        ],\n        \"wrong_environment\": [\n          {\n            \"id\": \"A2\",\n            \"person\": \"Maya\",\n            \"service\": \"LoginService\",\n            \"role\": \"DeploymentApprover\",\n            \"environment\": \"Staging\",\n            \"validFrom\": \"2026-11-01\",\n            \"validUntil\": \"2026-11-20\"\n          }\n        ]\n      }\n    }\n  },\n  \"source_sha256\": \"b798cfb12dfbbe0ce1d3ab69850fb31d7e2f0bdc77a7b07ea844068dc000e05c\",\n  \"observations\": {\n    \"join_step_1_projects\": [\n      \"Atlas\"\n    ],\n    \"join_step_2_services\": [\n      \"LoginService\"\n    ],\n    \"approval\": {\n      \"membership_only\": {\n        \"status\": \"UNKNOWN\",\n        \"supporting_assignments\": []\n      },\n      \"matching_assignment\": {\n        \"status\": \"SUPPORTED\",\n        \"supporting_assignments\": [\n          \"A1\"\n        ]\n      },\n      \"wrong_environment\": {\n        \"status\": \"UNKNOWN\",\n        \"supporting_assignments\": []\n      }\n    }\n  },\n  \"checks\": {\n    \"path_exists\": true,\n    \"path_is_not_approval\": true,\n    \"matching_assignment_supports\": true,\n    \"wrong_environment_does_not_support\": true\n  },\n  \"passed\": true\n}\n",
+  "stderr": ""
+}

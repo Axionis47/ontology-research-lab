@@ -1,0 +1,21 @@
+{
+  "experiment": "03-constraints-provenance",
+  "status": "PREPARED_NOT_RUN",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"03\",\n  \"title\": \"Valid does not mean evidenced\",\n  \"terms\": {\n    \"constraint\": \"An explicit acceptance condition.\",\n    \"provenance\": \"The source supporting a claim.\"\n  },\n  \"instruction\": \"For this closed fixture maintains requires an explicitly typed Person subject and Service object. Admit only if the source receipt exactly supports the claim. This is a validation policy, not RDFS inference.\",\n  \"input\": {\n    \"types\": {\n      \"Maya\": \"Person\",\n      \"LoginService\": \"Service\"\n    },\n    \"candidates\": {\n      \"A\": {\n        \"triple\": [\n          \"Maya\",\n          \"maintains\",\n          \"LoginService\"\n        ],\n        \"receipt\": null\n      },\n      \"B\": {\n        \"triple\": [\n          \"LoginService\",\n          \"maintains\",\n          \"Maya\"\n        ],\n        \"receipt\": null\n      },\n      \"C\": {\n        \"triple\": [\n          \"Maya\",\n          \"maintains\",\n          \"LoginService\"\n        ],\n        \"receipt\": [\n          \"Maya\",\n          \"maintains\",\n          \"LoginService\"\n        ]\n      }\n    }\n  },\n  \"output_shape\": {\n    \"A\": {\n      \"structure_valid\": \"boolean\",\n      \"admitted\": \"boolean\"\n    },\n    \"B\": {\n      \"structure_valid\": \"boolean\",\n      \"admitted\": \"boolean\"\n    },\n    \"C\": {\n      \"structure_valid\": \"boolean\",\n      \"admitted\": \"boolean\"\n    }\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "A": {
+      "structure_valid": true,
+      "admitted": false
+    },
+    "B": {
+      "structure_valid": false,
+      "admitted": false
+    },
+    "C": {
+      "structure_valid": true,
+      "admitted": true
+    }
+  },
+  "reported_models": [],
+  "passed": null
+}

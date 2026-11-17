@@ -1,0 +1,3 @@
+@prefix ex: <https://example.org/learning/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+ex:MaintainerShape a sh:NodeShape ; sh:targetSubjectsOf ex:maintains ; sh:class ex:Person ; sh:property [ sh:path ex:maintains ; sh:class ex:Service ] .

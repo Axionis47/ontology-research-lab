@@ -1,0 +1,485 @@
+{
+  "experiment": "03-schema-inspection",
+  "mode": "inspect",
+  "status": "MEASURED",
+  "initial_payload": {
+    "task": {
+      "service": "LoginService",
+      "environment": "Production",
+      "deployment_id": "d1",
+      "at": "2026-11-16"
+    },
+    "task_instruction": "Choose an eligible approver for this deployment using the pinned ontology.",
+    "facts": {
+      "revision": 1,
+      "source": "synthetic://service-catalog/snapshot-1",
+      "deployment": {
+        "id": "d1",
+        "author": "Maya",
+        "service": "LoginService"
+      },
+      "assignments": [
+        {
+          "id": "a-maya",
+          "person": "Maya",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-noah",
+          "person": "Noah",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-rin",
+          "person": "Rin",
+          "service": "LoginService",
+          "environment": "Staging",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-tao",
+          "person": "Tao",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-10-01",
+          "validUntil": "2026-11-15",
+          "active": true
+        }
+      ]
+    },
+    "coverage": "All relevant fixture facts are present; date comparisons use YYYY-MM-DD.",
+    "ontology_version": "approval-ontology-v1",
+    "finish_shape": {
+      "type": "finish",
+      "person": "name or null",
+      "evidence_ids": [
+        "supporting record IDs"
+      ],
+      "ontology_version": "pinned version",
+      "graph_revision": "integer",
+      "rule_ids": [
+        "all applied eligibility rule IDs"
+      ]
+    },
+    "catalog": {
+      "Person": "type",
+      "Service": "type",
+      "Assignment": "type",
+      "Deployment": "type",
+      "heldBy": "relation",
+      "forService": "relation",
+      "eligibility": "rule_set",
+      "Invoice": "type",
+      "Warehouse": "type",
+      "Shipment": "type",
+      "Subscription": "type",
+      "Asset": "type",
+      "PurchaseOrder": "type",
+      "Payment": "type",
+      "Refund": "type",
+      "TaxRate": "type",
+      "Expense": "type",
+      "Supplier": "type",
+      "Inventory": "type"
+    },
+    "interfaces": {
+      "inspect_schema": {
+        "arguments": {
+          "names": "array of catalog names"
+        },
+        "returns": "Requested ontology definitions and their dependency closure; includes rule meanings when eligibility is requested."
+      }
+    },
+    "call_shape": {
+      "type": "call",
+      "name": "declared interface",
+      "arguments": {
+        "documented": "arguments"
+      }
+    },
+    "consumption_protocol": "Use the provided interface successfully at least once, then finish. One request per turn. These are JSON application requests, not CLI built-in tools."
+  },
+  "calls": [
+    {
+      "step": 0,
+      "submitted_prompt": "Solve the same fixed task using only the supplied facts, ontology and interfaces. Return one JSON object, no Markdown. Do not use CLI tools, read files, or change any external state.\n{\"context\":{\"task\":{\"service\":\"LoginService\",\"environment\":\"Production\",\"deployment_id\":\"d1\",\"at\":\"2026-11-16\"},\"task_instruction\":\"Choose an eligible approver for this deployment using the pinned ontology.\",\"facts\":{\"revision\":1,\"source\":\"synthetic://service-catalog/snapshot-1\",\"deployment\":{\"id\":\"d1\",\"author\":\"Maya\",\"service\":\"LoginService\"},\"assignments\":[{\"id\":\"a-maya\",\"person\":\"Maya\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-noah\",\"person\":\"Noah\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-rin\",\"person\":\"Rin\",\"service\":\"LoginService\",\"environment\":\"Staging\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-tao\",\"person\":\"Tao\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-10-01\",\"validUntil\":\"2026-11-15\",\"active\":true}]},\"coverage\":\"All relevant fixture facts are present; date comparisons use YYYY-MM-DD.\",\"ontology_version\":\"approval-ontology-v1\",\"finish_shape\":{\"type\":\"finish\",\"person\":\"name or null\",\"evidence_ids\":[\"supporting record IDs\"],\"ontology_version\":\"pinned version\",\"graph_revision\":\"integer\",\"rule_ids\":[\"all applied eligibility rule IDs\"]},\"catalog\":{\"Person\":\"type\",\"Service\":\"type\",\"Assignment\":\"type\",\"Deployment\":\"type\",\"heldBy\":\"relation\",\"forService\":\"relation\",\"eligibility\":\"rule_set\",\"Invoice\":\"type\",\"Warehouse\":\"type\",\"Shipment\":\"type\",\"Subscription\":\"type\",\"Asset\":\"type\",\"PurchaseOrder\":\"type\",\"Payment\":\"type\",\"Refund\":\"type\",\"TaxRate\":\"type\",\"Expense\":\"type\",\"Supplier\":\"type\",\"Inventory\":\"type\"},\"interfaces\":{\"inspect_schema\":{\"arguments\":{\"names\":\"array of catalog names\"},\"returns\":\"Requested ontology definitions and their dependency closure; includes rule meanings when eligibility is requested.\"}},\"call_shape\":{\"type\":\"call\",\"name\":\"declared interface\",\"arguments\":{\"documented\":\"arguments\"}},\"consumption_protocol\":\"Use the provided interface successfully at least once, then finish. One request per turn. These are JSON application requests, not CLI built-in tools.\"},\"history\":[]}",
+      "user_chars": 2450,
+      "status": "RECEIVED",
+      "exit_code": 0,
+      "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+      "cli_response": {
+        "session_id": "223d3781-4439-4b96-8c04-05f2a91653b1",
+        "response": "{\"type\":\"call\",\"name\":\"inspect_schema\",\"arguments\":{\"names\":[\"eligibility\"]}}",
+        "stats": {
+          "models": {
+            "gemini-3.5-flash-lite": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 8932,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 1549,
+                "prompt": 1549,
+                "candidates": 37,
+                "total": 2580,
+                "cached": 0,
+                "thoughts": 994,
+                "tool": 0
+              },
+              "roles": {
+                "utility_router": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 8932,
+                  "tokens": {
+                    "input": 1549,
+                    "prompt": 1549,
+                    "candidates": 37,
+                    "total": 2580,
+                    "cached": 0,
+                    "thoughts": 994,
+                    "tool": 0
+                  }
+                }
+              }
+            },
+            "gemini-3.8-flash": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 9240,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 6539,
+                "prompt": 6539,
+                "candidates": 19,
+                "total": 7819,
+                "cached": 0,
+                "thoughts": 1261,
+                "tool": 0
+              },
+              "roles": {
+                "main": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 9240,
+                  "tokens": {
+                    "input": 6539,
+                    "prompt": 6539,
+                    "candidates": 19,
+                    "total": 7819,
+                    "cached": 0,
+                    "thoughts": 1261,
+                    "tool": 0
+                  }
+                }
+              }
+            }
+          },
+          "tools": {
+            "totalCalls": 0,
+            "totalSuccess": 0,
+            "totalFail": 0,
+            "totalDurationMs": 0,
+            "totalDecisions": {
+              "accept": 0,
+              "reject": 0,
+              "modify": 0,
+              "auto_accept": 0
+            },
+            "byName": {}
+          },
+          "files": {
+            "totalLinesAdded": 0,
+            "totalLinesRemoved": 0
+          }
+        }
+      },
+      "parsed": {
+        "type": "call",
+        "name": "inspect_schema",
+        "arguments": {
+          "names": [
+            "eligibility"
+          ]
+        }
+      }
+    },
+    {
+      "step": 1,
+      "submitted_prompt": "Solve the same fixed task using only the supplied facts, ontology and interfaces. Return one JSON object, no Markdown. Do not use CLI tools, read files, or change any external state.\n{\"context\":{\"task\":{\"service\":\"LoginService\",\"environment\":\"Production\",\"deployment_id\":\"d1\",\"at\":\"2026-11-16\"},\"task_instruction\":\"Choose an eligible approver for this deployment using the pinned ontology.\",\"facts\":{\"revision\":1,\"source\":\"synthetic://service-catalog/snapshot-1\",\"deployment\":{\"id\":\"d1\",\"author\":\"Maya\",\"service\":\"LoginService\"},\"assignments\":[{\"id\":\"a-maya\",\"person\":\"Maya\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-noah\",\"person\":\"Noah\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-rin\",\"person\":\"Rin\",\"service\":\"LoginService\",\"environment\":\"Staging\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-tao\",\"person\":\"Tao\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-10-01\",\"validUntil\":\"2026-11-15\",\"active\":true}]},\"coverage\":\"All relevant fixture facts are present; date comparisons use YYYY-MM-DD.\",\"ontology_version\":\"approval-ontology-v1\",\"finish_shape\":{\"type\":\"finish\",\"person\":\"name or null\",\"evidence_ids\":[\"supporting record IDs\"],\"ontology_version\":\"pinned version\",\"graph_revision\":\"integer\",\"rule_ids\":[\"all applied eligibility rule IDs\"]},\"catalog\":{\"Person\":\"type\",\"Service\":\"type\",\"Assignment\":\"type\",\"Deployment\":\"type\",\"heldBy\":\"relation\",\"forService\":\"relation\",\"eligibility\":\"rule_set\",\"Invoice\":\"type\",\"Warehouse\":\"type\",\"Shipment\":\"type\",\"Subscription\":\"type\",\"Asset\":\"type\",\"PurchaseOrder\":\"type\",\"Payment\":\"type\",\"Refund\":\"type\",\"TaxRate\":\"type\",\"Expense\":\"type\",\"Supplier\":\"type\",\"Inventory\":\"type\"},\"interfaces\":{\"inspect_schema\":{\"arguments\":{\"names\":\"array of catalog names\"},\"returns\":\"Requested ontology definitions and their dependency closure; includes rule meanings when eligibility is requested.\"}},\"call_shape\":{\"type\":\"call\",\"name\":\"declared interface\",\"arguments\":{\"documented\":\"arguments\"}},\"consumption_protocol\":\"Use the provided interface successfully at least once, then finish. One request per turn. These are JSON application requests, not CLI built-in tools.\"},\"history\":[{\"model_request\":{\"type\":\"call\",\"name\":\"inspect_schema\",\"arguments\":{\"names\":[\"eligibility\"]}},\"runtime_result\":{\"ontology_version\":\"approval-ontology-v1\",\"graph_revision\":1,\"source\":\"synthetic://service-catalog/snapshot-1\",\"definitions\":{\"Assignment\":{\"kind\":\"type\",\"meaning\":\"An observed role of a person for a service, with environment and validity interval.\",\"properties\":[\"id\",\"person\",\"service\",\"environment\",\"role\",\"validFrom\",\"validUntil\",\"active\"],\"requires\":[\"Person\",\"Service\",\"heldBy\",\"forService\"]},\"Deployment\":{\"kind\":\"type\",\"meaning\":\"A proposed deployment of a service, with an author.\",\"properties\":[\"id\",\"service\",\"author\"],\"requires\":[\"Person\",\"Service\"]},\"Person\":{\"kind\":\"type\",\"meaning\":\"An identified human.\"},\"Service\":{\"kind\":\"type\",\"meaning\":\"A software service.\"},\"eligibility\":{\"kind\":\"rule_set\",\"meaning\":\"All six rules must hold. Missing evidence is UNKNOWN and never establishes eligibility.\",\"rules\":[{\"id\":\"R1\",\"meaning\":\"Assignment service must equal task service.\"},{\"id\":\"R2\",\"meaning\":\"Assignment environment must equal task environment.\"},{\"id\":\"R3\",\"meaning\":\"Assignment role must be DeploymentApprover.\"},{\"id\":\"R4\",\"meaning\":\"Assignment active must be true.\"},{\"id\":\"R5\",\"meaning\":\"Assignment validFrom <= task at < assignment validUntil; the end is exclusive. All dates here use YYYY-MM-DD.\"},{\"id\":\"R6\",\"meaning\":\"Assignment person must differ from the deployment author.\"}],\"requires\":[\"Assignment\",\"Deployment\"]},\"forService\":{\"kind\":\"relation\",\"meaning\":\"Assignment.service identifies the service to which that assignment applies.\"},\"heldBy\":{\"kind\":\"relation\",\"meaning\":\"Assignment.person identifies the person holding this assignment; it is not the deployment author.\"}}}}]}",
+      "user_chars": 4171,
+      "status": "RECEIVED",
+      "exit_code": 0,
+      "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+      "cli_response": {
+        "session_id": "678d652c-9dfe-4b37-8369-b516ae9557fc",
+        "response": "{\"type\":\"finish\",\"person\":\"Noah\",\"evidence_ids\":[\"d1\",\"a-noah\"],\"ontology_version\":\"approval-ontology-v1\",\"graph_revision\":1,\"rule_ids\":[\"R1\",\"R2\",\"R3\",\"R4\",\"R5\",\"R6\"]}",
+        "stats": {
+          "models": {
+            "gemini-3.5-flash-lite": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 8205,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 1926,
+                "prompt": 1926,
+                "candidates": 41,
+                "total": 3053,
+                "cached": 0,
+                "thoughts": 1086,
+                "tool": 0
+              },
+              "roles": {
+                "utility_router": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 8205,
+                  "tokens": {
+                    "input": 1926,
+                    "prompt": 1926,
+                    "candidates": 41,
+                    "total": 3053,
+                    "cached": 0,
+                    "thoughts": 1086,
+                    "tool": 0
+                  }
+                }
+              }
+            },
+            "gemini-3.8-flash": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 19745,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 6916,
+                "prompt": 6916,
+                "candidates": 60,
+                "total": 9681,
+                "cached": 0,
+                "thoughts": 2705,
+                "tool": 0
+              },
+              "roles": {
+                "main": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 19745,
+                  "tokens": {
+                    "input": 6916,
+                    "prompt": 6916,
+                    "candidates": 60,
+                    "total": 9681,
+                    "cached": 0,
+                    "thoughts": 2705,
+                    "tool": 0
+                  }
+                }
+              }
+            }
+          },
+          "tools": {
+            "totalCalls": 0,
+            "totalSuccess": 0,
+            "totalFail": 0,
+            "totalDurationMs": 0,
+            "totalDecisions": {
+              "accept": 0,
+              "reject": 0,
+              "modify": 0,
+              "auto_accept": 0
+            },
+            "byName": {}
+          },
+          "files": {
+            "totalLinesAdded": 0,
+            "totalLinesRemoved": 0
+          }
+        }
+      },
+      "parsed": {
+        "type": "finish",
+        "person": "Noah",
+        "evidence_ids": [
+          "d1",
+          "a-noah"
+        ],
+        "ontology_version": "approval-ontology-v1",
+        "graph_revision": 1,
+        "rule_ids": [
+          "R1",
+          "R2",
+          "R3",
+          "R4",
+          "R5",
+          "R6"
+        ]
+      }
+    }
+  ],
+  "history": [
+    {
+      "model_request": {
+        "type": "call",
+        "name": "inspect_schema",
+        "arguments": {
+          "names": [
+            "eligibility"
+          ]
+        }
+      },
+      "runtime_result": {
+        "ontology_version": "approval-ontology-v1",
+        "graph_revision": 1,
+        "source": "synthetic://service-catalog/snapshot-1",
+        "definitions": {
+          "Assignment": {
+            "kind": "type",
+            "meaning": "An observed role of a person for a service, with environment and validity interval.",
+            "properties": [
+              "id",
+              "person",
+              "service",
+              "environment",
+              "role",
+              "validFrom",
+              "validUntil",
+              "active"
+            ],
+            "requires": [
+              "Person",
+              "Service",
+              "heldBy",
+              "forService"
+            ]
+          },
+          "Deployment": {
+            "kind": "type",
+            "meaning": "A proposed deployment of a service, with an author.",
+            "properties": [
+              "id",
+              "service",
+              "author"
+            ],
+            "requires": [
+              "Person",
+              "Service"
+            ]
+          },
+          "Person": {
+            "kind": "type",
+            "meaning": "An identified human."
+          },
+          "Service": {
+            "kind": "type",
+            "meaning": "A software service."
+          },
+          "eligibility": {
+            "kind": "rule_set",
+            "meaning": "All six rules must hold. Missing evidence is UNKNOWN and never establishes eligibility.",
+            "rules": [
+              {
+                "id": "R1",
+                "meaning": "Assignment service must equal task service."
+              },
+              {
+                "id": "R2",
+                "meaning": "Assignment environment must equal task environment."
+              },
+              {
+                "id": "R3",
+                "meaning": "Assignment role must be DeploymentApprover."
+              },
+              {
+                "id": "R4",
+                "meaning": "Assignment active must be true."
+              },
+              {
+                "id": "R5",
+                "meaning": "Assignment validFrom <= task at < assignment validUntil; the end is exclusive. All dates here use YYYY-MM-DD."
+              },
+              {
+                "id": "R6",
+                "meaning": "Assignment person must differ from the deployment author."
+              }
+            ],
+            "requires": [
+              "Assignment",
+              "Deployment"
+            ]
+          },
+          "forService": {
+            "kind": "relation",
+            "meaning": "Assignment.service identifies the service to which that assignment applies."
+          },
+          "heldBy": {
+            "kind": "relation",
+            "meaning": "Assignment.person identifies the person holding this assignment; it is not the deployment author."
+          }
+        }
+      }
+    }
+  ],
+  "passed": true,
+  "successful_interface_calls": 1,
+  "definition_names_exposed": [
+    "Assignment",
+    "Deployment",
+    "Person",
+    "Service",
+    "eligibility",
+    "forService",
+    "heldBy"
+  ],
+  "answer": {
+    "type": "finish",
+    "person": "Noah",
+    "evidence_ids": [
+      "d1",
+      "a-noah"
+    ],
+    "ontology_version": "approval-ontology-v1",
+    "graph_revision": 1,
+    "rule_ids": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6"
+    ]
+  },
+  "answer_correct": true,
+  "protocol_followed": true,
+  "gate_before_change": {
+    "admitted": true,
+    "reason": "ELIGIBLE"
+  },
+  "gate_after_revocation": {
+    "admitted": false,
+    "reason": "VERSION_MISMATCH"
+  }
+}

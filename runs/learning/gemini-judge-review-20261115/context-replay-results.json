@@ -1,0 +1,56 @@
+[
+  {
+    "test": "new-customer-rule-context32768-inline12000",
+    "request": "new-customer-rule",
+    "package": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+    "config": {
+      "max_steps": 10,
+      "max_tool_attempts": 6,
+      "deadline_seconds": 60,
+      "inline_output_chars": 12000,
+      "max_context_chars": 32768,
+      "max_stagnant_steps": 3
+    },
+    "state": "TRUE",
+    "status": "VERIFIED_SUCCESS",
+    "recovered": true,
+    "judge": "c0fbc99f06379aa1163641a093540945f2f5c1ba22d0ff2d3a864d4e78d5dbeb",
+    "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/context-replays/new-customer-rule-context32768-inline12000/react"
+  },
+  {
+    "test": "combined-new-rule-context32768-inline12000",
+    "request": "combined-new-rule",
+    "package": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+    "config": {
+      "max_steps": 10,
+      "max_tool_attempts": 6,
+      "deadline_seconds": 60,
+      "inline_output_chars": 12000,
+      "max_context_chars": 32768,
+      "max_stagnant_steps": 3
+    },
+    "state": "FALSE",
+    "status": "MODEL_ERROR",
+    "recovered": false,
+    "judge": "67c7577281a2c152dbbd97f35419dc4f1379a85334c4241f649c82a967190178",
+    "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/context-replays/combined-new-rule-context32768-inline12000/react"
+  },
+  {
+    "test": "combined-new-rule-context32768-inline20000",
+    "request": "combined-new-rule",
+    "package": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+    "config": {
+      "max_steps": 10,
+      "max_tool_attempts": 6,
+      "deadline_seconds": 60,
+      "inline_output_chars": 20000,
+      "max_context_chars": 32768,
+      "max_stagnant_steps": 3
+    },
+    "state": "TRUE",
+    "status": "VERIFIED_SUCCESS",
+    "recovered": true,
+    "judge": "e8dd3768b2a9931fc6aea8166798ece6926225d2e0c5f4656a061151a70eba5b",
+    "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/context-replays/combined-new-rule-context32768-inline20000/react"
+  }
+]

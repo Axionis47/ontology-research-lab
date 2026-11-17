@@ -1,0 +1,13 @@
+{
+  "complete": true,
+  "experiments": [
+    {
+      "experiment": "06-constraint-service",
+      "status": "MEASURED",
+      "passed": true,
+      "calls": 2,
+      "interface_calls": 1
+    }
+  ],
+  "appworld_runs": 0
+}

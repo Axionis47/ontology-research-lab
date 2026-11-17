@@ -1,0 +1,513 @@
+{
+  "experiment": "04-graph-queries",
+  "mode": "query",
+  "status": "MEASURED",
+  "initial_payload": {
+    "task": {
+      "service": "LoginService",
+      "environment": "Production",
+      "deployment_id": "d1",
+      "at": "2026-11-16"
+    },
+    "task_instruction": "Choose an eligible approver for this deployment using the pinned ontology.",
+    "facts": {
+      "revision": 1,
+      "source": "synthetic://service-catalog/snapshot-1",
+      "deployment": {
+        "id": "d1",
+        "author": "Maya",
+        "service": "LoginService"
+      },
+      "assignments": [
+        {
+          "id": "a-maya",
+          "person": "Maya",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-noah",
+          "person": "Noah",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-rin",
+          "person": "Rin",
+          "service": "LoginService",
+          "environment": "Staging",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-tao",
+          "person": "Tao",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-10-01",
+          "validUntil": "2026-11-15",
+          "active": true
+        }
+      ]
+    },
+    "coverage": "All relevant fixture facts are present; date comparisons use YYYY-MM-DD.",
+    "ontology_version": "approval-ontology-v1",
+    "finish_shape": {
+      "type": "finish",
+      "person": "name or null",
+      "evidence_ids": [
+        "supporting record IDs"
+      ],
+      "ontology_version": "pinned version",
+      "graph_revision": "integer",
+      "rule_ids": [
+        "all applied eligibility rule IDs"
+      ]
+    },
+    "definitions": {
+      "Assignment": {
+        "kind": "type",
+        "meaning": "An observed role of a person for a service, with environment and validity interval.",
+        "properties": [
+          "id",
+          "person",
+          "service",
+          "environment",
+          "role",
+          "validFrom",
+          "validUntil",
+          "active"
+        ],
+        "requires": [
+          "Person",
+          "Service",
+          "heldBy",
+          "forService"
+        ]
+      },
+      "Deployment": {
+        "kind": "type",
+        "meaning": "A proposed deployment of a service, with an author.",
+        "properties": [
+          "id",
+          "service",
+          "author"
+        ],
+        "requires": [
+          "Person",
+          "Service"
+        ]
+      },
+      "Person": {
+        "kind": "type",
+        "meaning": "An identified human."
+      },
+      "Service": {
+        "kind": "type",
+        "meaning": "A software service."
+      },
+      "eligibility": {
+        "kind": "rule_set",
+        "meaning": "All six rules must hold. Missing evidence is UNKNOWN and never establishes eligibility.",
+        "rules": [
+          {
+            "id": "R1",
+            "meaning": "Assignment service must equal task service."
+          },
+          {
+            "id": "R2",
+            "meaning": "Assignment environment must equal task environment."
+          },
+          {
+            "id": "R3",
+            "meaning": "Assignment role must be DeploymentApprover."
+          },
+          {
+            "id": "R4",
+            "meaning": "Assignment active must be true."
+          },
+          {
+            "id": "R5",
+            "meaning": "Assignment validFrom <= task at < assignment validUntil; the end is exclusive. All dates here use YYYY-MM-DD."
+          },
+          {
+            "id": "R6",
+            "meaning": "Assignment person must differ from the deployment author."
+          }
+        ],
+        "requires": [
+          "Assignment",
+          "Deployment"
+        ]
+      },
+      "forService": {
+        "kind": "relation",
+        "meaning": "Assignment.service identifies the service to which that assignment applies."
+      },
+      "heldBy": {
+        "kind": "relation",
+        "meaning": "Assignment.person identifies the person holding this assignment; it is not the deployment author."
+      }
+    },
+    "interfaces": {
+      "query_assignments": {
+        "arguments": {
+          "predicates": "array of {field, op, value}; op is eq, ne, lt, lte, gt or gte"
+        },
+        "returns": "Observed assignments matching ALL supplied predicates. Empty predicates return all. This does not automatically add eligibility conditions."
+      }
+    },
+    "call_shape": {
+      "type": "call",
+      "name": "declared interface",
+      "arguments": {
+        "documented": "arguments"
+      }
+    },
+    "consumption_protocol": "Use the provided interface successfully at least once, then finish. One request per turn. These are JSON application requests, not CLI built-in tools."
+  },
+  "calls": [
+    {
+      "step": 0,
+      "submitted_prompt": "Solve the same fixed task using only the supplied facts, ontology and interfaces. Return one JSON object, no Markdown. Do not use CLI tools, read files, or change any external state.\n{\"context\":{\"task\":{\"service\":\"LoginService\",\"environment\":\"Production\",\"deployment_id\":\"d1\",\"at\":\"2026-11-16\"},\"task_instruction\":\"Choose an eligible approver for this deployment using the pinned ontology.\",\"facts\":{\"revision\":1,\"source\":\"synthetic://service-catalog/snapshot-1\",\"deployment\":{\"id\":\"d1\",\"author\":\"Maya\",\"service\":\"LoginService\"},\"assignments\":[{\"id\":\"a-maya\",\"person\":\"Maya\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-noah\",\"person\":\"Noah\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-rin\",\"person\":\"Rin\",\"service\":\"LoginService\",\"environment\":\"Staging\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-tao\",\"person\":\"Tao\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-10-01\",\"validUntil\":\"2026-11-15\",\"active\":true}]},\"coverage\":\"All relevant fixture facts are present; date comparisons use YYYY-MM-DD.\",\"ontology_version\":\"approval-ontology-v1\",\"finish_shape\":{\"type\":\"finish\",\"person\":\"name or null\",\"evidence_ids\":[\"supporting record IDs\"],\"ontology_version\":\"pinned version\",\"graph_revision\":\"integer\",\"rule_ids\":[\"all applied eligibility rule IDs\"]},\"definitions\":{\"Assignment\":{\"kind\":\"type\",\"meaning\":\"An observed role of a person for a service, with environment and validity interval.\",\"properties\":[\"id\",\"person\",\"service\",\"environment\",\"role\",\"validFrom\",\"validUntil\",\"active\"],\"requires\":[\"Person\",\"Service\",\"heldBy\",\"forService\"]},\"Deployment\":{\"kind\":\"type\",\"meaning\":\"A proposed deployment of a service, with an author.\",\"properties\":[\"id\",\"service\",\"author\"],\"requires\":[\"Person\",\"Service\"]},\"Person\":{\"kind\":\"type\",\"meaning\":\"An identified human.\"},\"Service\":{\"kind\":\"type\",\"meaning\":\"A software service.\"},\"eligibility\":{\"kind\":\"rule_set\",\"meaning\":\"All six rules must hold. Missing evidence is UNKNOWN and never establishes eligibility.\",\"rules\":[{\"id\":\"R1\",\"meaning\":\"Assignment service must equal task service.\"},{\"id\":\"R2\",\"meaning\":\"Assignment environment must equal task environment.\"},{\"id\":\"R3\",\"meaning\":\"Assignment role must be DeploymentApprover.\"},{\"id\":\"R4\",\"meaning\":\"Assignment active must be true.\"},{\"id\":\"R5\",\"meaning\":\"Assignment validFrom <= task at < assignment validUntil; the end is exclusive. All dates here use YYYY-MM-DD.\"},{\"id\":\"R6\",\"meaning\":\"Assignment person must differ from the deployment author.\"}],\"requires\":[\"Assignment\",\"Deployment\"]},\"forService\":{\"kind\":\"relation\",\"meaning\":\"Assignment.service identifies the service to which that assignment applies.\"},\"heldBy\":{\"kind\":\"relation\",\"meaning\":\"Assignment.person identifies the person holding this assignment; it is not the deployment author.\"}},\"interfaces\":{\"query_assignments\":{\"arguments\":{\"predicates\":\"array of {field, op, value}; op is eq, ne, lt, lte, gt or gte\"},\"returns\":\"Observed assignments matching ALL supplied predicates. Empty predicates return all. This does not automatically add eligibility conditions.\"}},\"call_shape\":{\"type\":\"call\",\"name\":\"declared interface\",\"arguments\":{\"documented\":\"arguments\"}},\"consumption_protocol\":\"Use the provided interface successfully at least once, then finish. One request per turn. These are JSON application requests, not CLI built-in tools.\"},\"history\":[]}",
+      "user_chars": 3646,
+      "status": "RECEIVED",
+      "exit_code": 0,
+      "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+      "cli_response": {
+        "session_id": "25b5cb5a-bfd7-4876-86f4-6206acb7173b",
+        "response": "{\"type\":\"call\",\"name\":\"query_assignments\",\"arguments\":{\"predicates\":[{\"field\":\"service\",\"op\":\"eq\",\"value\":\"LoginService\"},{\"field\":\"environment\",\"op\":\"eq\",\"value\":\"Production\"}]}}",
+        "stats": {
+          "models": {
+            "gemini-3.5-flash-lite": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 6418,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 1810,
+                "prompt": 1810,
+                "candidates": 39,
+                "total": 2616,
+                "cached": 0,
+                "thoughts": 767,
+                "tool": 0
+              },
+              "roles": {
+                "utility_router": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 6418,
+                  "tokens": {
+                    "input": 1810,
+                    "prompt": 1810,
+                    "candidates": 39,
+                    "total": 2616,
+                    "cached": 0,
+                    "thoughts": 767,
+                    "tool": 0
+                  }
+                }
+              }
+            },
+            "gemini-3.8-flash": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 81432,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 6800,
+                "prompt": 6800,
+                "candidates": 43,
+                "total": 20182,
+                "cached": 0,
+                "thoughts": 13339,
+                "tool": 0
+              },
+              "roles": {
+                "main": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 81432,
+                  "tokens": {
+                    "input": 6800,
+                    "prompt": 6800,
+                    "candidates": 43,
+                    "total": 20182,
+                    "cached": 0,
+                    "thoughts": 13339,
+                    "tool": 0
+                  }
+                }
+              }
+            }
+          },
+          "tools": {
+            "totalCalls": 0,
+            "totalSuccess": 0,
+            "totalFail": 0,
+            "totalDurationMs": 0,
+            "totalDecisions": {
+              "accept": 0,
+              "reject": 0,
+              "modify": 0,
+              "auto_accept": 0
+            },
+            "byName": {}
+          },
+          "files": {
+            "totalLinesAdded": 0,
+            "totalLinesRemoved": 0
+          }
+        }
+      },
+      "parsed": {
+        "type": "call",
+        "name": "query_assignments",
+        "arguments": {
+          "predicates": [
+            {
+              "field": "service",
+              "op": "eq",
+              "value": "LoginService"
+            },
+            {
+              "field": "environment",
+              "op": "eq",
+              "value": "Production"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "step": 1,
+      "submitted_prompt": "Solve the same fixed task using only the supplied facts, ontology and interfaces. Return one JSON object, no Markdown. Do not use CLI tools, read files, or change any external state.\n{\"context\":{\"task\":{\"service\":\"LoginService\",\"environment\":\"Production\",\"deployment_id\":\"d1\",\"at\":\"2026-11-16\"},\"task_instruction\":\"Choose an eligible approver for this deployment using the pinned ontology.\",\"facts\":{\"revision\":1,\"source\":\"synthetic://service-catalog/snapshot-1\",\"deployment\":{\"id\":\"d1\",\"author\":\"Maya\",\"service\":\"LoginService\"},\"assignments\":[{\"id\":\"a-maya\",\"person\":\"Maya\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-noah\",\"person\":\"Noah\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-rin\",\"person\":\"Rin\",\"service\":\"LoginService\",\"environment\":\"Staging\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-tao\",\"person\":\"Tao\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-10-01\",\"validUntil\":\"2026-11-15\",\"active\":true}]},\"coverage\":\"All relevant fixture facts are present; date comparisons use YYYY-MM-DD.\",\"ontology_version\":\"approval-ontology-v1\",\"finish_shape\":{\"type\":\"finish\",\"person\":\"name or null\",\"evidence_ids\":[\"supporting record IDs\"],\"ontology_version\":\"pinned version\",\"graph_revision\":\"integer\",\"rule_ids\":[\"all applied eligibility rule IDs\"]},\"definitions\":{\"Assignment\":{\"kind\":\"type\",\"meaning\":\"An observed role of a person for a service, with environment and validity interval.\",\"properties\":[\"id\",\"person\",\"service\",\"environment\",\"role\",\"validFrom\",\"validUntil\",\"active\"],\"requires\":[\"Person\",\"Service\",\"heldBy\",\"forService\"]},\"Deployment\":{\"kind\":\"type\",\"meaning\":\"A proposed deployment of a service, with an author.\",\"properties\":[\"id\",\"service\",\"author\"],\"requires\":[\"Person\",\"Service\"]},\"Person\":{\"kind\":\"type\",\"meaning\":\"An identified human.\"},\"Service\":{\"kind\":\"type\",\"meaning\":\"A software service.\"},\"eligibility\":{\"kind\":\"rule_set\",\"meaning\":\"All six rules must hold. Missing evidence is UNKNOWN and never establishes eligibility.\",\"rules\":[{\"id\":\"R1\",\"meaning\":\"Assignment service must equal task service.\"},{\"id\":\"R2\",\"meaning\":\"Assignment environment must equal task environment.\"},{\"id\":\"R3\",\"meaning\":\"Assignment role must be DeploymentApprover.\"},{\"id\":\"R4\",\"meaning\":\"Assignment active must be true.\"},{\"id\":\"R5\",\"meaning\":\"Assignment validFrom <= task at < assignment validUntil; the end is exclusive. All dates here use YYYY-MM-DD.\"},{\"id\":\"R6\",\"meaning\":\"Assignment person must differ from the deployment author.\"}],\"requires\":[\"Assignment\",\"Deployment\"]},\"forService\":{\"kind\":\"relation\",\"meaning\":\"Assignment.service identifies the service to which that assignment applies.\"},\"heldBy\":{\"kind\":\"relation\",\"meaning\":\"Assignment.person identifies the person holding this assignment; it is not the deployment author.\"}},\"interfaces\":{\"query_assignments\":{\"arguments\":{\"predicates\":\"array of {field, op, value}; op is eq, ne, lt, lte, gt or gte\"},\"returns\":\"Observed assignments matching ALL supplied predicates. Empty predicates return all. This does not automatically add eligibility conditions.\"}},\"call_shape\":{\"type\":\"call\",\"name\":\"declared interface\",\"arguments\":{\"documented\":\"arguments\"}},\"consumption_protocol\":\"Use the provided interface successfully at least once, then finish. One request per turn. These are JSON application requests, not CLI built-in tools.\"},\"history\":[{\"model_request\":{\"type\":\"call\",\"name\":\"query_assignments\",\"arguments\":{\"predicates\":[{\"field\":\"service\",\"op\":\"eq\",\"value\":\"LoginService\"},{\"field\":\"environment\",\"op\":\"eq\",\"value\":\"Production\"}]}},\"runtime_result\":{\"ontology_version\":\"approval-ontology-v1\",\"graph_revision\":1,\"source\":\"synthetic://service-catalog/snapshot-1\",\"assignments\":[{\"id\":\"a-maya\",\"person\":\"Maya\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-noah\",\"person\":\"Noah\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-tao\",\"person\":\"Tao\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-10-01\",\"validUntil\":\"2026-11-15\",\"active\":true}],\"coverage\":\"complete for these predicates in the shared fixture\"}}]}",
+      "user_chars": 4583,
+      "status": "RECEIVED",
+      "exit_code": 0,
+      "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+      "cli_response": {
+        "session_id": "841bcff3-7c0a-4b87-b030-881602208eea",
+        "response": "{\"type\":\"finish\",\"person\":\"Noah\",\"evidence_ids\":[\"a-noah\"],\"ontology_version\":\"approval-ontology-v1\",\"graph_revision\":1,\"rule_ids\":[\"R1\",\"R2\",\"R3\",\"R4\",\"R5\",\"R6\"]}",
+        "stats": {
+          "models": {
+            "gemini-3.5-flash-lite": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 4598,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 2076,
+                "prompt": 2076,
+                "candidates": 48,
+                "total": 2558,
+                "cached": 0,
+                "thoughts": 434,
+                "tool": 0
+              },
+              "roles": {
+                "utility_router": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 4598,
+                  "tokens": {
+                    "input": 2076,
+                    "prompt": 2076,
+                    "candidates": 48,
+                    "total": 2558,
+                    "cached": 0,
+                    "thoughts": 434,
+                    "tool": 0
+                  }
+                }
+              }
+            },
+            "gemini-3.8-flash": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 73850,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 7066,
+                "prompt": 7066,
+                "candidates": 57,
+                "total": 16253,
+                "cached": 0,
+                "thoughts": 9130,
+                "tool": 0
+              },
+              "roles": {
+                "main": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 73850,
+                  "tokens": {
+                    "input": 7066,
+                    "prompt": 7066,
+                    "candidates": 57,
+                    "total": 16253,
+                    "cached": 0,
+                    "thoughts": 9130,
+                    "tool": 0
+                  }
+                }
+              }
+            }
+          },
+          "tools": {
+            "totalCalls": 0,
+            "totalSuccess": 0,
+            "totalFail": 0,
+            "totalDurationMs": 0,
+            "totalDecisions": {
+              "accept": 0,
+              "reject": 0,
+              "modify": 0,
+              "auto_accept": 0
+            },
+            "byName": {}
+          },
+          "files": {
+            "totalLinesAdded": 0,
+            "totalLinesRemoved": 0
+          }
+        }
+      },
+      "parsed": {
+        "type": "finish",
+        "person": "Noah",
+        "evidence_ids": [
+          "a-noah"
+        ],
+        "ontology_version": "approval-ontology-v1",
+        "graph_revision": 1,
+        "rule_ids": [
+          "R1",
+          "R2",
+          "R3",
+          "R4",
+          "R5",
+          "R6"
+        ]
+      }
+    }
+  ],
+  "history": [
+    {
+      "model_request": {
+        "type": "call",
+        "name": "query_assignments",
+        "arguments": {
+          "predicates": [
+            {
+              "field": "service",
+              "op": "eq",
+              "value": "LoginService"
+            },
+            {
+              "field": "environment",
+              "op": "eq",
+              "value": "Production"
+            }
+          ]
+        }
+      },
+      "runtime_result": {
+        "ontology_version": "approval-ontology-v1",
+        "graph_revision": 1,
+        "source": "synthetic://service-catalog/snapshot-1",
+        "assignments": [
+          {
+            "id": "a-maya",
+            "person": "Maya",
+            "service": "LoginService",
+            "environment": "Production",
+            "role": "DeploymentApprover",
+            "validFrom": "2026-11-01",
+            "validUntil": "2026-12-01",
+            "active": true
+          },
+          {
+            "id": "a-noah",
+            "person": "Noah",
+            "service": "LoginService",
+            "environment": "Production",
+            "role": "DeploymentApprover",
+            "validFrom": "2026-11-01",
+            "validUntil": "2026-12-01",
+            "active": true
+          },
+          {
+            "id": "a-tao",
+            "person": "Tao",
+            "service": "LoginService",
+            "environment": "Production",
+            "role": "DeploymentApprover",
+            "validFrom": "2026-10-01",
+            "validUntil": "2026-11-15",
+            "active": true
+          }
+        ],
+        "coverage": "complete for these predicates in the shared fixture"
+      }
+    }
+  ],
+  "passed": false,
+  "successful_interface_calls": 1,
+  "definition_names_exposed": [
+    "Assignment",
+    "Deployment",
+    "Person",
+    "Service",
+    "eligibility",
+    "forService",
+    "heldBy"
+  ],
+  "answer": {
+    "type": "finish",
+    "person": "Noah",
+    "evidence_ids": [
+      "a-noah"
+    ],
+    "ontology_version": "approval-ontology-v1",
+    "graph_revision": 1,
+    "rule_ids": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6"
+    ]
+  },
+  "answer_correct": false,
+  "protocol_followed": true,
+  "gate_before_change": {
+    "admitted": true,
+    "reason": "ELIGIBLE"
+  },
+  "gate_after_revocation": {
+    "admitted": false,
+    "reason": "VERSION_MISMATCH"
+  }
+}

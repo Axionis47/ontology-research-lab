@@ -1,0 +1,1 @@
+{"action_id": "get_record", "arguments": {"record_id": "r3"}, "evidence_ids": [], "kind": "act", "reason": "Retrieve record r3 as part of the task.", "request_id": "f3e379d8-c770-4ea9-90ec-ade2a11bf39c"}

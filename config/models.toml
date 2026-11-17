@@ -1,0 +1,16 @@
+# Existing model selection. CLI generation capabilities are documented separately.
+[ollama]
+base_url = "http://127.0.0.1:11434"
+model = "qwen3:8b-q4_K_M"
+num_ctx = 8192
+num_predict = 512
+temperature = 0
+think = false
+timeout_seconds = 180
+
+[gemini]
+# Use the installed CLI's existing authentication and model selection.
+# Deliberately omit a model override.
+executable = "gemini"
+timeout_seconds = 180
+policy = "config/gemini-no-tools.toml"

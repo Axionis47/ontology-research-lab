@@ -1,0 +1,82 @@
+{
+  "mode": "retrieved_fragment",
+  "status": "PREPARED_NOT_RUN",
+  "initial_payload": {
+    "task": {
+      "service": "LoginService",
+      "environment": "Production",
+      "deployment_id": "d1",
+      "at": "2026-11-16"
+    },
+    "definitions": {
+      "Person": "An identified human.",
+      "Assignment": "A directed association from person to service, qualified by role, environment and validity.",
+      "Deployment": "A deployment of a service with an author.",
+      "eligible": "A matching active DeploymentApprover assignment with validFrom <= at < validUntil, covering the service and environment. The person must differ from the deployment author.",
+      "unknown": "Evidence is insufficient; absence from an incomplete fragment is not proof of absence."
+    },
+    "final_response_shape": {
+      "type": "finish",
+      "person": "person name or null",
+      "evidence_ids": [
+        "supporting record IDs"
+      ],
+      "revision": "integer"
+    },
+    "observations": {
+      "revision": 1,
+      "source": "synthetic://service-catalog/snapshot-1",
+      "deployment": {
+        "id": "d1",
+        "author": "Maya",
+        "service": "LoginService"
+      },
+      "assignments": [
+        {
+          "id": "a-maya",
+          "person": "Maya",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-noah",
+          "person": "Noah",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-rin",
+          "person": "Rin",
+          "service": "LoginService",
+          "environment": "Staging",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-tao",
+          "person": "Tao",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-10-01",
+          "validUntil": "2026-11-15",
+          "active": true
+        }
+      ],
+      "coverage": "complete for target service and deployment"
+    }
+  },
+  "calls": [],
+  "history": [],
+  "correct_at_observation": null
+}

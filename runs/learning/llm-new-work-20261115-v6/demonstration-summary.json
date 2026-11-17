@@ -1,0 +1,88 @@
+{
+  "objective": "A real LLM proposes a retained improvement after new work, with old work preserved.",
+  "outcome": "NOT_DEMONSTRATED",
+  "attempts": [
+    {
+      "attempt": 1,
+      "report": "<workspace>/runs/learning/llm-new-work-20261115-v1/experiment-report.json",
+      "old_work": "TRUE",
+      "new_work_before": "FALSE",
+      "new_work_after": "FALSE",
+      "accepted_changes": 0,
+      "repair_outcomes": [
+        "RESOLVED",
+        "RETRY_WAIT"
+      ]
+    },
+    {
+      "attempt": 2,
+      "report": "<workspace>/runs/learning/llm-new-work-20261115-v2/experiment-report.json",
+      "old_work": "TRUE",
+      "new_work_before": "FALSE",
+      "new_work_after": "FALSE",
+      "accepted_changes": 0,
+      "repair_outcomes": [
+        "RESOLVED",
+        "NEEDS_EVIDENCE"
+      ]
+    },
+    {
+      "attempt": 3,
+      "report": "<workspace>/runs/learning/llm-new-work-20261115-v3/experiment-report.json",
+      "old_work": "TRUE",
+      "new_work_before": "FALSE",
+      "new_work_after": "FALSE",
+      "accepted_changes": 0,
+      "repair_outcomes": [
+        "RESOLVED",
+        "NEEDS_EVIDENCE"
+      ]
+    },
+    {
+      "attempt": 4,
+      "report": "<workspace>/runs/learning/llm-new-work-20261115-v4/experiment-report.json",
+      "old_work": "TRUE",
+      "new_work_before": "FALSE",
+      "new_work_after": "FALSE",
+      "accepted_changes": 0,
+      "repair_outcomes": [
+        "RESOLVED",
+        "NEEDS_EVIDENCE"
+      ]
+    },
+    {
+      "attempt": 5,
+      "report": "<workspace>/runs/learning/llm-new-work-20261115-v5/experiment-report.json",
+      "old_work": "TRUE",
+      "new_work_before": "FALSE",
+      "new_work_after": "FALSE",
+      "accepted_changes": 0,
+      "repair_outcomes": [
+        "RESOLVED",
+        "NEEDS_EVIDENCE"
+      ]
+    },
+    {
+      "attempt": 6,
+      "report": "<workspace>/runs/learning/llm-new-work-20261115-v6/experiment-report.json",
+      "old_work": "TRUE",
+      "new_work_before": "FALSE",
+      "new_work_after": "FALSE",
+      "accepted_changes": 0,
+      "repair_outcomes": [
+        "RESOLVED",
+        "NEEDS_EVIDENCE"
+      ]
+    }
+  ],
+  "source_and_model_configuration_restored": true,
+  "remaining_source_changes": 0,
+  "workload": "Synthetic local ticket updates",
+  "unrun_stages": [
+    "fresh-age-batch",
+    "new-customer-rule",
+    "fresh-customer-batch",
+    "larger-age-batch",
+    "larger-customer-batch"
+  ]
+}

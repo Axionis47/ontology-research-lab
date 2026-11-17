@@ -1,0 +1,22 @@
+[
+  [
+    "Maya",
+    "type",
+    "Person"
+  ],
+  [
+    "LoginService",
+    "type",
+    "Service"
+  ],
+  [
+    "Atlas",
+    "type",
+    "Project"
+  ],
+  [
+    "Maya",
+    "maintains",
+    "LoginService"
+  ]
+]

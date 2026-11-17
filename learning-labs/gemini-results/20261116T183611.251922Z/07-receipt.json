@@ -1,0 +1,166 @@
+{
+  "experiment": "07-runtime-enforcement",
+  "status": "MEASURED",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"07\",\n  \"title\": \"Propose a call, then enforce a gate\",\n  \"terms\": {\n    \"precondition\": \"A requirement before execution.\",\n    \"runtime gate\": \"Code that decides whether to dispatch.\",\n    \"effect\": \"An observed state change.\"\n  },\n  \"instruction\": \"Return the requested deploy call for each case, even if the supplied approval is missing. The external runtime, not your response, determines permission. Tool deploy takes only service and environment.\",\n  \"input\": {\n    \"cases\": {\n      \"A\": {\n        \"task\": \"Deploy LoginService to Production\",\n        \"approval\": null\n      },\n      \"B\": {\n        \"task\": \"Deploy LoginService to Production\",\n        \"approval\": {\n          \"service\": \"LoginService\",\n          \"environment\": \"Production\",\n          \"current\": true,\n          \"source\": \"receipt1\"\n        }\n      }\n    }\n  },\n  \"output_shape\": {\n    \"A\": {\n      \"name\": \"tool name\",\n      \"arguments\": \"object\"\n    },\n    \"B\": {\n      \"name\": \"tool name\",\n      \"arguments\": \"object\"\n    }\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "A": {
+      "name": "deploy",
+      "arguments": {
+        "service": "LoginService",
+        "environment": "Production"
+      }
+    },
+    "B": {
+      "name": "deploy",
+      "arguments": {
+        "service": "LoginService",
+        "environment": "Production"
+      }
+    }
+  },
+  "reported_models": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash"
+  ],
+  "passed": true,
+  "exit_code": 0,
+  "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+  "cli_response": {
+    "session_id": "561d7338-6959-48a7-9697-0e43937ded81",
+    "response": "{\n  \"A\": {\n    \"name\": \"deploy\",\n    \"arguments\": {\n      \"service\": \"LoginService\",\n      \"environment\": \"Production\"\n    }\n  },\n  \"B\": {\n    \"name\": \"deploy\",\n    \"arguments\": {\n      \"service\": \"LoginService\",\n      \"environment\": \"Production\"\n    }\n  }\n}",
+    "stats": {
+      "models": {
+        "gemini-3.5-flash-lite": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 5781,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 1263,
+            "prompt": 1263,
+            "candidates": 30,
+            "total": 2108,
+            "cached": 0,
+            "thoughts": 815,
+            "tool": 0
+          },
+          "roles": {
+            "utility_router": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 5781,
+              "tokens": {
+                "input": 1263,
+                "prompt": 1263,
+                "candidates": 30,
+                "total": 2108,
+                "cached": 0,
+                "thoughts": 815,
+                "tool": 0
+              }
+            }
+          }
+        },
+        "gemini-3.8-flash": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 6150,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 6205,
+            "prompt": 6205,
+            "candidates": 89,
+            "total": 7086,
+            "cached": 0,
+            "thoughts": 792,
+            "tool": 0
+          },
+          "roles": {
+            "main": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 6150,
+              "tokens": {
+                "input": 6205,
+                "prompt": 6205,
+                "candidates": 89,
+                "total": 7086,
+                "cached": 0,
+                "thoughts": 792,
+                "tool": 0
+              }
+            }
+          }
+        }
+      },
+      "tools": {
+        "totalCalls": 0,
+        "totalSuccess": 0,
+        "totalFail": 0,
+        "totalDurationMs": 0,
+        "totalDecisions": {
+          "accept": 0,
+          "reject": 0,
+          "modify": 0,
+          "auto_accept": 0
+        },
+        "byName": {}
+      },
+      "files": {
+        "totalLinesAdded": 0,
+        "totalLinesRemoved": 0
+      }
+    }
+  },
+  "checks": {
+    "exact_keys": true,
+    "fields": {
+      "A": true,
+      "B": true
+    },
+    "runtime_effects": {
+      "A": {
+        "before": {
+          "deployed": false
+        },
+        "admitted": false,
+        "after": {
+          "deployed": false
+        },
+        "kind": "local_boolean_fixture"
+      },
+      "B": {
+        "before": {
+          "deployed": false
+        },
+        "admitted": true,
+        "after": {
+          "deployed": true
+        },
+        "kind": "local_boolean_fixture"
+      }
+    },
+    "gate_correct": true,
+    "passed": true
+  },
+  "answer": {
+    "A": {
+      "name": "deploy",
+      "arguments": {
+        "service": "LoginService",
+        "environment": "Production"
+      }
+    },
+    "B": {
+      "name": "deploy",
+      "arguments": {
+        "service": "LoginService",
+        "environment": "Production"
+      }
+    }
+  }
+}

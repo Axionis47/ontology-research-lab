@@ -1,0 +1,11 @@
+--- <user-home>/.nvm/versions/node/v24.5.0/lib/node_modules/@google/gemini-cli/bundle/chunk-RCB6BI5H.js
++++ <user-home>/.nvm/versions/node/v24.5.0/lib/node_modules/@google/gemini-cli/bundle/chunk-RCB6BI5H.js
+@@ -334840,7 +334840,7 @@
+         ...currentGenerateContentConfig,
+         // TODO(12622): Ensure we don't overrwrite these when they are
+         // passed via config.
+-        systemInstruction: this.systemInstruction,
++        systemInstruction: this.tools.length ? this.systemInstruction : `${this.systemInstruction}\n\nThis is a text-only session with no tools available. Do not emit function calls or attempt tool execution. Any requested JSON, including objects describing reads or programs, is plain response text. Follow the requested response format exactly.`,
+         tools: this.tools,
+         ...(this.tools.length ? {} : { toolConfig: { functionCallingConfig: { mode: "NONE" } } }),
+         abortSignal

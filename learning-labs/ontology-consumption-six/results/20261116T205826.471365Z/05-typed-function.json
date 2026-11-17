@@ -1,0 +1,197 @@
+{
+  "experiment": "05-typed-function",
+  "mode": "function",
+  "status": "NOT_RUN",
+  "initial_payload": {
+    "task": {
+      "service": "LoginService",
+      "environment": "Production",
+      "deployment_id": "d1",
+      "at": "2026-11-16"
+    },
+    "task_instruction": "Choose an eligible approver for this deployment using the pinned ontology.",
+    "facts": {
+      "revision": 1,
+      "source": "synthetic://service-catalog/snapshot-1",
+      "deployment": {
+        "id": "d1",
+        "author": "Maya",
+        "service": "LoginService"
+      },
+      "assignments": [
+        {
+          "id": "a-maya",
+          "person": "Maya",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-noah",
+          "person": "Noah",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-rin",
+          "person": "Rin",
+          "service": "LoginService",
+          "environment": "Staging",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-tao",
+          "person": "Tao",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-10-01",
+          "validUntil": "2026-11-15",
+          "active": true
+        }
+      ]
+    },
+    "coverage": "All relevant fixture facts are present; date comparisons use YYYY-MM-DD.",
+    "ontology_version": "approval-ontology-v1",
+    "finish_shape": {
+      "type": "finish",
+      "person": "name or null",
+      "evidence_ids": [
+        "supporting record IDs"
+      ],
+      "ontology_version": "pinned version",
+      "graph_revision": "integer",
+      "rule_ids": [
+        "all applied eligibility rule IDs"
+      ]
+    },
+    "definitions": {
+      "Assignment": {
+        "kind": "type",
+        "meaning": "An observed role of a person for a service, with environment and validity interval.",
+        "properties": [
+          "id",
+          "person",
+          "service",
+          "environment",
+          "role",
+          "validFrom",
+          "validUntil",
+          "active"
+        ],
+        "requires": [
+          "Person",
+          "Service",
+          "heldBy",
+          "forService"
+        ]
+      },
+      "Deployment": {
+        "kind": "type",
+        "meaning": "A proposed deployment of a service, with an author.",
+        "properties": [
+          "id",
+          "service",
+          "author"
+        ],
+        "requires": [
+          "Person",
+          "Service"
+        ]
+      },
+      "Person": {
+        "kind": "type",
+        "meaning": "An identified human."
+      },
+      "Service": {
+        "kind": "type",
+        "meaning": "A software service."
+      },
+      "eligibility": {
+        "kind": "rule_set",
+        "meaning": "All six rules must hold. Missing evidence is UNKNOWN and never establishes eligibility.",
+        "rules": [
+          {
+            "id": "R1",
+            "meaning": "Assignment service must equal task service."
+          },
+          {
+            "id": "R2",
+            "meaning": "Assignment environment must equal task environment."
+          },
+          {
+            "id": "R3",
+            "meaning": "Assignment role must be DeploymentApprover."
+          },
+          {
+            "id": "R4",
+            "meaning": "Assignment active must be true."
+          },
+          {
+            "id": "R5",
+            "meaning": "Assignment validFrom <= task at < assignment validUntil; the end is exclusive. All dates here use YYYY-MM-DD."
+          },
+          {
+            "id": "R6",
+            "meaning": "Assignment person must differ from the deployment author."
+          }
+        ],
+        "requires": [
+          "Assignment",
+          "Deployment"
+        ]
+      },
+      "forService": {
+        "kind": "relation",
+        "meaning": "Assignment.service identifies the service to which that assignment applies."
+      },
+      "heldBy": {
+        "kind": "relation",
+        "meaning": "Assignment.person identifies the person holding this assignment; it is not the deployment author."
+      }
+    },
+    "interfaces": {
+      "find_eligible_approvers": {
+        "arguments": {
+          "service": "string",
+          "environment": "string",
+          "deployment_id": "string",
+          "at": "YYYY-MM-DD"
+        },
+        "returns": "Eligible candidates and explanations under the pinned six business rules; rejects unsupported task bindings."
+      }
+    },
+    "call_shape": {
+      "type": "call",
+      "name": "declared interface",
+      "arguments": {
+        "documented": "arguments"
+      }
+    },
+    "consumption_protocol": "Use the provided interface successfully at least once, then finish. One request per turn. These are JSON application requests, not CLI built-in tools."
+  },
+  "calls": [],
+  "history": [],
+  "passed": null,
+  "successful_interface_calls": 0,
+  "definition_names_exposed": [
+    "Assignment",
+    "Deployment",
+    "Person",
+    "Service",
+    "eligibility",
+    "forService",
+    "heldBy"
+  ],
+  "reason": "TIMEOUT"
+}

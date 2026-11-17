@@ -1,0 +1,10 @@
+{
+  "positive_triples": [
+    [
+      "Maya",
+      "maintains",
+      "LoginService"
+    ]
+  ],
+  "negative_sentence_positive_triples": []
+}

@@ -1,0 +1,27 @@
+{
+  "recorded_at": "2026-11-13T15:22:49.960294+00:00",
+  "command": "python3 -m unittest discover -s tests -v",
+  "python": "3.12.8",
+  "tests_run": 18,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "passed": true,
+  "elapsed_seconds": 10.736,
+  "log": "tests.txt",
+  "source_sha256": {
+    "react_runtime/store.py": "e2c456c5eea112e961f033fa4a2699a6ca39e52c79990791a8eb09df211a9e93",
+    "react_runtime/__init__.py": "37e1a78a78deb07782d5592aee2795d6eb61e90acf3ebdbd9ed83e5da9c4ff63",
+    "react_runtime/loop.py": "3659362fa6079c5a250df7a18703ba27dd59df202194110bd31fc0d1c478f32c",
+    "react_runtime/process.py": "8ed9ca89fad7df78956ce80de7d07267fc6507993c79b645fe9561e87e2124ab",
+    "react_runtime/provenance.py": "d75bc4b44c9d2e8672553ce8bf1062e6140ddd16af1b6577d8cfdf7a2078e2fc",
+    "react_runtime/fixtures.py": "81451af558f7c961b347567e4e33bc1fc0100d4524727dccc44da617dc8ddcbb",
+    "react_runtime/trace_audit.py": "68af6ef9d09ed4f3b6eb276760731d6b282483e66812151d95fbd0536d671dd3",
+    "scripts/run_react.py": "b3f964838313b3f08bd38e617dddd1a8af9f6e89490a0dad5b75457e7721bce4",
+    "scripts/inspect_trace.py": "bed253d66b13cad47e5f69964c6369cd754e11f73fa75ee32d832da0afb0f2ef",
+    "tests/test_react_loop.py": "19489e45b8e1a6793257def383482caaea69daa7606222279985153a59a3fb3b",
+    "prompts/react_system.txt": "1b92c291b53034cbe2228026017f4a8844010550d09bd60dc23ff43409b4c5ad",
+    "config/react_loop.toml": "b8a001bafa06b54f949f12f90456edf37bea8c95269210be25b45d63f228c431"
+  },
+  "benchmark_score": null
+}

@@ -1,0 +1,377 @@
+{
+  "requests": [
+    {
+      "request_id": "warmup-0",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 3,
+        "tool_attempts": 2,
+        "compactions": 0,
+        "kernel_version": null,
+        "kernel_handoff": null,
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/closed-loop-verified/inference/a741c2b0bfbabf956673/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/closed-loop-verified/inference/a741c2b0bfbabf956673/react/exports/6a585906-dde9-4edb-af23-51a3cc352631/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "5584c5075b1508d9ba514029b43948e922d3daa969998500ddcc1fb5400f12a6",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "f5e80f65bb4f978378dd4d76daaf4d6810052e3cfd196d8af1656b2ad08ec3e0",
+      "native": null,
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+    },
+    {
+      "request_id": "warmup-1",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 3,
+        "tool_attempts": 2,
+        "compactions": 0,
+        "kernel_version": null,
+        "kernel_handoff": null,
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/closed-loop-verified/inference/92c49bcb883386c4c6f2/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/closed-loop-verified/inference/92c49bcb883386c4c6f2/react/exports/6111978a-75bf-499c-8d5b-26085fac58fb/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "f8ad41638cf35898761b9286c52241589de750f57471c4466a25a80d1dcf4217",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "661c072ba60ef1eac562e04bf6ea6e7f15bcf5b7c41e091c7b36163818e533ca",
+      "native": null,
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+    },
+    {
+      "request_id": "warmup-2",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 3,
+        "tool_attempts": 2,
+        "compactions": 0,
+        "kernel_version": null,
+        "kernel_handoff": null,
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/closed-loop-verified/inference/2e79de2b6abdf74a490c/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/closed-loop-verified/inference/2e79de2b6abdf74a490c/react/exports/68b3784e-e82b-46ac-8151-9f328ce583e7/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "5557c1ab7d3587944c919d9e9948cb21af560303d2606cbfa43f9024374e48b2",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "666b77d0ab84a86a987c9320e69af92524fc338d34307f39818f370ac2f08127",
+      "native": null,
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+    },
+    {
+      "request_id": "gap",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 4,
+        "tool_attempts": 2,
+        "compactions": 0,
+        "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "kernel_handoff": {
+          "reason": "CAPABILITY_GAP",
+          "pending_work": "The learned selection would change protected records. Its plan was refused before dispatch; use the original conditions and current evidence.",
+          "evidence_ids": [
+            "b3fe4cd5-019e-47ce-b6fa-d329942f3e6f"
+          ],
+          "step": 1,
+          "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+        },
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/closed-loop-verified/inference/a37a9c9eaa1ad5f59805/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/closed-loop-verified/inference/a37a9c9eaa1ad5f59805/react/exports/4794cf0e-4f1a-41b0-8db1-742a4fc99509/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "6eaa7e36bcc7399ed7b37694fce6c0602366438425d013504d0eefe770ec2370",
+      "task_state": "TRUE",
+      "recovered": true,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "f5e80f65bb4f978378dd4d76daaf4d6810052e3cfd196d8af1656b2ad08ec3e0",
+      "native": null,
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+      "learning": {
+        "completed": [
+          {
+            "case": "f5e80f65bb4f978378dd4d76daaf4d6810052e3cfd196d8af1656b2ad08ec3e0",
+            "outcome": "ACCEPTED"
+          },
+          {
+            "case": "661c072ba60ef1eac562e04bf6ea6e7f15bcf5b7c41e091c7b36163818e533ca",
+            "outcome": "RESOLVED"
+          },
+          {
+            "case": "666b77d0ab84a86a987c9320e69af92524fc338d34307f39818f370ac2f08127",
+            "outcome": "RESOLVED"
+          }
+        ],
+        "active": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+        "generation": 3,
+        "proposals_spent": 43,
+        "cycles_spent": 3,
+        "cases": {
+          "RESOLVED": 3
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+            "receipt": "3def743233bdd75b41b63d544829d761fb824342aaaf181474084bcda6df9417",
+            "accepted": 1,
+            "at": "2026-11-13T20:50:17.132044+00:00"
+          }
+        ],
+        "native_performance_claimed": false
+      },
+      "next_package": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795"
+    },
+    {
+      "request_id": "numeric-gap",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 4,
+        "tool_attempts": 2,
+        "compactions": 0,
+        "kernel_version": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+        "kernel_handoff": {
+          "reason": "CAPABILITY_GAP",
+          "pending_work": "The learned selection would change protected records. Its plan was refused before dispatch; use the original conditions and current evidence.",
+          "evidence_ids": [
+            "8921ce10-91b5-46c8-b431-2916a0607c7c"
+          ],
+          "step": 1,
+          "kernel_version": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795"
+        },
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/closed-loop-verified/inference/6bdf0bf7893cb99c35e7/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/closed-loop-verified/inference/6bdf0bf7893cb99c35e7/react/exports/5e7ee2df-f4fb-4576-a90f-22a0a4f4c37d/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "6b946c29113b8cc7d0635182a39d5f3337630ea987a4760473d81d7a9983053a",
+      "task_state": "TRUE",
+      "recovered": true,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "f37d1c7071c2801db6635a513da3868f032640c0f4ba265c314caaa698876684",
+      "native": null,
+      "package_used": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+      "learning": {
+        "completed": [
+          {
+            "case": "f37d1c7071c2801db6635a513da3868f032640c0f4ba265c314caaa698876684",
+            "outcome": "ACCEPTED"
+          },
+          {
+            "case": "f5e80f65bb4f978378dd4d76daaf4d6810052e3cfd196d8af1656b2ad08ec3e0",
+            "outcome": "RESOLVED"
+          },
+          {
+            "case": "661c072ba60ef1eac562e04bf6ea6e7f15bcf5b7c41e091c7b36163818e533ca",
+            "outcome": "RESOLVED"
+          },
+          {
+            "case": "666b77d0ab84a86a987c9320e69af92524fc338d34307f39818f370ac2f08127",
+            "outcome": "RESOLVED"
+          }
+        ],
+        "active": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "generation": 4,
+        "proposals_spent": 49,
+        "cycles_spent": 7,
+        "cases": {
+          "RESOLVED": 4
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+            "receipt": "3def743233bdd75b41b63d544829d761fb824342aaaf181474084bcda6df9417",
+            "accepted": 1,
+            "at": "2026-11-13T20:50:17.132044+00:00"
+          },
+          {
+            "id": 2,
+            "parent": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+            "candidate": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+            "receipt": "56701403b445af60e6e908b09bf2d5069a5e30553f5777c684b5717b09da653f",
+            "accepted": 1,
+            "at": "2026-11-13T20:50:22.132746+00:00"
+          }
+        ],
+        "native_performance_claimed": false
+      },
+      "next_package": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc"
+    },
+    {
+      "request_id": "after-numeric",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "kernel_version": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "kernel_handoff": null,
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/closed-loop-verified/inference/c0e8d0e8cf56860a2848/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/closed-loop-verified/inference/c0e8d0e8cf56860a2848/react/exports/c25aac72-88b5-4a10-81d8-2ada716ce873/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "92bc47c7c6ad448e4b7ecb3bdee44700218b57d784378df25078f80b94a08c96",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "f37d1c7071c2801db6635a513da3868f032640c0f4ba265c314caaa698876684",
+      "native": null,
+      "package_used": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+      "learning": {
+        "completed": [],
+        "active": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "generation": 4,
+        "proposals_spent": 49,
+        "cycles_spent": 7,
+        "cases": {
+          "RESOLVED": 4
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+            "receipt": "3def743233bdd75b41b63d544829d761fb824342aaaf181474084bcda6df9417",
+            "accepted": 1,
+            "at": "2026-11-13T20:50:17.132044+00:00"
+          },
+          {
+            "id": 2,
+            "parent": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+            "candidate": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+            "receipt": "56701403b445af60e6e908b09bf2d5069a5e30553f5777c684b5717b09da653f",
+            "accepted": 1,
+            "at": "2026-11-13T20:50:22.132746+00:00"
+          }
+        ],
+        "native_performance_claimed": false
+      },
+      "next_package": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc"
+    },
+    {
+      "request_id": "old-relationship",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "kernel_version": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "kernel_handoff": null,
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/closed-loop-verified/inference/552622d54cf4592a1298/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/closed-loop-verified/inference/552622d54cf4592a1298/react/exports/12d75514-ddcc-44e6-b2b0-f13e92755e8f/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "e282cd6fbeaebce450dc6ed9fda0f6ffdacd7c7dc21d27dbe914cf2ce0df797e",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "661c072ba60ef1eac562e04bf6ea6e7f15bcf5b7c41e091c7b36163818e533ca",
+      "native": null,
+      "package_used": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+      "learning": {
+        "completed": [],
+        "active": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "generation": 4,
+        "proposals_spent": 49,
+        "cycles_spent": 7,
+        "cases": {
+          "RESOLVED": 4
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+            "receipt": "3def743233bdd75b41b63d544829d761fb824342aaaf181474084bcda6df9417",
+            "accepted": 1,
+            "at": "2026-11-13T20:50:17.132044+00:00"
+          },
+          {
+            "id": 2,
+            "parent": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+            "candidate": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+            "receipt": "56701403b445af60e6e908b09bf2d5069a5e30553f5777c684b5717b09da653f",
+            "accepted": 1,
+            "at": "2026-11-13T20:50:22.132746+00:00"
+          }
+        ],
+        "native_performance_claimed": false
+      },
+      "next_package": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc"
+    }
+  ],
+  "archive": {
+    "active": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+    "generation": 4,
+    "proposals_spent": 49,
+    "cycles_spent": 7,
+    "cases": {
+      "RESOLVED": 4
+    },
+    "decisions": [
+      {
+        "id": 1,
+        "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "candidate": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+        "receipt": "3def743233bdd75b41b63d544829d761fb824342aaaf181474084bcda6df9417",
+        "accepted": 1,
+        "at": "2026-11-13T20:50:17.132044+00:00"
+      },
+      {
+        "id": 2,
+        "parent": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+        "candidate": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "receipt": "56701403b445af60e6e908b09bf2d5069a5e30553f5777c684b5717b09da653f",
+        "accepted": 1,
+        "at": "2026-11-13T20:50:22.132746+00:00"
+      }
+    ],
+    "native_performance_claimed": false
+  },
+  "audit": {
+    "complete": true,
+    "event_head": "d8a049d93d196714642925aa46e2d52a254ff6c3a0a1e83a5b26d77b21d74ceb"
+  },
+  "demo_actor": "scripted reference"
+}

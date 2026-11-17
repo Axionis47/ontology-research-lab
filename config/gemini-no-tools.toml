@@ -1,0 +1,5 @@
+# Model probes return text/JSON only. They cannot execute tools.
+[[rule]]
+toolName = "*"
+decision = "deny"
+priority = 999

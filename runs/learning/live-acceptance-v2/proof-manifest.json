@@ -1,0 +1,993 @@
+{
+  "reference": "affe6ab311bc2b442c40f4c1c4aeab8317e9d8efd626774056d94feac6c0b68d",
+  "version": 1,
+  "model": {
+    "provider": "ollama",
+    "requested_model": "qwen3:8b-q4_K_M",
+    "local_model_id_prefix": "500a1f067a9f",
+    "resolved_model": "qwen3:8b-q4_K_M",
+    "transport": "ollama-http/1",
+    "applied_options": {
+      "num_ctx": 8192,
+      "num_predict": 512,
+      "temperature": 0,
+      "think": false
+    },
+    "benchmark": true,
+    "weights_changed": false
+  },
+  "model_command": [
+    "<workspace>/.venv/appworld/bin/python",
+    "<workspace>/react_runtime/ollama.py"
+  ],
+  "selection": {
+    "surface": {
+      "surface_id": "appworld_selective_updates_v1",
+      "dataset_split": "train",
+      "minimum_variants": 3,
+      "business_applications_per_scenario": 1,
+      "goal_shape": "Select records by properties or relationships, perform one kind of update, and verify the resulting state.",
+      "interaction": "one_request_per_episode",
+      "ranking": [
+        "native_difficulty",
+        "required_api_count",
+        "scenario_id"
+      ],
+      "actor_evidence": "Public task instruction, supervisor identity, documented MCP tools and their observed results only.",
+      "construction": "Deferred until the initial ReAct batch has terminated and been evaluated."
+    },
+    "split": "train",
+    "split_sha256": "93d9fe71e7a2e3b7529803d4a20b604f4ebf5ae806f321081140238068189d37",
+    "application": "spotify",
+    "scenario_id": "07b42fd",
+    "rank": [
+      1,
+      6,
+      "07b42fd"
+    ],
+    "tasks": [
+      {
+        "task_id": "07b42fd_1",
+        "instruction": "Follow all the classical artists on Spotify that have at least 22 followers.",
+        "spec_sha256": "bdfd184e961819a5090676112c5277836ef5b946a21425cab0a15fe7fcf6204d",
+        "native_difficulty": 1,
+        "required_apis": [
+          "spotify.follow_artist",
+          "spotify.login",
+          "spotify.search_artists",
+          "supervisor.complete_task",
+          "supervisor.show_account_passwords",
+          "supervisor.show_profile"
+        ],
+        "native_reported_api_count": 6,
+        "applications": [
+          "spotify"
+        ],
+        "db_version": "0.2.0",
+        "evaluator_sha256": "3c8488f9b80c968a79532dcf07b67d143bbfbcb021d7176bc3cdad5be3fdd43d"
+      },
+      {
+        "task_id": "07b42fd_2",
+        "instruction": "Follow all the edm artists on Spotify that have at least 23 followers.",
+        "spec_sha256": "7034f19ddda0d789f6c8ef308e188cf29816d5033d26c9b8155d0b5917bd8bf0",
+        "native_difficulty": 1,
+        "required_apis": [
+          "spotify.follow_artist",
+          "spotify.login",
+          "spotify.search_artists",
+          "supervisor.complete_task",
+          "supervisor.show_account_passwords",
+          "supervisor.show_profile"
+        ],
+        "native_reported_api_count": 6,
+        "applications": [
+          "spotify"
+        ],
+        "db_version": "0.2.0",
+        "evaluator_sha256": "3c8488f9b80c968a79532dcf07b67d143bbfbcb021d7176bc3cdad5be3fdd43d"
+      },
+      {
+        "task_id": "07b42fd_3",
+        "instruction": "Follow all the reggae artists on Spotify that have at least 21 followers.",
+        "spec_sha256": "36962787a50763f21cb2e1093b6b4c0cd383dbecd5f0a8abdb4b937f2fa4703c",
+        "native_difficulty": 1,
+        "required_apis": [
+          "spotify.follow_artist",
+          "spotify.login",
+          "spotify.search_artists",
+          "supervisor.complete_task",
+          "supervisor.show_account_passwords",
+          "supervisor.show_profile"
+        ],
+        "native_reported_api_count": 6,
+        "applications": [
+          "spotify"
+        ],
+        "db_version": "0.2.0",
+        "evaluator_sha256": "3c8488f9b80c968a79532dcf07b67d143bbfbcb021d7176bc3cdad5be3fdd43d"
+      }
+    ],
+    "selection_decisions": [
+      {
+        "scenario_id": "07b42fd",
+        "eligible": true,
+        "reason": null,
+        "rank": [
+          1,
+          6,
+          "07b42fd"
+        ]
+      },
+      {
+        "scenario_id": "229360a",
+        "eligible": true,
+        "reason": null,
+        "rank": [
+          2,
+          11,
+          "229360a"
+        ]
+      },
+      {
+        "scenario_id": "22cc237",
+        "eligible": false,
+        "reason": "NOT_ONE_BUSINESS_APPLICATION",
+        "rank": [
+          3,
+          12,
+          "22cc237"
+        ]
+      },
+      {
+        "scenario_id": "27e1026",
+        "eligible": false,
+        "reason": "Read-only answer; no requested record update.",
+        "rank": [
+          1,
+          8,
+          "27e1026"
+        ]
+      },
+      {
+        "scenario_id": "287e338",
+        "eligible": false,
+        "reason": "Read-only answer; no requested record update.",
+        "rank": [
+          1,
+          7,
+          "287e338"
+        ]
+      },
+      {
+        "scenario_id": "29caf6f",
+        "eligible": false,
+        "reason": "NOT_ONE_BUSINESS_APPLICATION",
+        "rank": [
+          2,
+          10,
+          "29caf6f"
+        ]
+      },
+      {
+        "scenario_id": "2a163ab",
+        "eligible": false,
+        "reason": "NOT_ONE_BUSINESS_APPLICATION",
+        "rank": [
+          2,
+          9,
+          "2a163ab"
+        ]
+      },
+      {
+        "scenario_id": "302c169",
+        "eligible": false,
+        "reason": "Requests both time rescheduling and disabling, two different update effects.",
+        "rank": [
+          1,
+          6,
+          "302c169"
+        ]
+      },
+      {
+        "scenario_id": "34d9492",
+        "eligible": true,
+        "reason": null,
+        "rank": [
+          3,
+          8,
+          "34d9492"
+        ]
+      },
+      {
+        "scenario_id": "3c13f5a",
+        "eligible": false,
+        "reason": "NOT_ONE_BUSINESS_APPLICATION",
+        "rank": [
+          3,
+          11,
+          "3c13f5a"
+        ]
+      },
+      {
+        "scenario_id": "60d0b5b",
+        "eligible": false,
+        "reason": "NOT_ONE_BUSINESS_APPLICATION",
+        "rank": [
+          2,
+          8,
+          "60d0b5b"
+        ]
+      },
+      {
+        "scenario_id": "6104387",
+        "eligible": false,
+        "reason": "NOT_ONE_BUSINESS_APPLICATION",
+        "rank": [
+          3,
+          12,
+          "6104387"
+        ]
+      },
+      {
+        "scenario_id": "692c77d",
+        "eligible": true,
+        "reason": null,
+        "rank": [
+          2,
+          11,
+          "692c77d"
+        ]
+      },
+      {
+        "scenario_id": "6ea6792",
+        "eligible": false,
+        "reason": "NOT_ONE_BUSINESS_APPLICATION",
+        "rank": [
+          1,
+          9,
+          "6ea6792"
+        ]
+      },
+      {
+        "scenario_id": "76f2c72",
+        "eligible": false,
+        "reason": "Read-only aggregation; no requested record update.",
+        "rank": [
+          2,
+          7,
+          "76f2c72"
+        ]
+      },
+      {
+        "scenario_id": "771d8fc",
+        "eligible": true,
+        "reason": null,
+        "rank": [
+          1,
+          8,
+          "771d8fc"
+        ]
+      },
+      {
+        "scenario_id": "7d7fbf6",
+        "eligible": false,
+        "reason": "Requests compression plus deletion, two different update effects.",
+        "rank": [
+          2,
+          6,
+          "7d7fbf6"
+        ]
+      },
+      {
+        "scenario_id": "82e2fac",
+        "eligible": false,
+        "reason": "Read-only answer; no requested record update.",
+        "rank": [
+          1,
+          8,
+          "82e2fac"
+        ]
+      },
+      {
+        "scenario_id": "aa8502b",
+        "eligible": true,
+        "reason": null,
+        "rank": [
+          2,
+          8,
+          "aa8502b"
+        ]
+      },
+      {
+        "scenario_id": "afc0fce",
+        "eligible": false,
+        "reason": "NOT_ONE_BUSINESS_APPLICATION",
+        "rank": [
+          3,
+          10,
+          "afc0fce"
+        ]
+      },
+      {
+        "scenario_id": "b0a8eae",
+        "eligible": false,
+        "reason": "NOT_ONE_BUSINESS_APPLICATION",
+        "rank": [
+          3,
+          11,
+          "b0a8eae"
+        ]
+      },
+      {
+        "scenario_id": "b7a9ee9",
+        "eligible": true,
+        "reason": null,
+        "rank": [
+          2,
+          8,
+          "b7a9ee9"
+        ]
+      },
+      {
+        "scenario_id": "c901732",
+        "eligible": false,
+        "reason": "Playback control rather than selective record updates.",
+        "rank": [
+          1,
+          8,
+          "c901732"
+        ]
+      },
+      {
+        "scenario_id": "ccb4494",
+        "eligible": true,
+        "reason": null,
+        "rank": [
+          2,
+          7,
+          "ccb4494"
+        ]
+      },
+      {
+        "scenario_id": "ce359b5",
+        "eligible": true,
+        "reason": null,
+        "rank": [
+          2,
+          10,
+          "ce359b5"
+        ]
+      },
+      {
+        "scenario_id": "cf6abd2",
+        "eligible": true,
+        "reason": null,
+        "rank": [
+          1,
+          7,
+          "cf6abd2"
+        ]
+      },
+      {
+        "scenario_id": "d0b1f43",
+        "eligible": false,
+        "reason": "NOT_ONE_BUSINESS_APPLICATION",
+        "rank": [
+          2,
+          8,
+          "d0b1f43"
+        ]
+      },
+      {
+        "scenario_id": "e3d6c94",
+        "eligible": false,
+        "reason": "Creates a new collection and populates it, outside updates to existing records.",
+        "rank": [
+          1,
+          9,
+          "e3d6c94"
+        ]
+      },
+      {
+        "scenario_id": "e7a10f8",
+        "eligible": false,
+        "reason": "Read-only aggregation; no requested record update.",
+        "rank": [
+          1,
+          7,
+          "e7a10f8"
+        ]
+      },
+      {
+        "scenario_id": "e85d92a",
+        "eligible": false,
+        "reason": "Read-only answer; no requested record update.",
+        "rank": [
+          1,
+          5,
+          "e85d92a"
+        ]
+      }
+    ],
+    "semantic_review": {
+      "eligible": true,
+      "reason": "Property-filtered artist-following membership updates.",
+      "task_specs": {
+        "07b42fd_1": "bdfd184e961819a5090676112c5277836ef5b946a21425cab0a15fe7fcf6204d",
+        "07b42fd_2": "7034f19ddda0d789f6c8ef308e188cf29816d5033d26c9b8155d0b5917bd8bf0",
+        "07b42fd_3": "36962787a50763f21cb2e1093b6b4c0cd383dbecd5f0a8abdb4b937f2fa4703c"
+      }
+    },
+    "selection_algorithm": "native_difficulty_then_api_union_count_then_scenario_id_v1",
+    "created_at": "2026-11-13T17:25:14.469451+00:00",
+    "surface_sha256": "511dbd659a82063e9a003b049ad45e4745cccb481b2410987bcb588c2a9adedb",
+    "reviews_sha256": "8a295ce691b603469b0efee4022db7515c9d86dc83209f9b5de2e8285ce7c76a",
+    "inventory_sha256": "8317f26e41a72da4664130614ba7f847d9709225acb13a48a84c9e6d25702243",
+    "input_hashes": {
+      "api_docs/function_calling/api_docs.json": "ddaf60c331c3f7a562cd70c653e0b80d44c14c23823eca6b33fed8185936c91f",
+      "api_docs/function_calling/spotify.json": "95b36bbd4743703f7ecfc1f8da9893ea3581b74e213374f1cbc87ce8cb79bdd7",
+      "api_docs/function_calling/supervisor.json": "88ad747838bd344696af89f3d8d5195b3cecbb0d3f31e98c2282013be68461a2",
+      "api_docs/standard/api_docs.json": "4ebb4bfd6f15d8f6f2c2645ec025f74d0498b87e9abd572ddc8181d14c4bd097",
+      "api_docs/standard/spotify.json": "2c6c7a601be211c6aaf98b0ad16fc9f547e9edd3fb9fd228f001616653e20da7",
+      "api_docs/standard/supervisor.json": "a829691be9050223cc6ce0735fd201ab1563e24c9b36acfdcc5509036d2f97fb",
+      "base_dbs/admin.db": "2a54320b5c0f3e15ec42a91ff6d48a35c1b9402a439676fd83abe9cba6907ac9",
+      "base_dbs/amazon.db": "0f8c234176a2ee5c5ed76c88f433fee28d54c77053318a2cda4d8f3fc213a48d",
+      "base_dbs/api_docs.db": "f5c8cb85fce35ea0eab41833bea12b261f1dae637a0011a095026f08f98b6045",
+      "base_dbs/file_system.db": "6073413135b14fff3ea3a289574d04d9815ea257ebbc3083db25eb97b634846a",
+      "base_dbs/gmail.db": "069221ea55688e2e454840ac4915b7920848be1958ec2a8d45e0743f7bc48cef",
+      "base_dbs/phone.db": "cc4b9469902a874adae83ba73f88d3b96e650fbabb34119409f13710abe0a143",
+      "base_dbs/simple_note.db": "58bfe70a5272be257a07bac3508d17c1d657c431c9628038c21a7e955e9827ed",
+      "base_dbs/splitwise.db": "36c88eb0b56b9663a74cc8696b520175afe2dedad5c9c9b7fcbbc3135e7ca8a3",
+      "base_dbs/spotify.db": "75d993b87a603145eff54e8a399848ad3e91c5460082fc9225ce13770f8424a3",
+      "base_dbs/supervisor.db": "410f9388a56d356d50a91e3b42b47777cf8bf0fed86a8c2461f598d91c562072",
+      "base_dbs/todoist.db": "5470d42bbc9ba39467b279ac2eab62b1978efa3b48d116274438d7031f54fdbb",
+      "base_dbs/venmo.db": "a1198cedc5e87f44025f4af4a19ce8ec76ebdb6d0270daa776cc1b67811069f9",
+      "base_dbs/version.txt": "911fc0c48cb0c70601db5775a9bef1b740dc4cc9f9b46389b9f0563fe7eb94d7",
+      "datasets/train.txt": "93d9fe71e7a2e3b7529803d4a20b604f4ebf5ae806f321081140238068189d37",
+      "tasks/07b42fd_1/dbs/admin.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_1/dbs/amazon.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_1/dbs/api_docs.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_1/dbs/file_system.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_1/dbs/gmail.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_1/dbs/phone.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_1/dbs/simple_note.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_1/dbs/splitwise.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_1/dbs/spotify.jsonl": "963b3c93eaa79a94b4adef8b4ec72dbc283de9d1d7dc5d639acaea9b50b6f5ec",
+      "tasks/07b42fd_1/dbs/supervisor.jsonl": "434f0fc2eed1ba8571ed0c3e6c632c21926be03f53a2b3b80365dbdfa2e8d29d",
+      "tasks/07b42fd_1/dbs/todoist.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_1/dbs/venmo.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_1/ground_truth/answer.json": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "tasks/07b42fd_1/ground_truth/api_calls.json": "b75b822e356fce4cb200f42cf6b9aac6738e6263173fd945be4947b7c16dfd66",
+      "tasks/07b42fd_1/ground_truth/compiled_solution.py": "d2c493cc2a6d98d2fd8e7fcffa6c6ed1553c7d518e03f2bce75fa0e35560b6ce",
+      "tasks/07b42fd_1/ground_truth/evaluation.py": "3c8488f9b80c968a79532dcf07b67d143bbfbcb021d7176bc3cdad5be3fdd43d",
+      "tasks/07b42fd_1/ground_truth/generator.py": "280d35bc98c3c2e2e3622d65308752505767a9da648ac8e8a6c615690a118fce",
+      "tasks/07b42fd_1/ground_truth/metadata.json": "df5081efb62a8717bda2553be62ce8d726f1d3f3a0d215a7d0b01ef1e58b3c23",
+      "tasks/07b42fd_1/ground_truth/private_data.json": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "tasks/07b42fd_1/ground_truth/public_data.json": "949c90691847645e4e80452a73c9c7cf56593eb412286e3af40a36fed788f8ff",
+      "tasks/07b42fd_1/ground_truth/required_apis.json": "3077f94957721bec910a51df3d32a0fe431bc09a00ec3de7143d2ced1a8d4741",
+      "tasks/07b42fd_1/ground_truth/required_apps.json": "ab5e6144ccf1f6697353cfb7d269f4b700c79512d708ba1c845bdf8f59fd4296",
+      "tasks/07b42fd_1/ground_truth/solution.py": "07c6f157393a047ae7b8d2b9442538b1bb2dc32ceb3a35b2c48f52bc718c30e0",
+      "tasks/07b42fd_1/ground_truth/test_data.json": "269b9b3283ffaa92ff364a6cb475f5cd1d163ac2d986e8e90c2bbc6bf1a54a9e",
+      "tasks/07b42fd_1/specs.json": "bdfd184e961819a5090676112c5277836ef5b946a21425cab0a15fe7fcf6204d",
+      "tasks/07b42fd_2/dbs/admin.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_2/dbs/amazon.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_2/dbs/api_docs.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_2/dbs/file_system.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_2/dbs/gmail.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_2/dbs/phone.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_2/dbs/simple_note.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_2/dbs/splitwise.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_2/dbs/spotify.jsonl": "555c4c9dc4abf42aeeb3a61454a11dd33f7efdb989eb45021395ea05ea782968",
+      "tasks/07b42fd_2/dbs/supervisor.jsonl": "04d5bc425bc9bfd9b2c6a17c5a6eeccc6437b7f12c5785994c50b03a437d225e",
+      "tasks/07b42fd_2/dbs/todoist.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_2/dbs/venmo.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_2/ground_truth/answer.json": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "tasks/07b42fd_2/ground_truth/api_calls.json": "5ed199f7b348ec388bb4bfa2328cd201b708ee6a3491d7e623d500fd6ca6c339",
+      "tasks/07b42fd_2/ground_truth/compiled_solution.py": "11bc27fa3359c64bff10f053b995e8832b7b583ebb12d6ac4839db37ca475ad8",
+      "tasks/07b42fd_2/ground_truth/evaluation.py": "3c8488f9b80c968a79532dcf07b67d143bbfbcb021d7176bc3cdad5be3fdd43d",
+      "tasks/07b42fd_2/ground_truth/generator.py": "280d35bc98c3c2e2e3622d65308752505767a9da648ac8e8a6c615690a118fce",
+      "tasks/07b42fd_2/ground_truth/metadata.json": "f2d2a9a980e856006eb3ed91b3feb0b968c2390c59e701ce2f2070996b34025b",
+      "tasks/07b42fd_2/ground_truth/private_data.json": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "tasks/07b42fd_2/ground_truth/public_data.json": "a972d8dcbef722451d873d0016487a431056e54ee9136de2245b8b9652397e9a",
+      "tasks/07b42fd_2/ground_truth/required_apis.json": "3077f94957721bec910a51df3d32a0fe431bc09a00ec3de7143d2ced1a8d4741",
+      "tasks/07b42fd_2/ground_truth/required_apps.json": "ab5e6144ccf1f6697353cfb7d269f4b700c79512d708ba1c845bdf8f59fd4296",
+      "tasks/07b42fd_2/ground_truth/solution.py": "07c6f157393a047ae7b8d2b9442538b1bb2dc32ceb3a35b2c48f52bc718c30e0",
+      "tasks/07b42fd_2/ground_truth/test_data.json": "269b9b3283ffaa92ff364a6cb475f5cd1d163ac2d986e8e90c2bbc6bf1a54a9e",
+      "tasks/07b42fd_2/specs.json": "7034f19ddda0d789f6c8ef308e188cf29816d5033d26c9b8155d0b5917bd8bf0",
+      "tasks/07b42fd_3/dbs/admin.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_3/dbs/amazon.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_3/dbs/api_docs.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_3/dbs/file_system.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_3/dbs/gmail.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_3/dbs/phone.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_3/dbs/simple_note.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_3/dbs/splitwise.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_3/dbs/spotify.jsonl": "9b29e4ac866f29f6a03a89cb77a4bc2587181ceebea736f2a01363ae6089dcd1",
+      "tasks/07b42fd_3/dbs/supervisor.jsonl": "04d14d3dd74d5cf3ec1cc8d5a28784c148ab8a5db4ceda48fb0da882041a57af",
+      "tasks/07b42fd_3/dbs/todoist.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_3/dbs/venmo.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tasks/07b42fd_3/ground_truth/answer.json": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "tasks/07b42fd_3/ground_truth/api_calls.json": "cf3f199f778dc9ec9055eb9690426f05cac73baf7b60841dc906290d932df291",
+      "tasks/07b42fd_3/ground_truth/compiled_solution.py": "55aa5fb3eb47c68e09b7faad8467c3be7ef4a1581c7e56b5d2ab4e9d10bf40de",
+      "tasks/07b42fd_3/ground_truth/evaluation.py": "3c8488f9b80c968a79532dcf07b67d143bbfbcb021d7176bc3cdad5be3fdd43d",
+      "tasks/07b42fd_3/ground_truth/generator.py": "280d35bc98c3c2e2e3622d65308752505767a9da648ac8e8a6c615690a118fce",
+      "tasks/07b42fd_3/ground_truth/metadata.json": "e56053aade2c015971757c28fd20b4702632b25c7e55485efbced93aa9453431",
+      "tasks/07b42fd_3/ground_truth/private_data.json": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "tasks/07b42fd_3/ground_truth/public_data.json": "adc1324acb3d69365b11ccbf6c700feda0e039a066e2dbe88759a493b9e6dee7",
+      "tasks/07b42fd_3/ground_truth/required_apis.json": "3077f94957721bec910a51df3d32a0fe431bc09a00ec3de7143d2ced1a8d4741",
+      "tasks/07b42fd_3/ground_truth/required_apps.json": "ab5e6144ccf1f6697353cfb7d269f4b700c79512d708ba1c845bdf8f59fd4296",
+      "tasks/07b42fd_3/ground_truth/solution.py": "07c6f157393a047ae7b8d2b9442538b1bb2dc32ceb3a35b2c48f52bc718c30e0",
+      "tasks/07b42fd_3/ground_truth/test_data.json": "269b9b3283ffaa92ff364a6cb475f5cd1d163ac2d986e8e90c2bbc6bf1a54a9e",
+      "tasks/07b42fd_3/specs.json": "36962787a50763f21cb2e1093b6b4c0cd383dbecd5f0a8abdb4b937f2fa4703c"
+    }
+  },
+  "repeats": 3,
+  "phases": [
+    {
+      "phase": "raw",
+      "request": {
+        "request_id": "raw:07b42fd_1",
+        "adapter": "appworld",
+        "actor": "ollama",
+        "root": "<workspace>/.appworld",
+        "task_id": "07b42fd_1",
+        "raw": true,
+        "learn": false
+      }
+    },
+    {
+      "phase": "raw",
+      "request": {
+        "request_id": "raw:07b42fd_2",
+        "adapter": "appworld",
+        "actor": "ollama",
+        "root": "<workspace>/.appworld",
+        "task_id": "07b42fd_2",
+        "raw": true,
+        "learn": false
+      }
+    },
+    {
+      "phase": "raw",
+      "request": {
+        "request_id": "raw:07b42fd_3",
+        "adapter": "appworld",
+        "actor": "ollama",
+        "root": "<workspace>/.appworld",
+        "task_id": "07b42fd_3",
+        "raw": true,
+        "learn": false
+      }
+    },
+    {
+      "phase": "recovery",
+      "request": {
+        "request_id": "recovery:07b42fd_1",
+        "adapter": "appworld",
+        "actor": "ollama",
+        "root": "<workspace>/.appworld",
+        "task_id": "07b42fd_1",
+        "raw": false,
+        "learn": false
+      }
+    },
+    {
+      "phase": "recovery",
+      "request": {
+        "request_id": "recovery:07b42fd_2",
+        "adapter": "appworld",
+        "actor": "ollama",
+        "root": "<workspace>/.appworld",
+        "task_id": "07b42fd_2",
+        "raw": false,
+        "learn": false
+      }
+    },
+    {
+      "phase": "recovery",
+      "request": {
+        "request_id": "recovery:07b42fd_3",
+        "adapter": "appworld",
+        "actor": "ollama",
+        "root": "<workspace>/.appworld",
+        "task_id": "07b42fd_3",
+        "raw": false,
+        "learn": false
+      }
+    },
+    {
+      "phase": "after",
+      "request": {
+        "request_id": "after:0:07b42fd_1",
+        "adapter": "appworld",
+        "actor": "ollama",
+        "root": "<workspace>/.appworld",
+        "task_id": "07b42fd_1",
+        "learn": false
+      }
+    },
+    {
+      "phase": "after",
+      "request": {
+        "request_id": "after:0:07b42fd_2",
+        "adapter": "appworld",
+        "actor": "ollama",
+        "root": "<workspace>/.appworld",
+        "task_id": "07b42fd_2",
+        "learn": false
+      }
+    },
+    {
+      "phase": "after",
+      "request": {
+        "request_id": "after:0:07b42fd_3",
+        "adapter": "appworld",
+        "actor": "ollama",
+        "root": "<workspace>/.appworld",
+        "task_id": "07b42fd_3",
+        "learn": false
+      }
+    },
+    {
+      "phase": "after",
+      "request": {
+        "request_id": "after:1:07b42fd_1",
+        "adapter": "appworld",
+        "actor": "ollama",
+        "root": "<workspace>/.appworld",
+        "task_id": "07b42fd_1",
+        "learn": false
+      }
+    },
+    {
+      "phase": "after",
+      "request": {
+        "request_id": "after:1:07b42fd_2",
+        "adapter": "appworld",
+        "actor": "ollama",
+        "root": "<workspace>/.appworld",
+        "task_id": "07b42fd_2",
+        "learn": false
+      }
+    },
+    {
+      "phase": "after",
+      "request": {
+        "request_id": "after:1:07b42fd_3",
+        "adapter": "appworld",
+        "actor": "ollama",
+        "root": "<workspace>/.appworld",
+        "task_id": "07b42fd_3",
+        "learn": false
+      }
+    },
+    {
+      "phase": "after",
+      "request": {
+        "request_id": "after:2:07b42fd_1",
+        "adapter": "appworld",
+        "actor": "ollama",
+        "root": "<workspace>/.appworld",
+        "task_id": "07b42fd_1",
+        "learn": false
+      }
+    },
+    {
+      "phase": "after",
+      "request": {
+        "request_id": "after:2:07b42fd_2",
+        "adapter": "appworld",
+        "actor": "ollama",
+        "root": "<workspace>/.appworld",
+        "task_id": "07b42fd_2",
+        "learn": false
+      }
+    },
+    {
+      "phase": "after",
+      "request": {
+        "request_id": "after:2:07b42fd_3",
+        "adapter": "appworld",
+        "actor": "ollama",
+        "root": "<workspace>/.appworld",
+        "task_id": "07b42fd_3",
+        "learn": false
+      }
+    },
+    {
+      "phase": "relationship_recovery",
+      "request": {
+        "request_id": "relationship_recovery",
+        "adapter": "local",
+        "actor": "ollama",
+        "data": {
+          "contract": {
+            "version": 1,
+            "goal": "Mark every open ticket belonging to a customer in the west region as reviewed. Leave all other records, fields and relationships unchanged.",
+            "scope": "synthetic:repair:relationship_filter",
+            "selector": {
+              "entity_type": "Ticket",
+              "where": {
+                "status": "open"
+              },
+              "related": {
+                "relation_type": "belongs_to",
+                "direction": "out",
+                "entity_type": "Customer",
+                "where": {
+                  "region": "west"
+                }
+              }
+            },
+            "update": {
+              "kind": "set_property",
+              "property": "reviewed",
+              "value": true
+            }
+          },
+          "before": {
+            "scope": "synthetic:repair:relationship_filter",
+            "revision": "0",
+            "complete": true,
+            "entities": [
+              {
+                "id": "customer:west",
+                "type": "Customer",
+                "properties": {
+                  "region": "west"
+                }
+              },
+              {
+                "id": "customer:east",
+                "type": "Customer",
+                "properties": {
+                  "region": "east"
+                }
+              },
+              {
+                "id": "ticket:1",
+                "type": "Ticket",
+                "properties": {
+                  "status": "open",
+                  "reviewed": false
+                }
+              },
+              {
+                "id": "ticket:2",
+                "type": "Ticket",
+                "properties": {
+                  "status": "open",
+                  "reviewed": false
+                }
+              },
+              {
+                "id": "ticket:3",
+                "type": "Ticket",
+                "properties": {
+                  "status": "open",
+                  "reviewed": false
+                }
+              },
+              {
+                "id": "ticket:4",
+                "type": "Ticket",
+                "properties": {
+                  "status": "closed",
+                  "reviewed": false
+                }
+              }
+            ],
+            "relations": [
+              {
+                "source": "ticket:1",
+                "type": "belongs_to",
+                "target": "customer:west"
+              },
+              {
+                "source": "ticket:2",
+                "type": "belongs_to",
+                "target": "customer:west"
+              },
+              {
+                "source": "ticket:3",
+                "type": "belongs_to",
+                "target": "customer:east"
+              },
+              {
+                "source": "ticket:4",
+                "type": "belongs_to",
+                "target": "customer:west"
+              }
+            ]
+          }
+        },
+        "loop_config": {
+          "max_steps": 12,
+          "deadline_seconds": 240,
+          "model_timeout_seconds": 90,
+          "inline_output_chars": 6000,
+          "max_stagnant_steps": 3
+        }
+      }
+    },
+    {
+      "phase": "relationship_transfer",
+      "request": {
+        "request_id": "relationship_transfer",
+        "adapter": "local",
+        "actor": "ollama",
+        "data": {
+          "contract": {
+            "version": 1,
+            "goal": "Mark every open ticket belonging to a customer in the west region as reviewed. Leave all other records, fields and relationships unchanged.",
+            "scope": "synthetic:repair:different_links",
+            "selector": {
+              "entity_type": "Ticket",
+              "where": {
+                "status": "open"
+              },
+              "related": {
+                "relation_type": "belongs_to",
+                "direction": "out",
+                "entity_type": "Customer",
+                "where": {
+                  "region": "west"
+                }
+              }
+            },
+            "update": {
+              "kind": "set_property",
+              "property": "reviewed",
+              "value": true
+            }
+          },
+          "before": {
+            "scope": "synthetic:repair:different_links",
+            "revision": "0",
+            "complete": true,
+            "entities": [
+              {
+                "id": "variant:ticket:4",
+                "type": "Ticket",
+                "properties": {
+                  "status": "closed",
+                  "reviewed": false
+                }
+              },
+              {
+                "id": "variant:ticket:3",
+                "type": "Ticket",
+                "properties": {
+                  "status": "open",
+                  "reviewed": false
+                }
+              },
+              {
+                "id": "variant:ticket:2",
+                "type": "Ticket",
+                "properties": {
+                  "status": "open",
+                  "reviewed": false
+                }
+              },
+              {
+                "id": "variant:ticket:1",
+                "type": "Ticket",
+                "properties": {
+                  "status": "open",
+                  "reviewed": false
+                }
+              },
+              {
+                "id": "variant:customer:east",
+                "type": "Customer",
+                "properties": {
+                  "region": "east"
+                }
+              },
+              {
+                "id": "variant:customer:west",
+                "type": "Customer",
+                "properties": {
+                  "region": "west"
+                }
+              }
+            ],
+            "relations": [
+              {
+                "source": "variant:ticket:1",
+                "type": "belongs_to",
+                "target": "variant:customer:west"
+              },
+              {
+                "source": "variant:ticket:2",
+                "type": "belongs_to",
+                "target": "variant:customer:east"
+              },
+              {
+                "source": "variant:ticket:3",
+                "type": "belongs_to",
+                "target": "variant:customer:west"
+              },
+              {
+                "source": "variant:ticket:4",
+                "type": "belongs_to",
+                "target": "variant:customer:west"
+              }
+            ]
+          }
+        },
+        "loop_config": {
+          "max_steps": 12,
+          "deadline_seconds": 240,
+          "model_timeout_seconds": 90,
+          "inline_output_chars": 6000,
+          "max_stagnant_steps": 3
+        }
+      }
+    },
+    {
+      "phase": "old_native_after_second_repair",
+      "request": {
+        "request_id": "old-native-final",
+        "adapter": "appworld",
+        "actor": "ollama",
+        "root": "<workspace>/.appworld",
+        "task_id": "07b42fd_1",
+        "learn": false
+      }
+    }
+  ],
+  "sources": {
+    "appworld_runtime/__init__.py": "fd4c10fcd8655c99c2e8d23ddc50480f7e1e8f626405229b0164d5eb772f2f24",
+    "appworld_runtime/batch.py": "655897b3ba5f6c505516560d8a13591606ddd4dbb837db6a1b8d8c0d374fb967",
+    "appworld_runtime/catalog.py": "3608c46283b11a25c10ccc118e1d110b1af62e84c48cccc769c7b2e0bf3931d2",
+    "appworld_runtime/credentials.py": "be027522fb128f57f4eb634d873d5bbb12ed0d90a4ce45cef17d7ef0ff5723aa",
+    "appworld_runtime/inference.py": "bbf92151f1f022ad570eb333cb35a907dd590843f05bb0023296c7fe9cbf450a",
+    "appworld_runtime/rpc.py": "d2148470a63ad7e2c7cfc385b4ad3bbc523c17f878d17b601f221e2679345478",
+    "appworld_runtime/session.py": "cc3dba1fe2ce4a7cf88741fff0d2351b3dfb274e15a6bd4fdd2c97bdefa4b2fe",
+    "appworld_runtime/surface.py": "81ad0096907375fd19b8b3274acc2ab54a3342d7e5d66bfe42f64678510f2ff5",
+    "appworld_runtime/tool_client.py": "bea7b93ae420ac034457dbde2e2a93637d8b842140fadd034b92f21872f72b15",
+    "appworld_runtime/worker.py": "efc76cc22bedab61b3eae2aecd4c9926436c0d7d2e8f94dc8e8071b0615608e6",
+    "config/models.toml": "b6f5c6488dff99cac8afff35eab0ca62abccaaf3340872dc5b152b91f170adff",
+    "oak-nine-operators.md": "fc2c10d083ad211ce2f82e244a0f6d370b5b55e6d52a4d112c76c3c3638ec258",
+    "react_runtime/__init__.py": "37e1a78a78deb07782d5592aee2795d6eb61e90acf3ebdbd9ed83e5da9c4ff63",
+    "react_runtime/completion.py": "03338e566ca030bb03a7c3f19304d42d0c028ee94ce6914dbed34dd894b6242d",
+    "react_runtime/fixtures.py": "81451af558f7c961b347567e4e33bc1fc0100d4524727dccc44da617dc8ddcbb",
+    "react_runtime/loop.py": "0d435f45e425d0b84d896e87a9384e1c33cfcc61430ccf96bee7478c7d4d3985",
+    "react_runtime/ollama.py": "afca20e0936054aa2efb60c0027f086b0020038c715947bf33f26027f8fb3202",
+    "react_runtime/process.py": "8ed9ca89fad7df78956ce80de7d07267fc6507993c79b645fe9561e87e2124ab",
+    "react_runtime/provenance.py": "395e8e38963554d9c332a79d95dec942e15742eb73bcc919c8d69926b59e7315",
+    "react_runtime/query.py": "565e1d36a79f3c0c762a28240bc79e8ce9ecc46f216054972e1839c16b19d8be",
+    "react_runtime/repair_scoring.py": "d5474509b0cd5173b97ac738e095af2ba36bd1a5229b770293fd8553fa6ba4c3",
+    "react_runtime/store.py": "e2c456c5eea112e961f033fa4a2699a6ca39e52c79990791a8eb09df211a9e93",
+    "react_runtime/trace_audit.py": "1d5d8ae0f87e4c24a36c88b6c28b59909e10c36f38b97a4f70c05bb0e01e39f8",
+    "repair_runtime/__init__.py": "b34deb32dcca9ca308076caba14f49c2875f2850af4d2cbf3e207d9e9744433d",
+    "repair_runtime/controller.py": "02146c3be002815285ec21b113270a9a4623d2e89726d8216702392aee0a7a8a",
+    "repair_runtime/engine.py": "fe8a367e6fce72957b0ad1794da07c08c917c5ffaa24f73bdaafb3c1ccd75f40",
+    "repair_runtime/episode.py": "9f75c6a7c1285ed550ebcc4101badca095b82d9cf38f1722e0c93eb350225cc5",
+    "repair_runtime/evaluation.py": "4230b373006c86823ffd788402ea598da8405930666a797007c316e202191241",
+    "repair_runtime/inference.py": "0c5e05a9a9e598357156ea89c13e7c226f66b1f8aa5a69ac9dbf29e338975fc1",
+    "repair_runtime/judge.py": "063eae3f63062f49a62913c1d03f62924634b9bf7bea4de23dad61bb50830980",
+    "repair_runtime/program.py": "6894fde8b3a137ad51a0e06db2271919c9821c4fa31dd0ab5bbf5701a447241e",
+    "repair_runtime/proposer.py": "767a416e079445169412189533e4bdba39d39cd1b6ebe3bb7a385474d4dd354c",
+    "repair_runtime/store.py": "ce1a18f58073abf749ee83c1de962495ec7da7df46ee5cfac4ec8338f6a9f306",
+    "scripts/inference.py": "b352f61140bd32c540a5311d8bc625d7ca95a43b8c8c5eb6fa853982e8be95b3",
+    "scripts/prove_inference.py": "1a913a3fc72596d046ea7e3d06bd14dac8d2c4be1ba54ed188261fe891015c2c",
+    "scripts/repair.py": "b4652d6cb4efd7a516e514f41144fd18886a167cff6e19721e15c07172040aee"
+  },
+  "stress_cases": "1c6e23917b46bce5de13a8a2e22d32d75624375997d40a6582998167d254630e",
+  "requirements": [
+    "Every scheduled task passes",
+    "Live model is used for every raw/recovery episode",
+    "Recovery preserves world and original goal",
+    "Every retained case passes without fallback before promotion",
+    "Two automatic repairs preserve old cases",
+    "All 100 frozen generated cases pass"
+  ],
+  "negative_control": "Bypass the learned direct numeric filter and require fresh execution gates to reject the regression without changing active state",
+  "limitations": [
+    "The three native tasks are previously exposed training variants, not sealed held-out tasks.",
+    "Generated structural cases are not additional native benchmark tasks."
+  ]
+}

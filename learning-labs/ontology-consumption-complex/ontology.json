@@ -1,0 +1,163 @@
+{
+  "version": "approval-complex-v1",
+  "definitions": {
+    "Organization": {
+      "kind": "type",
+      "meaning": "An organizational scope."
+    },
+    "Project": {
+      "kind": "type",
+      "meaning": "A project belongs to one organization."
+    },
+    "Service": {
+      "kind": "type",
+      "meaning": "A service belongs to one project and has a region."
+    },
+    "Deployment": {
+      "kind": "type",
+      "meaning": "A proposed change with service, author, environment and integer risk."
+    },
+    "Person": {
+      "kind": "type",
+      "meaning": "An identified human."
+    },
+    "Team": {
+      "kind": "type",
+      "meaning": "An organizational team."
+    },
+    "Membership": {
+      "kind": "type",
+      "meaning": "A time-bounded person-to-team relationship; home marks the team used for independence."
+    },
+    "Grant": {
+      "kind": "type",
+      "meaning": "A direct holder-to-role authority association with scope, risk cap and delegation permission."
+    },
+    "Delegation": {
+      "kind": "type",
+      "meaning": "A one-hop transfer from a direct grant holder to a recipient, with its own scope, cap and validity."
+    },
+    "Certificate": {
+      "kind": "type",
+      "meaning": "A time-bounded person qualification for a purpose, region and environment."
+    },
+    "Deny": {
+      "kind": "type",
+      "meaning": "An explicit time-bounded prohibition on a person within a scope."
+    },
+    "scopeCoverage": {
+      "kind": "relation_semantics",
+      "meaning": "A scope covers a service only if it is that service, its direct project, or that project's organization. A sibling project does not cover the service.",
+      "requires": [
+        "Service",
+        "Project",
+        "Organization"
+      ]
+    },
+    "authorityPath": {
+      "kind": "relation_semantics",
+      "meaning": "Authority is a current direct grant held by the candidate, OR exactly one current delegation to the candidate referencing a current direct grant. The delegation issuer must equal the grant holder, grant.delegable must be true, both scopes must cover the service, and risk bounds apply to both. Delegations never serve as source grants. The grant holder's own certification is NOT required to delegate; the recipient's is required to approve.",
+      "requires": [
+        "Grant",
+        "Delegation",
+        "Person",
+        "scopeCoverage"
+      ]
+    },
+    "eligibility": {
+      "kind": "rule_set",
+      "rules": [
+        {
+          "id": "R1",
+          "name": "Scope coverage",
+          "meaning": "A scope covers a service only if it is that service, its direct project, or that project's organization. A sibling project does not cover the service."
+        },
+        {
+          "id": "R2",
+          "name": "Current validity",
+          "meaning": "Every used grant, delegation, membership, certificate and deny has active=true and validFrom <= task.at < validUntil. End dates are exclusive."
+        },
+        {
+          "id": "R3",
+          "name": "Role matching",
+          "meaning": "Ops and Security authority must come from grants with roles OpsApprover and SecurityApprover respectively."
+        },
+        {
+          "id": "R4",
+          "name": "Risk bounds",
+          "meaning": "Deployment.risk must be <= Grant.maxRisk and, for delegation, <= Delegation.maxRisk. Equality is allowed."
+        },
+        {
+          "id": "R5",
+          "name": "Authority paths",
+          "meaning": "Authority is a current direct grant held by the candidate, OR exactly one current delegation to the candidate referencing a current direct grant. The delegation issuer must equal the grant holder, grant.delegable must be true, both scopes must cover the service, and risk bounds apply to both. Delegations never serve as source grants. The grant holder's own certification is NOT required to delegate; the recipient's is required to approve."
+        },
+        {
+          "id": "R6",
+          "name": "Certification",
+          "meaning": "Each selected person needs a current certificate with purpose deployment-approval, the service's region, and the deployment's environment."
+        },
+        {
+          "id": "R7",
+          "name": "Author exclusion",
+          "meaning": "Neither selected person may be Deployment.author."
+        },
+        {
+          "id": "R8",
+          "name": "Explicit deny precedence",
+          "meaning": "Any current Deny for a person with a scope covering the service blocks that person, overriding all grant or delegation paths."
+        },
+        {
+          "id": "R9",
+          "name": "Team independence",
+          "meaning": "Each selected person needs exactly one current home=true Membership. The two selected people must belong to different home teams."
+        },
+        {
+          "id": "R10",
+          "name": "Panel completeness",
+          "meaning": "Select exactly two distinct people: one OpsApprover and one SecurityApprover. If multiple valid panels exist, pick lexicographically smallest (Ops person ID, Security person ID). If none exists, return panel=null."
+        }
+      ],
+      "requires": [
+        "Deployment",
+        "Membership",
+        "Certificate",
+        "Deny",
+        "Team",
+        "authorityPath"
+      ]
+    },
+    "Invoice": {
+      "kind": "type",
+      "meaning": "An unrelated business concept, not an approval authority or rule."
+    },
+    "Shipment": {
+      "kind": "type",
+      "meaning": "An unrelated business concept, not an approval authority or rule."
+    },
+    "Warehouse": {
+      "kind": "type",
+      "meaning": "An unrelated business concept, not an approval authority or rule."
+    },
+    "Subscription": {
+      "kind": "type",
+      "meaning": "An unrelated business concept, not an approval authority or rule."
+    },
+    "PurchaseOrder": {
+      "kind": "type",
+      "meaning": "An unrelated business concept, not an approval authority or rule."
+    },
+    "Refund": {
+      "kind": "type",
+      "meaning": "An unrelated business concept, not an approval authority or rule."
+    },
+    "TaxRate": {
+      "kind": "type",
+      "meaning": "An unrelated business concept, not an approval authority or rule."
+    },
+    "Inventory": {
+      "kind": "type",
+      "meaning": "An unrelated business concept, not an approval authority or rule."
+    }
+  }
+}

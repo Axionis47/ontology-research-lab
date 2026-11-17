@@ -1,0 +1,25 @@
+{
+  "started_at": "2026-11-16T02:54:09.916264+00:00",
+  "command": [
+    "gemini",
+    "--prompt",
+    "Do not use tools. Reply with exactly MODEL_OK and nothing else.",
+    "--output-format",
+    "json",
+    "--extensions",
+    "none",
+    "--policy",
+    "<workspace>/config/gemini-no-tools.toml"
+  ],
+  "returncode": 55,
+  "elapsed_seconds": 4.34,
+  "reason_codes": [
+    "UNSUPPORTED_CLIENT"
+  ],
+  "reason_messages": [
+    "'This client is no longer supported for Gemini Code Assist for individuals. To continue using Gemini, please migrate to the Antigravity suite of products: https://antigravity.google',"
+  ],
+  "unsupported_client": true,
+  "model_response": null,
+  "auth_prompt": false
+}

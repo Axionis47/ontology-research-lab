@@ -1,0 +1,109 @@
+{
+  "kind": "synthetic_gemini_teaching_experiments",
+  "live_requested": true,
+  "complete": true,
+  "all_measured_and_passed": true,
+  "experiments": [
+    {
+      "experiment": "01-triples",
+      "status": "MEASURED",
+      "passed": true,
+      "reason": null,
+      "reported_models": [
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-flash"
+      ]
+    },
+    {
+      "experiment": "02-ontology-vs-facts",
+      "status": "MEASURED",
+      "passed": true,
+      "reason": null,
+      "reported_models": [
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-flash"
+      ]
+    },
+    {
+      "experiment": "03-constraints-provenance",
+      "status": "MEASURED",
+      "passed": true,
+      "reason": null,
+      "reported_models": [
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-flash"
+      ]
+    },
+    {
+      "experiment": "04-relationship-entities",
+      "status": "MEASURED",
+      "passed": true,
+      "reason": null,
+      "reported_models": [
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-flash"
+      ]
+    },
+    {
+      "experiment": "05-traversal-inference",
+      "status": "MEASURED",
+      "passed": true,
+      "reason": null,
+      "reported_models": [
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-flash"
+      ]
+    },
+    {
+      "experiment": "06-model-consumption",
+      "status": "MEASURED",
+      "passed": true,
+      "reason": null,
+      "reported_models": [
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-flash"
+      ]
+    },
+    {
+      "experiment": "07-runtime-enforcement",
+      "status": "MEASURED",
+      "passed": true,
+      "reason": null,
+      "reported_models": [
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-flash"
+      ]
+    },
+    {
+      "experiment": "08-fact-invalidation",
+      "status": "MEASURED",
+      "passed": true,
+      "reason": null,
+      "reported_models": [
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-flash"
+      ]
+    },
+    {
+      "experiment": "09-ontology-extension",
+      "status": "MEASURED",
+      "passed": true,
+      "reason": null,
+      "reported_models": [
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-flash"
+      ]
+    },
+    {
+      "experiment": "10-semantic-version-change",
+      "status": "MEASURED",
+      "passed": true,
+      "reason": null,
+      "reported_models": [
+        "gemini-3.5-flash-lite",
+        "gemini-3.8-flash"
+      ]
+    }
+  ],
+  "appworld_runs": 0
+}

@@ -1,0 +1,246 @@
+{
+  "passed": false,
+  "decisions": [
+    {
+      "component": "discovery",
+      "accepted": false,
+      "proposal": "b67f15ee0dc9aaf5401bad527c051ae4bed69d1867058f1780b735f350ec3c81",
+      "status": "unavailable",
+      "reason": "EXIT_ERROR"
+    },
+    {
+      "component": "binding",
+      "accepted": false,
+      "proposal": "6c3ff2579edca8d190d5fc2462a3713b110ecad377080edc8bd91ccfe39136df",
+      "status": "unavailable",
+      "reason": "EXIT_ERROR"
+    },
+    {
+      "component": "context",
+      "accepted": false,
+      "proposal": "6b6e8c17d7bdeacef92e68499cfe37efa56729579ce14257e5d77e1fde0e3daf",
+      "status": "unavailable",
+      "reason": "EXIT_ERROR"
+    }
+  ],
+  "live": [],
+  "sealed": [
+    {
+      "case": 0,
+      "component": "discovery",
+      "passed": false,
+      "ranked": [
+        "app__unfollow_record6571",
+        "app__follow_record6571"
+      ],
+      "bootstrap": null
+    },
+    {
+      "case": 1,
+      "component": "binding",
+      "passed": false,
+      "observations": [
+        [
+          {
+            "code": "OK",
+            "output_id": "db6b4df5-51e1-4be1-9cbf-3c1c78d9d29b",
+            "preview": "{}\n",
+            "truncated_in_context": false,
+            "effect_uncertain": false
+          },
+          null
+        ],
+        [
+          {
+            "code": "OK",
+            "output_id": "f937c094-132a-49cb-bc8f-59507ac006f6",
+            "preview": "{}\n",
+            "truncated_in_context": false,
+            "effect_uncertain": false
+          },
+          null
+        ],
+        [
+          {
+            "code": "OK",
+            "output_id": "74cfc963-3f77-4ef0-8841-e4b13623a815",
+            "preview": "{}\n",
+            "truncated_in_context": false,
+            "effect_uncertain": false
+          },
+          null
+        ]
+      ],
+      "arguments_unchanged": true
+    },
+    {
+      "case": 2,
+      "component": "context",
+      "passed": false,
+      "error": "CONTEXT_OVERFLOW"
+    },
+    {
+      "case": 3,
+      "component": "discovery",
+      "passed": false,
+      "ranked": [
+        "app__unarchive_record592",
+        "app__archive_record592"
+      ],
+      "bootstrap": null
+    },
+    {
+      "case": 4,
+      "component": "binding",
+      "passed": false,
+      "observations": [
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'record_id' is a required property; expected fields: record_id",
+            "repair_attempts_remaining": 3
+          },
+          null
+        ],
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'record_id' is a required property; expected fields: record_id",
+            "repair_attempts_remaining": 3
+          },
+          null
+        ],
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'record_id' is a required property; expected fields: record_id",
+            "repair_attempts_remaining": 3
+          },
+          null
+        ]
+      ],
+      "arguments_unchanged": true
+    },
+    {
+      "case": 5,
+      "component": "context",
+      "passed": false,
+      "stagnant": 7
+    },
+    {
+      "case": 6,
+      "component": "discovery",
+      "passed": false,
+      "ranked": [
+        "app__deactivate_account3322",
+        "app__activate_account3322"
+      ],
+      "bootstrap": null
+    },
+    {
+      "case": 7,
+      "component": "binding",
+      "passed": false,
+      "observations": [
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'not-an-integer' is not of type 'integer'; expected fields: record_id",
+            "repair_attempts_remaining": 3
+          },
+          null
+        ],
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'not-an-integer' is not of type 'integer'; expected fields: record_id",
+            "repair_attempts_remaining": 3
+          },
+          null
+        ],
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'not-an-integer' is not of type 'integer'; expected fields: record_id",
+            "repair_attempts_remaining": 3
+          },
+          null
+        ]
+      ],
+      "arguments_unchanged": true
+    },
+    {
+      "case": 8,
+      "component": "context",
+      "passed": false,
+      "error": "CONTEXT_OVERFLOW"
+    },
+    {
+      "case": 9,
+      "component": "discovery",
+      "passed": false,
+      "ranked": [
+        "app__unlock_item4780",
+        "app__lock_item4780"
+      ],
+      "bootstrap": null
+    },
+    {
+      "case": 10,
+      "component": "binding",
+      "passed": false,
+      "observations": [
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'record_id' is a required property; expected fields: record_id",
+            "repair_attempts_remaining": 3
+          },
+          null
+        ],
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'record_id' is a required property; expected fields: record_id",
+            "repair_attempts_remaining": 3
+          },
+          null
+        ],
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'record_id' is a required property; expected fields: record_id",
+            "repair_attempts_remaining": 3
+          },
+          null
+        ]
+      ],
+      "arguments_unchanged": true
+    },
+    {
+      "case": 11,
+      "component": "context",
+      "passed": false,
+      "stagnant": 6
+    }
+  ],
+  "negative_control": {
+    "receipt": "55799f3b30ad3533cc818241144edf185689cacef95027f32d6edb273615a474",
+    "accepted": false,
+    "versions_unchanged": true
+  },
+  "active_kernel": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+  "active_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+  "sources_unchanged": true,
+  "manual_changes": [
+    "Bounded typed policy instruction interpreter and proposer transport",
+    "Session errors stop uncertain effects",
+    "Immutable import, frozen evaluator, promotion protocol"
+  ],
+  "learned_changes": [],
+  "limitations": [
+    "Finite engineering acceptance, not general API semantics learning",
+    "Native cases are exposed training variants",
+    "Model composes registered mechanism primitives, no model weight training"
+  ]
+}

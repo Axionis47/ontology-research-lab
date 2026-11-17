@@ -1,0 +1,10 @@
+--- <user-home>/.nvm/versions/node/v24.5.0/lib/node_modules/@google/gemini-cli/bundle/chunk-RCB6BI5H.js
++++ <user-home>/.nvm/versions/node/v24.5.0/lib/node_modules/@google/gemini-cli/bundle/chunk-RCB6BI5H.js
+@@ -334842,6 +334842,7 @@
+         // passed via config.
+         systemInstruction: this.systemInstruction,
+         tools: this.tools,
++        ...(this.tools.length ? {} : { toolConfig: { functionCallingConfig: { mode: "NONE" } } }),
+         abortSignal
+       };
+       let nudgeMessage = "";

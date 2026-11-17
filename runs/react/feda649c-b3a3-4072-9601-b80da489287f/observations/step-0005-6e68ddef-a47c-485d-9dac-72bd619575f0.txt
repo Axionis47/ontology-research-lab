@@ -1,0 +1,1 @@
+{"action_id": "read_output", "arguments": {"json_pointer": "/proof", "output_id": "1afa4816-50fa-4347-b7eb-097c58f20d6f"}, "evidence_ids": ["6cc0fe7e-548e-424b-984b-416a76bbe5af"], "kind": "act", "reason": "Read the original r1 output at JSON pointer /proof to finish with the proof value.", "request_id": "8dfbd49b-2027-42e9-baaa-ab29bf714014"}

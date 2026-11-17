@@ -1,0 +1,14 @@
+{
+  "triples": [
+    [
+      "Maya",
+      "maintains",
+      "LoginService"
+    ],
+    [
+      "LoginService",
+      "belongsTo",
+      "Atlas"
+    ]
+  ]
+}

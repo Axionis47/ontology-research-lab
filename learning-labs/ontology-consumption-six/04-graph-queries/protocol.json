@@ -1,0 +1,6 @@
+{
+  "mode": "query",
+  "title": "Ontology-guided graph query",
+  "mechanism": "Relevant definitions plus a generic predicate query interface; model composes filters over the unchanged facts.",
+  "limitation": "A syntactically valid query may implement the wrong rule. Query runtime checks structure, not intended semantics."
+}

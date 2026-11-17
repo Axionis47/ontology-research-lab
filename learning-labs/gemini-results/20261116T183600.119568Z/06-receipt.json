@@ -1,0 +1,13 @@
+{
+  "experiment": "06-model-consumption",
+  "status": "PREPARED_NOT_RUN",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"06\",\n  \"title\": \"Request evidence through an interface\",\n  \"terms\": {\n    \"tool contract\": \"A named operation and its allowed arguments.\",\n    \"proposal\": \"A request, not an executed effect.\"\n  },\n  \"instruction\": \"Choose the single documented read tool to obtain the missing value. Return the tool request only; do not invent an owner. No tool is actually executed in this lesson.\",\n  \"input\": {\n    \"known\": {\n      \"LoginService\": {\n        \"type\": \"Service\",\n        \"owner\": \"UNKNOWN\"\n      }\n    },\n    \"task\": \"Identify the owner of LoginService.\",\n    \"tools\": {\n      \"get_service\": {\n        \"arguments\": {\n          \"service_id\": \"string\"\n        },\n        \"returns\": [\n          \"service_id\",\n          \"owner\"\n        ]\n      },\n      \"set_owner\": {\n        \"arguments\": {\n          \"service_id\": \"string\",\n          \"person_id\": \"string\"\n        },\n        \"effect\": \"changes owner\"\n      }\n    }\n  },\n  \"output_shape\": {\n    \"name\": \"tool name\",\n    \"arguments\": \"object\"\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "name": "get_service",
+    "arguments": {
+      "service_id": "LoginService"
+    }
+  },
+  "reported_models": [],
+  "passed": null
+}

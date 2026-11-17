@@ -1,0 +1,93 @@
+{
+  "parent": {
+    "functions": {
+      "direct": {
+        "nodes": [
+          {
+            "op": "lookup_entities",
+            "type": "selector.entity_type"
+          },
+          {
+            "input": 0,
+            "op": "filter_property_categorical",
+            "where": "selector.where"
+          }
+        ],
+        "return": 1
+      },
+      "related": {
+        "nodes": [
+          {
+            "op": "lookup_entities",
+            "type": "selector.entity_type"
+          },
+          {
+            "input": 0,
+            "op": "filter_property_categorical",
+            "where": "selector.where"
+          },
+          {
+            "op": "lookup_entities",
+            "type": "selector.related.entity_type"
+          },
+          {
+            "input": 2,
+            "op": "filter_property_categorical",
+            "where": "selector.related.where"
+          }
+        ],
+        "return": 1
+      }
+    },
+    "version": 1
+  },
+  "candidate": {
+    "functions": {
+      "direct": {
+        "nodes": [
+          {
+            "op": "lookup_entities",
+            "type": "selector.entity_type"
+          },
+          {
+            "input": 0,
+            "op": "filter_property_categorical",
+            "where": "selector.where"
+          },
+          {
+            "input": 1,
+            "op": "filter_numeric",
+            "predicates": "selector.numeric"
+          }
+        ],
+        "return": 2
+      },
+      "related": {
+        "nodes": [
+          {
+            "op": "lookup_entities",
+            "type": "selector.entity_type"
+          },
+          {
+            "input": 0,
+            "op": "filter_property_categorical",
+            "where": "selector.where"
+          },
+          {
+            "op": "lookup_entities",
+            "type": "selector.related.entity_type"
+          },
+          {
+            "input": 2,
+            "op": "filter_property_categorical",
+            "where": "selector.related.where"
+          }
+        ],
+        "return": 1
+      }
+    },
+    "version": 1
+  },
+  "source_proposal": "50274b8d8f8c37efdb903588f0e71aadbbcf409c6c49849bbbec3e6a7411c382",
+  "authored_by": "Separate Gemini CLI proposer call; original response in clean-replay/proposer-calls.json"
+}

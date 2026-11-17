@@ -1,0 +1,100 @@
+{
+  "kind": "synthetic_gemini_teaching_experiments",
+  "created_utc": "20261116T183611.251922Z",
+  "live_requested": true,
+  "provider": "installed Gemini CLI",
+  "role": "teaching_experiment_participant_user_selected",
+  "model_selection": "CLI configured default; no override or substitute",
+  "cli_version": "0.68.0",
+  "executable": "<user-home>/.nvm/versions/node/v24.5.0/bin/gemini",
+  "config_sha256": "b6f5c6488dff99cac8afff35eab0ca62abccaaf3340872dc5b152b91f170adff",
+  "policy_sha256": "406702e019a25be380e93ffa7ffb1c4b17c5857e429574cef3dde17887a0ab0f",
+  "runner_sha256": "24960174ffb79bea5fb746c90611e29cd8d0d507105b97b152347debbf4ed2d6",
+  "timeout_per_call_seconds": 180,
+  "maximum_cli_invocations": 10,
+  "context_boundary": "empty working directory, inherited CLI/global configuration, no resumed session",
+  "appworld_runs": 0,
+  "native_improvement": false,
+  "experiments": [
+    {
+      "id": "01-triples",
+      "source_sha256": {
+        "gemini-input.json": "d5f99445b4caf1f8a193f523d7ab97513bd15d46b3d251bc4ab91f75c69ce978",
+        "gemini-expected.json": "0968fe2cf75b0ffa9293c63b7ea8405190f55bfe9fb0d0244c95c621860e9a49",
+        "gemini-prompt.txt": "7e9811467e97e76a26ab2bce29c3985b6fd88ee62be460304193fb584e24bf38"
+      }
+    },
+    {
+      "id": "02-ontology-vs-facts",
+      "source_sha256": {
+        "gemini-input.json": "c20d2f97840b8f505e8d76332b169377a0109d1851c7976d249735225b2982f8",
+        "gemini-expected.json": "5847ac96ccb521db8b0443ba484c0d1e1504ef499e72b367892c874e219b848d",
+        "gemini-prompt.txt": "384b498131887d38c99bbb81cb73264658f2b1fcfddceba46107ae4fc0fd6863"
+      }
+    },
+    {
+      "id": "03-constraints-provenance",
+      "source_sha256": {
+        "gemini-input.json": "d0d9e9f413d05e17acba2e99beb24b81854209c310337c26823df003704af270",
+        "gemini-expected.json": "961d84c4a5af0b769cf5d9d49f302cf077e5411e4b7531420aaf462fdea99ca1",
+        "gemini-prompt.txt": "d6c4cac4a6549c123f3639ae0fc4b2b11e0a7049892951425b7bfda82915c305"
+      }
+    },
+    {
+      "id": "04-relationship-entities",
+      "source_sha256": {
+        "gemini-input.json": "33c17c5740a56201e5ad07196142985ae46584b75325c0ac1549e3128333e07c",
+        "gemini-expected.json": "9be9a5b3dbf54e858bbac8da69ad501e3c74cfa61c27e37adaa709f46988b2b5",
+        "gemini-prompt.txt": "f335c8d9fcbc34aec084355c4fa01b51a2da3968e3749252232a279377ed7fb2"
+      }
+    },
+    {
+      "id": "05-traversal-inference",
+      "source_sha256": {
+        "gemini-input.json": "e981abf98fb4c50bf82eae003b1457af88b223e0e6512423f079947efd53ff2d",
+        "gemini-expected.json": "b0f2ca68ef6bd9dcd0ea9e72a2439995fabd54641a26f3d3b11661e14b4e9543",
+        "gemini-prompt.txt": "a2d7e61f17b40daad6e6544d55c11d703b1d7f04afda20fec682f7a9cb302e05"
+      }
+    },
+    {
+      "id": "06-model-consumption",
+      "source_sha256": {
+        "gemini-input.json": "7289714df7d2d1aeef7b277ad208459983072860ce2b35e169c0dfbb1aa608f6",
+        "gemini-expected.json": "bd99a0148fcd7e1d55f348941d3d9c5ded6748d33e9f9cbafdeb510e45d76d77",
+        "gemini-prompt.txt": "6c22a399f26a31bfb6224a66790285cae6dbe1554b1f027d5745213f331dc4cd"
+      }
+    },
+    {
+      "id": "07-runtime-enforcement",
+      "source_sha256": {
+        "gemini-input.json": "32f06688cebd9bf76b674abcefae9640dafd725441df4e4b2ed6f3311c54d1c9",
+        "gemini-expected.json": "c7ab2fbf0b18de2f99d783504aeee652797c6c56c1f9b80b6b2bacbbee7210f8",
+        "gemini-prompt.txt": "d40dbcb8ab85d50178bfb5ab26c654e58e563e093ed9489a40d8a69cd731327b"
+      }
+    },
+    {
+      "id": "08-fact-invalidation",
+      "source_sha256": {
+        "gemini-input.json": "a0e4484d1f7d36d04f6ae6a8aadd88f014c40439b5c96917f9bafa99fed3dba7",
+        "gemini-expected.json": "4e2e5de7f7cf93b48bb6884f4fefc2d11156ee880115bd0bf645b68b92e1e79e",
+        "gemini-prompt.txt": "b34f5717f421e01cd1d0a5137f80b5a63c30fa27bafe7ce711123d0cbc787357"
+      }
+    },
+    {
+      "id": "09-ontology-extension",
+      "source_sha256": {
+        "gemini-input.json": "1032562e0f61172048557447dec95fe5902db1bf0b0835c5dcf8ba5237393188",
+        "gemini-expected.json": "9df38053682281fbbfba5f13faac8602ac27a55731b2a55ef750545ee5c9e1c3",
+        "gemini-prompt.txt": "6af1736797738d4a1f87bd3a1a9314d2dfe8d465a06e01313f818ef608dc7b2a"
+      }
+    },
+    {
+      "id": "10-semantic-version-change",
+      "source_sha256": {
+        "gemini-input.json": "60d811dbb9f3a43cb6f530f02335de7b261bcf3284e06e60e3dcbb595d5a4b86",
+        "gemini-expected.json": "8321a7094fb8f3aca9c0e92914f24eecfbb6cd27964cdaa6da57714a9433d8d9",
+        "gemini-prompt.txt": "51bada7b01854a7758351c0030dd829d3a3b16c908b1c2b3f123397602ebc920"
+      }
+    }
+  ]
+}

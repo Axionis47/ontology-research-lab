@@ -1,0 +1,383 @@
+{
+  "experiment": "01-full-definitions",
+  "mode": "full",
+  "status": "MEASURED",
+  "initial_payload": {
+    "task": {
+      "service": "LoginService",
+      "environment": "Production",
+      "deployment_id": "d1",
+      "at": "2026-11-16"
+    },
+    "task_instruction": "Choose an eligible approver for this deployment using the pinned ontology.",
+    "facts": {
+      "revision": 1,
+      "source": "synthetic://service-catalog/snapshot-1",
+      "deployment": {
+        "id": "d1",
+        "author": "Maya",
+        "service": "LoginService"
+      },
+      "assignments": [
+        {
+          "id": "a-maya",
+          "person": "Maya",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-noah",
+          "person": "Noah",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-rin",
+          "person": "Rin",
+          "service": "LoginService",
+          "environment": "Staging",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-tao",
+          "person": "Tao",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-10-01",
+          "validUntil": "2026-11-15",
+          "active": true
+        }
+      ]
+    },
+    "coverage": "All relevant fixture facts are present; date comparisons use YYYY-MM-DD.",
+    "ontology_version": "approval-ontology-v1",
+    "finish_shape": {
+      "type": "finish",
+      "person": "name or null",
+      "evidence_ids": [
+        "supporting record IDs"
+      ],
+      "ontology_version": "pinned version",
+      "graph_revision": "integer",
+      "rule_ids": [
+        "all applied eligibility rule IDs"
+      ]
+    },
+    "definitions": {
+      "Person": {
+        "kind": "type",
+        "meaning": "An identified human."
+      },
+      "Service": {
+        "kind": "type",
+        "meaning": "A software service."
+      },
+      "Assignment": {
+        "kind": "type",
+        "meaning": "An observed role of a person for a service, with environment and validity interval.",
+        "properties": [
+          "id",
+          "person",
+          "service",
+          "environment",
+          "role",
+          "validFrom",
+          "validUntil",
+          "active"
+        ],
+        "requires": [
+          "Person",
+          "Service",
+          "heldBy",
+          "forService"
+        ]
+      },
+      "Deployment": {
+        "kind": "type",
+        "meaning": "A proposed deployment of a service, with an author.",
+        "properties": [
+          "id",
+          "service",
+          "author"
+        ],
+        "requires": [
+          "Person",
+          "Service"
+        ]
+      },
+      "heldBy": {
+        "kind": "relation",
+        "meaning": "Assignment.person identifies the person holding this assignment; it is not the deployment author."
+      },
+      "forService": {
+        "kind": "relation",
+        "meaning": "Assignment.service identifies the service to which that assignment applies."
+      },
+      "eligibility": {
+        "kind": "rule_set",
+        "meaning": "All six rules must hold. Missing evidence is UNKNOWN and never establishes eligibility.",
+        "rules": [
+          {
+            "id": "R1",
+            "meaning": "Assignment service must equal task service."
+          },
+          {
+            "id": "R2",
+            "meaning": "Assignment environment must equal task environment."
+          },
+          {
+            "id": "R3",
+            "meaning": "Assignment role must be DeploymentApprover."
+          },
+          {
+            "id": "R4",
+            "meaning": "Assignment active must be true."
+          },
+          {
+            "id": "R5",
+            "meaning": "Assignment validFrom <= task at < assignment validUntil; the end is exclusive. All dates here use YYYY-MM-DD."
+          },
+          {
+            "id": "R6",
+            "meaning": "Assignment person must differ from the deployment author."
+          }
+        ],
+        "requires": [
+          "Assignment",
+          "Deployment"
+        ]
+      },
+      "Invoice": {
+        "kind": "type",
+        "meaning": "A billing record."
+      },
+      "Warehouse": {
+        "kind": "type",
+        "meaning": "A storage location."
+      },
+      "Shipment": {
+        "kind": "type",
+        "meaning": "A movement of goods."
+      },
+      "Subscription": {
+        "kind": "type",
+        "meaning": "A recurring service agreement."
+      },
+      "Asset": {
+        "kind": "type",
+        "meaning": "An item tracked for accounting."
+      },
+      "PurchaseOrder": {
+        "kind": "type",
+        "meaning": "A request to purchase goods."
+      },
+      "Payment": {
+        "kind": "type",
+        "meaning": "A transfer to settle an obligation."
+      },
+      "Refund": {
+        "kind": "type",
+        "meaning": "A reversal of a payment."
+      },
+      "TaxRate": {
+        "kind": "type",
+        "meaning": "A jurisdiction-specific rate."
+      },
+      "Expense": {
+        "kind": "type",
+        "meaning": "A recorded cost."
+      },
+      "Supplier": {
+        "kind": "type",
+        "meaning": "An organization providing goods."
+      },
+      "Inventory": {
+        "kind": "type",
+        "meaning": "A quantity of stocked goods."
+      }
+    }
+  },
+  "calls": [
+    {
+      "step": 0,
+      "submitted_prompt": "Solve the same fixed task using only the supplied facts, ontology and interfaces. Return one JSON object, no Markdown. Do not use CLI tools, read files, or change any external state.\n{\"context\":{\"task\":{\"service\":\"LoginService\",\"environment\":\"Production\",\"deployment_id\":\"d1\",\"at\":\"2026-11-16\"},\"task_instruction\":\"Choose an eligible approver for this deployment using the pinned ontology.\",\"facts\":{\"revision\":1,\"source\":\"synthetic://service-catalog/snapshot-1\",\"deployment\":{\"id\":\"d1\",\"author\":\"Maya\",\"service\":\"LoginService\"},\"assignments\":[{\"id\":\"a-maya\",\"person\":\"Maya\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-noah\",\"person\":\"Noah\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-rin\",\"person\":\"Rin\",\"service\":\"LoginService\",\"environment\":\"Staging\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-tao\",\"person\":\"Tao\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-10-01\",\"validUntil\":\"2026-11-15\",\"active\":true}]},\"coverage\":\"All relevant fixture facts are present; date comparisons use YYYY-MM-DD.\",\"ontology_version\":\"approval-ontology-v1\",\"finish_shape\":{\"type\":\"finish\",\"person\":\"name or null\",\"evidence_ids\":[\"supporting record IDs\"],\"ontology_version\":\"pinned version\",\"graph_revision\":\"integer\",\"rule_ids\":[\"all applied eligibility rule IDs\"]},\"definitions\":{\"Person\":{\"kind\":\"type\",\"meaning\":\"An identified human.\"},\"Service\":{\"kind\":\"type\",\"meaning\":\"A software service.\"},\"Assignment\":{\"kind\":\"type\",\"meaning\":\"An observed role of a person for a service, with environment and validity interval.\",\"properties\":[\"id\",\"person\",\"service\",\"environment\",\"role\",\"validFrom\",\"validUntil\",\"active\"],\"requires\":[\"Person\",\"Service\",\"heldBy\",\"forService\"]},\"Deployment\":{\"kind\":\"type\",\"meaning\":\"A proposed deployment of a service, with an author.\",\"properties\":[\"id\",\"service\",\"author\"],\"requires\":[\"Person\",\"Service\"]},\"heldBy\":{\"kind\":\"relation\",\"meaning\":\"Assignment.person identifies the person holding this assignment; it is not the deployment author.\"},\"forService\":{\"kind\":\"relation\",\"meaning\":\"Assignment.service identifies the service to which that assignment applies.\"},\"eligibility\":{\"kind\":\"rule_set\",\"meaning\":\"All six rules must hold. Missing evidence is UNKNOWN and never establishes eligibility.\",\"rules\":[{\"id\":\"R1\",\"meaning\":\"Assignment service must equal task service.\"},{\"id\":\"R2\",\"meaning\":\"Assignment environment must equal task environment.\"},{\"id\":\"R3\",\"meaning\":\"Assignment role must be DeploymentApprover.\"},{\"id\":\"R4\",\"meaning\":\"Assignment active must be true.\"},{\"id\":\"R5\",\"meaning\":\"Assignment validFrom <= task at < assignment validUntil; the end is exclusive. All dates here use YYYY-MM-DD.\"},{\"id\":\"R6\",\"meaning\":\"Assignment person must differ from the deployment author.\"}],\"requires\":[\"Assignment\",\"Deployment\"]},\"Invoice\":{\"kind\":\"type\",\"meaning\":\"A billing record.\"},\"Warehouse\":{\"kind\":\"type\",\"meaning\":\"A storage location.\"},\"Shipment\":{\"kind\":\"type\",\"meaning\":\"A movement of goods.\"},\"Subscription\":{\"kind\":\"type\",\"meaning\":\"A recurring service agreement.\"},\"Asset\":{\"kind\":\"type\",\"meaning\":\"An item tracked for accounting.\"},\"PurchaseOrder\":{\"kind\":\"type\",\"meaning\":\"A request to purchase goods.\"},\"Payment\":{\"kind\":\"type\",\"meaning\":\"A transfer to settle an obligation.\"},\"Refund\":{\"kind\":\"type\",\"meaning\":\"A reversal of a payment.\"},\"TaxRate\":{\"kind\":\"type\",\"meaning\":\"A jurisdiction-specific rate.\"},\"Expense\":{\"kind\":\"type\",\"meaning\":\"A recorded cost.\"},\"Supplier\":{\"kind\":\"type\",\"meaning\":\"An organization providing goods.\"},\"Inventory\":{\"kind\":\"type\",\"meaning\":\"A quantity of stocked goods.\"}}},\"history\":[]}",
+      "user_chars": 3885,
+      "status": "RECEIVED",
+      "exit_code": 0,
+      "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+      "cli_response": {
+        "session_id": "b96fa380-1b03-4c2b-a35c-22d3da092908",
+        "response": "{\"type\":\"finish\",\"person\":\"Noah\",\"evidence_ids\":[\"a-noah\",\"d1\"],\"ontology_version\":\"approval-ontology-v1\",\"graph_revision\":1,\"rule_ids\":[\"R1\",\"R2\",\"R3\",\"R4\",\"R5\",\"R6\"]}",
+        "stats": {
+          "models": {
+            "gemini-3.5-flash-lite": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 6768,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 1867,
+                "prompt": 1867,
+                "candidates": 32,
+                "total": 2934,
+                "cached": 0,
+                "thoughts": 1035,
+                "tool": 0
+              },
+              "roles": {
+                "utility_router": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 6768,
+                  "tokens": {
+                    "input": 1867,
+                    "prompt": 1867,
+                    "candidates": 32,
+                    "total": 2934,
+                    "cached": 0,
+                    "thoughts": 1035,
+                    "tool": 0
+                  }
+                }
+              }
+            },
+            "gemini-3.8-flash": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 40673,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 6857,
+                "prompt": 6857,
+                "candidates": 60,
+                "total": 13377,
+                "cached": 0,
+                "thoughts": 6460,
+                "tool": 0
+              },
+              "roles": {
+                "main": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 40673,
+                  "tokens": {
+                    "input": 6857,
+                    "prompt": 6857,
+                    "candidates": 60,
+                    "total": 13377,
+                    "cached": 0,
+                    "thoughts": 6460,
+                    "tool": 0
+                  }
+                }
+              }
+            }
+          },
+          "tools": {
+            "totalCalls": 0,
+            "totalSuccess": 0,
+            "totalFail": 0,
+            "totalDurationMs": 0,
+            "totalDecisions": {
+              "accept": 0,
+              "reject": 0,
+              "modify": 0,
+              "auto_accept": 0
+            },
+            "byName": {}
+          },
+          "files": {
+            "totalLinesAdded": 0,
+            "totalLinesRemoved": 0
+          }
+        }
+      },
+      "parsed": {
+        "type": "finish",
+        "person": "Noah",
+        "evidence_ids": [
+          "a-noah",
+          "d1"
+        ],
+        "ontology_version": "approval-ontology-v1",
+        "graph_revision": 1,
+        "rule_ids": [
+          "R1",
+          "R2",
+          "R3",
+          "R4",
+          "R5",
+          "R6"
+        ]
+      }
+    }
+  ],
+  "history": [],
+  "passed": true,
+  "successful_interface_calls": 0,
+  "definition_names_exposed": [
+    "Asset",
+    "Assignment",
+    "Deployment",
+    "Expense",
+    "Inventory",
+    "Invoice",
+    "Payment",
+    "Person",
+    "PurchaseOrder",
+    "Refund",
+    "Service",
+    "Shipment",
+    "Subscription",
+    "Supplier",
+    "TaxRate",
+    "Warehouse",
+    "eligibility",
+    "forService",
+    "heldBy"
+  ],
+  "answer": {
+    "type": "finish",
+    "person": "Noah",
+    "evidence_ids": [
+      "a-noah",
+      "d1"
+    ],
+    "ontology_version": "approval-ontology-v1",
+    "graph_revision": 1,
+    "rule_ids": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6"
+    ]
+  },
+  "answer_correct": true,
+  "protocol_followed": true,
+  "gate_before_change": {
+    "admitted": true,
+    "reason": "ELIGIBLE"
+  },
+  "gate_after_revocation": {
+    "admitted": false,
+    "reason": "VERSION_MISMATCH"
+  }
+}

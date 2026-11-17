@@ -1,0 +1,242 @@
+{
+  "experiment": "06-model-consumption",
+  "kind": "synthetic model-interface experiment",
+  "status": "PREPARED_NOT_RUN",
+  "actor": {
+    "provider": "ollama",
+    "configured_model": "qwen3:8b-q4_K_M"
+  },
+  "input_sha256": "afe8f1c00545ed4cec7fe63df8ca73dccf5f730b8d34bedec168eef4c4f31e11",
+  "checks": {
+    "six_interfaces_prepared": true,
+    "expected_answers_not_in_requests": true
+  },
+  "trials": [
+    {
+      "case_id": "valid",
+      "interface": "text",
+      "expected": "Noah",
+      "request": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "Use only supplied observations and the stated rule. Return JSON with answer (person name or unknown) and evidence_ids (array). Do not invent facts."
+          },
+          {
+            "role": "user",
+            "content": "{\"question\": \"Who has established authority to approve a production deployment of LoginService?\", \"definitions\": {\"Person\": \"An identified human.\", \"Service\": \"An identified software service.\", \"Assignment\": \"An association between a person, role, service, environment, and current validity.\", \"rule\": \"Authority is established only by an assignment whose role is DeploymentApprover, service is LoginService, environment is Production, and current is true. Project membership alone is insufficient. If no such assignment is observed, return unknown, not a guess.\"}, \"observations\": [\"Record e1: person is \\\"Maya\\\"; role is \\\"ProjectManager\\\"; project is \\\"Atlas\\\".\", \"Record e2: person is \\\"Noah\\\"; role is \\\"DeploymentApprover\\\"; service is \\\"LoginService\\\"; environment is \\\"Production\\\"; current is true.\"]}"
+          }
+        ]
+      },
+      "available_observations": [
+        {
+          "evidence_id": "e1",
+          "person": "Maya",
+          "role": "ProjectManager",
+          "project": "Atlas"
+        },
+        {
+          "evidence_id": "e2",
+          "person": "Noah",
+          "role": "DeploymentApprover",
+          "service": "LoginService",
+          "environment": "Production",
+          "current": true
+        }
+      ]
+    },
+    {
+      "case_id": "valid",
+      "interface": "ontology",
+      "expected": "Noah",
+      "request": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "Use only supplied observations and the stated rule. Return JSON with answer (person name or unknown) and evidence_ids (array). Do not invent facts."
+          },
+          {
+            "role": "user",
+            "content": "{\"question\": \"Who has established authority to approve a production deployment of LoginService?\", \"definitions\": {\"Person\": \"An identified human.\", \"Service\": \"An identified software service.\", \"Assignment\": \"An association between a person, role, service, environment, and current validity.\", \"rule\": \"Authority is established only by an assignment whose role is DeploymentApprover, service is LoginService, environment is Production, and current is true. Project membership alone is insufficient. If no such assignment is observed, return unknown, not a guess.\"}, \"observations\": [{\"evidence_id\": \"e1\", \"person\": \"Maya\", \"role\": \"ProjectManager\", \"project\": \"Atlas\"}, {\"evidence_id\": \"e2\", \"person\": \"Noah\", \"role\": \"DeploymentApprover\", \"service\": \"LoginService\", \"environment\": \"Production\", \"current\": true}]}"
+          }
+        ]
+      },
+      "available_observations": [
+        {
+          "evidence_id": "e1",
+          "person": "Maya",
+          "role": "ProjectManager",
+          "project": "Atlas"
+        },
+        {
+          "evidence_id": "e2",
+          "person": "Noah",
+          "role": "DeploymentApprover",
+          "service": "LoginService",
+          "environment": "Production",
+          "current": true
+        }
+      ]
+    },
+    {
+      "case_id": "valid",
+      "interface": "query",
+      "expected": "Noah",
+      "request": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "Use only supplied observations and the stated rule. Return JSON with answer (person name or unknown) and evidence_ids (array). Do not invent facts."
+          },
+          {
+            "role": "user",
+            "content": "{\"question\": \"Who has established authority to approve a production deployment of LoginService?\", \"definitions\": {\"Person\": \"An identified human.\", \"Service\": \"An identified software service.\", \"Assignment\": \"An association between a person, role, service, environment, and current validity.\", \"rule\": \"Authority is established only by an assignment whose role is DeploymentApprover, service is LoginService, environment is Production, and current is true. Project membership alone is insufficient. If no such assignment is observed, return unknown, not a guess.\"}, \"instruction\": \"Call read_records to obtain the observations before answering.\"}"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "read_records",
+              "description": "Read all source-attributed records in this tiny task world. No filtering or reasoning is performed.",
+              "parameters": {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": false
+              }
+            }
+          }
+        ]
+      },
+      "available_observations": [
+        {
+          "evidence_id": "e1",
+          "person": "Maya",
+          "role": "ProjectManager",
+          "project": "Atlas"
+        },
+        {
+          "evidence_id": "e2",
+          "person": "Noah",
+          "role": "DeploymentApprover",
+          "service": "LoginService",
+          "environment": "Production",
+          "current": true
+        }
+      ]
+    },
+    {
+      "case_id": "wrong-environment",
+      "interface": "text",
+      "expected": "unknown",
+      "request": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "Use only supplied observations and the stated rule. Return JSON with answer (person name or unknown) and evidence_ids (array). Do not invent facts."
+          },
+          {
+            "role": "user",
+            "content": "{\"question\": \"Who has established authority to approve a production deployment of LoginService?\", \"definitions\": {\"Person\": \"An identified human.\", \"Service\": \"An identified software service.\", \"Assignment\": \"An association between a person, role, service, environment, and current validity.\", \"rule\": \"Authority is established only by an assignment whose role is DeploymentApprover, service is LoginService, environment is Production, and current is true. Project membership alone is insufficient. If no such assignment is observed, return unknown, not a guess.\"}, \"observations\": [\"Record e1: person is \\\"Maya\\\"; role is \\\"ProjectManager\\\"; project is \\\"Atlas\\\".\", \"Record e2: person is \\\"Noah\\\"; role is \\\"DeploymentApprover\\\"; service is \\\"LoginService\\\"; environment is \\\"Staging\\\"; current is true.\"]}"
+          }
+        ]
+      },
+      "available_observations": [
+        {
+          "evidence_id": "e1",
+          "person": "Maya",
+          "role": "ProjectManager",
+          "project": "Atlas"
+        },
+        {
+          "evidence_id": "e2",
+          "person": "Noah",
+          "role": "DeploymentApprover",
+          "service": "LoginService",
+          "environment": "Staging",
+          "current": true
+        }
+      ]
+    },
+    {
+      "case_id": "wrong-environment",
+      "interface": "ontology",
+      "expected": "unknown",
+      "request": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "Use only supplied observations and the stated rule. Return JSON with answer (person name or unknown) and evidence_ids (array). Do not invent facts."
+          },
+          {
+            "role": "user",
+            "content": "{\"question\": \"Who has established authority to approve a production deployment of LoginService?\", \"definitions\": {\"Person\": \"An identified human.\", \"Service\": \"An identified software service.\", \"Assignment\": \"An association between a person, role, service, environment, and current validity.\", \"rule\": \"Authority is established only by an assignment whose role is DeploymentApprover, service is LoginService, environment is Production, and current is true. Project membership alone is insufficient. If no such assignment is observed, return unknown, not a guess.\"}, \"observations\": [{\"evidence_id\": \"e1\", \"person\": \"Maya\", \"role\": \"ProjectManager\", \"project\": \"Atlas\"}, {\"evidence_id\": \"e2\", \"person\": \"Noah\", \"role\": \"DeploymentApprover\", \"service\": \"LoginService\", \"environment\": \"Staging\", \"current\": true}]}"
+          }
+        ]
+      },
+      "available_observations": [
+        {
+          "evidence_id": "e1",
+          "person": "Maya",
+          "role": "ProjectManager",
+          "project": "Atlas"
+        },
+        {
+          "evidence_id": "e2",
+          "person": "Noah",
+          "role": "DeploymentApprover",
+          "service": "LoginService",
+          "environment": "Staging",
+          "current": true
+        }
+      ]
+    },
+    {
+      "case_id": "wrong-environment",
+      "interface": "query",
+      "expected": "unknown",
+      "request": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "Use only supplied observations and the stated rule. Return JSON with answer (person name or unknown) and evidence_ids (array). Do not invent facts."
+          },
+          {
+            "role": "user",
+            "content": "{\"question\": \"Who has established authority to approve a production deployment of LoginService?\", \"definitions\": {\"Person\": \"An identified human.\", \"Service\": \"An identified software service.\", \"Assignment\": \"An association between a person, role, service, environment, and current validity.\", \"rule\": \"Authority is established only by an assignment whose role is DeploymentApprover, service is LoginService, environment is Production, and current is true. Project membership alone is insufficient. If no such assignment is observed, return unknown, not a guess.\"}, \"instruction\": \"Call read_records to obtain the observations before answering.\"}"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "read_records",
+              "description": "Read all source-attributed records in this tiny task world. No filtering or reasoning is performed.",
+              "parameters": {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": false
+              }
+            }
+          }
+        ]
+      },
+      "available_observations": [
+        {
+          "evidence_id": "e1",
+          "person": "Maya",
+          "role": "ProjectManager",
+          "project": "Atlas"
+        },
+        {
+          "evidence_id": "e2",
+          "person": "Noah",
+          "role": "DeploymentApprover",
+          "service": "LoginService",
+          "environment": "Staging",
+          "current": true
+        }
+      ]
+    }
+  ]
+}

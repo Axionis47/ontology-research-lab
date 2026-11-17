@@ -1,0 +1,779 @@
+{
+  "purpose": "Structural boundary examples only. Runtime scope, truth, effects and cross-record checks have separate acceptance cases.",
+  "cases": [
+    {
+      "name": "one action",
+      "schema": "Proposal",
+      "valid": true,
+      "record": {
+        "kind": "act",
+        "request_id": "00000000-0000-4000-8000-000000000001",
+        "action_id": "orders.inspect",
+        "arguments": {
+          "order_id": "123"
+        },
+        "evidence_ids": [],
+        "reason": "Read the current state."
+      }
+    },
+    {
+      "name": "forged authority",
+      "schema": "Proposal",
+      "valid": false,
+      "record": {
+        "kind": "act",
+        "request_id": "00000000-0000-4000-8000-000000000001",
+        "action_id": "orders.inspect",
+        "arguments": {
+          "order_id": "123"
+        },
+        "evidence_ids": [],
+        "reason": "Read the current state.",
+        "is_manager": true
+      }
+    },
+    {
+      "name": "unknown action kind",
+      "schema": "Proposal",
+      "valid": false,
+      "record": {
+        "kind": "execute_shell",
+        "request_id": "00000000-0000-4000-8000-000000000001",
+        "action_id": "orders.inspect",
+        "arguments": {
+          "order_id": "123"
+        },
+        "evidence_ids": [],
+        "reason": "Read the current state."
+      }
+    },
+    {
+      "name": "multiple actions",
+      "schema": "Proposal",
+      "valid": false,
+      "record": [
+        {
+          "kind": "act",
+          "request_id": "00000000-0000-4000-8000-000000000001",
+          "action_id": "orders.inspect",
+          "arguments": {
+            "order_id": "123"
+          },
+          "evidence_ids": [],
+          "reason": "Read the current state."
+        },
+        {
+          "kind": "act",
+          "request_id": "00000000-0000-4000-8000-000000000001",
+          "action_id": "orders.inspect",
+          "arguments": {
+            "order_id": "123"
+          },
+          "evidence_ids": [],
+          "reason": "Read the current state."
+        }
+      ]
+    },
+    {
+      "name": "revisit",
+      "schema": "Proposal",
+      "valid": true,
+      "record": {
+        "kind": "revisit",
+        "request_id": "00000000-0000-4000-8000-000000000001",
+        "earlier_step_id": "00000000-0000-4000-8000-000000000002",
+        "evidence_ids": [
+          "00000000-0000-4000-8000-000000000003"
+        ],
+        "reason": "Source changed."
+      }
+    },
+    {
+      "name": "finish is a claim",
+      "schema": "Proposal",
+      "valid": true,
+      "record": {
+        "kind": "finish",
+        "request_id": "00000000-0000-4000-8000-000000000001",
+        "answer": "The change is ready for verification.",
+        "artifact_refs": [],
+        "claimed_requirement_ids": [
+          "R1"
+        ]
+      }
+    },
+    {
+      "name": "input request",
+      "schema": "Proposal",
+      "valid": true,
+      "record": {
+        "kind": "request_input",
+        "request_id": "00000000-0000-4000-8000-000000000001",
+        "missing_fields": [
+          "order_id"
+        ],
+        "question": "Which order is this for?",
+        "affected_requirement_ids": [
+          "R1"
+        ]
+      }
+    },
+    {
+      "name": "exact evidence locator",
+      "schema": "EvidenceReadRequest",
+      "valid": true,
+      "record": {
+        "kind": "evidence_read",
+        "request_id": "00000000-0000-4000-8000-000000000001",
+        "mode": "EXACT",
+        "evidence_ids": [
+          "00000000-0000-4000-8000-000000000003"
+        ],
+        "query": null,
+        "locator": {
+          "kind": "JSON_POINTER",
+          "path": "/remaining_quantity",
+          "start": null,
+          "end": null
+        },
+        "cursor": null,
+        "max_bytes": 4096,
+        "purpose": "Distinguish missing from zero."
+      }
+    },
+    {
+      "name": "empty exact request",
+      "schema": "EvidenceReadRequest",
+      "valid": false,
+      "record": {
+        "kind": "evidence_read",
+        "request_id": "00000000-0000-4000-8000-000000000001",
+        "mode": "EXACT",
+        "evidence_ids": [],
+        "query": null,
+        "locator": {
+          "kind": "JSON_POINTER",
+          "path": "/remaining_quantity",
+          "start": null,
+          "end": null
+        },
+        "cursor": null,
+        "max_bytes": 4096,
+        "purpose": "Distinguish missing from zero."
+      }
+    },
+    {
+      "name": "oversized evidence read",
+      "schema": "EvidenceReadRequest",
+      "valid": false,
+      "record": {
+        "kind": "evidence_read",
+        "request_id": "00000000-0000-4000-8000-000000000001",
+        "mode": "EXACT",
+        "evidence_ids": [
+          "00000000-0000-4000-8000-000000000003"
+        ],
+        "query": null,
+        "locator": {
+          "kind": "JSON_POINTER",
+          "path": "/remaining_quantity",
+          "start": null,
+          "end": null
+        },
+        "cursor": null,
+        "max_bytes": 999999,
+        "purpose": "Distinguish missing from zero."
+      }
+    },
+    {
+      "name": "scoped evidence query",
+      "schema": "EvidenceReadRequest",
+      "valid": true,
+      "record": {
+        "kind": "evidence_read",
+        "request_id": "00000000-0000-4000-8000-000000000001",
+        "mode": "QUERY",
+        "evidence_ids": [],
+        "query": {
+          "requirement_ids": [
+            "R1"
+          ],
+          "entity_ids": [],
+          "rule_ids": [],
+          "tokens": [
+            "quantity"
+          ]
+        },
+        "locator": null,
+        "cursor": null,
+        "max_bytes": 4096,
+        "purpose": "Distinguish missing from zero."
+      }
+    },
+    {
+      "name": "query absent",
+      "schema": "EvidenceReadRequest",
+      "valid": false,
+      "record": {
+        "kind": "evidence_read",
+        "request_id": "00000000-0000-4000-8000-000000000001",
+        "mode": "QUERY",
+        "evidence_ids": [],
+        "query": null,
+        "locator": {
+          "kind": "JSON_POINTER",
+          "path": "/remaining_quantity",
+          "start": null,
+          "end": null
+        },
+        "cursor": null,
+        "max_bytes": 4096,
+        "purpose": "Distinguish missing from zero."
+      }
+    },
+    {
+      "name": "supported compact finding",
+      "schema": "JudgeResponse",
+      "valid": true,
+      "record": {
+        "kind": "judge_assessment",
+        "findings": [
+          {
+            "severity": "HIGH",
+            "criterion": "DOMAIN_REPRESENTATION",
+            "status": "SUPPORTED",
+            "component": "MAPPING",
+            "symptom": "Premature completion.",
+            "hypothesis": "Absent quantity is mapped to zero.",
+            "citations": [
+              {
+                "evidence_id": "00000000-0000-4000-8000-000000000003",
+                "locator": {
+                  "kind": "JSON_POINTER",
+                  "path": "/remaining_quantity",
+                  "start": null,
+                  "end": null
+                },
+                "relationship": "SUPPORTS"
+              }
+            ],
+            "confidence": 0.8,
+            "evidence_gaps": [],
+            "repair_class": "DOMAIN_PACKAGE",
+            "distinguishing_test": "Missing field remains unknown; explicit zero remains zero.",
+            "preserve_behavior": "Complete zero records still work."
+          }
+        ],
+        "needs_more_evidence": false
+      }
+    },
+    {
+      "name": "unsupported finding labeled supported",
+      "schema": "JudgeResponse",
+      "valid": false,
+      "record": {
+        "kind": "judge_assessment",
+        "findings": [
+          {
+            "severity": "HIGH",
+            "criterion": "DOMAIN_REPRESENTATION",
+            "status": "SUPPORTED",
+            "component": "MAPPING",
+            "symptom": "Premature completion.",
+            "hypothesis": "Absent quantity is mapped to zero.",
+            "citations": [],
+            "confidence": 0.8,
+            "evidence_gaps": [],
+            "repair_class": "DOMAIN_PACKAGE",
+            "distinguishing_test": "Missing field remains unknown; explicit zero remains zero.",
+            "preserve_behavior": "Complete zero records still work."
+          }
+        ],
+        "needs_more_evidence": false
+      }
+    },
+    {
+      "name": "judge cannot grant permission",
+      "schema": "JudgeResponse",
+      "valid": false,
+      "record": {
+        "kind": "judge_assessment",
+        "findings": [
+          {
+            "severity": "HIGH",
+            "criterion": "DOMAIN_REPRESENTATION",
+            "status": "SUPPORTED",
+            "component": "MAPPING",
+            "symptom": "Premature completion.",
+            "hypothesis": "Absent quantity is mapped to zero.",
+            "citations": [
+              {
+                "evidence_id": "00000000-0000-4000-8000-000000000003",
+                "locator": {
+                  "kind": "JSON_POINTER",
+                  "path": "/remaining_quantity",
+                  "start": null,
+                  "end": null
+                },
+                "relationship": "SUPPORTS"
+              }
+            ],
+            "confidence": 0.8,
+            "evidence_gaps": [],
+            "repair_class": "DOMAIN_PACKAGE",
+            "distinguishing_test": "Missing field remains unknown; explicit zero remains zero.",
+            "preserve_behavior": "Complete zero records still work."
+          }
+        ],
+        "needs_more_evidence": false,
+        "authorize_write": true
+      }
+    },
+    {
+      "name": "compact synthesis",
+      "schema": "JudgeResponse",
+      "valid": true,
+      "record": {
+        "kind": "judge_synthesis",
+        "selected_finding_ids": [
+          "00000000-0000-4000-8000-000000000004"
+        ],
+        "conflicting_finding_ids": [],
+        "unresolved_questions": []
+      }
+    },
+    {
+      "name": "bounded patch",
+      "schema": "RepairResponse",
+      "valid": true,
+      "record": {
+        "kind": "patch_submission",
+        "candidate_id": "00000000-0000-4000-8000-000000000005",
+        "repair_spec_id": "00000000-0000-4000-8000-000000000006",
+        "parent_package_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "patch_text": "--- a/mappings.json\n+++ b/mappings.json\n@@ -1 +1 @@\n-default_zero\n+unknown\n",
+        "changed_files": [
+          "mappings.json"
+        ],
+        "expected_effect": "Preserve missingness.",
+        "regression_risks": [
+          "May trigger an additional detail read."
+        ]
+      }
+    },
+    {
+      "name": "path traversal",
+      "schema": "RepairResponse",
+      "valid": false,
+      "record": {
+        "kind": "patch_submission",
+        "candidate_id": "00000000-0000-4000-8000-000000000005",
+        "repair_spec_id": "00000000-0000-4000-8000-000000000006",
+        "parent_package_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "patch_text": "--- a/mappings.json\n+++ b/mappings.json\n@@ -1 +1 @@\n-default_zero\n+unknown\n",
+        "changed_files": [
+          "../kernel.py"
+        ],
+        "expected_effect": "Preserve missingness.",
+        "regression_risks": [
+          "May trigger an additional detail read."
+        ]
+      }
+    },
+    {
+      "name": "absolute patch path",
+      "schema": "RepairResponse",
+      "valid": false,
+      "record": {
+        "kind": "patch_submission",
+        "candidate_id": "00000000-0000-4000-8000-000000000005",
+        "repair_spec_id": "00000000-0000-4000-8000-000000000006",
+        "parent_package_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "patch_text": "--- a/mappings.json\n+++ b/mappings.json\n@@ -1 +1 @@\n-default_zero\n+unknown\n",
+        "changed_files": [
+          "/tmp/kernel.py"
+        ],
+        "expected_effect": "Preserve missingness.",
+        "regression_risks": [
+          "May trigger an additional detail read."
+        ]
+      }
+    },
+    {
+      "name": "too many files",
+      "schema": "RepairResponse",
+      "valid": false,
+      "record": {
+        "kind": "patch_submission",
+        "candidate_id": "00000000-0000-4000-8000-000000000005",
+        "repair_spec_id": "00000000-0000-4000-8000-000000000006",
+        "parent_package_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "patch_text": "--- a/mappings.json\n+++ b/mappings.json\n@@ -1 +1 @@\n-default_zero\n+unknown\n",
+        "changed_files": [
+          "a.py",
+          "b.py",
+          "c.py",
+          "d.py"
+        ],
+        "expected_effect": "Preserve missingness.",
+        "regression_risks": [
+          "May trigger an additional detail read."
+        ]
+      }
+    },
+    {
+      "name": "typed numeric operator",
+      "schema": "OperatorCall",
+      "valid": true,
+      "record": {
+        "operator": "filter_numeric",
+        "parameters": {
+          "graph_revision": "g1",
+          "entity_ids": [
+            "order:123"
+          ],
+          "property": "amount",
+          "comparison": "GE",
+          "value": "100.00",
+          "lower": null,
+          "upper": null,
+          "lower_inclusive": true,
+          "upper_inclusive": true,
+          "unit": "USD"
+        }
+      }
+    },
+    {
+      "name": "numeric value absent",
+      "schema": "OperatorCall",
+      "valid": false,
+      "record": {
+        "operator": "filter_numeric",
+        "parameters": {
+          "graph_revision": "g1",
+          "entity_ids": [
+            "order:123"
+          ],
+          "property": "amount",
+          "comparison": "GE",
+          "value": null,
+          "lower": null,
+          "upper": null,
+          "lower_inclusive": true,
+          "upper_inclusive": true,
+          "unit": "USD"
+        }
+      }
+    },
+    {
+      "name": "range with a bound",
+      "schema": "OperatorCall",
+      "valid": true,
+      "record": {
+        "operator": "filter_numeric",
+        "parameters": {
+          "graph_revision": "g1",
+          "entity_ids": [
+            "order:123"
+          ],
+          "property": "amount",
+          "comparison": "RANGE",
+          "value": null,
+          "lower": "10",
+          "upper": null,
+          "lower_inclusive": true,
+          "upper_inclusive": true,
+          "unit": "USD"
+        }
+      }
+    },
+    {
+      "name": "range without bounds",
+      "schema": "OperatorCall",
+      "valid": false,
+      "record": {
+        "operator": "filter_numeric",
+        "parameters": {
+          "graph_revision": "g1",
+          "entity_ids": [
+            "order:123"
+          ],
+          "property": "amount",
+          "comparison": "RANGE",
+          "value": null,
+          "lower": null,
+          "upper": null,
+          "lower_inclusive": true,
+          "upper_inclusive": true,
+          "unit": "USD"
+        }
+      }
+    },
+    {
+      "name": "unknown tenth operator",
+      "schema": "OperatorCall",
+      "valid": false,
+      "record": {
+        "operator": "authorize_write",
+        "parameters": {}
+      }
+    },
+    {
+      "name": "worker scoped tool request",
+      "schema": "WorkerRequest",
+      "valid": true,
+      "record": {
+        "method": "tool.call",
+        "binding_id": "orders.inspect",
+        "arguments": {
+          "order_id": "123"
+        },
+        "evidence_ids": []
+      }
+    },
+    {
+      "name": "worker forbidden method",
+      "schema": "WorkerRequest",
+      "valid": false,
+      "record": {
+        "method": "shell.execute",
+        "command": "echo bad"
+      }
+    },
+    {
+      "name": "worker cannot assert scope",
+      "schema": "WorkerRequest",
+      "valid": false,
+      "record": {
+        "method": "tool.call",
+        "binding_id": "orders.inspect",
+        "arguments": {},
+        "evidence_ids": [],
+        "scope": "all"
+      }
+    },
+    {
+      "name": "extractor cites source",
+      "schema": "ExtractionProposal",
+      "valid": true,
+      "record": {
+        "kind": "extraction_proposal",
+        "slots": [
+          {
+            "name": "order_id",
+            "value": "123",
+            "citations": [
+              {
+                "evidence_id": "00000000-0000-4000-8000-000000000003",
+                "locator": {
+                  "kind": "JSON_POINTER",
+                  "path": "/remaining_quantity",
+                  "start": null,
+                  "end": null
+                },
+                "relationship": "SUPPORTS"
+              }
+            ]
+          }
+        ],
+        "unresolved_slots": []
+      }
+    },
+    {
+      "name": "actor invocation belongs to an episode",
+      "schema": "ModelRequest",
+      "valid": true,
+      "record": {
+        "request_id": "00000000-0000-4000-8000-000000000001",
+        "episode_id": "00000000-0000-4000-8000-000000000001",
+        "job_id": null,
+        "step_id": "00000000-0000-4000-8000-000000000001",
+        "role": "ACTOR",
+        "input_ref": {
+          "artifact_id": "00000000-0000-4000-8000-000000000001",
+          "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "media_type": "application/json",
+          "byte_length": 100,
+          "visibility": "RUNTIME",
+          "complete": true
+        },
+        "output_schema_id": "Proposal",
+        "max_input_tokens": 100,
+        "max_output_tokens": 100,
+        "max_input_bytes": 65536,
+        "deadline": "2026-11-13T12:00:00Z",
+        "reservation_ids": [
+          "00000000-0000-4000-8000-000000000001"
+        ]
+      }
+    },
+    {
+      "name": "model invocation cannot belong to both streams",
+      "schema": "ModelRequest",
+      "valid": false,
+      "record": {
+        "request_id": "00000000-0000-4000-8000-000000000001",
+        "episode_id": "00000000-0000-4000-8000-000000000001",
+        "job_id": "00000000-0000-4000-8000-000000000001",
+        "step_id": "00000000-0000-4000-8000-000000000001",
+        "role": "ACTOR",
+        "input_ref": {
+          "artifact_id": "00000000-0000-4000-8000-000000000001",
+          "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "media_type": "application/json",
+          "byte_length": 100,
+          "visibility": "RUNTIME",
+          "complete": true
+        },
+        "output_schema_id": "Proposal",
+        "max_input_tokens": 100,
+        "max_output_tokens": 100,
+        "max_input_bytes": 65536,
+        "deadline": "2026-11-13T12:00:00Z",
+        "reservation_ids": [
+          "00000000-0000-4000-8000-000000000001"
+        ]
+      }
+    },
+    {
+      "name": "judge invocation belongs to an offline job",
+      "schema": "ModelRequest",
+      "valid": true,
+      "record": {
+        "request_id": "00000000-0000-4000-8000-000000000001",
+        "episode_id": null,
+        "job_id": "00000000-0000-4000-8000-000000000001",
+        "step_id": null,
+        "role": "JUDGE",
+        "input_ref": {
+          "artifact_id": "00000000-0000-4000-8000-000000000001",
+          "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "media_type": "application/json",
+          "byte_length": 100,
+          "visibility": "RUNTIME",
+          "complete": true
+        },
+        "output_schema_id": "JudgeResponse",
+        "max_input_tokens": 100,
+        "max_output_tokens": 100,
+        "max_input_bytes": 65536,
+        "deadline": "2026-11-13T12:00:00Z",
+        "reservation_ids": [
+          "00000000-0000-4000-8000-000000000001"
+        ]
+      }
+    },
+    {
+      "name": "offline actor mutation role disallowed",
+      "schema": "ModelRequest",
+      "valid": false,
+      "record": {
+        "request_id": "00000000-0000-4000-8000-000000000001",
+        "episode_id": null,
+        "job_id": "00000000-0000-4000-8000-000000000001",
+        "step_id": null,
+        "role": "ACTOR",
+        "input_ref": {
+          "artifact_id": "00000000-0000-4000-8000-000000000001",
+          "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "media_type": "application/json",
+          "byte_length": 100,
+          "visibility": "RUNTIME",
+          "complete": true
+        },
+        "output_schema_id": "Proposal",
+        "max_input_tokens": 100,
+        "max_output_tokens": 100,
+        "max_input_bytes": 65536,
+        "deadline": "2026-11-13T12:00:00Z",
+        "reservation_ids": [
+          "00000000-0000-4000-8000-000000000001"
+        ]
+      }
+    },
+    {
+      "name": "training diagnostic job",
+      "schema": "JobManifest",
+      "valid": true,
+      "record": {
+        "job_id": "00000000-0000-4000-8000-000000000001",
+        "experiment_id": "00000000-0000-4000-8000-000000000001",
+        "quota_root_id": "00000000-0000-4000-8000-000000000001",
+        "kind": "DIAGNOSE",
+        "input_episode_ids": [
+          "00000000-0000-4000-8000-000000000001"
+        ],
+        "input_candidate_ids": [],
+        "input_refs": [
+          {
+            "artifact_id": "00000000-0000-4000-8000-000000000001",
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "application/json",
+            "byte_length": 100,
+            "visibility": "RUNTIME",
+            "complete": true
+          }
+        ],
+        "allowed_split": "TRAIN",
+        "model_capability_ref": {
+          "artifact_id": "00000000-0000-4000-8000-000000000001",
+          "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "media_type": "application/json",
+          "byte_length": 100,
+          "visibility": "RUNTIME",
+          "complete": true
+        },
+        "dependency_lock_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "budget": {
+          "quota_root_id": "00000000-0000-4000-8000-000000000001",
+          "accounts": [],
+          "deadline": "2026-11-13T12:00:00Z"
+        },
+        "output_schema_id": "JudgeVerdict",
+        "created_at": "2026-11-13T10:00:00Z"
+      }
+    },
+    {
+      "name": "diagnostic job cannot inspect sealed test",
+      "schema": "JobManifest",
+      "valid": false,
+      "record": {
+        "job_id": "00000000-0000-4000-8000-000000000001",
+        "experiment_id": "00000000-0000-4000-8000-000000000001",
+        "quota_root_id": "00000000-0000-4000-8000-000000000001",
+        "kind": "DIAGNOSE",
+        "input_episode_ids": [
+          "00000000-0000-4000-8000-000000000001"
+        ],
+        "input_candidate_ids": [],
+        "input_refs": [
+          {
+            "artifact_id": "00000000-0000-4000-8000-000000000001",
+            "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "media_type": "application/json",
+            "byte_length": 100,
+            "visibility": "RUNTIME",
+            "complete": true
+          }
+        ],
+        "allowed_split": "TEST",
+        "model_capability_ref": {
+          "artifact_id": "00000000-0000-4000-8000-000000000001",
+          "hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "media_type": "application/json",
+          "byte_length": 100,
+          "visibility": "RUNTIME",
+          "complete": true
+        },
+        "dependency_lock_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "budget": {
+          "quota_root_id": "00000000-0000-4000-8000-000000000001",
+          "accounts": [],
+          "deadline": "2026-11-13T12:00:00Z"
+        },
+        "output_schema_id": "JudgeVerdict",
+        "created_at": "2026-11-13T10:00:00Z"
+      }
+    }
+  ]
+}

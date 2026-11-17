@@ -1,0 +1,73 @@
+{
+  "requests": [
+    {
+      "request_id": "live-probe-1",
+      "episode": {
+        "status": "MODEL_ERROR",
+        "answer": null,
+        "steps": 9,
+        "tool_attempts": 7,
+        "compactions": 4,
+        "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "kernel_handoff": {
+          "reason": "CAPABILITY_GAP",
+          "pending_work": "The learned selection would change protected records. Its plan was refused before dispatch; use the original conditions and current evidence.",
+          "evidence_ids": [
+            "d1af265d-67a6-496c-8aa1-30a7bcc370fe"
+          ],
+          "step": 1,
+          "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+        },
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/live-proof-probe/inference/32329ffd5d37dceb5ee2/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/live-proof-probe/inference/32329ffd5d37dceb5ee2/react/exports/8cd3121d-5c4d-4f97-b70c-cac919b73700/judge_packet.json",
+          "complete": false,
+          "problems": [
+            {
+              "artifact_id": "d7f9f40a-6f41-4234-8601-0dfecf6673b8",
+              "error": "PARTIAL_CAPTURE"
+            },
+            {
+              "artifact_id": "45e19dd9-4c59-401d-be21-9e628e2cd5b5",
+              "error": "PARTIAL_CAPTURE"
+            }
+          ]
+        }
+      },
+      "judge": "5e46888816a9dc5fd9f90861222eb6b07fa7d3ea11ebc5c5218d8df9731d21be",
+      "task_state": "UNKNOWN",
+      "recovered": false,
+      "repair_route": "RUNTIME_OR_EVIDENCE",
+      "repair_case": null,
+      "native": {
+        "success": false,
+        "evaluation": "ef3cd67f823e8bc3813db0ea9b881aeb534727d863793a4b1b027be299fa5c12",
+        "mcp_segments": [
+          "7d54a9ed3583540afcbdbaa0876792eefc812ef76c5e518cd746f07d0d1f6fc6",
+          "0347b58271e14fb48b61fce5f2dcce4f15e40e82dbb9838fb387fb04190f60ba",
+          "ffe2a5d16a77c41c69a18236ed1cd829f7e5cb1826200d9186d933a158c0a0ca"
+        ],
+        "mcp_events": 38,
+        "task_id": "07b42fd_1",
+        "scope": "appworld:07b42fd_1:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+    }
+  ],
+  "archive": {
+    "active": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+    "generation": 0,
+    "proposals_spent": 0,
+    "cycles_spent": 0,
+    "cases": {},
+    "decisions": [],
+    "native_performance_claimed": false
+  },
+  "audit": {
+    "complete": true,
+    "event_head": "3858c0374ba140bc4aeefe410ace770669afa77e77e23b69b1fce3158806776e"
+  },
+  "demo_actor": null
+}

@@ -1,0 +1,36 @@
+{
+  "complete": true,
+  "appworld_runs": 0,
+  "experiments": [
+    {
+      "experiment": "01-full-definitions",
+      "status": "MEASURED",
+      "passed": true
+    },
+    {
+      "experiment": "02-retrieved-definitions",
+      "status": "MEASURED",
+      "passed": false
+    },
+    {
+      "experiment": "03-schema-inspection",
+      "status": "MEASURED",
+      "passed": true
+    },
+    {
+      "experiment": "04-graph-queries",
+      "status": "MEASURED",
+      "passed": false
+    },
+    {
+      "experiment": "05-typed-function",
+      "status": "MEASURED",
+      "passed": true
+    },
+    {
+      "experiment": "06-constraint-service",
+      "status": "MEASURED",
+      "passed": true
+    }
+  ]
+}

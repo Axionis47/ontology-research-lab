@@ -1,0 +1,173 @@
+{
+  "assessment": {
+    "findings": [
+      {
+        "citations": [
+          {
+            "evidence_id": "b5f1126e-b966-5cb1-bfd2-b6a28e9b8d8a",
+            "locator": {
+              "end": null,
+              "kind": "WHOLE",
+              "path": null,
+              "start": null
+            },
+            "relationship": "SUPPORTS"
+          },
+          {
+            "evidence_id": "9a34861c-791d-5a8c-a257-77d9808e7dd9",
+            "locator": {
+              "end": null,
+              "kind": "WHOLE",
+              "path": null,
+              "start": null
+            },
+            "relationship": "SUPPORTS"
+          },
+          {
+            "evidence_id": "c6718b11-df6f-5968-987e-711a1d6d2bee",
+            "locator": {
+              "end": null,
+              "kind": "WHOLE",
+              "path": null,
+              "start": null
+            },
+            "relationship": "SUPPORTS"
+          }
+        ],
+        "component": "FUNCTION",
+        "confidence": 0.95,
+        "criterion": "FUNCTION_COMPUTATION",
+        "distinguishing_test": "Execute the program on a graph containing entities with varied numeric properties; verify that direct execution filters by both categorical criteria and numeric threshold predicates.",
+        "evidence_gaps": [],
+        "hypothesis": "The direct function definition in the parent program lacks an operator node to evaluate selector.numeric predicates, causing preflight execution to select all 7 classical artists instead of the single artist with at least 22 followers, violating unrelated state preservation.",
+        "preserve_behavior": "Preserve correct categorical property filtering on selector.where for tasks with only categorical constraints.",
+        "repair_class": "DOMAIN_PACKAGE",
+        "severity": "CRITICAL",
+        "status": "SUPPORTED",
+        "symptom": "The parent program's direct function selects all entities matching the categorical genre filter while omitting the numeric follower count condition."
+      },
+      {
+        "citations": [
+          {
+            "evidence_id": "d84212c0-e108-5198-a99e-8fdf6ca5eee4",
+            "locator": {
+              "end": null,
+              "kind": "WHOLE",
+              "path": null,
+              "start": null
+            },
+            "relationship": "SUPPORTS"
+          },
+          {
+            "evidence_id": "c4299c57-416a-5817-9a19-d597f1896b16",
+            "locator": {
+              "end": null,
+              "kind": "WHOLE",
+              "path": null,
+              "start": null
+            },
+            "relationship": "SUPPORTS"
+          },
+          {
+            "evidence_id": "cf0d01ce-eb84-5b10-b56c-faa19b2c0901",
+            "locator": {
+              "end": null,
+              "kind": "WHOLE",
+              "path": null,
+              "start": null
+            },
+            "relationship": "SUPPORTS"
+          }
+        ],
+        "component": "ACTOR",
+        "confidence": 0.95,
+        "criterion": "ACTION_SELECTION",
+        "distinguishing_test": "Evaluate the actor in recovery mode with tool discovery schemas; verify it produces valid arguments satisfying limit <= 10 and valid strategy oneOf variants without repeating rejected argument structures.",
+        "evidence_gaps": [],
+        "hypothesis": "The actor model repeatedly violated the discover_tools input schema by passing an empty object for strategy (which requires an enum or weighted object) and limit exceeding the schema maximum of 10, failing to recover after receiving validation error feedback.",
+        "preserve_behavior": "Preserve the actor's intent to discover tools when handed off from kernel due to a capability gap.",
+        "repair_class": "TRAINING_EXAMPLE",
+        "severity": "CRITICAL",
+        "status": "SUPPORTED",
+        "symptom": "During recovery, the actor repeatedly invoked discover_tools with invalid arguments ('strategy': {}, 'limit': 100), triggering repeated ARGUMENT_SCHEMA_INVALID denials and stalling execution."
+      }
+    ],
+    "kind": "judge_assessment",
+    "needs_more_evidence": false
+  },
+  "elapsed_seconds": 44.663,
+  "envelope": "69d1c0fb34ad193999873bec12b1bc3ba8b2e3a67ae3865eb46bcdcf889cb8c1",
+  "input": "9bc6844509b94fefe02153dc315f6fdcfab99ff1e7a0877b10136f08341e93a7",
+  "model_stats": {
+    "gemini-3.5-flash-lite": {
+      "api": {
+        "errorsByType": {},
+        "totalErrors": 0,
+        "totalLatencyMs": 5933,
+        "totalRequests": 1
+      },
+      "roles": {
+        "utility_router": {
+          "tokens": {
+            "cached": 0,
+            "candidates": 60,
+            "input": 15965,
+            "prompt": 15965,
+            "thoughts": 589,
+            "tool": 0,
+            "total": 16614
+          },
+          "totalErrors": 0,
+          "totalLatencyMs": 5933,
+          "totalRequests": 1
+        }
+      },
+      "tokens": {
+        "cached": 0,
+        "candidates": 60,
+        "input": 15965,
+        "prompt": 15965,
+        "thoughts": 589,
+        "tool": 0,
+        "total": 16614
+      }
+    },
+    "gemini-3.8-flash": {
+      "api": {
+        "errorsByType": {},
+        "totalErrors": 0,
+        "totalLatencyMs": 37545,
+        "totalRequests": 1
+      },
+      "roles": {
+        "main": {
+          "tokens": {
+            "cached": 0,
+            "candidates": 1093,
+            "input": 20957,
+            "prompt": 20957,
+            "thoughts": 5438,
+            "tool": 0,
+            "total": 27488
+          },
+          "totalErrors": 0,
+          "totalLatencyMs": 37545,
+          "totalRequests": 1
+        }
+      },
+      "tokens": {
+        "cached": 0,
+        "candidates": 1093,
+        "input": 20957,
+        "prompt": 20957,
+        "thoughts": 5438,
+        "tool": 0,
+        "total": 27488
+      }
+    }
+  },
+  "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+  "provider": "gemini",
+  "role": "diagnostic_judge",
+  "status": "VALIDATED"
+}

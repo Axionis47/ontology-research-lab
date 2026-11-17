@@ -1,0 +1,13 @@
+{
+  "complete": true,
+  "experiments": [
+    {
+      "experiment": "04-graph-queries",
+      "status": "MEASURED",
+      "passed": false,
+      "calls": 2,
+      "interface_calls": 1
+    }
+  ],
+  "appworld_runs": 0
+}

@@ -1,0 +1,182 @@
+{
+  "07b42fd": {
+    "eligible": true,
+    "reason": "Property-filtered artist-following membership updates.",
+    "task_specs": {
+      "07b42fd_1": "bdfd184e961819a5090676112c5277836ef5b946a21425cab0a15fe7fcf6204d",
+      "07b42fd_2": "7034f19ddda0d789f6c8ef308e188cf29816d5033d26c9b8155d0b5917bd8bf0",
+      "07b42fd_3": "36962787a50763f21cb2e1093b6b4c0cd383dbecd5f0a8abdb4b937f2fa4703c"
+    }
+  },
+  "229360a": {
+    "eligible": true,
+    "reason": "Conditional library membership removals using liked/downloaded relationships.",
+    "task_specs": {
+      "229360a_1": "87952ed4a815a97a3fedfe9888e105d2f6639077b9656ac18d3918c209df73fb",
+      "229360a_2": "ed9221dbe7db87a4377fdfc367a8086847bd10483f783b7a27cfa7900f5fc610",
+      "229360a_3": "0dbee444b3c82b16773291358952c88b3963803155c2bb451f07184b6ec21e77"
+    }
+  },
+  "27e1026": {
+    "eligible": false,
+    "reason": "Read-only answer; no requested record update.",
+    "task_specs": {
+      "27e1026_1": "b421fd3ada72ebbdf867996f5f6d88f255594ff7967e9663964abd8502673c96",
+      "27e1026_2": "bc9abb614312524fadc6dbe137851e84a9b3445991db36d96cf56bc41d36dc0e",
+      "27e1026_3": "2dab3cc3407b49ca5e989060dd4a60d0c88c3efee87f0d1bf3f68fb215b21786"
+    }
+  },
+  "287e338": {
+    "eligible": false,
+    "reason": "Read-only answer; no requested record update.",
+    "task_specs": {
+      "287e338_1": "54fc2c9e2e67ab192aa374487c083987935cf010789297b46159ef794d9bfe0e",
+      "287e338_2": "b7499cec984c53703d416af2c7081f85a057a71a3e9fa079763aa91452759f4d",
+      "287e338_3": "c84da8acd2a0ff1b1affc4d149aa759765172ca08430394e850a5b696bb69397"
+    }
+  },
+  "302c169": {
+    "eligible": false,
+    "reason": "Requests both time rescheduling and disabling, two different update effects.",
+    "task_specs": {
+      "302c169_1": "ac6cb4dbbd041d4801d7f2d9275bfffdb582aadc0892bb046c7581f298e36593",
+      "302c169_2": "f21066dc4a8d5e2f68ad37140dcbed6a5febf2e809b11d48bed1103cd16eeb23",
+      "302c169_3": "b8f17868e3ca57a0e1cb57b3ddd1d6211e28e38d21bfa1f26c9628bda47d74e7"
+    }
+  },
+  "34d9492": {
+    "eligible": true,
+    "reason": "Conditional file moves based on properties and directory membership.",
+    "task_specs": {
+      "34d9492_1": "7442a0f0ceef8f5313ed30340069190d8142483eddcf6f41c4df6565591980a5",
+      "34d9492_2": "f7c4880efa233b3405e8c8222b871082c1ca84083244e751f40e306540e4c3aa",
+      "34d9492_3": "ae395ab188f1430b792b1bce686038788fe578525fddd7b2f26ecee7edfa2923"
+    }
+  },
+  "692c77d": {
+    "eligible": true,
+    "reason": "Set ratings on a selected intersection of related songs; creating or updating a rating is the same requested effect.",
+    "task_specs": {
+      "692c77d_1": "868003a30edf38f774e63a3011456f26022bd9c6e98bf0b9db15bf6ba7f80763",
+      "692c77d_2": "a72a708a313a4693663af35aa226eb40e611741bb297e29a1bb5ab76f0c1b427",
+      "692c77d_3": "b46002add00086aea30eae49bf1e6472668ab6cd66b7bcbd9b6f5b0c5b3b885c"
+    }
+  },
+  "76f2c72": {
+    "eligible": false,
+    "reason": "Read-only aggregation; no requested record update.",
+    "task_specs": {
+      "76f2c72_1": "2075ed2d1a072cfc07edff1c4addc7dd22c7e49fe19313c26579923e82f8e7de",
+      "76f2c72_2": "2b08e84b419cbfd865c15ade04e4d140da68ac96b03860019499bee3ec4dc13b",
+      "76f2c72_3": "8a1ba1f2a46fdf3ec5f7d25d1a6f4fa54c4c25d8f7af99d02755f4cd7fd91b99"
+    }
+  },
+  "771d8fc": {
+    "eligible": true,
+    "reason": "Delete messages selected by their sender relationship.",
+    "task_specs": {
+      "771d8fc_1": "831bd2824a9b0885d89065610ce2d5dcb63bebf3fb36906d892ee94ef9df10a5",
+      "771d8fc_2": "57c62045d6c73a6fab5a9288f87f675eb06332594d6bff6f023b8ab324fd6976",
+      "771d8fc_3": "966ab50bd66d577d3b6ef5530ce3ccfe0b473603f5b5a42259f6a35e3ebf8321"
+    }
+  },
+  "7d7fbf6": {
+    "eligible": false,
+    "reason": "Requests compression plus deletion, two different update effects.",
+    "task_specs": {
+      "7d7fbf6_1": "48513b017a73c5ff52afc87c86720548de418cad92fb051aeecd00521e47b59e",
+      "7d7fbf6_2": "828e13410d5041dcc1da6909811212a277b3afc3c2acb6d625500cfead8146f3",
+      "7d7fbf6_3": "2b90718bee3edc97216b4aa664af9d78ef5a1f3a7ea680505f2349432c925f2d"
+    }
+  },
+  "82e2fac": {
+    "eligible": false,
+    "reason": "Read-only answer; no requested record update.",
+    "task_specs": {
+      "82e2fac_1": "2d50e834f09533ea9d9a534eed309e40cf7a5dbbf52dc0c1052f49f2f4e0df74",
+      "82e2fac_2": "bd5f8527e7bbb78d07bd8389047c36e55a99f26e11f03d9db41f3bf11ba6f6e1",
+      "82e2fac_3": "ff908ae86398fcfc068d4d3df98e2a4d9c2898f2b38755bb53cae50df23346de"
+    }
+  },
+  "aa8502b": {
+    "eligible": true,
+    "reason": "Artist-following membership updates selected through liked-song relationships.",
+    "task_specs": {
+      "aa8502b_1": "156d5cd9d27392f12e5d8467083f1b9d5d87643a63de9e4fe2b82bf7a05f9b0b",
+      "aa8502b_2": "32677fd020ec0a8fb036abe9d7eed91964e48e8201b0ad72135596f7f96b90e2",
+      "aa8502b_3": "85af75da2e0e5af0bab436356ecd5cfcbd5e5a7cbc33741cb9cccc04f4c2a734"
+    }
+  },
+  "b7a9ee9": {
+    "eligible": true,
+    "reason": "Artist-following updates selected through playlist/song relationships and properties.",
+    "task_specs": {
+      "b7a9ee9_1": "7f37305a1a2006a9d11cfd8c8c422f498c089fd4db316ecbf68985858aeb4a27",
+      "b7a9ee9_2": "9eeade0b46b249e2654a983de9f4a6102e9edc050e875b5db24920903f526d40",
+      "b7a9ee9_3": "7114bef61b3e0a8a759c914edc195e47e5f10928cbe89d9b9be06a3b691cd321"
+    }
+  },
+  "c901732": {
+    "eligible": false,
+    "reason": "Playback control rather than selective record updates.",
+    "task_specs": {
+      "c901732_1": "a67107c4cc31976cfb605c106bf9f6cfa85fa9f2e839da6cdad96c830b59eef2",
+      "c901732_2": "e469ebe5299c460f66f7a2c255d9b502d561bab1224fe2c7a0c382e21380d808",
+      "c901732_3": "629e28cce50b6be7ba8f5fa10310c4b5c6972afd63d62e5814405aa88186f023"
+    }
+  },
+  "ccb4494": {
+    "eligible": true,
+    "reason": "Song-like membership updates selected through queue position.",
+    "task_specs": {
+      "ccb4494_1": "f4b4e87c29681185509c9754e0f91333ded9b49178cfba433844c725ebf663cb",
+      "ccb4494_2": "fd60b7bfdef5b18cfa641df08c76a957180a9d4ff5551f2c376ae3a83e8dcc4e",
+      "ccb4494_3": "e25903899e96e5a06ef353d1ba7e77a9f991a4455f9a646852e719d2ea5c7ce8"
+    }
+  },
+  "ce359b5": {
+    "eligible": true,
+    "reason": "Conditional song-membership removals from existing collections.",
+    "task_specs": {
+      "ce359b5_1": "b8de3ee178568cd18b7afce4baddf1311e9239acde9db828de0deafb05bd9fac",
+      "ce359b5_2": "69a1c46155c9c83d0b0e82c5be5d364fd9abeb57b900a3b1ed881d8b3374370a",
+      "ce359b5_3": "a7827252dac8cf01d5fbdcb08f02894759ad9cb8d3da8be4af56dddcbb101d81"
+    }
+  },
+  "cf6abd2": {
+    "eligible": true,
+    "reason": "Update a selected checklist item within an existing note.",
+    "task_specs": {
+      "cf6abd2_1": "7136760302213f362aa723d980babf729341e29f1ff50d9d8e025838c6ec10f9",
+      "cf6abd2_2": "339ba57b2dd48b6e130b8b46254b099731b5b287987f3ca6f397169d8e8a1365",
+      "cf6abd2_3": "8a372f2243c82f993064e67278eda886ad3795bb3b14be4d01b52f2654cf9bae"
+    }
+  },
+  "e3d6c94": {
+    "eligible": false,
+    "reason": "Creates a new collection and populates it, outside updates to existing records.",
+    "task_specs": {
+      "e3d6c94_1": "adde62b3ac397a779c1dedc31ef3295f5ab90942bc858f8e41879bc3a6a232a0",
+      "e3d6c94_2": "81ac72cea4fd9908c73a6f138b601d0c506dd5642a2a4f95be9e57ee82ac8960",
+      "e3d6c94_3": "139ed5f8671f9feb8f780406af2e7cfd328bd0cfbfa269fb2af13d001374e3c9"
+    }
+  },
+  "e7a10f8": {
+    "eligible": false,
+    "reason": "Read-only aggregation; no requested record update.",
+    "task_specs": {
+      "e7a10f8_1": "6bff1d422c3a97ae52686e7bb426e0301254a54eefa3c2503d9987c27c8c6bd6",
+      "e7a10f8_2": "7f971fb453fd0e457dad12cd9701410850dbc70b963594d01394a742e48773ae",
+      "e7a10f8_3": "08954738aed7213d2761a8a815c0240ea0ba4c2a89790292713b931e471dccc8"
+    }
+  },
+  "e85d92a": {
+    "eligible": false,
+    "reason": "Read-only answer; no requested record update.",
+    "task_specs": {
+      "e85d92a_1": "d8856875a5c2ffb0db5f02c1cb5d89e645c0f9ae11c3ed8acd10e2557ae844b3",
+      "e85d92a_2": "037e3e4bb16fb81cb43abb9a2b16b3f7836d96e7216a2e2b711559e0f7113d63",
+      "e85d92a_3": "6f0c70849b5c6ccb6063d3a27b594b1b18ad8b4ba92c31628f3a7b569bd50067"
+    }
+  }
+}

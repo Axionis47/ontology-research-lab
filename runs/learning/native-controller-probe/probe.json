@@ -1,0 +1,7 @@
+{
+  "request_id": "native-gap-1",
+  "status": "EXECUTION_ERROR",
+  "error": "AppWorld session failed; see <workspace>/runs/learning/native-controller-probe/inference/c26046e9819420fe54b2/session/session.log",
+  "directory": "<workspace>/runs/learning/native-controller-probe/inference/c26046e9819420fe54b2",
+  "repair_route": "RUNTIME_OR_EVIDENCE"
+}

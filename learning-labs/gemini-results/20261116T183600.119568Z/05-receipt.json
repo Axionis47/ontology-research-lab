@@ -1,0 +1,11 @@
+{
+  "experiment": "05-traversal-inference",
+  "status": "PREPARED_NOT_RUN",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"05\",\n  \"title\": \"Connected is not authorized\",\n  \"terms\": {\n    \"traversal\": \"Following stored edges.\",\n    \"inference\": \"Drawing a conclusion under an explicit rule.\",\n    \"unknown\": \"The available evidence does not establish the conclusion.\"\n  },\n  \"instruction\": \"Approval requires a current DeploymentApprover assignment for LoginService in Production. Membership is not sufficient. Return SUPPORTED or UNKNOWN for each case.\",\n  \"input\": {\n    \"shared_facts\": [\n      [\n        \"Maya\",\n        \"belongsTo\",\n        \"Atlas\"\n      ],\n      [\n        \"LoginService\",\n        \"belongsTo\",\n        \"Atlas\"\n      ]\n    ],\n    \"cases\": {\n      \"A\": {\n        \"assignments\": []\n      },\n      \"B\": {\n        \"assignments\": [\n          {\n            \"person\": \"Maya\",\n            \"role\": \"DeploymentApprover\",\n            \"service\": \"LoginService\",\n            \"environment\": \"Production\",\n            \"current\": true\n          }\n        ]\n      }\n    }\n  },\n  \"output_shape\": {\n    \"A\": \"SUPPORTED or UNKNOWN\",\n    \"B\": \"SUPPORTED or UNKNOWN\"\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "A": "UNKNOWN",
+    "B": "SUPPORTED"
+  },
+  "reported_models": [],
+  "passed": null
+}

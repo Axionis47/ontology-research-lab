@@ -1,0 +1,11 @@
+# Discovery and schema inspection are metered steps, so this surface has its own
+# fixed baseline budget. These are experimental limits, not AppWorld defaults.
+max_steps = 40
+max_tool_attempts = 40
+deadline_seconds = 900
+model_timeout_seconds = 90
+max_context_chars = 16000
+compaction_trigger_fraction = 0.80
+retain_recent_steps = 2
+inline_output_chars = 2000
+max_process_output_bytes = 262144

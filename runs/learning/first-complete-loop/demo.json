@@ -1,0 +1,188 @@
+{
+  "receipt": "2bc5ffe3eef78121d353e4b568b59f37b869c3874adc1d268fe2f98e28ab5c12",
+  "baseline": [
+    {
+      "status": "BUDGET_EXHAUSTED",
+      "answer": null,
+      "steps": 3,
+      "tool_attempts": 2,
+      "compactions": 0,
+      "kernel_version": null,
+      "kernel_handoff": null,
+      "benchmark_result": null,
+      "run_directory": "<workspace>/runs/learning/first-complete-loop/baseline/relationship_filter/react",
+      "judge_packet": {
+        "path": "<workspace>/runs/learning/first-complete-loop/baseline/relationship_filter/react/exports/4adaf93f-4ff2-4a7d-b0f2-2a3d403334c8/judge_packet.json",
+        "complete": true,
+        "problems": []
+      },
+      "repair_case": "f5e80f65bb4f978378dd4d76daaf4d6810052e3cfd196d8af1656b2ad08ec3e0"
+    },
+    {
+      "status": "BUDGET_EXHAUSTED",
+      "answer": null,
+      "steps": 3,
+      "tool_attempts": 2,
+      "compactions": 0,
+      "kernel_version": null,
+      "kernel_handoff": null,
+      "benchmark_result": null,
+      "run_directory": "<workspace>/runs/learning/first-complete-loop/baseline/different_links/react",
+      "judge_packet": {
+        "path": "<workspace>/runs/learning/first-complete-loop/baseline/different_links/react/exports/f89d7aed-930d-40df-901f-8ae856ed7eee/judge_packet.json",
+        "complete": true,
+        "problems": []
+      },
+      "repair_case": "661c072ba60ef1eac562e04bf6ea6e7f15bcf5b7c41e091c7b36163818e533ca"
+    },
+    {
+      "status": "VERIFIED_SUCCESS",
+      "answer": "Requested update applied",
+      "steps": 3,
+      "tool_attempts": 2,
+      "compactions": 0,
+      "kernel_version": null,
+      "kernel_handoff": null,
+      "benchmark_result": null,
+      "run_directory": "<workspace>/runs/learning/first-complete-loop/baseline/single_match/react",
+      "judge_packet": {
+        "path": "<workspace>/runs/learning/first-complete-loop/baseline/single_match/react/exports/a06a8a0a-bee3-4944-b806-62abd1007d08/judge_packet.json",
+        "complete": true,
+        "problems": []
+      },
+      "repair_case": "666b77d0ab84a86a987c9320e69af92524fc338d34307f39818f370ac2f08127"
+    }
+  ],
+  "learning": {
+    "completed": [
+      {
+        "case": "f5e80f65bb4f978378dd4d76daaf4d6810052e3cfd196d8af1656b2ad08ec3e0",
+        "outcome": "ACCEPTED"
+      },
+      {
+        "case": "661c072ba60ef1eac562e04bf6ea6e7f15bcf5b7c41e091c7b36163818e533ca",
+        "outcome": "RESOLVED"
+      },
+      {
+        "case": "666b77d0ab84a86a987c9320e69af92524fc338d34307f39818f370ac2f08127",
+        "outcome": "RESOLVED"
+      },
+      {
+        "case": "840741c9247fcc382fc3373ccc2a6ecac323319350a1981ec5a6f400f6f3e271",
+        "outcome": "RESOLVED"
+      }
+    ],
+    "active": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+    "generation": 4,
+    "proposals_spent": 35,
+    "cycles_spent": 4,
+    "cases": {
+      "RESOLVED": 4
+    },
+    "decisions": [
+      {
+        "id": 1,
+        "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "candidate": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+        "receipt": "e4c68008d2bfe7d4bbe56319618968c34ffc1e1a6fad8c67de1fc11dfac60bee",
+        "accepted": 1,
+        "at": "2026-11-13T20:16:33.168379+00:00"
+      }
+    ],
+    "native_performance_claimed": false
+  },
+  "after": [
+    {
+      "status": "VERIFIED_SUCCESS",
+      "answer": "Requested update applied",
+      "steps": 2,
+      "tool_attempts": 1,
+      "compactions": 0,
+      "kernel_version": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+      "kernel_handoff": null,
+      "benchmark_result": null,
+      "run_directory": "<workspace>/runs/learning/first-complete-loop/after/relationship_filter/react",
+      "judge_packet": {
+        "path": "<workspace>/runs/learning/first-complete-loop/after/relationship_filter/react/exports/34f01dc0-12a7-4889-8693-c067a5179db8/judge_packet.json",
+        "complete": true,
+        "problems": []
+      },
+      "repair_case": "f5e80f65bb4f978378dd4d76daaf4d6810052e3cfd196d8af1656b2ad08ec3e0"
+    },
+    {
+      "status": "VERIFIED_SUCCESS",
+      "answer": "Requested update applied",
+      "steps": 2,
+      "tool_attempts": 1,
+      "compactions": 0,
+      "kernel_version": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+      "kernel_handoff": null,
+      "benchmark_result": null,
+      "run_directory": "<workspace>/runs/learning/first-complete-loop/after/different_links/react",
+      "judge_packet": {
+        "path": "<workspace>/runs/learning/first-complete-loop/after/different_links/react/exports/bf0d39b6-1d12-4855-8e57-523f5ac87b60/judge_packet.json",
+        "complete": true,
+        "problems": []
+      },
+      "repair_case": "661c072ba60ef1eac562e04bf6ea6e7f15bcf5b7c41e091c7b36163818e533ca"
+    },
+    {
+      "status": "VERIFIED_SUCCESS",
+      "answer": "Requested update applied",
+      "steps": 2,
+      "tool_attempts": 1,
+      "compactions": 0,
+      "kernel_version": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+      "kernel_handoff": null,
+      "benchmark_result": null,
+      "run_directory": "<workspace>/runs/learning/first-complete-loop/after/single_match/react",
+      "judge_packet": {
+        "path": "<workspace>/runs/learning/first-complete-loop/after/single_match/react/exports/e834b9c3-d639-4b40-8ad4-999f86c182ae/judge_packet.json",
+        "complete": true,
+        "problems": []
+      },
+      "repair_case": "666b77d0ab84a86a987c9320e69af92524fc338d34307f39818f370ac2f08127"
+    },
+    {
+      "status": "VERIFIED_SUCCESS",
+      "answer": "Requested update applied",
+      "steps": 2,
+      "tool_attempts": 1,
+      "compactions": 0,
+      "kernel_version": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+      "kernel_handoff": null,
+      "benchmark_result": null,
+      "run_directory": "<workspace>/runs/learning/first-complete-loop/after/empty_target/react",
+      "judge_packet": {
+        "path": "<workspace>/runs/learning/first-complete-loop/after/empty_target/react/exports/6b168784-c774-4b53-9cf0-8242316376b9/judge_packet.json",
+        "complete": true,
+        "problems": []
+      },
+      "repair_case": "840741c9247fcc382fc3373ccc2a6ecac323319350a1981ec5a6f400f6f3e271"
+    }
+  ],
+  "candidate_handwritten": false,
+  "proposer": "bounded-program-search",
+  "model_learning_claimed": false,
+  "native_performance_claimed": false,
+  "status": {
+    "active": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+    "generation": 4,
+    "proposals_spent": 35,
+    "cycles_spent": 4,
+    "cases": {
+      "RESOLVED": 4
+    },
+    "decisions": [
+      {
+        "id": 1,
+        "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "candidate": "8ef2700fa5881d35d1316ff71053f2fa21bb0ec15e41967e1978efb7814d0795",
+        "receipt": "e4c68008d2bfe7d4bbe56319618968c34ffc1e1a6fad8c67de1fc11dfac60bee",
+        "accepted": 1,
+        "at": "2026-11-13T20:16:33.168379+00:00"
+      }
+    ],
+    "native_performance_claimed": false
+  }
+}

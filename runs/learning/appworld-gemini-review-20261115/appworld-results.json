@@ -1,0 +1,236 @@
+{
+  "recorded_at": "2026-11-16T14:15:37.837845+00:00",
+  "environment": "AppWorld official MCP and official native evaluator",
+  "roles": {
+    "task_actor": "Qwen",
+    "diagnostic_judge": "Gemini CLI",
+    "qwen_schema_repair_role": "withdrawn; incorrectly introduced by assistant"
+  },
+  "requested_loop_passed": false,
+  "baseline": {
+    "raw_passed": 0,
+    "raw_total": 3,
+    "seed_recovery_passed": 0,
+    "seed_recovery_total": 3,
+    "live_model_calls": 18,
+    "wire_receipts_valid": true,
+    "reason": "All six stopped at NO_PROGRESS after repeated invalid discover_tools strategy arguments.",
+    "evidence": "baseline-native-audits.json"
+  },
+  "retained_program": {
+    "passed": 3,
+    "total": 3,
+    "native_checks_per_task": 5,
+    "model_calls": 0,
+    "package": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+    "origin": "earlier native AppWorld run, not a new model improvement",
+    "initialization_failure": "Third initial session timed out before episode execution; a fresh retry passed.",
+    "rows": [
+      {
+        "request_id": "retained:07b42fd_1",
+        "audit": {
+          "passed": true,
+          "native_success": true,
+          "native_checks": 5,
+          "model_calls": 0,
+          "kernel_calls": 2,
+          "handoffs": 0,
+          "goals_pinned": true,
+          "scripted_actor": false,
+          "trace_complete": true,
+          "event_head": "81d24dd50314c5ba953b8545747731d4d50d0a7437125014190972614de66b19",
+          "task_state": "TRUE",
+          "execution_stop": "VERIFIED_SUCCESS",
+          "steps": 2,
+          "tool_attempts": 1,
+          "compactions": 0,
+          "judge": "cee29ec7cb9956844cf7b2faa0d3562b1cd2cf08212119854588b61a26d03a77",
+          "run": "<workspace>/runs/learning/appworld-gemini-review-20261115/retention-worlds/07b42fd_1/react",
+          "wire_receipts_valid": true,
+          "wire_receipts": []
+        },
+        "result": {
+          "request_id": "retained:07b42fd_1",
+          "episode": {
+            "status": "VERIFIED_SUCCESS",
+            "answer": "Requested update applied",
+            "steps": 2,
+            "tool_attempts": 1,
+            "compactions": 0,
+            "kernel_version": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "kernel_handoff": null,
+            "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+            "benchmark_result": null,
+            "run_directory": "<workspace>/runs/learning/appworld-gemini-review-20261115/retention-worlds/07b42fd_1/react",
+            "judge_packet": {
+              "path": "<workspace>/runs/learning/appworld-gemini-review-20261115/retention-worlds/07b42fd_1/react/exports/3840a6c8-1f60-477d-be6e-a5da566f9795/judge_packet.json",
+              "complete": true,
+              "problems": []
+            }
+          },
+          "native": {
+            "success": true,
+            "evaluation": "0af23b550c0dccbc5c3d278f389a71b9355815423e6c1e39c98e5624d8b2b9dc",
+            "mcp_segments": [
+              "4595c1b522d320b41c8cd51c9c8d1c5647ed2042d39fdeba4028cf7d2d2e3cc0",
+              "7b3467281f68e9706e9bb8109d3d5ced62829c8147d1d193ce1319e0766a308b"
+            ],
+            "mcp_events": 32,
+            "task_id": "07b42fd_1",
+            "scope": "appworld:07b42fd_1:spotify-following",
+            "native_inputs_unchanged": true
+          },
+          "judge": "cee29ec7cb9956844cf7b2faa0d3562b1cd2cf08212119854588b61a26d03a77",
+          "task_state": "TRUE",
+          "package_used": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23"
+        }
+      },
+      {
+        "request_id": "retained:07b42fd_2",
+        "audit": {
+          "passed": true,
+          "native_success": true,
+          "native_checks": 5,
+          "model_calls": 0,
+          "kernel_calls": 2,
+          "handoffs": 0,
+          "goals_pinned": true,
+          "scripted_actor": false,
+          "trace_complete": true,
+          "event_head": "78b93d26b50fa237f57012b9226b9de62a021e14be125d51097d786a35750a52",
+          "task_state": "TRUE",
+          "execution_stop": "VERIFIED_SUCCESS",
+          "steps": 2,
+          "tool_attempts": 1,
+          "compactions": 0,
+          "judge": "387284e346e18ba248f21eb8233aceff34826a536b5da8bee111610b16e056f4",
+          "run": "<workspace>/runs/learning/appworld-gemini-review-20261115/retention-worlds/07b42fd_2/react",
+          "wire_receipts_valid": true,
+          "wire_receipts": []
+        },
+        "result": {
+          "request_id": "retained:07b42fd_2",
+          "episode": {
+            "status": "VERIFIED_SUCCESS",
+            "answer": "Requested update applied",
+            "steps": 2,
+            "tool_attempts": 1,
+            "compactions": 0,
+            "kernel_version": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "kernel_handoff": null,
+            "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+            "benchmark_result": null,
+            "run_directory": "<workspace>/runs/learning/appworld-gemini-review-20261115/retention-worlds/07b42fd_2/react",
+            "judge_packet": {
+              "path": "<workspace>/runs/learning/appworld-gemini-review-20261115/retention-worlds/07b42fd_2/react/exports/37f1ec7b-8138-47e3-a815-38a5f5725b87/judge_packet.json",
+              "complete": true,
+              "problems": []
+            }
+          },
+          "native": {
+            "success": true,
+            "evaluation": "8885b3900ac07598a99b38730d1b11f020ba9cb1b21d4a3a7184e9f5e589ff40",
+            "mcp_segments": [
+              "95b2f1714ab407da5174c0948f78210e8020763a18bca6ab878b8836be18086d",
+              "aad0514f49c12235b8607c13e68745c9c140521843117c5e602dfe48559159d1"
+            ],
+            "mcp_events": 32,
+            "task_id": "07b42fd_2",
+            "scope": "appworld:07b42fd_2:spotify-following",
+            "native_inputs_unchanged": true
+          },
+          "judge": "387284e346e18ba248f21eb8233aceff34826a536b5da8bee111610b16e056f4",
+          "task_state": "TRUE",
+          "package_used": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23"
+        }
+      },
+      {
+        "request_id": "retained-retry:07b42fd_3",
+        "audit": {
+          "passed": true,
+          "native_success": true,
+          "native_checks": 5,
+          "model_calls": 0,
+          "kernel_calls": 2,
+          "handoffs": 0,
+          "goals_pinned": true,
+          "scripted_actor": false,
+          "trace_complete": true,
+          "event_head": "85dc7b04633948e85bbecbbe3f09105d3f7b40bf7acfcd66f1de09947e397c95",
+          "task_state": "TRUE",
+          "execution_stop": "VERIFIED_SUCCESS",
+          "steps": 2,
+          "tool_attempts": 1,
+          "compactions": 0,
+          "judge": "a356c384d6dc77a193d07fdd728a334f70f439263dc76a76916922e7f77ab1b4",
+          "run": "<workspace>/runs/learning/appworld-gemini-review-20261115/retention-retry/07b42fd_3/react",
+          "wire_receipts_valid": true,
+          "wire_receipts": []
+        },
+        "result": {
+          "request_id": "retained-retry:07b42fd_3",
+          "episode": {
+            "status": "VERIFIED_SUCCESS",
+            "answer": "Requested update applied",
+            "steps": 2,
+            "tool_attempts": 1,
+            "compactions": 0,
+            "kernel_version": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "kernel_handoff": null,
+            "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+            "benchmark_result": null,
+            "run_directory": "<workspace>/runs/learning/appworld-gemini-review-20261115/retention-retry/07b42fd_3/react",
+            "judge_packet": {
+              "path": "<workspace>/runs/learning/appworld-gemini-review-20261115/retention-retry/07b42fd_3/react/exports/438e68f3-94e3-46ef-80ee-223ffe2af6ce/judge_packet.json",
+              "complete": true,
+              "problems": []
+            }
+          },
+          "native": {
+            "success": true,
+            "evaluation": "ef6e6c17fe8af7ad84070853a1aceadf6f97a02b390f387c706a28296084bbad",
+            "mcp_segments": [
+              "be805debb587d1d369f8358773e0537feee8ed54d7f4492adb507cf55b7f2347",
+              "4f964b321983cae1bb7cf01c41bee4e41cbe8df898df3773b6f13677faf15f7b"
+            ],
+            "mcp_events": 32,
+            "task_id": "07b42fd_3",
+            "scope": "appworld:07b42fd_3:spotify-following",
+            "native_inputs_unchanged": true
+          },
+          "judge": "a356c384d6dc77a193d07fdd728a334f70f439263dc76a76916922e7f77ab1b4",
+          "task_state": "TRUE",
+          "package_used": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23"
+        }
+      }
+    ]
+  },
+  "gemini_judge": {
+    "started_at": "2026-11-16T03:21:00.908644+00:00",
+    "provider": "installed Gemini CLI",
+    "role": "diagnostic judge",
+    "environment": "AppWorld",
+    "task_id": "07b42fd_1",
+    "input_sha256": "16050bc8132c777c54d03092c7e66bab1d6f0374ef68050eca3f2164615fff2a",
+    "model_response": null,
+    "promotion_allowed": false,
+    "state": "JUDGE_UNAVAILABLE",
+    "error": "Gemini CLI default call was rejected by Google: UNSUPPORTED_CLIENT for the existing saved login",
+    "error_type": "RuntimeError",
+    "elapsed_seconds": 7.9
+  },
+  "withdrawn_experiment": {
+    "path": "schema-adjusted/inference-result.json",
+    "native_passed": 1,
+    "total": 6,
+    "counted_as_accepted_improvement": false,
+    "code_change_reverted": true,
+    "evidence": "role-correction.json"
+  },
+  "runtime_restored": true,
+  "limitations": [
+    "Three previously exposed training variants of the same supported Spotify task family.",
+    "Retained package was originally produced by bounded program search.",
+    "No new accepted LLM improvement and no Gemini verdict were obtained."
+  ]
+}

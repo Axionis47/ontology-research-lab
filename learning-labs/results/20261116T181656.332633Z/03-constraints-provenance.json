@@ -1,0 +1,15 @@
+{
+  "project": "03-constraints-provenance",
+  "exit_code": 0,
+  "json_result": true,
+  "passed": true,
+  "source_sha256": {
+    "run.py": "a53a536a8389f708980e245c6f222378df451c67a8aa0f55371deb79abc3407a",
+    "input.json": "d06b047bb2410ce07b971b7cd189f958bef31cba34518cb8ad8a8610d3181959",
+    "shapes.ttl": "b12e28e9fa6fcac01cac0b7a121cf05230a85184a9f2941801fe74e0b6e36091",
+    "README.md": "b9bf1dfb655a3447ff3a890f8ec0464c5ef2b599736e023490594b859cf85654",
+    "provenance.ttl": "f24db0ff894aa54ddd6af13ad8c3bafb7e25d088426b9cc642a50ea879616da3"
+  },
+  "stdout": "{\n  \"kind\": \"synthetic_component_experiment\",\n  \"engine\": \"explicit_python_not_standards_engine\",\n  \"inputs\": {\n    \"input.json\": {\n      \"types\": {\n        \"Maya\": \"Person\",\n        \"LoginService\": \"Service\"\n      },\n      \"candidates\": [\n        {\n          \"id\": \"A\",\n          \"triple\": [\n            \"Maya\",\n            \"maintains\",\n            \"LoginService\"\n          ]\n        },\n        {\n          \"id\": \"B\",\n          \"triple\": [\n            \"LoginService\",\n            \"maintains\",\n            \"Maya\"\n          ]\n        },\n        {\n          \"id\": \"C\",\n          \"triple\": [\n            \"Maya\",\n            \"maintains\",\n            \"LoginService\"\n          ],\n          \"source\": \"receipt1\"\n        }\n      ],\n      \"receipts\": {\n        \"receipt1\": {\n          \"kind\": \"synthetic_fixture\",\n          \"triple\": [\n            \"Maya\",\n            \"maintains\",\n            \"LoginService\"\n          ],\n          \"revision\": 1\n        }\n      }\n    }\n  },\n  \"source_sha256\": \"a53a536a8389f708980e245c6f222378df451c67a8aa0f55371deb79abc3407a\",\n  \"observations\": [\n    {\n      \"id\": \"A\",\n      \"structure_valid\": true,\n      \"source_matches\": false,\n      \"admitted\": false\n    },\n    {\n      \"id\": \"B\",\n      \"structure_valid\": false,\n      \"source_matches\": false,\n      \"admitted\": false\n    },\n    {\n      \"id\": \"C\",\n      \"structure_valid\": true,\n      \"source_matches\": true,\n      \"admitted\": true\n    }\n  ],\n  \"checks\": {\n    \"A_structure_without_evidence\": true,\n    \"B_reversed_relation_rejected\": true,\n    \"C_traceable_claim_admitted\": true\n  },\n  \"passed\": true\n}\n",
+  "stderr": ""
+}

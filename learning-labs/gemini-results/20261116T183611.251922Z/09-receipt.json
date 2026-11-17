@@ -1,0 +1,128 @@
+{
+  "experiment": "09-ontology-extension",
+  "status": "MEASURED",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"09\",\n  \"title\": \"Extend without inventing facts\",\n  \"terms\": {\n    \"migration\": \"Transforming records into a new representation.\",\n    \"unknown\": \"An unsupported value, represented as null here.\",\n    \"extension\": \"Adding representational capacity.\"\n  },\n  \"instruction\": \"Migrate the legacy relation to the new Assignment shape. Use null for unsupported fields. Preserve evidence and do not default an unknown environment to Production.\",\n  \"input\": {\n    \"legacy\": {\n      \"person\": \"Maya\",\n      \"service\": \"LoginService\",\n      \"source\": \"receipt1\"\n    },\n    \"new_shape\": {\n      \"person\": \"string\",\n      \"service\": \"string\",\n      \"environment\": \"string or null\",\n      \"validUntil\": \"date or null\",\n      \"source\": \"string\"\n    }\n  },\n  \"output_shape\": {\n    \"person\": \"string\",\n    \"service\": \"string\",\n    \"environment\": \"string or null\",\n    \"validUntil\": \"date or null\",\n    \"source\": \"string\"\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "person": "Maya",
+    "service": "LoginService",
+    "environment": null,
+    "validUntil": null,
+    "source": "receipt1"
+  },
+  "reported_models": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash"
+  ],
+  "passed": true,
+  "exit_code": 0,
+  "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+  "cli_response": {
+    "session_id": "b2a25e2e-587e-4ab4-b610-35ae662d6496",
+    "response": "{\n  \"person\": \"Maya\",\n  \"service\": \"LoginService\",\n  \"environment\": null,\n  \"validUntil\": null,\n  \"source\": \"receipt1\"\n}",
+    "stats": {
+      "models": {
+        "gemini-3.5-flash-lite": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 5270,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 1239,
+            "prompt": 1239,
+            "candidates": 41,
+            "total": 1813,
+            "cached": 0,
+            "thoughts": 533,
+            "tool": 0
+          },
+          "roles": {
+            "utility_router": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 5270,
+              "tokens": {
+                "input": 1239,
+                "prompt": 1239,
+                "candidates": 41,
+                "total": 1813,
+                "cached": 0,
+                "thoughts": 533,
+                "tool": 0
+              }
+            }
+          }
+        },
+        "gemini-3.8-flash": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 3510,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 6181,
+            "prompt": 6181,
+            "candidates": 44,
+            "total": 6560,
+            "cached": 0,
+            "thoughts": 335,
+            "tool": 0
+          },
+          "roles": {
+            "main": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 3510,
+              "tokens": {
+                "input": 6181,
+                "prompt": 6181,
+                "candidates": 44,
+                "total": 6560,
+                "cached": 0,
+                "thoughts": 335,
+                "tool": 0
+              }
+            }
+          }
+        }
+      },
+      "tools": {
+        "totalCalls": 0,
+        "totalSuccess": 0,
+        "totalFail": 0,
+        "totalDurationMs": 0,
+        "totalDecisions": {
+          "accept": 0,
+          "reject": 0,
+          "modify": 0,
+          "auto_accept": 0
+        },
+        "byName": {}
+      },
+      "files": {
+        "totalLinesAdded": 0,
+        "totalLinesRemoved": 0
+      }
+    }
+  },
+  "checks": {
+    "exact_keys": true,
+    "fields": {
+      "person": true,
+      "service": true,
+      "environment": true,
+      "validUntil": true,
+      "source": true
+    },
+    "passed": true
+  },
+  "answer": {
+    "person": "Maya",
+    "service": "LoginService",
+    "environment": null,
+    "validUntil": null,
+    "source": "receipt1"
+  }
+}

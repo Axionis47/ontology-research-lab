@@ -1,0 +1,63 @@
+{
+  "synthetic_scripted_demo": true,
+  "model_learning_claimed": false,
+  "fixture_sha256": "4fe8c8129c7fdd873f3a5f6a7bebf791da636ce698c5f78d834adb450aca55f9",
+  "cases": [
+    {
+      "case": "complete",
+      "execution_status": "VERIFIED_SUCCESS",
+      "completion": "TRUE",
+      "reward": 1,
+      "checks": {
+        "scope_complete": "TRUE",
+        "target_set_known": "TRUE",
+        "targets_updated": "TRUE",
+        "unrelated_state_preserved": "TRUE"
+      },
+      "report": "<workspace>/runs/completion/first-demo/complete/react/observations/step-0003-9d437bb1-e4cc-4564-8da4-9609048936ac.txt",
+      "trace_complete": true
+    },
+    {
+      "case": "missed_target",
+      "execution_status": "BUDGET_EXHAUSTED",
+      "completion": "FALSE",
+      "reward": 0,
+      "checks": {
+        "scope_complete": "TRUE",
+        "target_set_known": "TRUE",
+        "targets_updated": "FALSE",
+        "unrelated_state_preserved": "TRUE"
+      },
+      "report": "<workspace>/runs/completion/first-demo/missed_target/react/observations/step-0003-26b88aba-458e-4d91-974a-400bdb0cd142.txt",
+      "trace_complete": true
+    },
+    {
+      "case": "unintended_change",
+      "execution_status": "BUDGET_EXHAUSTED",
+      "completion": "FALSE",
+      "reward": 0,
+      "checks": {
+        "scope_complete": "TRUE",
+        "target_set_known": "TRUE",
+        "targets_updated": "TRUE",
+        "unrelated_state_preserved": "FALSE"
+      },
+      "report": "<workspace>/runs/completion/first-demo/unintended_change/react/observations/step-0003-52ec186d-72b0-440f-9c40-efd7c973fe7a.txt",
+      "trace_complete": true
+    },
+    {
+      "case": "incomplete_evidence",
+      "execution_status": "BUDGET_EXHAUSTED",
+      "completion": "UNKNOWN",
+      "reward": null,
+      "checks": {
+        "scope_complete": "UNKNOWN",
+        "target_set_known": "UNKNOWN",
+        "targets_updated": "UNKNOWN",
+        "unrelated_state_preserved": "UNKNOWN"
+      },
+      "report": "<workspace>/runs/completion/first-demo/incomplete_evidence/react/observations/step-0003-5f002e33-57e5-4367-9e8d-09c1d3f60d66.txt",
+      "trace_complete": true
+    }
+  ]
+}

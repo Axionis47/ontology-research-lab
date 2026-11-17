@@ -1,0 +1,296 @@
+{
+  "passed": false,
+  "status": "INTERRUPTED_AFTER_OBSERVED_FAILURE",
+  "completed_episodes": [
+    {
+      "phase": "raw",
+      "request_id": "raw:07b42fd_1",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 6,
+        "kernel_calls": 0,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "98cdb0ff6a9e39d31a2e347c46125429b68aa9723bc3993c5b5679f94a5c204a",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 6,
+        "tool_attempts": 4,
+        "compactions": 1,
+        "judge": "9695ba15c5027ca8b9af998f85ac5ede18b5582c2a810b077ff2a69ff33a89cb",
+        "run": "<workspace>/runs/learning/live-acceptance/inference/87719c50632715bb5a33/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 3,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1030,
+            "output_tokens": 28,
+            "duration_ms": 11246
+          },
+          {
+            "event": 8,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1093,
+            "output_tokens": 24,
+            "duration_ms": 2821
+          },
+          {
+            "event": 15,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1366,
+            "output_tokens": 23,
+            "duration_ms": 4258
+          },
+          {
+            "event": 22,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1848,
+            "output_tokens": 47,
+            "duration_ms": 10039
+          },
+          {
+            "event": 27,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1934,
+            "output_tokens": 46,
+            "duration_ms": 8457
+          },
+          {
+            "event": 35,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2373,
+            "output_tokens": 24,
+            "duration_ms": 9890
+          }
+        ]
+      }
+    },
+    {
+      "phase": "raw",
+      "request_id": "raw:07b42fd_2",
+      "audit": {
+        "passed": false,
+        "native_success": false,
+        "native_checks": 5,
+        "model_calls": 7,
+        "kernel_calls": 0,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "b8bff07f1ea7ca603fa8ac3ca734f9d0443ac2016105c17a9a2224b79ce0f413",
+        "task_state": "FALSE",
+        "execution_stop": "NO_PROGRESS",
+        "steps": 8,
+        "tool_attempts": 6,
+        "compactions": 2,
+        "judge": "1012691d9e9487b2d3291dca0f5fe5e7c8a8af9155127a3ce66ea9de1501d299",
+        "run": "<workspace>/runs/learning/live-acceptance/inference/f81593e85934ad0cb3fb/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 3,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1034,
+            "output_tokens": 35,
+            "duration_ms": 11132
+          },
+          {
+            "event": 10,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1314,
+            "output_tokens": 23,
+            "duration_ms": 5533
+          },
+          {
+            "event": 17,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1794,
+            "output_tokens": 59,
+            "duration_ms": 10855
+          },
+          {
+            "event": 24,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2131,
+            "output_tokens": 54,
+            "duration_ms": 12550
+          },
+          {
+            "event": 30,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1790,
+            "output_tokens": 54,
+            "duration_ms": 9658
+          },
+          {
+            "event": 37,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2142,
+            "output_tokens": 54,
+            "duration_ms": 12207
+          },
+          {
+            "event": 45,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2292,
+            "output_tokens": 54,
+            "duration_ms": 11299
+          }
+        ]
+      }
+    },
+    {
+      "phase": "raw",
+      "request_id": "raw:07b42fd_3",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 13,
+        "kernel_calls": 0,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "52e0fdc9ea740f13514749ed246c83212a1c703d50b56d9bdf2b2f096bd57236",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 13,
+        "tool_attempts": 11,
+        "compactions": 9,
+        "judge": "0d50a55ede14f46de037b92c6fc5a9bf517f3e0ef1dc496df484029ac1873f23",
+        "run": "<workspace>/runs/learning/live-acceptance/inference/1106fde774ae283ba47b/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 3,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1031,
+            "output_tokens": 28,
+            "duration_ms": 11452
+          },
+          {
+            "event": 8,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1096,
+            "output_tokens": 24,
+            "duration_ms": 4197
+          },
+          {
+            "event": 15,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1505,
+            "output_tokens": 23,
+            "duration_ms": 4958
+          },
+          {
+            "event": 22,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1988,
+            "output_tokens": 59,
+            "duration_ms": 10262
+          },
+          {
+            "event": 30,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2168,
+            "output_tokens": 35,
+            "duration_ms": 10143
+          },
+          {
+            "event": 43,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2069,
+            "output_tokens": 23,
+            "duration_ms": 7674
+          },
+          {
+            "event": 51,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2227,
+            "output_tokens": 59,
+            "duration_ms": 11794
+          },
+          {
+            "event": 59,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2684,
+            "output_tokens": 35,
+            "duration_ms": 13226
+          },
+          {
+            "event": 72,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2570,
+            "output_tokens": 59,
+            "duration_ms": 13939
+          },
+          {
+            "event": 80,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2724,
+            "output_tokens": 31,
+            "duration_ms": 12044
+          },
+          {
+            "event": 93,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2941,
+            "output_tokens": 56,
+            "duration_ms": 18225
+          },
+          {
+            "event": 99,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2756,
+            "output_tokens": 46,
+            "duration_ms": 14030
+          },
+          {
+            "event": 107,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3909,
+            "output_tokens": 24,
+            "duration_ms": 20566
+          }
+        ]
+      }
+    }
+  ],
+  "scheduled_episodes": 18,
+  "interrupted_request": "recovery:07b42fd_1",
+  "reason": "Raw EDM task failed due to case-sensitive native genre adapter. Legacy flat-proposal instructions conflicted with native tools. Stopped at postcondition boundary before repairing adapter. Original criteria and artifacts preserved.",
+  "at": "2026-11-13T22:53:04.472916+00:00"
+}

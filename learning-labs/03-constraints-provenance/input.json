@@ -1,0 +1,44 @@
+{
+  "types": {
+    "Maya": "Person",
+    "LoginService": "Service"
+  },
+  "candidates": [
+    {
+      "id": "A",
+      "triple": [
+        "Maya",
+        "maintains",
+        "LoginService"
+      ]
+    },
+    {
+      "id": "B",
+      "triple": [
+        "LoginService",
+        "maintains",
+        "Maya"
+      ]
+    },
+    {
+      "id": "C",
+      "triple": [
+        "Maya",
+        "maintains",
+        "LoginService"
+      ],
+      "source": "receipt1"
+    }
+  ],
+  "receipts": {
+    "receipt1": {
+      "kind": "synthetic_fixture",
+      "triple": [
+        "Maya",
+        "maintains",
+        "LoginService"
+      ],
+      "revision": 1
+    }
+  }
+}

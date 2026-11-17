@@ -1,0 +1,70 @@
+{
+  "kind": "synthetic_educational_checks",
+  "models_run": false,
+  "appworld_run": false,
+  "expected_projects": 10,
+  "all_passed": true,
+  "projects": [
+    {
+      "project": "01-triples",
+      "exit_code": 0,
+      "json_result": true,
+      "passed": true
+    },
+    {
+      "project": "02-ontology-vs-facts",
+      "exit_code": 0,
+      "json_result": true,
+      "passed": true
+    },
+    {
+      "project": "03-constraints-provenance",
+      "exit_code": 0,
+      "json_result": true,
+      "passed": true
+    },
+    {
+      "project": "04-relationship-entities",
+      "exit_code": 0,
+      "json_result": true,
+      "passed": true
+    },
+    {
+      "project": "05-traversal-inference",
+      "exit_code": 0,
+      "json_result": true,
+      "passed": true
+    },
+    {
+      "project": "06-model-consumption",
+      "exit_code": 0,
+      "json_result": true,
+      "passed": true
+    },
+    {
+      "project": "07-runtime-enforcement",
+      "exit_code": 0,
+      "json_result": true,
+      "passed": true
+    },
+    {
+      "project": "08-fact-invalidation",
+      "exit_code": 0,
+      "json_result": true,
+      "passed": true
+    },
+    {
+      "project": "09-ontology-extension",
+      "exit_code": 0,
+      "json_result": true,
+      "passed": true
+    },
+    {
+      "project": "10-semantic-version-change",
+      "exit_code": 0,
+      "json_result": true,
+      "passed": true
+    }
+  ],
+  "python": "3.12.8 (v3.12.8:2dc476bcb91, Dec  3 2024, 14:43:19) [Clang 13.0.0 (clang-1300.0.29.30)]"
+}

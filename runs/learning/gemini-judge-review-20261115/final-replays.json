@@ -1,0 +1,92 @@
+[
+  {
+    "request_id": "old-work",
+    "state": "TRUE",
+    "status": "VERIFIED_SUCCESS",
+    "kernel_gap": false,
+    "model_calls": 0,
+    "judge": "112b996b623bcaeef5cdb7fe9e0d1064e7ce390f7b7519382e8928cc3aeac28d",
+    "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/final-replay/old-work/react"
+  },
+  {
+    "request_id": "new-age-rule",
+    "state": "TRUE",
+    "status": "VERIFIED_SUCCESS",
+    "kernel_gap": false,
+    "model_calls": 0,
+    "judge": "7738cf421e9a749bb94b96a02761a14d1a94af682c879b9f2df215dee0e30ea2",
+    "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/final-replay/new-age-rule/react"
+  },
+  {
+    "request_id": "fresh-age-batch",
+    "state": "TRUE",
+    "status": "VERIFIED_SUCCESS",
+    "kernel_gap": false,
+    "model_calls": 0,
+    "judge": "a62f8133daa4248ba761658460cab4d7cf2af11686577f46700d5e4664ca5282",
+    "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/final-replay/fresh-age-batch/react"
+  },
+  {
+    "request_id": "new-customer-rule",
+    "state": "TRUE",
+    "status": "VERIFIED_SUCCESS",
+    "kernel_gap": false,
+    "model_calls": 0,
+    "judge": "e8da4b21c934c37deaf9423b64464b0d08fa63195e465a3ada1c39bb0c572a98",
+    "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/final-replay/new-customer-rule/react"
+  },
+  {
+    "request_id": "fresh-customer-batch",
+    "state": "TRUE",
+    "status": "VERIFIED_SUCCESS",
+    "kernel_gap": false,
+    "model_calls": 0,
+    "judge": "eb51d1875ab4106a07c3baad580321e807b40ba459e0678f8a695b76b1957736",
+    "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/final-replay/fresh-customer-batch/react"
+  },
+  {
+    "request_id": "larger-age-batch",
+    "state": "TRUE",
+    "status": "VERIFIED_SUCCESS",
+    "kernel_gap": false,
+    "model_calls": 0,
+    "judge": "01880488dbf85ba2d5dfe038f5bc8d528947e23aac2d3f19a106a8214eff39b7",
+    "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/final-replay/larger-age-batch/react"
+  },
+  {
+    "request_id": "larger-customer-batch",
+    "state": "TRUE",
+    "status": "VERIFIED_SUCCESS",
+    "kernel_gap": false,
+    "model_calls": 0,
+    "judge": "a7885289b17b9474afb1dd10c2c9abc0c3d086b13a597658181bd7237c637b82",
+    "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/final-replay/larger-customer-batch/react"
+  },
+  {
+    "request_id": "combined-new-rule",
+    "state": "TRUE",
+    "status": "VERIFIED_SUCCESS",
+    "kernel_gap": false,
+    "model_calls": 0,
+    "judge": "cb582737b2c9ed652e7b8f40205d29d0389e557e58520b8a3f935ba87ced2310",
+    "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/final-replay/combined-new-rule/react"
+  },
+  {
+    "request_id": "combined-larger-batch",
+    "state": "TRUE",
+    "status": "VERIFIED_SUCCESS",
+    "kernel_gap": false,
+    "model_calls": 0,
+    "judge": "90081f29dd50713a2ad7bbf23a504807bf6e4979d33e8c1e29d664ef9ce91113",
+    "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/final-replay/combined-larger-batch/react"
+  },
+  {
+    "request_id": "old-work-after-three-repairs",
+    "state": "TRUE",
+    "status": "VERIFIED_SUCCESS",
+    "kernel_gap": false,
+    "model_calls": 0,
+    "judge": "e060f137147460ecd6a04866e8db61ddc3450d2bf53a05514e036881e275683b",
+    "run_directory": "<workspace>/runs/learning/gemini-judge-review-20261115/final-replay/old-work-after-three-repairs/react"
+  }
+]

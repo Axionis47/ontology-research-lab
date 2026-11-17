@@ -1,0 +1,17 @@
+{
+  "experiment": "01-triples",
+  "status": "PREPARED_NOT_RUN",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"01\",\n  \"title\": \"Sentence to triples\",\n  \"terms\": {\n    \"entity\": \"An identified thing.\",\n    \"triple\": \"A subject, predicate and object.\",\n    \"predicate\": \"A directed named relationship.\"\n  },\n  \"instruction\": \"Translate only explicitly asserted positive relationships into triples. Do not reverse edges or invent a positive assertion from a denial.\",\n  \"input\": {\n    \"sentences\": {\n      \"positive\": \"Maya maintains LoginService.\",\n      \"negative\": \"Maya does not maintain BillingService.\"\n    },\n    \"vocabulary\": [\n      \"Maya\",\n      \"LoginService\",\n      \"BillingService\",\n      \"maintains\"\n    ]\n  },\n  \"output_shape\": {\n    \"positive_triples\": \"array of [subject,predicate,object]\",\n    \"negative_sentence_positive_triples\": \"array of [subject,predicate,object]\"\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "positive_triples": [
+      [
+        "Maya",
+        "maintains",
+        "LoginService"
+      ]
+    ],
+    "negative_sentence_positive_triples": []
+  },
+  "reported_models": [],
+  "passed": null
+}

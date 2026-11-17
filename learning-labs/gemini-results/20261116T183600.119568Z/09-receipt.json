@@ -1,0 +1,14 @@
+{
+  "experiment": "09-ontology-extension",
+  "status": "PREPARED_NOT_RUN",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"09\",\n  \"title\": \"Extend without inventing facts\",\n  \"terms\": {\n    \"migration\": \"Transforming records into a new representation.\",\n    \"unknown\": \"An unsupported value, represented as null here.\",\n    \"extension\": \"Adding representational capacity.\"\n  },\n  \"instruction\": \"Migrate the legacy relation to the new Assignment shape. Use null for unsupported fields. Preserve evidence and do not default an unknown environment to Production.\",\n  \"input\": {\n    \"legacy\": {\n      \"person\": \"Maya\",\n      \"service\": \"LoginService\",\n      \"source\": \"receipt1\"\n    },\n    \"new_shape\": {\n      \"person\": \"string\",\n      \"service\": \"string\",\n      \"environment\": \"string or null\",\n      \"validUntil\": \"date or null\",\n      \"source\": \"string\"\n    }\n  },\n  \"output_shape\": {\n    \"person\": \"string\",\n    \"service\": \"string\",\n    \"environment\": \"string or null\",\n    \"validUntil\": \"date or null\",\n    \"source\": \"string\"\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "person": "Maya",
+    "service": "LoginService",
+    "environment": null,
+    "validUntil": null,
+    "source": "receipt1"
+  },
+  "reported_models": [],
+  "passed": null
+}

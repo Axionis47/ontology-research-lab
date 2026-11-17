@@ -1,0 +1,14 @@
+{
+  "experiment": "08-fact-invalidation",
+  "status": "PREPARED_NOT_RUN",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"08\",\n  \"title\": \"Invalidate a stale conclusion\",\n  \"terms\": {\n    \"revision\": \"An identity for an observed state version.\",\n    \"dependency\": \"Evidence a conclusion relies on.\",\n    \"invalidation\": \"Marking a dependent result as stale.\"\n  },\n  \"instruction\": \"Return all transitively stale nodes excluding the changed source itself. Do not invalidate unrelated nodes. A plan based on a revoked assignment must not execute.\",\n  \"input\": {\n    \"change\": {\n      \"node\": \"assignment17\",\n      \"revision_before\": 1,\n      \"revision_after\": 2,\n      \"active_after\": false\n    },\n    \"depends_on\": {\n      \"decision8\": [\n        \"assignment17\"\n      ],\n      \"plan3\": [\n        \"decision8\"\n      ],\n      \"display_name\": [\n        \"profile1\"\n      ]\n    }\n  },\n  \"output_shape\": {\n    \"stale_nodes\": \"array of node IDs\",\n    \"execute_plan3\": \"boolean\"\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "stale_nodes": [
+      "decision8",
+      "plan3"
+    ],
+    "execute_plan3": false
+  },
+  "reported_models": [],
+  "passed": null
+}

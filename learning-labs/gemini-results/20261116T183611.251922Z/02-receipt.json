@@ -1,0 +1,119 @@
+{
+  "experiment": "02-ontology-vs-facts",
+  "status": "MEASURED",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"02\",\n  \"title\": \"Definition or observation?\",\n  \"terms\": {\n    \"ontology\": \"Definitions of types and relationships.\",\n    \"instance\": \"A particular entity.\",\n    \"graph update\": \"New observations using existing meanings.\"\n  },\n  \"instruction\": \"Classify each proposed update as graph or ontology. Existing Person definitions cover all people; a newly named person needs no new class.\",\n  \"input\": {\n    \"ontology\": {\n      \"types\": [\n        \"Person\",\n        \"Service\"\n      ],\n      \"relations\": {\n        \"maintains\": \"Person to Service\"\n      }\n    },\n    \"updates\": {\n      \"A\": \"Observe Noah is a Person.\",\n      \"B\": \"Add a TemporaryAssignment type with an expiry property.\"\n    }\n  },\n  \"output_shape\": {\n    \"A\": \"graph or ontology\",\n    \"B\": \"graph or ontology\"\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "A": "graph",
+    "B": "ontology"
+  },
+  "reported_models": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash"
+  ],
+  "passed": true,
+  "exit_code": 0,
+  "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+  "cli_response": {
+    "session_id": "5a84dbe6-7f9a-4386-bbcd-a47afc13a063",
+    "response": "{\n  \"A\": \"graph\",\n  \"B\": \"ontology\"\n}",
+    "stats": {
+      "models": {
+        "gemini-3.5-flash-lite": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 6223,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 1199,
+            "prompt": 1199,
+            "candidates": 33,
+            "total": 2105,
+            "cached": 0,
+            "thoughts": 873,
+            "tool": 0
+          },
+          "roles": {
+            "utility_router": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 6223,
+              "tokens": {
+                "input": 1199,
+                "prompt": 1199,
+                "candidates": 33,
+                "total": 2105,
+                "cached": 0,
+                "thoughts": 873,
+                "tool": 0
+              }
+            }
+          }
+        },
+        "gemini-3.8-flash": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 5287,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 6141,
+            "prompt": 6141,
+            "candidates": 19,
+            "total": 6575,
+            "cached": 0,
+            "thoughts": 415,
+            "tool": 0
+          },
+          "roles": {
+            "main": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 5287,
+              "tokens": {
+                "input": 6141,
+                "prompt": 6141,
+                "candidates": 19,
+                "total": 6575,
+                "cached": 0,
+                "thoughts": 415,
+                "tool": 0
+              }
+            }
+          }
+        }
+      },
+      "tools": {
+        "totalCalls": 0,
+        "totalSuccess": 0,
+        "totalFail": 0,
+        "totalDurationMs": 0,
+        "totalDecisions": {
+          "accept": 0,
+          "reject": 0,
+          "modify": 0,
+          "auto_accept": 0
+        },
+        "byName": {}
+      },
+      "files": {
+        "totalLinesAdded": 0,
+        "totalLinesRemoved": 0
+      }
+    }
+  },
+  "checks": {
+    "exact_keys": true,
+    "fields": {
+      "A": true,
+      "B": true
+    },
+    "passed": true
+  },
+  "answer": {
+    "A": "graph",
+    "B": "ontology"
+  }
+}

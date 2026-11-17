@@ -1,0 +1,66 @@
+[
+  {
+    "experiment": "01-full-definitions",
+    "original_receipt": "results/20261116T205826.471365Z/01-full-definitions.json",
+    "status": "CLI_UNAVAILABLE",
+    "passed": null,
+    "reason": "TIMEOUT",
+    "cli_calls": 1
+  },
+  {
+    "experiment": "01-full-definitions",
+    "original_receipt": "results/20261116T210153.652607Z/01-full-definitions.json",
+    "status": "CLI_UNAVAILABLE",
+    "passed": null,
+    "reason": "TIMEOUT",
+    "cli_calls": 1
+  },
+  {
+    "experiment": "01-full-definitions",
+    "original_receipt": "results/20261116T210932.259062Z/01-full-definitions.json",
+    "status": "MEASURED",
+    "passed": true,
+    "reason": null,
+    "cli_calls": 1
+  },
+  {
+    "experiment": "02-retrieved-definitions",
+    "original_receipt": "results/20261116T210600.372687Z/02-retrieved-definitions.json",
+    "status": "MEASURED",
+    "passed": false,
+    "reason": null,
+    "cli_calls": 1
+  },
+  {
+    "experiment": "03-schema-inspection",
+    "original_receipt": "results/20261116T210824.791715Z/03-schema-inspection.json",
+    "status": "MEASURED",
+    "passed": true,
+    "reason": null,
+    "cli_calls": 2
+  },
+  {
+    "experiment": "04-graph-queries",
+    "original_receipt": "results/20261116T210913.209862Z/04-graph-queries.json",
+    "status": "MEASURED",
+    "passed": false,
+    "reason": null,
+    "cli_calls": 2
+  },
+  {
+    "experiment": "05-typed-function",
+    "original_receipt": "results/20261116T211201.809137Z/05-typed-function.json",
+    "status": "MEASURED",
+    "passed": true,
+    "reason": null,
+    "cli_calls": 2
+  },
+  {
+    "experiment": "06-constraint-service",
+    "original_receipt": "results/20261116T211232.129775Z/06-constraint-service.json",
+    "status": "MEASURED",
+    "passed": true,
+    "reason": null,
+    "cli_calls": 2
+  }
+]

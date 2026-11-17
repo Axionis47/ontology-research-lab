@@ -1,0 +1,372 @@
+[
+  {
+    "request_id": "old-work",
+    "state": "TRUE",
+    "events": 18,
+    "complete": true,
+    "compaction_events": [],
+    "actor_calls": 0,
+    "writes": 1,
+    "model_contexts": []
+  },
+  {
+    "request_id": "new-age-rule",
+    "state": "TRUE",
+    "events": 26,
+    "complete": true,
+    "compaction_events": [],
+    "actor_calls": 2,
+    "writes": 1,
+    "model_contexts": [
+      {
+        "seq": 8,
+        "input_ref": {
+          "bytes": 5257,
+          "complete": true,
+          "id": "249f19e3-af5b-4175-bd49-e68b83b04098",
+          "kind": "inputs",
+          "path": "inputs/step-0002-249f19e3-af5b-4175-bd49-e68b83b04098.txt",
+          "sha256": "4a67e65e7286681f4bb6623a73038cd09d2d45c6fca2437a6187a86854bf5b23",
+          "step": 2
+        },
+        "recent_step_count": 1,
+        "recent_actions": [
+          "kernel_handoff"
+        ]
+      },
+      {
+        "seq": 15,
+        "input_ref": {
+          "bytes": 12243,
+          "complete": true,
+          "id": "6307b3af-c4fe-4835-850a-0d321ca60a32",
+          "kind": "inputs",
+          "path": "inputs/step-0003-6307b3af-c4fe-4835-850a-0d321ca60a32.txt",
+          "sha256": "db616591757cc38f217ee24efc26651e0b05d5f260dbb84ebc933cb2f97412af",
+          "step": 3
+        },
+        "recent_step_count": 2,
+        "recent_actions": [
+          "kernel_handoff",
+          "inspect_state"
+        ]
+      }
+    ]
+  },
+  {
+    "request_id": "fresh-age-batch",
+    "state": "TRUE",
+    "events": 18,
+    "complete": true,
+    "compaction_events": [],
+    "actor_calls": 0,
+    "writes": 1,
+    "model_contexts": []
+  },
+  {
+    "request_id": "new-customer-rule",
+    "state": "FALSE",
+    "events": 36,
+    "complete": true,
+    "compaction_events": [
+      {
+        "seq": 15,
+        "type": "context_compacted",
+        "step": 3,
+        "at": "2026-11-16T02:54:59.488013+00:00",
+        "monotonic_ns": 483128032412083,
+        "payload": {
+          "after_chars": 5122,
+          "after_ref": {
+            "bytes": 5122,
+            "complete": true,
+            "id": "7fa2031b-4724-4417-a482-e287c0005970",
+            "kind": "compactions",
+            "path": "compactions/step-0003-7fa2031b-4724-4417-a482-e287c0005970.txt",
+            "sha256": "d7d9724ea7702beb94742566a5234f9c61aee333d85cf0e07e8454353e9c1675",
+            "step": 3
+          },
+          "before_chars": 19102,
+          "before_ref": {
+            "bytes": 19102,
+            "complete": true,
+            "id": "0498ed60-cd9b-4c66-8373-a024d5a445e5",
+            "kind": "compactions",
+            "path": "compactions/step-0003-0498ed60-cd9b-4c66-8373-a024d5a445e5.txt",
+            "sha256": "b58f6edcbf74bec80c53ab6784285b160800c7ec95725f508998a4f3158c5f90",
+            "step": 3
+          },
+          "new_cutoff": 2,
+          "old_cutoff": 0,
+          "original_outputs_deleted": 0,
+          "policy": "deterministic_action_index_v1",
+          "tool_attempts": 1
+        },
+        "previous_sha256": "b81a9c90c0d4d87655079a6874c637cd40cac9f6e043005be4454ff51c6f4edb",
+        "sha256": "1204d1a0f81bfd5dcc5dda2acafe89e52289a3aeef4cba64a75b591c14256225"
+      },
+      {
+        "seq": 23,
+        "type": "context_compacted",
+        "step": 4,
+        "at": "2026-11-16T02:55:01.226783+00:00",
+        "monotonic_ns": 483129771178375,
+        "payload": {
+          "after_chars": 5349,
+          "after_ref": {
+            "bytes": 5349,
+            "complete": true,
+            "id": "5e37bfe8-f38e-4702-b8fe-d4985d5a7ac6",
+            "kind": "compactions",
+            "path": "compactions/step-0004-5e37bfe8-f38e-4702-b8fe-d4985d5a7ac6.txt",
+            "sha256": "379c88faacbc7bd7d456fba5ba49194d8c54118250c48e7adda3ffc37b78027b",
+            "step": 4
+          },
+          "before_chars": 18943,
+          "before_ref": {
+            "bytes": 18943,
+            "complete": true,
+            "id": "d9b8ee47-8561-48b4-823a-fe308fc4d762",
+            "kind": "compactions",
+            "path": "compactions/step-0004-d9b8ee47-8561-48b4-823a-fe308fc4d762.txt",
+            "sha256": "542d29ff688a67e41366e851dcb05a23e3b4ed9ab9d01271bd9e9cdf24f8f557",
+            "step": 4
+          },
+          "new_cutoff": 3,
+          "old_cutoff": 2,
+          "original_outputs_deleted": 0,
+          "policy": "deterministic_action_index_v1",
+          "tool_attempts": 2
+        },
+        "previous_sha256": "fc292077aa2c3c7b13b0c10c1396d86ad0916c2c2186219bdcb9fcafa96116b8",
+        "sha256": "81dba561d5135f952a414a846b7ddd88e4558e52094f7014c87410eeda2aeca8"
+      }
+    ],
+    "actor_calls": 3,
+    "writes": 0,
+    "model_contexts": [
+      {
+        "seq": 8,
+        "input_ref": {
+          "bytes": 5279,
+          "complete": true,
+          "id": "f9c04caa-a1c7-47d5-aecb-d386a08fabb2",
+          "kind": "inputs",
+          "path": "inputs/step-0002-f9c04caa-a1c7-47d5-aecb-d386a08fabb2.txt",
+          "sha256": "be988546743c02bbe8dae95f07825f11c33702f2f1d06d1b4c9ee1b923bcbced",
+          "step": 2
+        },
+        "recent_step_count": 1,
+        "recent_actions": [
+          "kernel_handoff"
+        ]
+      },
+      {
+        "seq": 16,
+        "input_ref": {
+          "bytes": 5122,
+          "complete": true,
+          "id": "757b058a-51e1-432b-b668-f9775602ab4d",
+          "kind": "inputs",
+          "path": "inputs/step-0003-757b058a-51e1-432b-b668-f9775602ab4d.txt",
+          "sha256": "d7d9724ea7702beb94742566a5234f9c61aee333d85cf0e07e8454353e9c1675",
+          "step": 3
+        },
+        "recent_step_count": 0,
+        "recent_actions": []
+      },
+      {
+        "seq": 24,
+        "input_ref": {
+          "bytes": 5349,
+          "complete": true,
+          "id": "9801559c-bef8-417b-86cb-a8b862c612e7",
+          "kind": "inputs",
+          "path": "inputs/step-0004-9801559c-bef8-417b-86cb-a8b862c612e7.txt",
+          "sha256": "379c88faacbc7bd7d456fba5ba49194d8c54118250c48e7adda3ffc37b78027b",
+          "step": 4
+        },
+        "recent_step_count": 0,
+        "recent_actions": []
+      }
+    ]
+  },
+  {
+    "request_id": "fresh-customer-batch",
+    "state": "TRUE",
+    "events": 18,
+    "complete": true,
+    "compaction_events": [],
+    "actor_calls": 0,
+    "writes": 1,
+    "model_contexts": []
+  },
+  {
+    "request_id": "larger-age-batch",
+    "state": "TRUE",
+    "events": 18,
+    "complete": true,
+    "compaction_events": [],
+    "actor_calls": 0,
+    "writes": 1,
+    "model_contexts": []
+  },
+  {
+    "request_id": "larger-customer-batch",
+    "state": "TRUE",
+    "events": 18,
+    "complete": true,
+    "compaction_events": [],
+    "actor_calls": 0,
+    "writes": 1,
+    "model_contexts": []
+  },
+  {
+    "request_id": "combined-new-rule",
+    "state": "FALSE",
+    "events": 36,
+    "complete": true,
+    "compaction_events": [
+      {
+        "seq": 15,
+        "type": "context_compacted",
+        "step": 3,
+        "at": "2026-11-16T02:55:16.359913+00:00",
+        "monotonic_ns": 483144904185916,
+        "payload": {
+          "after_chars": 5096,
+          "after_ref": {
+            "bytes": 5096,
+            "complete": true,
+            "id": "338352a7-d40f-4099-860b-2b2dcda80b4e",
+            "kind": "compactions",
+            "path": "compactions/step-0003-338352a7-d40f-4099-860b-2b2dcda80b4e.txt",
+            "sha256": "63d86dbae55156db0022c5e6a0357ebf4d313f8f004a0b84dc5d3755b295d535",
+            "step": 3
+          },
+          "before_chars": 19149,
+          "before_ref": {
+            "bytes": 19149,
+            "complete": true,
+            "id": "13b60613-8ffb-4b21-95ba-7f1abe842599",
+            "kind": "compactions",
+            "path": "compactions/step-0003-13b60613-8ffb-4b21-95ba-7f1abe842599.txt",
+            "sha256": "d52e140792f9d6a7f642535a5d018e58de95c5326b98a9d77253ae95fcb8af74",
+            "step": 3
+          },
+          "new_cutoff": 2,
+          "old_cutoff": 0,
+          "original_outputs_deleted": 0,
+          "policy": "deterministic_action_index_v1",
+          "tool_attempts": 1
+        },
+        "previous_sha256": "1484c1ea31212de942650150ef90bdb283993e7edb94ddcbb26efadd2503bfd4",
+        "sha256": "cef2150acde38218380d118e7beedc21a5e262c83d0c188a7fbd2ffcc880effb"
+      },
+      {
+        "seq": 23,
+        "type": "context_compacted",
+        "step": 4,
+        "at": "2026-11-16T02:55:18.405652+00:00",
+        "monotonic_ns": 483146949906583,
+        "payload": {
+          "after_chars": 5323,
+          "after_ref": {
+            "bytes": 5323,
+            "complete": true,
+            "id": "cc2f00c8-249c-4abd-b105-759028c4fe6f",
+            "kind": "compactions",
+            "path": "compactions/step-0004-cc2f00c8-249c-4abd-b105-759028c4fe6f.txt",
+            "sha256": "d9f15a1414001ae056c766c86af75561a8af3e1d0b29e3f5f21e75ba88fe9778",
+            "step": 4
+          },
+          "before_chars": 18990,
+          "before_ref": {
+            "bytes": 18990,
+            "complete": true,
+            "id": "e872b640-12ab-4355-98d9-5ae2efb6778a",
+            "kind": "compactions",
+            "path": "compactions/step-0004-e872b640-12ab-4355-98d9-5ae2efb6778a.txt",
+            "sha256": "72d0f0b37d7fa8565bafb6768a8155c51080353500df32b86be2c00962b92253",
+            "step": 4
+          },
+          "new_cutoff": 3,
+          "old_cutoff": 2,
+          "original_outputs_deleted": 0,
+          "policy": "deterministic_action_index_v1",
+          "tool_attempts": 2
+        },
+        "previous_sha256": "4dfbd27c7a05671d51d5631c4b0154164189c61452d8c5a917e6864bb2f3d5bf",
+        "sha256": "a530bf86069b1f748885ccb323fa8426765c9685555e7a8c53ccea76c5a7b7f8"
+      }
+    ],
+    "actor_calls": 3,
+    "writes": 0,
+    "model_contexts": [
+      {
+        "seq": 8,
+        "input_ref": {
+          "bytes": 5253,
+          "complete": true,
+          "id": "a844f20f-7315-4f68-b3fe-4afb08062402",
+          "kind": "inputs",
+          "path": "inputs/step-0002-a844f20f-7315-4f68-b3fe-4afb08062402.txt",
+          "sha256": "bda165e4603042908e0739cc55ce8b053cf65a245c667026831151347f7c58d6",
+          "step": 2
+        },
+        "recent_step_count": 1,
+        "recent_actions": [
+          "kernel_handoff"
+        ]
+      },
+      {
+        "seq": 16,
+        "input_ref": {
+          "bytes": 5096,
+          "complete": true,
+          "id": "1feca5a6-c322-4e89-8941-be203df60018",
+          "kind": "inputs",
+          "path": "inputs/step-0003-1feca5a6-c322-4e89-8941-be203df60018.txt",
+          "sha256": "63d86dbae55156db0022c5e6a0357ebf4d313f8f004a0b84dc5d3755b295d535",
+          "step": 3
+        },
+        "recent_step_count": 0,
+        "recent_actions": []
+      },
+      {
+        "seq": 24,
+        "input_ref": {
+          "bytes": 5323,
+          "complete": true,
+          "id": "2fcbf7a1-91aa-4d98-aba2-e45430c0845f",
+          "kind": "inputs",
+          "path": "inputs/step-0004-2fcbf7a1-91aa-4d98-aba2-e45430c0845f.txt",
+          "sha256": "d9f15a1414001ae056c766c86af75561a8af3e1d0b29e3f5f21e75ba88fe9778",
+          "step": 4
+        },
+        "recent_step_count": 0,
+        "recent_actions": []
+      }
+    ]
+  },
+  {
+    "request_id": "combined-larger-batch",
+    "state": "TRUE",
+    "events": 18,
+    "complete": true,
+    "compaction_events": [],
+    "actor_calls": 0,
+    "writes": 1,
+    "model_contexts": []
+  },
+  {
+    "request_id": "old-work-after-three-repairs",
+    "state": "TRUE",
+    "events": 18,
+    "complete": true,
+    "compaction_events": [],
+    "actor_calls": 0,
+    "writes": 1,
+    "model_contexts": []
+  }
+]

@@ -1,0 +1,54 @@
+{
+  "holdout": {
+    "passed_before": 42,
+    "passed_after": 96,
+    "total": 96
+  },
+  "final_replays": {
+    "passed": 10,
+    "total": 10
+  },
+  "sources_unchanged": true,
+  "archive_status": {
+    "active": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+    "generation": 9,
+    "active_policy": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+    "policy_decisions": [],
+    "proposals_spent": 74,
+    "cycles_spent": 20,
+    "cases": {
+      "RESOLVED": 9
+    },
+    "decisions": [
+      {
+        "id": 1,
+        "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "receipt": "7eacd832e44424c5ba4f09ddb72632b64d24da139c575bbfa80af81d48e600e9",
+        "accepted": 1,
+        "at": "2026-11-16T02:54:55.921167+00:00"
+      },
+      {
+        "id": 2,
+        "parent": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "candidate": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "receipt": "2f4cd5bc5d4c928cd630dc351a79050cba953749448841615c3a5e1f68e53ef1",
+        "accepted": 1,
+        "at": "2026-11-16T02:55:08.059478+00:00"
+      },
+      {
+        "id": 3,
+        "parent": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+        "candidate": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+        "receipt": "852f497b60e7a6030892c7fcb1d1053f9137941f08e8fffc981392a22151674b",
+        "accepted": 1,
+        "at": "2026-11-16T02:55:31.000163+00:00"
+      }
+    ],
+    "native_performance_claimed": false
+  },
+  "audit": {
+    "complete": true,
+    "event_head": "da639e80c17f309a674f823ffba02dce785ea2b7a26c263322ac0da4b8a66382"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "kind": "synthetic_gemini_teaching_experiments",
+  "live_requested": false,
+  "complete": true,
+  "all_measured_and_passed": false,
+  "experiments": [
+    {
+      "experiment": "01-triples",
+      "status": "PREPARED_NOT_RUN",
+      "passed": null,
+      "reason": null,
+      "reported_models": []
+    },
+    {
+      "experiment": "02-ontology-vs-facts",
+      "status": "PREPARED_NOT_RUN",
+      "passed": null,
+      "reason": null,
+      "reported_models": []
+    },
+    {
+      "experiment": "03-constraints-provenance",
+      "status": "PREPARED_NOT_RUN",
+      "passed": null,
+      "reason": null,
+      "reported_models": []
+    },
+    {
+      "experiment": "04-relationship-entities",
+      "status": "PREPARED_NOT_RUN",
+      "passed": null,
+      "reason": null,
+      "reported_models": []
+    },
+    {
+      "experiment": "05-traversal-inference",
+      "status": "PREPARED_NOT_RUN",
+      "passed": null,
+      "reason": null,
+      "reported_models": []
+    },
+    {
+      "experiment": "06-model-consumption",
+      "status": "PREPARED_NOT_RUN",
+      "passed": null,
+      "reason": null,
+      "reported_models": []
+    },
+    {
+      "experiment": "07-runtime-enforcement",
+      "status": "PREPARED_NOT_RUN",
+      "passed": null,
+      "reason": null,
+      "reported_models": []
+    },
+    {
+      "experiment": "08-fact-invalidation",
+      "status": "PREPARED_NOT_RUN",
+      "passed": null,
+      "reason": null,
+      "reported_models": []
+    },
+    {
+      "experiment": "09-ontology-extension",
+      "status": "PREPARED_NOT_RUN",
+      "passed": null,
+      "reason": null,
+      "reported_models": []
+    },
+    {
+      "experiment": "10-semantic-version-change",
+      "status": "PREPARED_NOT_RUN",
+      "passed": null,
+      "reason": null,
+      "reported_models": []
+    }
+  ],
+  "appworld_runs": 0
+}

@@ -1,0 +1,51 @@
+{
+  "example_only": true,
+  "protocol_version": "gap-report/0.1",
+  "receipt_id": "sha256:e4c88acc15c1423f79f2f461f0eeaca0f8599a627ef7a15acc33bf43fe7b7859",
+  "status": "GAP_DETECTED",
+  "diagnostic": "CONSTRAINT_VIOLATION",
+  "root_cause": "UNDETERMINED",
+  "pins": {
+    "context": {
+      "run_id": "demo-run-1",
+      "work_unit_id": "demo-work-1",
+      "requirement_id": "identify-atlas-leads",
+      "environment_id": "demo-workspace",
+      "scope_lease_id": "demo-scope-1",
+      "allowed_predicates": [
+        "hasActiveLead"
+      ]
+    },
+    "ontology_version": "3",
+    "ontology_hash": "sha256:b40b14e33baccf50549033071311ae327eadb6b899728015c5bc143a456282d8",
+    "mapping_version": "1",
+    "mapping_hash": "sha256:f0304aae6daa15574854872e324b9ae4431d180df60ac1488fda69efa6800ed7",
+    "evidence": {
+      "source_id": "synthetic-staffing-source",
+      "source_revision": "17",
+      "observed_at": "2026-11-12T14:00:00Z",
+      "content_hash": "sha256:82c3eb97fab87141611e88d7ba532ef4b1b82e4ffd5cdfb5be2c716e59a6f670",
+      "locator": "/record/active_lead_ids"
+    }
+  },
+  "check": {
+    "id": "active-lead-max-count",
+    "version": "1",
+    "operator": "distinct-count-less-than-or-equal",
+    "shape_id": "ProjectLeadShape",
+    "focus_entity": "project:atlas",
+    "relationship": "hasActiveLead",
+    "expected": {
+      "max_count": 1
+    },
+    "observed": {
+      "distinct_count": 2,
+      "values": [
+        "person:maya",
+        "person:noah"
+      ]
+    }
+  },
+  "next_action": "REPRODUCE_AND_TRIAGE",
+  "schema_change_authorized": false
+}

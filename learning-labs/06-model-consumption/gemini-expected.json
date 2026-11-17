@@ -1,0 +1,6 @@
+{
+  "name": "get_service",
+  "arguments": {
+    "service_id": "LoginService"
+  }
+}

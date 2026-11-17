@@ -1,0 +1,7 @@
+{
+  "stale_nodes": [
+    "decision8",
+    "plan3"
+  ],
+  "execute_plan3": false
+}

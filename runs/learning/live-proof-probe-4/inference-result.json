@@ -1,0 +1,65 @@
+{
+  "requests": [
+    {
+      "request_id": "live-probe-4",
+      "episode": {
+        "status": "NO_PROGRESS",
+        "answer": null,
+        "steps": 11,
+        "tool_attempts": 9,
+        "compactions": 4,
+        "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "kernel_handoff": {
+          "reason": "CAPABILITY_GAP",
+          "pending_work": "The learned selection would change protected records. Its plan was refused before dispatch; use the original conditions and current evidence.",
+          "evidence_ids": [
+            "8d496ac4-c571-4c48-92a7-e407f34e1469"
+          ],
+          "step": 1,
+          "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+        },
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/live-proof-probe-4/inference/d8f4db55f9a3c87103e0/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/live-proof-probe-4/inference/d8f4db55f9a3c87103e0/react/exports/d2b08542-cf9c-49c2-9f8c-449cfe91591d/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "352ebcf7e88052da66f1baebf5905d5c566a0e009873430d93a3628a32a65f6b",
+      "task_state": "FALSE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "3858738db4833e6ac75b67e73a931e6cec8ecd9b47f1baf45fb8ee117ea28471",
+      "native": {
+        "success": false,
+        "evaluation": "be8976248db22fbf585d68ac4ae7ac541b44738e627d3c30e2aa5fb2b2323e23",
+        "mcp_segments": [
+          "4595c1b522d320b41c8cd51c9c8d1c5647ed2042d39fdeba4028cf7d2d2e3cc0",
+          "e6970853911253fb5012a16395d30d43c52631567c460700fe59a1def2199070"
+        ],
+        "mcp_events": 28,
+        "task_id": "07b42fd_1",
+        "scope": "appworld:07b42fd_1:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+    }
+  ],
+  "archive": {
+    "active": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+    "generation": 1,
+    "proposals_spent": 0,
+    "cycles_spent": 0,
+    "cases": {
+      "READY": 1
+    },
+    "decisions": [],
+    "native_performance_claimed": false
+  },
+  "audit": {
+    "complete": true,
+    "event_head": "387308c94731e9b0b3fe4279e10adde306f29054c125dc0c0642c710f94c83cd"
+  },
+  "demo_actor": null
+}

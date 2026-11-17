@@ -1,0 +1,13 @@
+{
+  "packages": {
+    "v1": {"meaning": "Project approval covers its services.", "policy": "project_or_service"},
+    "v2": {"meaning": "Approval must explicitly cover the target service.", "policy": "service_only"},
+    "bad": {"meaning": "Deny every deployment.", "policy": "deny_all"}
+  },
+  "authoritative_rule_fixture": {"source": "fixture://policy-owner/service-approval-v2", "required_policy": "service_only"},
+  "cases": [
+    {"name": "targeted_gap", "approval": "project", "expected": false},
+    {"name": "preserve_service_approval", "approval": "service", "expected": true},
+    {"name": "preserve_denial_without_approval", "approval": "none", "expected": false}
+  ]
+}

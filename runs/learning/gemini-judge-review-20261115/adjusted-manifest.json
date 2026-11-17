@@ -1,0 +1,8 @@
+{
+  "registered_at": "2026-11-16T03:01:21.079404+00:00",
+  "kind": "development rerun on exposed cases",
+  "base_manifest": "manifest.json",
+  "changes": "Only the two previously failed reference-actor requests get max_context_chars=32768 and inline_output_chars=20000; no model or global config changes",
+  "request_sha256": "e6da733b6578e9507ba012e5da34bf9e900b10e9bf09765fd9c1ed3d376bea37",
+  "acceptance": "All 10 sequential requests must finish TRUE; three structural repairs retained; no missing results count as pass"
+}

@@ -1,0 +1,18 @@
+{
+  "version": "1",
+  "classes": [
+    "Person",
+    "Service",
+    "Project"
+  ],
+  "relations": {
+    "maintains": {
+      "domain": "Person",
+      "range": "Service"
+    },
+    "belongsTo": {
+      "domain": "Service",
+      "range": "Project"
+    }
+  }
+}

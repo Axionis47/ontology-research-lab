@@ -1,0 +1,10 @@
+{
+  "kind": "native_integration_probe_not_agent_score",
+  "catalog_size": 98,
+  "mcp_write_readback_verified": true,
+  "changed_state_saved": true,
+  "outside_application_rejected": true,
+  "official_evaluation_available": true,
+  "native_task_success": false,
+  "native_inputs_unchanged": true
+}

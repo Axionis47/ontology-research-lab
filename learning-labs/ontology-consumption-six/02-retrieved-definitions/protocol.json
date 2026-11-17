@@ -1,0 +1,6 @@
+{
+  "mode": "retrieved",
+  "title": "Relevant definitions retrieved",
+  "mechanism": "Trusted dependency-closure retrieval selects eligibility and its defining concepts, never fact records.",
+  "limitation": "A faulty dependency map can omit a decisive definition. This fixture uses exact closure, not uncertain semantic search."
+}

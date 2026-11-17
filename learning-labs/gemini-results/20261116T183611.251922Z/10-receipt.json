@@ -1,0 +1,125 @@
+{
+  "experiment": "10-semantic-version-change",
+  "status": "MEASURED",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"10\",\n  \"title\": \"Changed meaning and pinned versions\",\n  \"terms\": {\n    \"semantic change\": \"Changing what a rule means.\",\n    \"pinned version\": \"The package an episode uses consistently.\",\n    \"regression\": \"A required behavior broken by a candidate.\"\n  },\n  \"instruction\": \"Compute project-only approval under each version. Candidate v2 has already passed the external release gate. Active episodes remain pinned unless explicitly stopped or migrated. Select the package for each episode. This exercise is not permission to disregard an urgent revocation.\",\n  \"input\": {\n    \"v1\": \"Project or service approval permits deployment.\",\n    \"v2\": \"Only service-specific approval permits deployment.\",\n    \"approval\": \"project\",\n    \"active_episode\": {\n      \"pinned\": \"v1\"\n    },\n    \"accepted_for_new_episodes\": \"v2\"\n  },\n  \"output_shape\": {\n    \"v1_permits\": \"boolean\",\n    \"v2_permits\": \"boolean\",\n    \"active_episode_version\": \"string\",\n    \"new_episode_version\": \"string\"\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "v1_permits": true,
+    "v2_permits": false,
+    "active_episode_version": "v1",
+    "new_episode_version": "v2"
+  },
+  "reported_models": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash"
+  ],
+  "passed": true,
+  "exit_code": 0,
+  "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+  "cli_response": {
+    "session_id": "b02fe560-1e47-4432-83da-70026c4b7fd0",
+    "response": "{\n  \"v1_permits\": true,\n  \"v2_permits\": false,\n  \"active_episode_version\": \"v1\",\n  \"new_episode_version\": \"v2\"\n}",
+    "stats": {
+      "models": {
+        "gemini-3.5-flash-lite": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 5756,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 1245,
+            "prompt": 1245,
+            "candidates": 38,
+            "total": 2133,
+            "cached": 0,
+            "thoughts": 850,
+            "tool": 0
+          },
+          "roles": {
+            "utility_router": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 5756,
+              "tokens": {
+                "input": 1245,
+                "prompt": 1245,
+                "candidates": 38,
+                "total": 2133,
+                "cached": 0,
+                "thoughts": 850,
+                "tool": 0
+              }
+            }
+          }
+        },
+        "gemini-3.8-flash": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 6150,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 6187,
+            "prompt": 6187,
+            "candidates": 51,
+            "total": 7057,
+            "cached": 0,
+            "thoughts": 819,
+            "tool": 0
+          },
+          "roles": {
+            "main": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 6150,
+              "tokens": {
+                "input": 6187,
+                "prompt": 6187,
+                "candidates": 51,
+                "total": 7057,
+                "cached": 0,
+                "thoughts": 819,
+                "tool": 0
+              }
+            }
+          }
+        }
+      },
+      "tools": {
+        "totalCalls": 0,
+        "totalSuccess": 0,
+        "totalFail": 0,
+        "totalDurationMs": 0,
+        "totalDecisions": {
+          "accept": 0,
+          "reject": 0,
+          "modify": 0,
+          "auto_accept": 0
+        },
+        "byName": {}
+      },
+      "files": {
+        "totalLinesAdded": 0,
+        "totalLinesRemoved": 0
+      }
+    }
+  },
+  "checks": {
+    "exact_keys": true,
+    "fields": {
+      "v1_permits": true,
+      "v2_permits": true,
+      "active_episode_version": true,
+      "new_episode_version": true
+    },
+    "passed": true
+  },
+  "answer": {
+    "v1_permits": true,
+    "v2_permits": false,
+    "active_episode_version": "v1",
+    "new_episode_version": "v2"
+  }
+}

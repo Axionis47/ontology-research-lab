@@ -1,0 +1,52 @@
+{
+  "mode": "graph_queries",
+  "status": "PREPARED_NOT_RUN",
+  "initial_payload": {
+    "task": {
+      "service": "LoginService",
+      "environment": "Production",
+      "deployment_id": "d1",
+      "at": "2026-11-16"
+    },
+    "definitions": {
+      "Person": "An identified human.",
+      "Assignment": "A directed association from person to service, qualified by role, environment and validity.",
+      "Deployment": "A deployment of a service with an author.",
+      "eligible": "A matching active DeploymentApprover assignment with validFrom <= at < validUntil, covering the service and environment. The person must differ from the deployment author.",
+      "unknown": "Evidence is insufficient; absence from an incomplete fragment is not proof of absence."
+    },
+    "final_response_shape": {
+      "type": "finish",
+      "person": "person name or null",
+      "evidence_ids": [
+        "supporting record IDs"
+      ],
+      "revision": "integer"
+    },
+    "tools": {
+      "query_assignments": {
+        "arguments": {
+          "service": "string"
+        },
+        "returns": "All assignment entities for a service, with source and revision; does not apply eligibility rules."
+      },
+      "read_deployment": {
+        "arguments": {
+          "deployment_id": "string"
+        },
+        "returns": "Deployment entity including author, source and revision."
+      }
+    },
+    "call_shape": {
+      "type": "call",
+      "name": "declared tool name",
+      "arguments": {
+        "documented": "arguments"
+      }
+    },
+    "instruction": "Request evidence with one call at a time before finishing. These are application-protocol JSON messages, not Gemini CLI built-in tools."
+  },
+  "calls": [],
+  "history": [],
+  "correct_at_observation": null
+}

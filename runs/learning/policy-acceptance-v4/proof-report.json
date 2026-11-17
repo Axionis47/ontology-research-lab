@@ -1,0 +1,1470 @@
+{
+  "passed": false,
+  "decisions": [
+    {
+      "receipt": "f893c82d034fc971cdd4d13444cd253b3c04d72d474161ae684d0038058b462c",
+      "component": "discovery",
+      "accepted": true,
+      "conditions": {
+        "target_reproduced": true,
+        "target_improved": true,
+        "no_sealed_regression": true,
+        "component_sealed_pass": true,
+        "structural_pass": true,
+        "sources_unchanged": true,
+        "no_episode_running": true,
+        "retained_execution_pass": true
+      }
+    },
+    {
+      "receipt": "50c95155d9abccd66cb6b993675da548155229ba33dbdef51f0afb643574a74c",
+      "component": "binding",
+      "accepted": true,
+      "conditions": {
+        "target_reproduced": true,
+        "target_improved": true,
+        "no_sealed_regression": true,
+        "component_sealed_pass": true,
+        "structural_pass": true,
+        "sources_unchanged": true,
+        "no_episode_running": true,
+        "retained_execution_pass": true
+      }
+    },
+    {
+      "receipt": "e1489b3bac8f1d9a9d5a1dc3954f5b14279a66f14d6a2f1798a9365679e3e74c",
+      "component": "context",
+      "accepted": false,
+      "conditions": {
+        "target_reproduced": true,
+        "target_improved": true,
+        "no_sealed_regression": true,
+        "component_sealed_pass": true,
+        "structural_pass": true,
+        "sources_unchanged": true,
+        "no_episode_running": true,
+        "retained_execution_pass": true,
+        "fresh_live_pass": false
+      }
+    }
+  ],
+  "live": [
+    {
+      "case": "raw:07b42fd_1",
+      "repeat": 0,
+      "phase": "raw",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 2,
+        "kernel_calls": 0,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "3aaa490a93620d5ac689caf352daa69f2b472752d1259cd8bef8fa4baf156b1e",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 6,
+        "tool_attempts": 6,
+        "compactions": 2,
+        "judge": "9009f46029924ecb392b983560d2e20aab39de100e4c605a909244aa38b53712",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/raw-0-0/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 24,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3139,
+            "output_tokens": 34,
+            "duration_ms": 29506
+          },
+          {
+            "event": 37,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2776,
+            "output_tokens": 24,
+            "duration_ms": 10876
+          }
+        ]
+      }
+    },
+    {
+      "case": "raw:07b42fd_1",
+      "repeat": 1,
+      "phase": "raw",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 2,
+        "kernel_calls": 0,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "559f2494a6d6ef4f4c3192c54750a2bb164fbbf14f62870cd0f3efcc4a52b200",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 6,
+        "tool_attempts": 6,
+        "compactions": 2,
+        "judge": "f45685e449b6cc75c0eb70e6f886069260a1ad60d5481630d8bbef2d5fa1602c",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/raw-0-1/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 24,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3147,
+            "output_tokens": 34,
+            "duration_ms": 14013
+          },
+          {
+            "event": 37,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2816,
+            "output_tokens": 24,
+            "duration_ms": 10695
+          }
+        ]
+      }
+    },
+    {
+      "case": "raw:07b42fd_1",
+      "repeat": 2,
+      "phase": "raw",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 2,
+        "kernel_calls": 0,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "24502f258976b4a648fc9db179b416613fbfec865575e36804f3c0f2e57f7e87",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 6,
+        "tool_attempts": 6,
+        "compactions": 2,
+        "judge": "530aa1778c437fc8ff2bab793c6d5e75ebc9078624ac94213232e5b1d8b12898",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/raw-0-2/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 24,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3147,
+            "output_tokens": 34,
+            "duration_ms": 13614
+          },
+          {
+            "event": 37,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2794,
+            "output_tokens": 24,
+            "duration_ms": 14010
+          }
+        ]
+      }
+    },
+    {
+      "case": "raw:07b42fd_2",
+      "repeat": 0,
+      "phase": "raw",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 3,
+        "kernel_calls": 0,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "244ad6510513e377e3ffbb34414c50261260f2c9343beee09052281919bb9394",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 7,
+        "tool_attempts": 6,
+        "compactions": 3,
+        "judge": "2b5bbca23d41e9748192c58fa48729fce6ac85fdbd3d50fd6f32d21e199ec812",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/raw-1-0/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 24,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3157,
+            "output_tokens": 42,
+            "duration_ms": 23246
+          },
+          {
+            "event": 35,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2312,
+            "output_tokens": 36,
+            "duration_ms": 12075
+          },
+          {
+            "event": 48,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2715,
+            "output_tokens": 23,
+            "duration_ms": 11209
+          }
+        ]
+      }
+    },
+    {
+      "case": "raw:07b42fd_2",
+      "repeat": 1,
+      "phase": "raw",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 3,
+        "kernel_calls": 0,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "37c03630beb1d497488a215e4f121238a39c35f4dcda9e69dccbb55bb9196433",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 7,
+        "tool_attempts": 6,
+        "compactions": 3,
+        "judge": "df1a94dd4867ccb95354d91405426814779269173f30992487eac06b57211501",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/raw-1-1/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 24,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3138,
+            "output_tokens": 42,
+            "duration_ms": 17806
+          },
+          {
+            "event": 35,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2304,
+            "output_tokens": 36,
+            "duration_ms": 9696
+          },
+          {
+            "event": 48,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2720,
+            "output_tokens": 23,
+            "duration_ms": 10564
+          }
+        ]
+      }
+    },
+    {
+      "case": "raw:07b42fd_2",
+      "repeat": 2,
+      "phase": "raw",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 3,
+        "kernel_calls": 0,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "71b283aa05102b7f38789446e1ce49fc65f4add547c5a8eb30ec9e2764d53228",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 7,
+        "tool_attempts": 6,
+        "compactions": 3,
+        "judge": "b81db9cc6362d12b9023eebeaf8a370d88ded5af3ca5fc455f0f2898f6b4d352",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/raw-1-2/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 24,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3153,
+            "output_tokens": 42,
+            "duration_ms": 16042
+          },
+          {
+            "event": 35,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2309,
+            "output_tokens": 36,
+            "duration_ms": 8691
+          },
+          {
+            "event": 48,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2689,
+            "output_tokens": 23,
+            "duration_ms": 10253
+          }
+        ]
+      }
+    },
+    {
+      "case": "raw:07b42fd_3",
+      "repeat": 0,
+      "phase": "raw",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 3,
+        "kernel_calls": 0,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "06b623890e94847fd60f0b726e54a50958df7b0a66b86d6177c6d3735b9014ba",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 7,
+        "tool_attempts": 6,
+        "compactions": 3,
+        "judge": "2bd251fba68e03bc0e7fd0c49d285a4f3fb1ea0da02152f10004462f4d6a8c80",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/raw-2-0/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 24,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3154,
+            "output_tokens": 43,
+            "duration_ms": 25092
+          },
+          {
+            "event": 35,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2301,
+            "output_tokens": 37,
+            "duration_ms": 8721
+          },
+          {
+            "event": 48,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3067,
+            "output_tokens": 24,
+            "duration_ms": 11831
+          }
+        ]
+      }
+    },
+    {
+      "case": "raw:07b42fd_3",
+      "repeat": 1,
+      "phase": "raw",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 3,
+        "kernel_calls": 0,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "3a867544db352fb39f61a8f7789ec0dd80633cd09e54c5894bac3c115e6c7775",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 7,
+        "tool_attempts": 6,
+        "compactions": 3,
+        "judge": "41770e335283d7bc0f2b59d1e07ff219e737d665d228a0ed5daff3b5ef387d73",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/raw-2-1/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 24,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3157,
+            "output_tokens": 43,
+            "duration_ms": 17924
+          },
+          {
+            "event": 35,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2314,
+            "output_tokens": 37,
+            "duration_ms": 11112
+          },
+          {
+            "event": 48,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3093,
+            "output_tokens": 24,
+            "duration_ms": 13680
+          }
+        ]
+      }
+    },
+    {
+      "case": "raw:07b42fd_3",
+      "repeat": 2,
+      "phase": "raw",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 3,
+        "kernel_calls": 0,
+        "handoffs": 0,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "99ab729c2d2ab2bcd8bdb09fc324d4c13601269ac7eb6dee1039e32b56493c98",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 7,
+        "tool_attempts": 6,
+        "compactions": 3,
+        "judge": "bb25abaf3bf1af8769f029c2e1adf169473dfb4a689b098e8e78fef947558ee4",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/raw-2-2/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 24,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3143,
+            "output_tokens": 43,
+            "duration_ms": 20813
+          },
+          {
+            "event": 35,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2305,
+            "output_tokens": 37,
+            "duration_ms": 15310
+          },
+          {
+            "event": 48,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3097,
+            "output_tokens": 24,
+            "duration_ms": 19495
+          }
+        ]
+      }
+    },
+    {
+      "case": "recovery:07b42fd_1",
+      "repeat": 0,
+      "phase": "recovery",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 2,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "63f3b5222b7853ed78195a68e70381e9f21943d148ce5a3f6bf239bd5ab361e0",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 7,
+        "tool_attempts": 6,
+        "compactions": 2,
+        "judge": "73409986d3bb914cf80b0f907d1e6ff98b9d817d64e13ffc6e966170ac271f9a",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/recovery-3-0/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 30,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3401,
+            "output_tokens": 34,
+            "duration_ms": 41827
+          },
+          {
+            "event": 43,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2928,
+            "output_tokens": 24,
+            "duration_ms": 11353
+          }
+        ]
+      }
+    },
+    {
+      "case": "recovery:07b42fd_1",
+      "repeat": 1,
+      "phase": "recovery",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 2,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "e103c7dd67a0347d7d2fb1a13d017ecd1c519cfe266c90692cc81528ebd92281",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 7,
+        "tool_attempts": 6,
+        "compactions": 2,
+        "judge": "a99b42e6a73189ed69b2099870057e342b6205be59f821157c886376b7fd492a",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/recovery-3-1/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 30,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3394,
+            "output_tokens": 34,
+            "duration_ms": 16071
+          },
+          {
+            "event": 43,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2933,
+            "output_tokens": 24,
+            "duration_ms": 11042
+          }
+        ]
+      }
+    },
+    {
+      "case": "recovery:07b42fd_1",
+      "repeat": 2,
+      "phase": "recovery",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 2,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "2401f2044d524b3ee452192586e725f949e45e376e7009a77850f6b59fe81ff4",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 7,
+        "tool_attempts": 6,
+        "compactions": 2,
+        "judge": "81b9576632c54b9e129026766cb48e22bbb35768a32181aeaeb1013a7fc67884",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/recovery-3-2/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 30,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3390,
+            "output_tokens": 34,
+            "duration_ms": 18445
+          },
+          {
+            "event": 43,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2954,
+            "output_tokens": 24,
+            "duration_ms": 13594
+          }
+        ]
+      }
+    },
+    {
+      "case": "recovery:07b42fd_2",
+      "repeat": 0,
+      "phase": "recovery",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 3,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "9dae4eeb5e15c4652eac383d55753c3756b08dc77ff4f186f2d1835fa3ea07c7",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 8,
+        "tool_attempts": 6,
+        "compactions": 3,
+        "judge": "08018fe95b165e578b2fa28920071f37f2b4c1ee8565fea53dcacd57e0aeade9",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/recovery-4-0/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 30,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3400,
+            "output_tokens": 42,
+            "duration_ms": 56743
+          },
+          {
+            "event": 41,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2450,
+            "output_tokens": 36,
+            "duration_ms": 10686
+          },
+          {
+            "event": 54,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2815,
+            "output_tokens": 23,
+            "duration_ms": 14633
+          }
+        ]
+      }
+    },
+    {
+      "case": "recovery:07b42fd_2",
+      "repeat": 1,
+      "phase": "recovery",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 3,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "5fac0dc9a3c2d68e6715abc8c8e7710ffda30570ca424b09172f61dfca9a3f7d",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 8,
+        "tool_attempts": 6,
+        "compactions": 3,
+        "judge": "81965d41b494c0f6f7fcba799ad486c855eaf44f16e99c1c812eca4298e260a9",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/recovery-4-1/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 30,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3394,
+            "output_tokens": 42,
+            "duration_ms": 17948
+          },
+          {
+            "event": 41,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2445,
+            "output_tokens": 36,
+            "duration_ms": 11959
+          },
+          {
+            "event": 54,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2846,
+            "output_tokens": 23,
+            "duration_ms": 10789
+          }
+        ]
+      }
+    },
+    {
+      "case": "recovery:07b42fd_2",
+      "repeat": 2,
+      "phase": "recovery",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 3,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "25f08463a6e4cb3422a1a27498a41c0c9457ba8b4826b4e6b8378433337a4e43",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 8,
+        "tool_attempts": 6,
+        "compactions": 3,
+        "judge": "6a058fd4a78c9372fc81dc96c4e58507ab591f2a79f3000edf2bac61105fbaa5",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/recovery-4-2/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 30,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3390,
+            "output_tokens": 42,
+            "duration_ms": 18208
+          },
+          {
+            "event": 41,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2454,
+            "output_tokens": 36,
+            "duration_ms": 10015
+          },
+          {
+            "event": 54,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2845,
+            "output_tokens": 23,
+            "duration_ms": 10444
+          }
+        ]
+      }
+    },
+    {
+      "case": "recovery:07b42fd_3",
+      "repeat": 0,
+      "phase": "recovery",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 2,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "f1c3fbc2b0ccae6a13bc0a4a6907d9213348e5845019dfcfbbac511781d68ed3",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 7,
+        "tool_attempts": 6,
+        "compactions": 2,
+        "judge": "dfa7553d1883ec690a6931b314700c1585ab5654f318656b3ad039ca2efcd301",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/recovery-5-0/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 30,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3397,
+            "output_tokens": 34,
+            "duration_ms": 42681
+          },
+          {
+            "event": 43,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2941,
+            "output_tokens": 24,
+            "duration_ms": 13325
+          }
+        ]
+      }
+    },
+    {
+      "case": "recovery:07b42fd_3",
+      "repeat": 1,
+      "phase": "recovery",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 2,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "88606d267cff2c73eb16dfaf43804cbf8ce030ebc3f80824c667eef1237b0803",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 7,
+        "tool_attempts": 6,
+        "compactions": 2,
+        "judge": "587e7c41b6c2a14336275146d3c24087ceb52b10841a7ab1fc3de135f88e5f1b",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/recovery-5-1/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 30,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3403,
+            "output_tokens": 34,
+            "duration_ms": 15163
+          },
+          {
+            "event": 43,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2974,
+            "output_tokens": 24,
+            "duration_ms": 12803
+          }
+        ]
+      }
+    },
+    {
+      "case": "recovery:07b42fd_3",
+      "repeat": 2,
+      "phase": "recovery",
+      "audit": {
+        "passed": true,
+        "native_success": true,
+        "native_checks": 5,
+        "model_calls": 3,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "063284da390a76a48733f7190c96d707a39a1aaa0f0dfd11ad499cb4fe699b81",
+        "task_state": "TRUE",
+        "execution_stop": "VERIFIED_SUCCESS",
+        "steps": 8,
+        "tool_attempts": 6,
+        "compactions": 3,
+        "judge": "90ed4d08a8dcbdf6a5091c6f1f5370a56cbb144039a40c4c644172cb8ca744b6",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/recovery-5-2/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 30,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3389,
+            "output_tokens": 51,
+            "duration_ms": 16896
+          },
+          {
+            "event": 41,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2451,
+            "output_tokens": 43,
+            "duration_ms": 9946
+          },
+          {
+            "event": 54,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3235,
+            "output_tokens": 24,
+            "duration_ms": 13760
+          }
+        ]
+      }
+    },
+    {
+      "case": "relationship_recovery",
+      "repeat": 0,
+      "phase": "relationship_recovery",
+      "audit": {
+        "passed": false,
+        "native_success": null,
+        "native_checks": null,
+        "model_calls": 11,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "e49feab199499f5c3550266cbf933c68967e62b1289be3a11a0e76880a578944",
+        "task_state": "FALSE",
+        "execution_stop": "BUDGET_EXHAUSTED",
+        "steps": 12,
+        "tool_attempts": 11,
+        "compactions": 9,
+        "judge": "f2db48453134dd7dc85d4b5afb7de21f90fa9560db899f6ff2fc340dd877bfc2",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/relationship_recovery-6-0/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 9,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1080,
+            "output_tokens": 33,
+            "duration_ms": 10101
+          },
+          {
+            "event": 16,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1201,
+            "output_tokens": 27,
+            "duration_ms": 5217
+          },
+          {
+            "event": 24,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2201,
+            "output_tokens": 59,
+            "duration_ms": 14413
+          },
+          {
+            "event": 32,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2371,
+            "output_tokens": 55,
+            "duration_ms": 15412
+          },
+          {
+            "event": 40,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1909,
+            "output_tokens": 57,
+            "duration_ms": 11966
+          },
+          {
+            "event": 48,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2038,
+            "output_tokens": 57,
+            "duration_ms": 12485
+          },
+          {
+            "event": 56,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2069,
+            "output_tokens": 53,
+            "duration_ms": 11454
+          },
+          {
+            "event": 64,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2062,
+            "output_tokens": 58,
+            "duration_ms": 11003
+          },
+          {
+            "event": 72,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2066,
+            "output_tokens": 54,
+            "duration_ms": 11512
+          },
+          {
+            "event": 80,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2073,
+            "output_tokens": 50,
+            "duration_ms": 14030
+          },
+          {
+            "event": 88,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2060,
+            "output_tokens": 56,
+            "duration_ms": 11471
+          }
+        ]
+      }
+    },
+    {
+      "case": "relationship_recovery",
+      "repeat": 1,
+      "phase": "relationship_recovery",
+      "audit": {
+        "passed": false,
+        "native_success": null,
+        "native_checks": null,
+        "model_calls": 11,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "4d649d352390ba0e35eb8d14a41786c65b92e9912505d289931c21d3ef6e2785",
+        "task_state": "FALSE",
+        "execution_stop": "BUDGET_EXHAUSTED",
+        "steps": 12,
+        "tool_attempts": 8,
+        "compactions": 9,
+        "judge": "a40f60d9c0a1d23cdba60001e94ceff684859365b93d91cfd04983e97d3dd39c",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/relationship_recovery-6-1/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 9,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1079,
+            "output_tokens": 33,
+            "duration_ms": 5371
+          },
+          {
+            "event": 16,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1201,
+            "output_tokens": 26,
+            "duration_ms": 4821
+          },
+          {
+            "event": 24,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1411,
+            "output_tokens": 71,
+            "duration_ms": 10563
+          },
+          {
+            "event": 30,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1592,
+            "output_tokens": 65,
+            "duration_ms": 10061
+          },
+          {
+            "event": 38,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1699,
+            "output_tokens": 32,
+            "duration_ms": 8564
+          },
+          {
+            "event": 46,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2017,
+            "output_tokens": 65,
+            "duration_ms": 13885
+          },
+          {
+            "event": 54,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2050,
+            "output_tokens": 27,
+            "duration_ms": 9331
+          },
+          {
+            "event": 62,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2662,
+            "output_tokens": 53,
+            "duration_ms": 16557
+          },
+          {
+            "event": 70,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3123,
+            "output_tokens": 38,
+            "duration_ms": 18188
+          },
+          {
+            "event": 76,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2456,
+            "output_tokens": 37,
+            "duration_ms": 13373
+          },
+          {
+            "event": 84,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1908,
+            "output_tokens": 33,
+            "duration_ms": 10412
+          }
+        ]
+      }
+    },
+    {
+      "case": "relationship_recovery",
+      "repeat": 2,
+      "phase": "relationship_recovery",
+      "audit": {
+        "passed": false,
+        "native_success": null,
+        "native_checks": null,
+        "model_calls": 11,
+        "kernel_calls": 1,
+        "handoffs": 1,
+        "goals_pinned": true,
+        "scripted_actor": false,
+        "trace_complete": true,
+        "event_head": "89bd3f11f83e33bdfb0393ddfc821dc632ef13bf07f2f84f08b007d5198a2d46",
+        "task_state": "FALSE",
+        "execution_stop": "BUDGET_EXHAUSTED",
+        "steps": 12,
+        "tool_attempts": 8,
+        "compactions": 9,
+        "judge": "c7bebfd4a8f531482ee7a8807c9da4dc17a2d22fe4014cc853e7a6e71f8424bd",
+        "run": "<workspace>/runs/learning/policy-acceptance-v4/live/relationship_recovery-6-2/react",
+        "wire_receipts_valid": true,
+        "wire_receipts": [
+          {
+            "event": 9,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1081,
+            "output_tokens": 33,
+            "duration_ms": 6946
+          },
+          {
+            "event": 16,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1200,
+            "output_tokens": 28,
+            "duration_ms": 9395
+          },
+          {
+            "event": 22,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1250,
+            "output_tokens": 24,
+            "duration_ms": 7738
+          },
+          {
+            "event": 30,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2701,
+            "output_tokens": 58,
+            "duration_ms": 14639
+          },
+          {
+            "event": 38,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2867,
+            "output_tokens": 55,
+            "duration_ms": 17313
+          },
+          {
+            "event": 46,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2037,
+            "output_tokens": 51,
+            "duration_ms": 11822
+          },
+          {
+            "event": 54,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2531,
+            "output_tokens": 87,
+            "duration_ms": 19205
+          },
+          {
+            "event": 65,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 1952,
+            "output_tokens": 33,
+            "duration_ms": 15527
+          },
+          {
+            "event": 73,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 2032,
+            "output_tokens": 27,
+            "duration_ms": 10074
+          },
+          {
+            "event": 81,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3370,
+            "output_tokens": 51,
+            "duration_ms": 19541
+          },
+          {
+            "event": 89,
+            "valid": true,
+            "context_length": 8192,
+            "prompt_tokens": 3747,
+            "output_tokens": 34,
+            "duration_ms": 19818
+          }
+        ]
+      }
+    }
+  ],
+  "sealed": [
+    {
+      "case": 0,
+      "component": "discovery",
+      "passed": true,
+      "ranked": [
+        "app__follow_record4194",
+        "app__unfollow_record4194"
+      ]
+    },
+    {
+      "case": 1,
+      "component": "binding",
+      "passed": true,
+      "observations": [
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "record_id must be grounded in an observed record_id; read evidence before rebinding",
+            "repair_attempts_remaining": 2
+          },
+          null
+        ],
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "record_id must be grounded in an observed record_id; read evidence before rebinding",
+            "repair_attempts_remaining": 1
+          },
+          null
+        ],
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "record_id must be grounded in an observed record_id; read evidence before rebinding",
+            "repair_attempts_remaining": 0
+          },
+          "ARGUMENT_REPAIR_EXHAUSTED"
+        ]
+      ],
+      "arguments_unchanged": true
+    },
+    {
+      "case": 2,
+      "component": "context",
+      "passed": false,
+      "error": "CONTEXT_OVERFLOW"
+    },
+    {
+      "case": 3,
+      "component": "discovery",
+      "passed": true,
+      "ranked": [
+        "app__archive_item545",
+        "app__unarchive_item545"
+      ]
+    },
+    {
+      "case": 4,
+      "component": "binding",
+      "passed": true,
+      "observations": [
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'record_id' is a required property; expected fields: record_id",
+            "repair_attempts_remaining": 2
+          },
+          null
+        ],
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'record_id' is a required property; expected fields: record_id",
+            "repair_attempts_remaining": 1
+          },
+          null
+        ],
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'record_id' is a required property; expected fields: record_id",
+            "repair_attempts_remaining": 0
+          },
+          "ARGUMENT_REPAIR_EXHAUSTED"
+        ]
+      ],
+      "arguments_unchanged": true
+    },
+    {
+      "case": 5,
+      "component": "context",
+      "passed": false,
+      "stagnant": 7
+    },
+    {
+      "case": 6,
+      "component": "discovery",
+      "passed": true,
+      "ranked": [
+        "app__activate_item9961",
+        "app__deactivate_item9961"
+      ]
+    },
+    {
+      "case": 7,
+      "component": "binding",
+      "passed": true,
+      "observations": [
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'not-an-integer' is not of type 'integer'; expected fields: record_id",
+            "repair_attempts_remaining": 2
+          },
+          null
+        ],
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'not-an-integer' is not of type 'integer'; expected fields: record_id",
+            "repair_attempts_remaining": 1
+          },
+          null
+        ],
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'not-an-integer' is not of type 'integer'; expected fields: record_id",
+            "repair_attempts_remaining": 0
+          },
+          "ARGUMENT_REPAIR_EXHAUSTED"
+        ]
+      ],
+      "arguments_unchanged": true
+    },
+    {
+      "case": 8,
+      "component": "context",
+      "passed": false,
+      "error": "CONTEXT_OVERFLOW"
+    },
+    {
+      "case": 9,
+      "component": "discovery",
+      "passed": true,
+      "ranked": [
+        "app__lock_account1185",
+        "app__unlock_account1185"
+      ]
+    },
+    {
+      "case": 10,
+      "component": "binding",
+      "passed": true,
+      "observations": [
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'record_id' is a required property; expected fields: record_id",
+            "repair_attempts_remaining": 2
+          },
+          null
+        ],
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'record_id' is a required property; expected fields: record_id",
+            "repair_attempts_remaining": 1
+          },
+          null
+        ],
+        [
+          {
+            "code": "ARGUMENT_SCHEMA_INVALID",
+            "message": "'record_id' is a required property; expected fields: record_id",
+            "repair_attempts_remaining": 0
+          },
+          "ARGUMENT_REPAIR_EXHAUSTED"
+        ]
+      ],
+      "arguments_unchanged": true
+    },
+    {
+      "case": 11,
+      "component": "context",
+      "passed": false,
+      "stagnant": 6
+    }
+  ],
+  "negative_control": {
+    "receipt": "b75d7e593549d18bd3e7de6c1adb896324739930a826cc613a6421f79c6d1f89",
+    "accepted": false,
+    "versions_unchanged": true
+  },
+  "active_kernel": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+  "active_policy": "031ff288b70a5618448dbf7739accb8523c62881e1480abeb34dda9dc0a20f8e",
+  "sources_unchanged": true,
+  "manual_changes": [
+    "Registered policy interpreters and provider schema projection",
+    "Session errors stop uncertain effects",
+    "Immutable import, frozen evaluator, promotion protocol"
+  ],
+  "learned_changes": [
+    {
+      "component": "discovery",
+      "bundle": "4f831b1b4b895af4eff6a6a514313b78a398c0c0d1884c9838b9c3bcb285e090"
+    },
+    {
+      "component": "binding",
+      "bundle": "031ff288b70a5618448dbf7739accb8523c62881e1480abeb34dda9dc0a20f8e"
+    }
+  ],
+  "limitations": [
+    "Finite engineering acceptance, not general API semantics learning",
+    "Native cases are exposed training variants",
+    "Registered strategy search, no model weight training"
+  ]
+}

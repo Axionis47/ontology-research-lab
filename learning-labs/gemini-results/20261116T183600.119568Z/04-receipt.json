@@ -1,0 +1,14 @@
+{
+  "experiment": "04-relationship-entities",
+  "status": "PREPARED_NOT_RUN",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"04\",\n  \"title\": \"A relationship with scope and time\",\n  \"terms\": {\n    \"assignment\": \"An entity describing a relationship and its details.\",\n    \"scope\": \"Where a responsibility applies.\",\n    \"expiry\": \"Exclusive end of validity.\"\n  },\n  \"instruction\": \"Return people supported as maintainers of LoginService. A matching assignment must have role Maintainer, matching environment, and validFrom <= date < validUntil. Empty lists mean no supporting observation.\",\n  \"input\": {\n    \"assignments\": [\n      {\n        \"person\": \"Maya\",\n        \"service\": \"LoginService\",\n        \"role\": \"Maintainer\",\n        \"environment\": \"Staging\",\n        \"validFrom\": \"2026-11-01\",\n        \"validUntil\": \"2026-11-20\"\n      }\n    ],\n    \"queries\": {\n      \"A\": {\n        \"environment\": \"Staging\",\n        \"date\": \"2026-11-16\"\n      },\n      \"B\": {\n        \"environment\": \"Production\",\n        \"date\": \"2026-11-16\"\n      },\n      \"C\": {\n        \"environment\": \"Staging\",\n        \"date\": \"2026-11-20\"\n      }\n    }\n  },\n  \"output_shape\": {\n    \"A\": \"array of people\",\n    \"B\": \"array of people\",\n    \"C\": \"array of people\"\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "A": [
+      "Maya"
+    ],
+    "B": [],
+    "C": []
+  },
+  "reported_models": [],
+  "passed": null
+}

@@ -1,0 +1,41 @@
+{
+  "experiment": "04",
+  "title": "A relationship with scope and time",
+  "terms": {
+    "assignment": "An entity describing a relationship and its details.",
+    "scope": "Where a responsibility applies.",
+    "expiry": "Exclusive end of validity."
+  },
+  "instruction": "Return people supported as maintainers of LoginService. A matching assignment must have role Maintainer, matching environment, and validFrom <= date < validUntil. Empty lists mean no supporting observation.",
+  "input": {
+    "assignments": [
+      {
+        "person": "Maya",
+        "service": "LoginService",
+        "role": "Maintainer",
+        "environment": "Staging",
+        "validFrom": "2026-11-01",
+        "validUntil": "2026-11-20"
+      }
+    ],
+    "queries": {
+      "A": {
+        "environment": "Staging",
+        "date": "2026-11-16"
+      },
+      "B": {
+        "environment": "Production",
+        "date": "2026-11-16"
+      },
+      "C": {
+        "environment": "Staging",
+        "date": "2026-11-20"
+      }
+    }
+  },
+  "output_shape": {
+    "A": "array of people",
+    "B": "array of people",
+    "C": "array of people"
+  }
+}

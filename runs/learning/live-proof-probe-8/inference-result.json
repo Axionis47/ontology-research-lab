@@ -1,0 +1,65 @@
+{
+  "requests": [
+    {
+      "request_id": "live-probe-8",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested state independently verified",
+        "steps": 6,
+        "tool_attempts": 4,
+        "compactions": 1,
+        "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "kernel_handoff": {
+          "reason": "CAPABILITY_GAP",
+          "pending_work": "The learned selection would change protected records. Its plan was refused before dispatch; use the original conditions and current evidence.",
+          "evidence_ids": [
+            "add07229-f77f-4af0-85fd-b3aa06391935"
+          ],
+          "step": 1,
+          "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+        },
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/live-proof-probe-8/inference/22c53d6d4b27c0bf2077/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/live-proof-probe-8/inference/22c53d6d4b27c0bf2077/react/exports/dc424597-e1a6-4938-96d1-24fc5c9a4841/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "cd36c10f625e5cfc4a4735f93e56bf19867d47a0bdc1e35682a169b944a171ed",
+      "task_state": "TRUE",
+      "recovered": true,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "3858738db4833e6ac75b67e73a931e6cec8ecd9b47f1baf45fb8ee117ea28471",
+      "native": {
+        "success": true,
+        "evaluation": "9235cf9f0eca0e01eb171817df43d77298e2b5801e1400f3c976d170819863be",
+        "mcp_segments": [
+          "4595c1b522d320b41c8cd51c9c8d1c5647ed2042d39fdeba4028cf7d2d2e3cc0",
+          "d33984db313626aa5496e0afb3b850be640db795e950945b45495b8b5e8a688d"
+        ],
+        "mcp_events": 32,
+        "task_id": "07b42fd_1",
+        "scope": "appworld:07b42fd_1:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+    }
+  ],
+  "archive": {
+    "active": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+    "generation": 1,
+    "proposals_spent": 0,
+    "cycles_spent": 0,
+    "cases": {
+      "READY": 1
+    },
+    "decisions": [],
+    "native_performance_claimed": false
+  },
+  "audit": {
+    "complete": true,
+    "event_head": "918a637a2c7e89c3f983bd65c24d5e51bfb97bbb07fdd6240f71b688501e84eb"
+  },
+  "demo_actor": null
+}

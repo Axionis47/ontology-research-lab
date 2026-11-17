@@ -1,0 +1,61 @@
+You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.
+
+{
+  "experiment": "03",
+  "title": "Valid does not mean evidenced",
+  "terms": {
+    "constraint": "An explicit acceptance condition.",
+    "provenance": "The source supporting a claim."
+  },
+  "instruction": "For this closed fixture maintains requires an explicitly typed Person subject and Service object. Admit only if the source receipt exactly supports the claim. This is a validation policy, not RDFS inference.",
+  "input": {
+    "types": {
+      "Maya": "Person",
+      "LoginService": "Service"
+    },
+    "candidates": {
+      "A": {
+        "triple": [
+          "Maya",
+          "maintains",
+          "LoginService"
+        ],
+        "receipt": null
+      },
+      "B": {
+        "triple": [
+          "LoginService",
+          "maintains",
+          "Maya"
+        ],
+        "receipt": null
+      },
+      "C": {
+        "triple": [
+          "Maya",
+          "maintains",
+          "LoginService"
+        ],
+        "receipt": [
+          "Maya",
+          "maintains",
+          "LoginService"
+        ]
+      }
+    }
+  },
+  "output_shape": {
+    "A": {
+      "structure_valid": "boolean",
+      "admitted": "boolean"
+    },
+    "B": {
+      "structure_valid": "boolean",
+      "admitted": "boolean"
+    },
+    "C": {
+      "structure_valid": "boolean",
+      "admitted": "boolean"
+    }
+  }
+}

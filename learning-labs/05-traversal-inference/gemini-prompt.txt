@@ -1,0 +1,46 @@
+You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.
+
+{
+  "experiment": "05",
+  "title": "Connected is not authorized",
+  "terms": {
+    "traversal": "Following stored edges.",
+    "inference": "Drawing a conclusion under an explicit rule.",
+    "unknown": "The available evidence does not establish the conclusion."
+  },
+  "instruction": "Approval requires a current DeploymentApprover assignment for LoginService in Production. Membership is not sufficient. Return SUPPORTED or UNKNOWN for each case.",
+  "input": {
+    "shared_facts": [
+      [
+        "Maya",
+        "belongsTo",
+        "Atlas"
+      ],
+      [
+        "LoginService",
+        "belongsTo",
+        "Atlas"
+      ]
+    ],
+    "cases": {
+      "A": {
+        "assignments": []
+      },
+      "B": {
+        "assignments": [
+          {
+            "person": "Maya",
+            "role": "DeploymentApprover",
+            "service": "LoginService",
+            "environment": "Production",
+            "current": true
+          }
+        ]
+      }
+    }
+  },
+  "output_shape": {
+    "A": "SUPPORTED or UNKNOWN",
+    "B": "SUPPORTED or UNKNOWN"
+  }
+}

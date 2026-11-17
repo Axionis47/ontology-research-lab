@@ -1,0 +1,99 @@
+{
+  "kind": "readiness_probe_not_experiment",
+  "timeout_seconds": 30,
+  "prompt": "Do not use tools. Reply with exactly MODEL_OK.",
+  "exit_code": 0,
+  "status": "RESPONSE",
+  "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+  "cli_response": {
+    "session_id": "90b981d2-6d40-4d26-b229-2bb594a78d76",
+    "response": "MODEL_OK",
+    "stats": {
+      "models": {
+        "gemini-3.5-flash-lite": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 4001,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 924,
+            "prompt": 924,
+            "candidates": 25,
+            "total": 1353,
+            "cached": 0,
+            "thoughts": 404,
+            "tool": 0
+          },
+          "roles": {
+            "utility_router": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 4001,
+              "tokens": {
+                "input": 924,
+                "prompt": 924,
+                "candidates": 25,
+                "total": 1353,
+                "cached": 0,
+                "thoughts": 404,
+                "tool": 0
+              }
+            }
+          }
+        },
+        "gemini-3.8-flash": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 1752,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 5910,
+            "prompt": 5910,
+            "candidates": 3,
+            "total": 5971,
+            "cached": 0,
+            "thoughts": 58,
+            "tool": 0
+          },
+          "roles": {
+            "main": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 1752,
+              "tokens": {
+                "input": 5910,
+                "prompt": 5910,
+                "candidates": 3,
+                "total": 5971,
+                "cached": 0,
+                "thoughts": 58,
+                "tool": 0
+              }
+            }
+          }
+        }
+      },
+      "tools": {
+        "totalCalls": 0,
+        "totalSuccess": 0,
+        "totalFail": 0,
+        "totalDurationMs": 0,
+        "totalDecisions": {
+          "accept": 0,
+          "reject": 0,
+          "modify": 0,
+          "auto_accept": 0
+        },
+        "byName": {}
+      },
+      "files": {
+        "totalLinesAdded": 0,
+        "totalLinesRemoved": 0
+      }
+    }
+  }
+}

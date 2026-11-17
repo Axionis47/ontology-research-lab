@@ -1,0 +1,17 @@
+{
+  "project": "01-triples",
+  "exit_code": 0,
+  "json_result": true,
+  "passed": true,
+  "check_count": 4,
+  "status": "EXECUTED",
+  "source_sha256": {
+    "run.py": "e80880d674fd7b5c3704d494c221af29ab3d03a163d9f105d1eb286f5aedfe1f",
+    "input.json": "69f47c679dc8450d75f29b0ba0e87fd1d8f0629f47b5de1cae9b86c4c8900bd7",
+    "README.md": "4685d9a589d873cba4a7a23f65b784d02bc9ca5f474b4e7de6717e01c71ad7b0",
+    "query.rq": "3f6fb45165307bd2f24b90717e34af8ddbc49532a7bc24937a7d79235bf7d44c",
+    "graph.ttl": "1d37dee5d067e52878c586b96c17b00f38d849cb4b2d4c8eb87222604418b63c"
+  },
+  "stdout": "{\n  \"kind\": \"synthetic_component_experiment\",\n  \"engine\": \"explicit_python_not_standards_engine\",\n  \"inputs\": {\n    \"input.json\": {\n      \"triples\": [\n        [\n          \"Maya\",\n          \"maintains\",\n          \"LoginService\"\n        ],\n        [\n          \"LoginService\",\n          \"belongsTo\",\n          \"Atlas\"\n        ]\n      ]\n    }\n  },\n  \"source_sha256\": \"e80880d674fd7b5c3704d494c221af29ab3d03a163d9f105d1eb286f5aedfe1f\",\n  \"observations\": {\n    \"maya_maintains\": [\n      \"LoginService\"\n    ],\n    \"service_project\": [\n      \"Atlas\"\n    ],\n    \"reverse_lookup\": [],\n    \"unique_triples\": 2\n  },\n  \"checks\": {\n    \"lookup_service\": true,\n    \"lookup_project\": true,\n    \"direction_is_not_reversed\": true,\n    \"duplicate_has_no_new_meaning\": true\n  },\n  \"passed\": true\n}\n",
+  "stderr": ""
+}

@@ -1,0 +1,18 @@
+{
+  "project": "02-ontology-vs-facts",
+  "exit_code": 0,
+  "json_result": true,
+  "passed": true,
+  "check_count": 4,
+  "status": "EXECUTED",
+  "source_sha256": {
+    "run.py": "a045302f5c128d4e7b0c18529f0596d19418ac91fe74ae34b0460b0370e52115",
+    "ontology.json": "044be37f8d006006934b81f028dcd8020d556f3ae7e2c70c6b65c94286d8495b",
+    "README.md": "2c1137bdb9cb926f9bd60ee0b56b7be001263ad00db9f1599438f66adb40c300",
+    "facts.json": "a34e00d675b99572537ded1e80779fab432d14c276388c1277af3a5577fc0b21",
+    "new-observation.json": "a7cc0937a7960356dff33de5f71c978df1ba6aa43b0a32e9de0c67e12c3c8882",
+    "ontology.ttl": "3cad8427009089db98d86e72ac964dcb117712a5424b572ff66744bdb9b33afc"
+  },
+  "stdout": "{\n  \"kind\": \"synthetic_component_experiment\",\n  \"engine\": \"explicit_python_not_standards_engine\",\n  \"inputs\": {\n    \"facts.json\": [\n      [\n        \"Maya\",\n        \"type\",\n        \"Person\"\n      ],\n      [\n        \"LoginService\",\n        \"type\",\n        \"Service\"\n      ],\n      [\n        \"Atlas\",\n        \"type\",\n        \"Project\"\n      ],\n      [\n        \"Maya\",\n        \"maintains\",\n        \"LoginService\"\n      ]\n    ],\n    \"new-observation.json\": [\n      \"Noah\",\n      \"type\",\n      \"Person\"\n    ],\n    \"ontology.json\": {\n      \"version\": \"1\",\n      \"classes\": [\n        \"Person\",\n        \"Service\",\n        \"Project\"\n      ],\n      \"relations\": {\n        \"maintains\": {\n          \"domain\": \"Person\",\n          \"range\": \"Service\"\n        },\n        \"belongsTo\": {\n          \"domain\": \"Service\",\n          \"range\": \"Project\"\n        }\n      }\n    }\n  },\n  \"source_sha256\": \"a045302f5c128d4e7b0c18529f0596d19418ac91fe74ae34b0460b0370e52115\",\n  \"observations\": {\n    \"ontology_before\": \"86914be45bd9bd186a69b5eb877cc938a7892b73aa01de313e9b053cd47f4d66\",\n    \"ontology_after\": \"86914be45bd9bd186a69b5eb877cc938a7892b73aa01de313e9b053cd47f4d66\",\n    \"graph_before\": \"11d2b62e76cc18ee7ed3adc2efc4ef726858345c8abd5f5215c5a839dd925a9d\",\n    \"graph_after\": \"a2b7b8a4170585b2d93115331f0c0b08a8693e54dcc97535626282c86ef5cd49\",\n    \"added\": [\n      \"Noah\",\n      \"type\",\n      \"Person\"\n    ],\n    \"unknown_Robot_type_admitted\": false\n  },\n  \"checks\": {\n    \"definition_unchanged\": true,\n    \"graph_changed\": true,\n    \"new_instance_uses_existing_type\": true,\n    \"unknown_type_not_silently_added\": true\n  },\n  \"passed\": true\n}\n",
+  "stderr": ""
+}

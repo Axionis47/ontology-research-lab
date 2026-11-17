@@ -1,0 +1,6 @@
+{
+  "mode": "full",
+  "title": "All definitions injected",
+  "mechanism": "Full ontology in context; LLM interprets and combines the rules.",
+  "limitation": "Large vocabularies consume context; definitions in a prompt are not enforcement."
+}

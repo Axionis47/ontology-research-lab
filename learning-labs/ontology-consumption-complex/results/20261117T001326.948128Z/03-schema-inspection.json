@@ -1,0 +1,1007 @@
+{
+  "experiment": "03-schema-inspection",
+  "mode": "inspect",
+  "status": "MEASURED",
+  "initial_payload": {
+    "task": {
+      "deployment_id": "d2",
+      "at": "2026-11-16",
+      "required_roles": [
+        "OpsApprover",
+        "SecurityApprover"
+      ]
+    },
+    "task_instruction": "Select the required two-person approval panel using the pinned rules.",
+    "facts": {
+      "revision": 7,
+      "source": "synthetic://complex-approvals/world-1",
+      "coverage": "Complete authoritative fixture for these records at revision 7. Missing qualifying records mean no qualifying record in this fixture. Unknown identifiers remain unknown.",
+      "records": [
+        {
+          "id": "org-mercury",
+          "type": "Organization",
+          "name": "Mercury"
+        },
+        {
+          "id": "project-atlas",
+          "type": "Project",
+          "organization": "org-mercury"
+        },
+        {
+          "id": "project-other",
+          "type": "Project",
+          "organization": "org-mercury"
+        },
+        {
+          "id": "svc-login",
+          "type": "Service",
+          "project": "project-atlas",
+          "region": "EU"
+        },
+        {
+          "id": "d2",
+          "type": "Deployment",
+          "service": "svc-login",
+          "author": "Maya",
+          "environment": "Production",
+          "risk": 4
+        },
+        {
+          "id": "Identity",
+          "type": "Team"
+        },
+        {
+          "id": "Platform",
+          "type": "Team"
+        },
+        {
+          "id": "Security",
+          "type": "Team"
+        },
+        {
+          "id": "Maya",
+          "type": "Person"
+        },
+        {
+          "id": "m-Maya",
+          "type": "Membership",
+          "person": "Maya",
+          "team": "Identity",
+          "home": true,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "c-Maya",
+          "type": "Certificate",
+          "person": "Maya",
+          "purpose": "deployment-approval",
+          "region": "EU",
+          "environment": "Production",
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "Noah",
+          "type": "Person"
+        },
+        {
+          "id": "m-Noah",
+          "type": "Membership",
+          "person": "Noah",
+          "team": "Identity",
+          "home": true,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "c-Noah",
+          "type": "Certificate",
+          "person": "Noah",
+          "purpose": "deployment-approval",
+          "region": "EU",
+          "environment": "Production",
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "Rin",
+          "type": "Person"
+        },
+        {
+          "id": "m-Rin",
+          "type": "Membership",
+          "person": "Rin",
+          "team": "Security",
+          "home": true,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "c-Rin",
+          "type": "Certificate",
+          "person": "Rin",
+          "purpose": "deployment-approval",
+          "region": "EU",
+          "environment": "Production",
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2026-11-15"
+        },
+        {
+          "id": "Tao",
+          "type": "Person"
+        },
+        {
+          "id": "m-Tao",
+          "type": "Membership",
+          "person": "Tao",
+          "team": "Identity",
+          "home": true,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "c-Tao",
+          "type": "Certificate",
+          "person": "Tao",
+          "purpose": "deployment-approval",
+          "region": "EU",
+          "environment": "Production",
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "Iris",
+          "type": "Person"
+        },
+        {
+          "id": "m-Iris",
+          "type": "Membership",
+          "person": "Iris",
+          "team": "Platform",
+          "home": true,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "c-Iris",
+          "type": "Certificate",
+          "person": "Iris",
+          "purpose": "deployment-approval",
+          "region": "EU",
+          "environment": "Production",
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2026-11-15"
+        },
+        {
+          "id": "Uma",
+          "type": "Person"
+        },
+        {
+          "id": "m-Uma",
+          "type": "Membership",
+          "person": "Uma",
+          "team": "Identity",
+          "home": true,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "c-Uma",
+          "type": "Certificate",
+          "person": "Uma",
+          "purpose": "deployment-approval",
+          "region": "EU",
+          "environment": "Production",
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "Vera",
+          "type": "Person"
+        },
+        {
+          "id": "m-Vera",
+          "type": "Membership",
+          "person": "Vera",
+          "team": "Platform",
+          "home": true,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "c-Vera",
+          "type": "Certificate",
+          "person": "Vera",
+          "purpose": "deployment-approval",
+          "region": "EU",
+          "environment": "Production",
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "Wes",
+          "type": "Person"
+        },
+        {
+          "id": "m-Wes",
+          "type": "Membership",
+          "person": "Wes",
+          "team": "Security",
+          "home": true,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "c-Wes",
+          "type": "Certificate",
+          "person": "Wes",
+          "purpose": "deployment-approval",
+          "region": "EU",
+          "environment": "Production",
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "Xena",
+          "type": "Person"
+        },
+        {
+          "id": "m-Xena",
+          "type": "Membership",
+          "person": "Xena",
+          "team": "Security",
+          "home": true,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "c-Xena",
+          "type": "Certificate",
+          "person": "Xena",
+          "purpose": "deployment-approval",
+          "region": "EU",
+          "environment": "Production",
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "Yuri",
+          "type": "Person"
+        },
+        {
+          "id": "m-Yuri",
+          "type": "Membership",
+          "person": "Yuri",
+          "team": "Platform",
+          "home": true,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "c-Yuri",
+          "type": "Certificate",
+          "person": "Yuri",
+          "purpose": "deployment-approval",
+          "region": "US",
+          "environment": "Production",
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "Zoe",
+          "type": "Person"
+        },
+        {
+          "id": "m-Zoe",
+          "type": "Membership",
+          "person": "Zoe",
+          "team": "Platform",
+          "home": true,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "c-Zoe",
+          "type": "Certificate",
+          "person": "Zoe",
+          "purpose": "deployment-approval",
+          "region": "EU",
+          "environment": "Production",
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "g-Maya",
+          "type": "Grant",
+          "holder": "Maya",
+          "role": "OpsApprover",
+          "scope": "project-atlas",
+          "maxRisk": 5,
+          "delegable": false,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "g-Noah",
+          "type": "Grant",
+          "holder": "Noah",
+          "role": "OpsApprover",
+          "scope": "project-atlas",
+          "maxRisk": 3,
+          "delegable": false,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "g-Rin",
+          "type": "Grant",
+          "holder": "Rin",
+          "role": "SecurityApprover",
+          "scope": "project-atlas",
+          "maxRisk": 5,
+          "delegable": false,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "g-Tao",
+          "type": "Grant",
+          "holder": "Tao",
+          "role": "SecurityApprover",
+          "scope": "project-atlas",
+          "maxRisk": 5,
+          "delegable": false,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "g-Iris",
+          "type": "Grant",
+          "holder": "Iris",
+          "role": "OpsApprover",
+          "scope": "project-atlas",
+          "maxRisk": 5,
+          "delegable": true,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "g-Wes",
+          "type": "Grant",
+          "holder": "Wes",
+          "role": "SecurityApprover",
+          "scope": "project-other",
+          "maxRisk": 5,
+          "delegable": false,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "g-Yuri",
+          "type": "Grant",
+          "holder": "Yuri",
+          "role": "OpsApprover",
+          "scope": "org-mercury",
+          "maxRisk": 5,
+          "delegable": false,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "g-Zoe",
+          "type": "Grant",
+          "holder": "Zoe",
+          "role": "OpsApprover",
+          "scope": "svc-login",
+          "maxRisk": 5,
+          "delegable": false,
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        },
+        {
+          "id": "del-Uma",
+          "type": "Delegation",
+          "issuer": "Iris",
+          "recipient": "Uma",
+          "grant": "g-Iris",
+          "scope": "svc-login",
+          "maxRisk": 4,
+          "active": true,
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01"
+        },
+        {
+          "id": "del-Vera",
+          "type": "Delegation",
+          "issuer": "Iris",
+          "recipient": "Vera",
+          "grant": "g-Iris",
+          "scope": "svc-login",
+          "maxRisk": 4,
+          "active": true,
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01"
+        },
+        {
+          "id": "del-Xena",
+          "type": "Delegation",
+          "issuer": "Tao",
+          "recipient": "Xena",
+          "grant": "g-Tao",
+          "scope": "svc-login",
+          "maxRisk": 4,
+          "active": true,
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01"
+        },
+        {
+          "id": "deny-Zoe",
+          "type": "Deny",
+          "person": "Zoe",
+          "scope": "svc-login",
+          "active": true,
+          "validFrom": "2026-01-01",
+          "validUntil": "2027-01-01"
+        }
+      ]
+    },
+    "ontology_version": "approval-complex-v1",
+    "finish_shape": {
+      "type": "finish",
+      "panel": {
+        "ops": "person ID",
+        "security": "person ID"
+      },
+      "proof_ids": [
+        "complete proof record IDs"
+      ],
+      "rule_ids": [
+        "all applied rule IDs"
+      ],
+      "ontology_version": "pinned version",
+      "graph_revision": "integer"
+    },
+    "evidence_requirement": "For a selected panel cite the Deployment, Service, its Project and Organization. For EACH selected person cite their Person, current home Membership, Team, valid Certificate, source Grant, and Delegation if authority is indirect. Cite R1 through R10. Additional known record IDs are allowed. If no valid pair exists return panel=null. Do not invent record IDs.",
+    "catalog": {
+      "Organization": "type",
+      "Project": "type",
+      "Service": "type",
+      "Deployment": "type",
+      "Person": "type",
+      "Team": "type",
+      "Membership": "type",
+      "Grant": "type",
+      "Delegation": "type",
+      "Certificate": "type",
+      "Deny": "type",
+      "scopeCoverage": "relation_semantics",
+      "authorityPath": "relation_semantics",
+      "eligibility": "rule_set",
+      "Invoice": "type",
+      "Shipment": "type",
+      "Warehouse": "type",
+      "Subscription": "type",
+      "PurchaseOrder": "type",
+      "Refund": "type",
+      "TaxRate": "type",
+      "Inventory": "type"
+    },
+    "interfaces": {
+      "inspect_schema": {
+        "arguments": {
+          "names": "array of catalog names"
+        },
+        "returns": "Definitions and dependency closure. Request eligibility to obtain the complete approval rules."
+      }
+    },
+    "call_shape": {
+      "type": "call",
+      "name": "interface name",
+      "arguments": {
+        "documented": "arguments"
+      }
+    },
+    "consumption_protocol": "Successfully use the provided interface before finishing. Inspection must retrieve eligibility rules. One application request per turn, not a CLI built-in tool call."
+  },
+  "calls": [
+    {
+      "step": 0,
+      "submitted_prompt": "Solve the same fixed task using only the supplied facts, ontology and interfaces. Return one JSON object, no Markdown. Do not use CLI tools, read files, or change any external state.\n{\"context\":{\"task\":{\"deployment_id\":\"d2\",\"at\":\"2026-11-16\",\"required_roles\":[\"OpsApprover\",\"SecurityApprover\"]},\"task_instruction\":\"Select the required two-person approval panel using the pinned rules.\",\"facts\":{\"revision\":7,\"source\":\"synthetic://complex-approvals/world-1\",\"coverage\":\"Complete authoritative fixture for these records at revision 7. Missing qualifying records mean no qualifying record in this fixture. Unknown identifiers remain unknown.\",\"records\":[{\"id\":\"org-mercury\",\"type\":\"Organization\",\"name\":\"Mercury\"},{\"id\":\"project-atlas\",\"type\":\"Project\",\"organization\":\"org-mercury\"},{\"id\":\"project-other\",\"type\":\"Project\",\"organization\":\"org-mercury\"},{\"id\":\"svc-login\",\"type\":\"Service\",\"project\":\"project-atlas\",\"region\":\"EU\"},{\"id\":\"d2\",\"type\":\"Deployment\",\"service\":\"svc-login\",\"author\":\"Maya\",\"environment\":\"Production\",\"risk\":4},{\"id\":\"Identity\",\"type\":\"Team\"},{\"id\":\"Platform\",\"type\":\"Team\"},{\"id\":\"Security\",\"type\":\"Team\"},{\"id\":\"Maya\",\"type\":\"Person\"},{\"id\":\"m-Maya\",\"type\":\"Membership\",\"person\":\"Maya\",\"team\":\"Identity\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Maya\",\"type\":\"Certificate\",\"person\":\"Maya\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"Noah\",\"type\":\"Person\"},{\"id\":\"m-Noah\",\"type\":\"Membership\",\"person\":\"Noah\",\"team\":\"Identity\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Noah\",\"type\":\"Certificate\",\"person\":\"Noah\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"Rin\",\"type\":\"Person\"},{\"id\":\"m-Rin\",\"type\":\"Membership\",\"person\":\"Rin\",\"team\":\"Security\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Rin\",\"type\":\"Certificate\",\"person\":\"Rin\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2026-11-15\"},{\"id\":\"Tao\",\"type\":\"Person\"},{\"id\":\"m-Tao\",\"type\":\"Membership\",\"person\":\"Tao\",\"team\":\"Identity\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Tao\",\"type\":\"Certificate\",\"person\":\"Tao\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"Iris\",\"type\":\"Person\"},{\"id\":\"m-Iris\",\"type\":\"Membership\",\"person\":\"Iris\",\"team\":\"Platform\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Iris\",\"type\":\"Certificate\",\"person\":\"Iris\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2026-11-15\"},{\"id\":\"Uma\",\"type\":\"Person\"},{\"id\":\"m-Uma\",\"type\":\"Membership\",\"person\":\"Uma\",\"team\":\"Identity\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Uma\",\"type\":\"Certificate\",\"person\":\"Uma\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"Vera\",\"type\":\"Person\"},{\"id\":\"m-Vera\",\"type\":\"Membership\",\"person\":\"Vera\",\"team\":\"Platform\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Vera\",\"type\":\"Certificate\",\"person\":\"Vera\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"Wes\",\"type\":\"Person\"},{\"id\":\"m-Wes\",\"type\":\"Membership\",\"person\":\"Wes\",\"team\":\"Security\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Wes\",\"type\":\"Certificate\",\"person\":\"Wes\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"Xena\",\"type\":\"Person\"},{\"id\":\"m-Xena\",\"type\":\"Membership\",\"person\":\"Xena\",\"team\":\"Security\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Xena\",\"type\":\"Certificate\",\"person\":\"Xena\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"Yuri\",\"type\":\"Person\"},{\"id\":\"m-Yuri\",\"type\":\"Membership\",\"person\":\"Yuri\",\"team\":\"Platform\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Yuri\",\"type\":\"Certificate\",\"person\":\"Yuri\",\"purpose\":\"deployment-approval\",\"region\":\"US\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"Zoe\",\"type\":\"Person\"},{\"id\":\"m-Zoe\",\"type\":\"Membership\",\"person\":\"Zoe\",\"team\":\"Platform\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Zoe\",\"type\":\"Certificate\",\"person\":\"Zoe\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"g-Maya\",\"type\":\"Grant\",\"holder\":\"Maya\",\"role\":\"OpsApprover\",\"scope\":\"project-atlas\",\"maxRisk\":5,\"delegable\":false,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"g-Noah\",\"type\":\"Grant\",\"holder\":\"Noah\",\"role\":\"OpsApprover\",\"scope\":\"project-atlas\",\"maxRisk\":3,\"delegable\":false,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"g-Rin\",\"type\":\"Grant\",\"holder\":\"Rin\",\"role\":\"SecurityApprover\",\"scope\":\"project-atlas\",\"maxRisk\":5,\"delegable\":false,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"g-Tao\",\"type\":\"Grant\",\"holder\":\"Tao\",\"role\":\"SecurityApprover\",\"scope\":\"project-atlas\",\"maxRisk\":5,\"delegable\":false,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"g-Iris\",\"type\":\"Grant\",\"holder\":\"Iris\",\"role\":\"OpsApprover\",\"scope\":\"project-atlas\",\"maxRisk\":5,\"delegable\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"g-Wes\",\"type\":\"Grant\",\"holder\":\"Wes\",\"role\":\"SecurityApprover\",\"scope\":\"project-other\",\"maxRisk\":5,\"delegable\":false,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"g-Yuri\",\"type\":\"Grant\",\"holder\":\"Yuri\",\"role\":\"OpsApprover\",\"scope\":\"org-mercury\",\"maxRisk\":5,\"delegable\":false,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"g-Zoe\",\"type\":\"Grant\",\"holder\":\"Zoe\",\"role\":\"OpsApprover\",\"scope\":\"svc-login\",\"maxRisk\":5,\"delegable\":false,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"del-Uma\",\"type\":\"Delegation\",\"issuer\":\"Iris\",\"recipient\":\"Uma\",\"grant\":\"g-Iris\",\"scope\":\"svc-login\",\"maxRisk\":4,\"active\":true,\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\"},{\"id\":\"del-Vera\",\"type\":\"Delegation\",\"issuer\":\"Iris\",\"recipient\":\"Vera\",\"grant\":\"g-Iris\",\"scope\":\"svc-login\",\"maxRisk\":4,\"active\":true,\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\"},{\"id\":\"del-Xena\",\"type\":\"Delegation\",\"issuer\":\"Tao\",\"recipient\":\"Xena\",\"grant\":\"g-Tao\",\"scope\":\"svc-login\",\"maxRisk\":4,\"active\":true,\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\"},{\"id\":\"deny-Zoe\",\"type\":\"Deny\",\"person\":\"Zoe\",\"scope\":\"svc-login\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"}]},\"ontology_version\":\"approval-complex-v1\",\"finish_shape\":{\"type\":\"finish\",\"panel\":{\"ops\":\"person ID\",\"security\":\"person ID\"},\"proof_ids\":[\"complete proof record IDs\"],\"rule_ids\":[\"all applied rule IDs\"],\"ontology_version\":\"pinned version\",\"graph_revision\":\"integer\"},\"evidence_requirement\":\"For a selected panel cite the Deployment, Service, its Project and Organization. For EACH selected person cite their Person, current home Membership, Team, valid Certificate, source Grant, and Delegation if authority is indirect. Cite R1 through R10. Additional known record IDs are allowed. If no valid pair exists return panel=null. Do not invent record IDs.\",\"catalog\":{\"Organization\":\"type\",\"Project\":\"type\",\"Service\":\"type\",\"Deployment\":\"type\",\"Person\":\"type\",\"Team\":\"type\",\"Membership\":\"type\",\"Grant\":\"type\",\"Delegation\":\"type\",\"Certificate\":\"type\",\"Deny\":\"type\",\"scopeCoverage\":\"relation_semantics\",\"authorityPath\":\"relation_semantics\",\"eligibility\":\"rule_set\",\"Invoice\":\"type\",\"Shipment\":\"type\",\"Warehouse\":\"type\",\"Subscription\":\"type\",\"PurchaseOrder\":\"type\",\"Refund\":\"type\",\"TaxRate\":\"type\",\"Inventory\":\"type\"},\"interfaces\":{\"inspect_schema\":{\"arguments\":{\"names\":\"array of catalog names\"},\"returns\":\"Definitions and dependency closure. Request eligibility to obtain the complete approval rules.\"}},\"call_shape\":{\"type\":\"call\",\"name\":\"interface name\",\"arguments\":{\"documented\":\"arguments\"}},\"consumption_protocol\":\"Successfully use the provided interface before finishing. Inspection must retrieve eligibility rules. One application request per turn, not a CLI built-in tool call.\"},\"history\":[]}",
+      "user_chars": 8932,
+      "status": "RECEIVED",
+      "exit_code": 0,
+      "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+      "cli_response": {
+        "session_id": "5ab84348-0e12-4878-81ca-e84cd6b959ca",
+        "response": "{\"type\":\"call\",\"name\":\"inspect_schema\",\"arguments\":{\"names\":[\"eligibility\"]}}",
+        "stats": {
+          "models": {
+            "gemini-3.5-flash-lite": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 5171,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 3717,
+                "prompt": 3717,
+                "candidates": 65,
+                "total": 4350,
+                "cached": 0,
+                "thoughts": 568,
+                "tool": 0
+              },
+              "roles": {
+                "utility_router": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 5171,
+                  "tokens": {
+                    "input": 3717,
+                    "prompt": 3717,
+                    "candidates": 65,
+                    "total": 4350,
+                    "cached": 0,
+                    "thoughts": 568,
+                    "tool": 0
+                  }
+                }
+              }
+            },
+            "gemini-3.8-flash": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 10822,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 8708,
+                "prompt": 8708,
+                "candidates": 19,
+                "total": 10025,
+                "cached": 0,
+                "thoughts": 1298,
+                "tool": 0
+              },
+              "roles": {
+                "main": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 10822,
+                  "tokens": {
+                    "input": 8708,
+                    "prompt": 8708,
+                    "candidates": 19,
+                    "total": 10025,
+                    "cached": 0,
+                    "thoughts": 1298,
+                    "tool": 0
+                  }
+                }
+              }
+            }
+          },
+          "tools": {
+            "totalCalls": 0,
+            "totalSuccess": 0,
+            "totalFail": 0,
+            "totalDurationMs": 0,
+            "totalDecisions": {
+              "accept": 0,
+              "reject": 0,
+              "modify": 0,
+              "auto_accept": 0
+            },
+            "byName": {}
+          },
+          "files": {
+            "totalLinesAdded": 0,
+            "totalLinesRemoved": 0
+          }
+        }
+      },
+      "parsed": {
+        "type": "call",
+        "name": "inspect_schema",
+        "arguments": {
+          "names": [
+            "eligibility"
+          ]
+        }
+      }
+    },
+    {
+      "step": 1,
+      "submitted_prompt": "Solve the same fixed task using only the supplied facts, ontology and interfaces. Return one JSON object, no Markdown. Do not use CLI tools, read files, or change any external state.\n{\"context\":{\"task\":{\"deployment_id\":\"d2\",\"at\":\"2026-11-16\",\"required_roles\":[\"OpsApprover\",\"SecurityApprover\"]},\"task_instruction\":\"Select the required two-person approval panel using the pinned rules.\",\"facts\":{\"revision\":7,\"source\":\"synthetic://complex-approvals/world-1\",\"coverage\":\"Complete authoritative fixture for these records at revision 7. Missing qualifying records mean no qualifying record in this fixture. Unknown identifiers remain unknown.\",\"records\":[{\"id\":\"org-mercury\",\"type\":\"Organization\",\"name\":\"Mercury\"},{\"id\":\"project-atlas\",\"type\":\"Project\",\"organization\":\"org-mercury\"},{\"id\":\"project-other\",\"type\":\"Project\",\"organization\":\"org-mercury\"},{\"id\":\"svc-login\",\"type\":\"Service\",\"project\":\"project-atlas\",\"region\":\"EU\"},{\"id\":\"d2\",\"type\":\"Deployment\",\"service\":\"svc-login\",\"author\":\"Maya\",\"environment\":\"Production\",\"risk\":4},{\"id\":\"Identity\",\"type\":\"Team\"},{\"id\":\"Platform\",\"type\":\"Team\"},{\"id\":\"Security\",\"type\":\"Team\"},{\"id\":\"Maya\",\"type\":\"Person\"},{\"id\":\"m-Maya\",\"type\":\"Membership\",\"person\":\"Maya\",\"team\":\"Identity\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Maya\",\"type\":\"Certificate\",\"person\":\"Maya\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"Noah\",\"type\":\"Person\"},{\"id\":\"m-Noah\",\"type\":\"Membership\",\"person\":\"Noah\",\"team\":\"Identity\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Noah\",\"type\":\"Certificate\",\"person\":\"Noah\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"Rin\",\"type\":\"Person\"},{\"id\":\"m-Rin\",\"type\":\"Membership\",\"person\":\"Rin\",\"team\":\"Security\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Rin\",\"type\":\"Certificate\",\"person\":\"Rin\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2026-11-15\"},{\"id\":\"Tao\",\"type\":\"Person\"},{\"id\":\"m-Tao\",\"type\":\"Membership\",\"person\":\"Tao\",\"team\":\"Identity\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Tao\",\"type\":\"Certificate\",\"person\":\"Tao\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"Iris\",\"type\":\"Person\"},{\"id\":\"m-Iris\",\"type\":\"Membership\",\"person\":\"Iris\",\"team\":\"Platform\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Iris\",\"type\":\"Certificate\",\"person\":\"Iris\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2026-11-15\"},{\"id\":\"Uma\",\"type\":\"Person\"},{\"id\":\"m-Uma\",\"type\":\"Membership\",\"person\":\"Uma\",\"team\":\"Identity\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Uma\",\"type\":\"Certificate\",\"person\":\"Uma\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"Vera\",\"type\":\"Person\"},{\"id\":\"m-Vera\",\"type\":\"Membership\",\"person\":\"Vera\",\"team\":\"Platform\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Vera\",\"type\":\"Certificate\",\"person\":\"Vera\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"Wes\",\"type\":\"Person\"},{\"id\":\"m-Wes\",\"type\":\"Membership\",\"person\":\"Wes\",\"team\":\"Security\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Wes\",\"type\":\"Certificate\",\"person\":\"Wes\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"Xena\",\"type\":\"Person\"},{\"id\":\"m-Xena\",\"type\":\"Membership\",\"person\":\"Xena\",\"team\":\"Security\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Xena\",\"type\":\"Certificate\",\"person\":\"Xena\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"Yuri\",\"type\":\"Person\"},{\"id\":\"m-Yuri\",\"type\":\"Membership\",\"person\":\"Yuri\",\"team\":\"Platform\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Yuri\",\"type\":\"Certificate\",\"person\":\"Yuri\",\"purpose\":\"deployment-approval\",\"region\":\"US\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"Zoe\",\"type\":\"Person\"},{\"id\":\"m-Zoe\",\"type\":\"Membership\",\"person\":\"Zoe\",\"team\":\"Platform\",\"home\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"c-Zoe\",\"type\":\"Certificate\",\"person\":\"Zoe\",\"purpose\":\"deployment-approval\",\"region\":\"EU\",\"environment\":\"Production\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"g-Maya\",\"type\":\"Grant\",\"holder\":\"Maya\",\"role\":\"OpsApprover\",\"scope\":\"project-atlas\",\"maxRisk\":5,\"delegable\":false,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"g-Noah\",\"type\":\"Grant\",\"holder\":\"Noah\",\"role\":\"OpsApprover\",\"scope\":\"project-atlas\",\"maxRisk\":3,\"delegable\":false,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"g-Rin\",\"type\":\"Grant\",\"holder\":\"Rin\",\"role\":\"SecurityApprover\",\"scope\":\"project-atlas\",\"maxRisk\":5,\"delegable\":false,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"g-Tao\",\"type\":\"Grant\",\"holder\":\"Tao\",\"role\":\"SecurityApprover\",\"scope\":\"project-atlas\",\"maxRisk\":5,\"delegable\":false,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"g-Iris\",\"type\":\"Grant\",\"holder\":\"Iris\",\"role\":\"OpsApprover\",\"scope\":\"project-atlas\",\"maxRisk\":5,\"delegable\":true,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"g-Wes\",\"type\":\"Grant\",\"holder\":\"Wes\",\"role\":\"SecurityApprover\",\"scope\":\"project-other\",\"maxRisk\":5,\"delegable\":false,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"g-Yuri\",\"type\":\"Grant\",\"holder\":\"Yuri\",\"role\":\"OpsApprover\",\"scope\":\"org-mercury\",\"maxRisk\":5,\"delegable\":false,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"g-Zoe\",\"type\":\"Grant\",\"holder\":\"Zoe\",\"role\":\"OpsApprover\",\"scope\":\"svc-login\",\"maxRisk\":5,\"delegable\":false,\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"},{\"id\":\"del-Uma\",\"type\":\"Delegation\",\"issuer\":\"Iris\",\"recipient\":\"Uma\",\"grant\":\"g-Iris\",\"scope\":\"svc-login\",\"maxRisk\":4,\"active\":true,\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\"},{\"id\":\"del-Vera\",\"type\":\"Delegation\",\"issuer\":\"Iris\",\"recipient\":\"Vera\",\"grant\":\"g-Iris\",\"scope\":\"svc-login\",\"maxRisk\":4,\"active\":true,\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\"},{\"id\":\"del-Xena\",\"type\":\"Delegation\",\"issuer\":\"Tao\",\"recipient\":\"Xena\",\"grant\":\"g-Tao\",\"scope\":\"svc-login\",\"maxRisk\":4,\"active\":true,\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\"},{\"id\":\"deny-Zoe\",\"type\":\"Deny\",\"person\":\"Zoe\",\"scope\":\"svc-login\",\"active\":true,\"validFrom\":\"2026-01-01\",\"validUntil\":\"2027-01-01\"}]},\"ontology_version\":\"approval-complex-v1\",\"finish_shape\":{\"type\":\"finish\",\"panel\":{\"ops\":\"person ID\",\"security\":\"person ID\"},\"proof_ids\":[\"complete proof record IDs\"],\"rule_ids\":[\"all applied rule IDs\"],\"ontology_version\":\"pinned version\",\"graph_revision\":\"integer\"},\"evidence_requirement\":\"For a selected panel cite the Deployment, Service, its Project and Organization. For EACH selected person cite their Person, current home Membership, Team, valid Certificate, source Grant, and Delegation if authority is indirect. Cite R1 through R10. Additional known record IDs are allowed. If no valid pair exists return panel=null. Do not invent record IDs.\",\"catalog\":{\"Organization\":\"type\",\"Project\":\"type\",\"Service\":\"type\",\"Deployment\":\"type\",\"Person\":\"type\",\"Team\":\"type\",\"Membership\":\"type\",\"Grant\":\"type\",\"Delegation\":\"type\",\"Certificate\":\"type\",\"Deny\":\"type\",\"scopeCoverage\":\"relation_semantics\",\"authorityPath\":\"relation_semantics\",\"eligibility\":\"rule_set\",\"Invoice\":\"type\",\"Shipment\":\"type\",\"Warehouse\":\"type\",\"Subscription\":\"type\",\"PurchaseOrder\":\"type\",\"Refund\":\"type\",\"TaxRate\":\"type\",\"Inventory\":\"type\"},\"interfaces\":{\"inspect_schema\":{\"arguments\":{\"names\":\"array of catalog names\"},\"returns\":\"Definitions and dependency closure. Request eligibility to obtain the complete approval rules.\"}},\"call_shape\":{\"type\":\"call\",\"name\":\"interface name\",\"arguments\":{\"documented\":\"arguments\"}},\"consumption_protocol\":\"Successfully use the provided interface before finishing. Inspection must retrieve eligibility rules. One application request per turn, not a CLI built-in tool call.\"},\"history\":[{\"model_request\":{\"type\":\"call\",\"name\":\"inspect_schema\",\"arguments\":{\"names\":[\"eligibility\"]}},\"runtime_result\":{\"ontology_version\":\"approval-complex-v1\",\"graph_revision\":7,\"definitions\":{\"Certificate\":{\"kind\":\"type\",\"meaning\":\"A time-bounded person qualification for a purpose, region and environment.\"},\"Delegation\":{\"kind\":\"type\",\"meaning\":\"A one-hop transfer from a direct grant holder to a recipient, with its own scope, cap and validity.\"},\"Deny\":{\"kind\":\"type\",\"meaning\":\"An explicit time-bounded prohibition on a person within a scope.\"},\"Deployment\":{\"kind\":\"type\",\"meaning\":\"A proposed change with service, author, environment and integer risk.\"},\"Grant\":{\"kind\":\"type\",\"meaning\":\"A direct holder-to-role authority association with scope, risk cap and delegation permission.\"},\"Membership\":{\"kind\":\"type\",\"meaning\":\"A time-bounded person-to-team relationship; home marks the team used for independence.\"},\"Organization\":{\"kind\":\"type\",\"meaning\":\"An organizational scope.\"},\"Person\":{\"kind\":\"type\",\"meaning\":\"An identified human.\"},\"Project\":{\"kind\":\"type\",\"meaning\":\"A project belongs to one organization.\"},\"Service\":{\"kind\":\"type\",\"meaning\":\"A service belongs to one project and has a region.\"},\"Team\":{\"kind\":\"type\",\"meaning\":\"An organizational team.\"},\"authorityPath\":{\"kind\":\"relation_semantics\",\"meaning\":\"Authority is a current direct grant held by the candidate, OR exactly one current delegation to the candidate referencing a current direct grant. The delegation issuer must equal the grant holder, grant.delegable must be true, both scopes must cover the service, and risk bounds apply to both. Delegations never serve as source grants. The grant holder's own certification is NOT required to delegate; the recipient's is required to approve.\",\"requires\":[\"Grant\",\"Delegation\",\"Person\",\"scopeCoverage\"]},\"eligibility\":{\"kind\":\"rule_set\",\"rules\":[{\"id\":\"R1\",\"name\":\"Scope coverage\",\"meaning\":\"A scope covers a service only if it is that service, its direct project, or that project's organization. A sibling project does not cover the service.\"},{\"id\":\"R2\",\"name\":\"Current validity\",\"meaning\":\"Every used grant, delegation, membership, certificate and deny has active=true and validFrom <= task.at < validUntil. End dates are exclusive.\"},{\"id\":\"R3\",\"name\":\"Role matching\",\"meaning\":\"Ops and Security authority must come from grants with roles OpsApprover and SecurityApprover respectively.\"},{\"id\":\"R4\",\"name\":\"Risk bounds\",\"meaning\":\"Deployment.risk must be <= Grant.maxRisk and, for delegation, <= Delegation.maxRisk. Equality is allowed.\"},{\"id\":\"R5\",\"name\":\"Authority paths\",\"meaning\":\"Authority is a current direct grant held by the candidate, OR exactly one current delegation to the candidate referencing a current direct grant. The delegation issuer must equal the grant holder, grant.delegable must be true, both scopes must cover the service, and risk bounds apply to both. Delegations never serve as source grants. The grant holder's own certification is NOT required to delegate; the recipient's is required to approve.\"},{\"id\":\"R6\",\"name\":\"Certification\",\"meaning\":\"Each selected person needs a current certificate with purpose deployment-approval, the service's region, and the deployment's environment.\"},{\"id\":\"R7\",\"name\":\"Author exclusion\",\"meaning\":\"Neither selected person may be Deployment.author.\"},{\"id\":\"R8\",\"name\":\"Explicit deny precedence\",\"meaning\":\"Any current Deny for a person with a scope covering the service blocks that person, overriding all grant or delegation paths.\"},{\"id\":\"R9\",\"name\":\"Team independence\",\"meaning\":\"Each selected person needs exactly one current home=true Membership. The two selected people must belong to different home teams.\"},{\"id\":\"R10\",\"name\":\"Panel completeness\",\"meaning\":\"Select exactly two distinct people: one OpsApprover and one SecurityApprover. If multiple valid panels exist, pick lexicographically smallest (Ops person ID, Security person ID). If none exists, return panel=null.\"}],\"requires\":[\"Deployment\",\"Membership\",\"Certificate\",\"Deny\",\"Team\",\"authorityPath\"]},\"scopeCoverage\":{\"kind\":\"relation_semantics\",\"meaning\":\"A scope covers a service only if it is that service, its direct project, or that project's organization. A sibling project does not cover the service.\",\"requires\":[\"Service\",\"Project\",\"Organization\"]}}}}]}",
+      "user_chars": 13249,
+      "status": "RECEIVED",
+      "exit_code": 0,
+      "stderr_sha256": "4a44629c8b644a0e5629b463e0fc14392bda3ef65c08cca2e0cd8963ff59d3c2",
+      "cli_response": {
+        "session_id": "7e7c6c4b-cff1-466e-a754-6c96a78da621",
+        "response": "{\"type\":\"finish\",\"panel\":{\"ops\":\"Vera\",\"security\":\"Tao\"},\"proof_ids\":[\"d2\",\"svc-login\",\"project-atlas\",\"org-mercury\",\"Vera\",\"m-Vera\",\"Platform\",\"c-Vera\",\"g-Iris\",\"del-Vera\",\"Tao\",\"m-Tao\",\"Identity\",\"c-Tao\",\"g-Tao\"],\"rule_ids\":[\"R1\",\"R2\",\"R3\",\"R4\",\"R5\",\"R6\",\"R7\",\"R8\",\"R9\",\"R10\"],\"ontology_version\":\"approval-complex-v1\",\"graph_revision\":7}",
+        "stats": {
+          "models": {
+            "gemini-3.5-flash-lite": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 6133,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 4637,
+                "prompt": 4637,
+                "candidates": 54,
+                "total": 5442,
+                "cached": 0,
+                "thoughts": 751,
+                "tool": 0
+              },
+              "roles": {
+                "utility_router": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 6133,
+                  "tokens": {
+                    "input": 4637,
+                    "prompt": 4637,
+                    "candidates": 54,
+                    "total": 5442,
+                    "cached": 0,
+                    "thoughts": 751,
+                    "tool": 0
+                  }
+                }
+              }
+            },
+            "gemini-3.8-flash": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 35381,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 9628,
+                "prompt": 9628,
+                "candidates": 129,
+                "total": 16011,
+                "cached": 0,
+                "thoughts": 6254,
+                "tool": 0
+              },
+              "roles": {
+                "main": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 35381,
+                  "tokens": {
+                    "input": 9628,
+                    "prompt": 9628,
+                    "candidates": 129,
+                    "total": 16011,
+                    "cached": 0,
+                    "thoughts": 6254,
+                    "tool": 0
+                  }
+                }
+              }
+            }
+          },
+          "tools": {
+            "totalCalls": 0,
+            "totalSuccess": 0,
+            "totalFail": 0,
+            "totalDurationMs": 0,
+            "totalDecisions": {
+              "accept": 0,
+              "reject": 0,
+              "modify": 0,
+              "auto_accept": 0
+            },
+            "byName": {}
+          },
+          "files": {
+            "totalLinesAdded": 0,
+            "totalLinesRemoved": 0
+          }
+        }
+      },
+      "parsed": {
+        "type": "finish",
+        "panel": {
+          "ops": "Vera",
+          "security": "Tao"
+        },
+        "proof_ids": [
+          "d2",
+          "svc-login",
+          "project-atlas",
+          "org-mercury",
+          "Vera",
+          "m-Vera",
+          "Platform",
+          "c-Vera",
+          "g-Iris",
+          "del-Vera",
+          "Tao",
+          "m-Tao",
+          "Identity",
+          "c-Tao",
+          "g-Tao"
+        ],
+        "rule_ids": [
+          "R1",
+          "R2",
+          "R3",
+          "R4",
+          "R5",
+          "R6",
+          "R7",
+          "R8",
+          "R9",
+          "R10"
+        ],
+        "ontology_version": "approval-complex-v1",
+        "graph_revision": 7
+      }
+    }
+  ],
+  "history": [
+    {
+      "model_request": {
+        "type": "call",
+        "name": "inspect_schema",
+        "arguments": {
+          "names": [
+            "eligibility"
+          ]
+        }
+      },
+      "runtime_result": {
+        "ontology_version": "approval-complex-v1",
+        "graph_revision": 7,
+        "definitions": {
+          "Certificate": {
+            "kind": "type",
+            "meaning": "A time-bounded person qualification for a purpose, region and environment."
+          },
+          "Delegation": {
+            "kind": "type",
+            "meaning": "A one-hop transfer from a direct grant holder to a recipient, with its own scope, cap and validity."
+          },
+          "Deny": {
+            "kind": "type",
+            "meaning": "An explicit time-bounded prohibition on a person within a scope."
+          },
+          "Deployment": {
+            "kind": "type",
+            "meaning": "A proposed change with service, author, environment and integer risk."
+          },
+          "Grant": {
+            "kind": "type",
+            "meaning": "A direct holder-to-role authority association with scope, risk cap and delegation permission."
+          },
+          "Membership": {
+            "kind": "type",
+            "meaning": "A time-bounded person-to-team relationship; home marks the team used for independence."
+          },
+          "Organization": {
+            "kind": "type",
+            "meaning": "An organizational scope."
+          },
+          "Person": {
+            "kind": "type",
+            "meaning": "An identified human."
+          },
+          "Project": {
+            "kind": "type",
+            "meaning": "A project belongs to one organization."
+          },
+          "Service": {
+            "kind": "type",
+            "meaning": "A service belongs to one project and has a region."
+          },
+          "Team": {
+            "kind": "type",
+            "meaning": "An organizational team."
+          },
+          "authorityPath": {
+            "kind": "relation_semantics",
+            "meaning": "Authority is a current direct grant held by the candidate, OR exactly one current delegation to the candidate referencing a current direct grant. The delegation issuer must equal the grant holder, grant.delegable must be true, both scopes must cover the service, and risk bounds apply to both. Delegations never serve as source grants. The grant holder's own certification is NOT required to delegate; the recipient's is required to approve.",
+            "requires": [
+              "Grant",
+              "Delegation",
+              "Person",
+              "scopeCoverage"
+            ]
+          },
+          "eligibility": {
+            "kind": "rule_set",
+            "rules": [
+              {
+                "id": "R1",
+                "name": "Scope coverage",
+                "meaning": "A scope covers a service only if it is that service, its direct project, or that project's organization. A sibling project does not cover the service."
+              },
+              {
+                "id": "R2",
+                "name": "Current validity",
+                "meaning": "Every used grant, delegation, membership, certificate and deny has active=true and validFrom <= task.at < validUntil. End dates are exclusive."
+              },
+              {
+                "id": "R3",
+                "name": "Role matching",
+                "meaning": "Ops and Security authority must come from grants with roles OpsApprover and SecurityApprover respectively."
+              },
+              {
+                "id": "R4",
+                "name": "Risk bounds",
+                "meaning": "Deployment.risk must be <= Grant.maxRisk and, for delegation, <= Delegation.maxRisk. Equality is allowed."
+              },
+              {
+                "id": "R5",
+                "name": "Authority paths",
+                "meaning": "Authority is a current direct grant held by the candidate, OR exactly one current delegation to the candidate referencing a current direct grant. The delegation issuer must equal the grant holder, grant.delegable must be true, both scopes must cover the service, and risk bounds apply to both. Delegations never serve as source grants. The grant holder's own certification is NOT required to delegate; the recipient's is required to approve."
+              },
+              {
+                "id": "R6",
+                "name": "Certification",
+                "meaning": "Each selected person needs a current certificate with purpose deployment-approval, the service's region, and the deployment's environment."
+              },
+              {
+                "id": "R7",
+                "name": "Author exclusion",
+                "meaning": "Neither selected person may be Deployment.author."
+              },
+              {
+                "id": "R8",
+                "name": "Explicit deny precedence",
+                "meaning": "Any current Deny for a person with a scope covering the service blocks that person, overriding all grant or delegation paths."
+              },
+              {
+                "id": "R9",
+                "name": "Team independence",
+                "meaning": "Each selected person needs exactly one current home=true Membership. The two selected people must belong to different home teams."
+              },
+              {
+                "id": "R10",
+                "name": "Panel completeness",
+                "meaning": "Select exactly two distinct people: one OpsApprover and one SecurityApprover. If multiple valid panels exist, pick lexicographically smallest (Ops person ID, Security person ID). If none exists, return panel=null."
+              }
+            ],
+            "requires": [
+              "Deployment",
+              "Membership",
+              "Certificate",
+              "Deny",
+              "Team",
+              "authorityPath"
+            ]
+          },
+          "scopeCoverage": {
+            "kind": "relation_semantics",
+            "meaning": "A scope covers a service only if it is that service, its direct project, or that project's organization. A sibling project does not cover the service.",
+            "requires": [
+              "Service",
+              "Project",
+              "Organization"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "passed": true,
+  "successful_interface_calls": 1,
+  "definition_names_exposed": [
+    "Certificate",
+    "Delegation",
+    "Deny",
+    "Deployment",
+    "Grant",
+    "Membership",
+    "Organization",
+    "Person",
+    "Project",
+    "Service",
+    "Team",
+    "authorityPath",
+    "eligibility",
+    "scopeCoverage"
+  ],
+  "answer": {
+    "type": "finish",
+    "panel": {
+      "ops": "Vera",
+      "security": "Tao"
+    },
+    "proof_ids": [
+      "d2",
+      "svc-login",
+      "project-atlas",
+      "org-mercury",
+      "Vera",
+      "m-Vera",
+      "Platform",
+      "c-Vera",
+      "g-Iris",
+      "del-Vera",
+      "Tao",
+      "m-Tao",
+      "Identity",
+      "c-Tao",
+      "g-Tao"
+    ],
+    "rule_ids": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "R8",
+      "R9",
+      "R10"
+    ],
+    "ontology_version": "approval-complex-v1",
+    "graph_revision": 7
+  },
+  "score_details": {
+    "shape": true,
+    "panel_correct": true,
+    "proof_complete": true,
+    "versions_correct": true,
+    "rule_coverage": true,
+    "passed": true
+  },
+  "answer_correct": true,
+  "protocol_followed": true,
+  "gate_before_change": {
+    "admitted": true,
+    "reason": "VALID"
+  },
+  "gate_after_revocation": {
+    "admitted": false,
+    "reason": "VERSION_MISMATCH"
+  },
+  "gate_with_forged_current_revision": {
+    "admitted": false,
+    "reason": "INVALID"
+  }
+}

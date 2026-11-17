@@ -1,0 +1,14 @@
+{
+  "started_at": "2026-11-16T02:58:11.334478+00:00",
+  "provider": "gemini",
+  "transport": "installed Gemini CLI with existing authentication and model selection",
+  "role": "diagnostic judge",
+  "input": "runs/learning/gemini-judge-review-20261115/gemini-judge-input.json",
+  "input_sha256": "6c2cdb6e4592c81cfba708189d9bfa5d9a90dc4ce9273448bee590a8ce42dc3f",
+  "model_response": null,
+  "promotion_allowed": false,
+  "state": "JUDGE_UNAVAILABLE",
+  "error": "Gemini CLI default call was rejected by Google: UNSUPPORTED_CLIENT for the existing saved login",
+  "error_type": "RuntimeError",
+  "elapsed_seconds": 5.87
+}

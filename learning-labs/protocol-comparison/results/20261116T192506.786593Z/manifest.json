@@ -1,0 +1,19 @@
+{
+  "kind": "synthetic_interface_comparison",
+  "world_sha256": "b7a274220da954e41832f1664ef2a29f647ff0229b7d005b0e5693823b2eb2af",
+  "runner_sha256": "d406bc8460d3c53455408cf40d55a6826926eed9049de51bca83aba9286bc67a",
+  "helper_sha256": "24960174ffb79bea5fb746c90611e29cd8d0d507105b97b152347debbf4ed2d6",
+  "policy_sha256": "406702e019a25be380e93ffa7ffb1c4b17c5857e429574cef3dde17887a0ab0f",
+  "config_sha256": "b6f5c6488dff99cac8afff35eab0ca62abccaaf3340872dc5b152b91f170adff",
+  "cli_version": "0.68.0",
+  "model": "configured CLI routing, no override",
+  "max_cli_calls": 14,
+  "max_calls_per_mode": {
+    "full_text": 2,
+    "full_structured": 2,
+    "retrieved_fragment": 2,
+    "graph_queries": 4,
+    "typed_function": 4
+  },
+  "appworld_runs": 0
+}

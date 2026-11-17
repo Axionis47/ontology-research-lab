@@ -1,0 +1,214 @@
+{
+  "mode": "retrieved_fragment",
+  "status": "MEASURED",
+  "initial_payload": {
+    "task": {
+      "service": "LoginService",
+      "environment": "Production",
+      "deployment_id": "d1",
+      "at": "2026-11-16"
+    },
+    "definitions": {
+      "Person": "An identified human.",
+      "Assignment": "A directed association from person to service, qualified by role, environment and validity.",
+      "Deployment": "A deployment of a service with an author.",
+      "eligible": "A matching active DeploymentApprover assignment with validFrom <= at < validUntil, covering the service and environment. The person must differ from the deployment author.",
+      "unknown": "Evidence is insufficient; absence from an incomplete fragment is not proof of absence."
+    },
+    "final_response_shape": {
+      "type": "finish",
+      "person": "person name or null",
+      "evidence_ids": [
+        "supporting record IDs"
+      ],
+      "revision": "integer"
+    },
+    "observations": {
+      "revision": 1,
+      "source": "synthetic://service-catalog/snapshot-1",
+      "deployment": {
+        "id": "d1",
+        "author": "Maya",
+        "service": "LoginService"
+      },
+      "assignments": [
+        {
+          "id": "a-maya",
+          "person": "Maya",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-noah",
+          "person": "Noah",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-rin",
+          "person": "Rin",
+          "service": "LoginService",
+          "environment": "Staging",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-tao",
+          "person": "Tao",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-10-01",
+          "validUntil": "2026-11-15",
+          "active": true
+        }
+      ],
+      "coverage": "complete for target service and deployment"
+    }
+  },
+  "calls": [
+    {
+      "step": 0,
+      "submitted_prompt": "Use only supplied evidence and definitions. Choose an eligible approver for the task, or null if no candidate is supported by complete evidence. Return only one JSON object. Do not use CLI tools or access files.\n{\"task_context\":{\"task\":{\"service\":\"LoginService\",\"environment\":\"Production\",\"deployment_id\":\"d1\",\"at\":\"2026-11-16\"},\"definitions\":{\"Person\":\"An identified human.\",\"Assignment\":\"A directed association from person to service, qualified by role, environment and validity.\",\"Deployment\":\"A deployment of a service with an author.\",\"eligible\":\"A matching active DeploymentApprover assignment with validFrom <= at < validUntil, covering the service and environment. The person must differ from the deployment author.\",\"unknown\":\"Evidence is insufficient; absence from an incomplete fragment is not proof of absence.\"},\"final_response_shape\":{\"type\":\"finish\",\"person\":\"person name or null\",\"evidence_ids\":[\"supporting record IDs\"],\"revision\":\"integer\"},\"observations\":{\"revision\":1,\"source\":\"synthetic://service-catalog/snapshot-1\",\"deployment\":{\"id\":\"d1\",\"author\":\"Maya\",\"service\":\"LoginService\"},\"assignments\":[{\"id\":\"a-maya\",\"person\":\"Maya\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-noah\",\"person\":\"Noah\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-rin\",\"person\":\"Rin\",\"service\":\"LoginService\",\"environment\":\"Staging\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-11-01\",\"validUntil\":\"2026-12-01\",\"active\":true},{\"id\":\"a-tao\",\"person\":\"Tao\",\"service\":\"LoginService\",\"environment\":\"Production\",\"role\":\"DeploymentApprover\",\"validFrom\":\"2026-10-01\",\"validUntil\":\"2026-11-15\",\"active\":true}],\"coverage\":\"complete for target service and deployment\"}},\"interaction_history\":[]}",
+      "user_prompt_chars": 1904,
+      "status": "RECEIVED",
+      "exit_code": 0,
+      "cli_response": {
+        "session_id": "86bd804b-fbc2-4569-be69-98fd8df0fc87",
+        "response": "{\"type\":\"finish\",\"person\":\"Noah\",\"evidence_ids\":[\"d1\",\"a-noah\"],\"revision\":1}",
+        "stats": {
+          "models": {
+            "gemini-3.5-flash-lite": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 7970,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 1411,
+                "prompt": 1411,
+                "candidates": 43,
+                "total": 2442,
+                "cached": 0,
+                "thoughts": 988,
+                "tool": 0
+              },
+              "roles": {
+                "utility_router": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 7970,
+                  "tokens": {
+                    "input": 1411,
+                    "prompt": 1411,
+                    "candidates": 43,
+                    "total": 2442,
+                    "cached": 0,
+                    "thoughts": 988,
+                    "tool": 0
+                  }
+                }
+              }
+            },
+            "gemini-3.8-flash": {
+              "api": {
+                "totalRequests": 1,
+                "totalErrors": 0,
+                "totalLatencyMs": 8007,
+                "errorsByType": {}
+              },
+              "tokens": {
+                "input": 6401,
+                "prompt": 6401,
+                "candidates": 25,
+                "total": 7550,
+                "cached": 0,
+                "thoughts": 1124,
+                "tool": 0
+              },
+              "roles": {
+                "main": {
+                  "totalRequests": 1,
+                  "totalErrors": 0,
+                  "totalLatencyMs": 8007,
+                  "tokens": {
+                    "input": 6401,
+                    "prompt": 6401,
+                    "candidates": 25,
+                    "total": 7550,
+                    "cached": 0,
+                    "thoughts": 1124,
+                    "tool": 0
+                  }
+                }
+              }
+            }
+          },
+          "tools": {
+            "totalCalls": 0,
+            "totalSuccess": 0,
+            "totalFail": 0,
+            "totalDurationMs": 0,
+            "totalDecisions": {
+              "accept": 0,
+              "reject": 0,
+              "modify": 0,
+              "auto_accept": 0
+            },
+            "byName": {}
+          },
+          "files": {
+            "totalLinesAdded": 0,
+            "totalLinesRemoved": 0
+          }
+        }
+      },
+      "parsed": {
+        "type": "finish",
+        "person": "Noah",
+        "evidence_ids": [
+          "d1",
+          "a-noah"
+        ],
+        "revision": 1
+      }
+    }
+  ],
+  "history": [],
+  "correct_at_observation": true,
+  "answer": {
+    "type": "finish",
+    "person": "Noah",
+    "evidence_ids": [
+      "d1",
+      "a-noah"
+    ],
+    "revision": 1
+  },
+  "action_probe": {
+    "event": "Noah assignment revoked after selection, before dispatch",
+    "current_revision": 2,
+    "unguarded_fixture": {
+      "selected_person": "Noah",
+      "constraint_violation": true
+    },
+    "gated_fixture": {
+      "selected_person": null,
+      "admitted": false,
+      "reason": "STALE_OR_INELIGIBLE"
+    },
+    "current_eligible": [],
+    "kind": "deterministic local effect probe, not another model judgment"
+  }
+}

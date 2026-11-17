@@ -1,0 +1,26 @@
+{
+  "experiment": "01",
+  "title": "Sentence to triples",
+  "terms": {
+    "entity": "An identified thing.",
+    "triple": "A subject, predicate and object.",
+    "predicate": "A directed named relationship."
+  },
+  "instruction": "Translate only explicitly asserted positive relationships into triples. Do not reverse edges or invent a positive assertion from a denial.",
+  "input": {
+    "sentences": {
+      "positive": "Maya maintains LoginService.",
+      "negative": "Maya does not maintain BillingService."
+    },
+    "vocabulary": [
+      "Maya",
+      "LoginService",
+      "BillingService",
+      "maintains"
+    ]
+  },
+  "output_shape": {
+    "positive_triples": "array of [subject,predicate,object]",
+    "negative_sentence_positive_triples": "array of [subject,predicate,object]"
+  }
+}

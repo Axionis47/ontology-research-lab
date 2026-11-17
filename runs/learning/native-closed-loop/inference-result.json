@@ -1,0 +1,339 @@
+{
+  "requests": [
+    {
+      "request_id": "native-bootstrap-1",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 4,
+        "tool_attempts": 3,
+        "compactions": 0,
+        "kernel_version": null,
+        "kernel_handoff": null,
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/native-closed-loop/inference/389f0ee0eb5b8467d551/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/native-closed-loop/inference/389f0ee0eb5b8467d551/react/exports/6f22511f-4915-4879-b96d-ce21e54dd596/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "32a5d52b33c9131698820d16e371137f5dc7bb0c649056c92147b1c3eddadaa4",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "3858738db4833e6ac75b67e73a931e6cec8ecd9b47f1baf45fb8ee117ea28471",
+      "native": {
+        "success": true,
+        "evaluation": "3b90f6c68a48d0482d4ce798e032ac7a01111e7db282948a495a58096245c8f4",
+        "mcp_segments": [
+          "7d54a9ed3583540afcbdbaa0876792eefc812ef76c5e518cd746f07d0d1f6fc6",
+          "e3f5462c3d19145b849e5cf443b64435414ba6ac6889ab72820b06f70423c891"
+        ],
+        "mcp_events": 32,
+        "task_id": "07b42fd_1",
+        "scope": "appworld:07b42fd_1:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+    },
+    {
+      "request_id": "native-bootstrap-2",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 4,
+        "tool_attempts": 3,
+        "compactions": 0,
+        "kernel_version": null,
+        "kernel_handoff": null,
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/native-closed-loop/inference/dedc15a4204be5484dd6/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/native-closed-loop/inference/dedc15a4204be5484dd6/react/exports/1ae75c3b-6bd8-4da0-ab6b-6b3fe4c48530/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "d43c849f293bbbe0eca237a4e943e23830787f3b1665f00b41c3320d3a762b73",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "9d5ddff998a54bd81cbaa105ca22788e618eb1a296152a04fe7143e4a45b4cee",
+      "native": {
+        "success": true,
+        "evaluation": "5e945dd8b10e8add9dd2d4ad280f4c0d7fa16c10d440ab961110369a43236e5e",
+        "mcp_segments": [
+          "30734a942b45c58f6ba64fae074c0a22e7c97b77b57ff055645d092c240b8758",
+          "f8e5f0cdfe8e7768f4a92970a94d961a0e564b4ed066da9986a86e5b300200bd"
+        ],
+        "mcp_events": 32,
+        "task_id": "07b42fd_2",
+        "scope": "appworld:07b42fd_2:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+    },
+    {
+      "request_id": "native-bootstrap-3",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 4,
+        "tool_attempts": 3,
+        "compactions": 0,
+        "kernel_version": null,
+        "kernel_handoff": null,
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/native-closed-loop/inference/1c536e384b146fd60626/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/native-closed-loop/inference/1c536e384b146fd60626/react/exports/c90aa8c4-a78b-45cb-ad8a-cba63900054d/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "53132476cff8bbb9c4723da539d962d607b560bc0cf24353c4b834ce8faffb3e",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "5815408aedaba8e4bf13744ed988a80b4af6c9dae0b384122d6f5c4cae3981b0",
+      "native": {
+        "success": true,
+        "evaluation": "2fca99d537b29b312d9eb032983e4cac95afc3ce865c6f33fc663c097c5e6102",
+        "mcp_segments": [
+          "18ae36274cfbf1d13c75bd209961c482e66cc7105048c9a42f518af6e1220345",
+          "4738bd16c5e6374351217b8002cc8432e2e849050b17471adc846e3cdd31bdea"
+        ],
+        "mcp_events": 32,
+        "task_id": "07b42fd_3",
+        "scope": "appworld:07b42fd_3:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+    },
+    {
+      "request_id": "native-gap",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 5,
+        "tool_attempts": 3,
+        "compactions": 0,
+        "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "kernel_handoff": {
+          "reason": "CAPABILITY_GAP",
+          "pending_work": "The learned selection would change protected records. Its plan was refused before dispatch; use the original conditions and current evidence.",
+          "evidence_ids": [
+            "6bc55404-e012-4120-b8f7-1d44b607ed3e"
+          ],
+          "step": 1,
+          "kernel_version": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1"
+        },
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/native-closed-loop/inference/da4d30b36f90a1acb978/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/native-closed-loop/inference/da4d30b36f90a1acb978/react/exports/71dcff4d-2e55-48ee-8441-174fde499f27/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "3cdb37e3165fad692e4452d42ad7ff42461e60aebc38f4ce028cd216d352bc7f",
+      "task_state": "TRUE",
+      "recovered": true,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "3858738db4833e6ac75b67e73a931e6cec8ecd9b47f1baf45fb8ee117ea28471",
+      "native": {
+        "success": true,
+        "evaluation": "b5e40f7904c804f41c7fc83c55dc044e74e8a32a4d992fb78ee865b82fdae892",
+        "mcp_segments": [
+          "7d54a9ed3583540afcbdbaa0876792eefc812ef76c5e518cd746f07d0d1f6fc6",
+          "4d68018e65fb559d0553fd7681c7879aef9028e68bef08eaa831e8f157ae7f3d",
+          "16ff3e5014cd368c5123f2dcb43d1668a5d876b40c394bb6d694097ad7f813a9"
+        ],
+        "mcp_events": 38,
+        "task_id": "07b42fd_1",
+        "scope": "appworld:07b42fd_1:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+      "learning": {
+        "completed": [
+          {
+            "case": "3858738db4833e6ac75b67e73a931e6cec8ecd9b47f1baf45fb8ee117ea28471",
+            "outcome": "ACCEPTED"
+          },
+          {
+            "case": "9d5ddff998a54bd81cbaa105ca22788e618eb1a296152a04fe7143e4a45b4cee",
+            "outcome": "RESOLVED"
+          },
+          {
+            "case": "5815408aedaba8e4bf13744ed988a80b4af6c9dae0b384122d6f5c4cae3981b0",
+            "outcome": "RESOLVED"
+          }
+        ],
+        "active": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "generation": 3,
+        "proposals_spent": 6,
+        "cycles_spent": 3,
+        "cases": {
+          "RESOLVED": 3
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "receipt": "1eb4fb28e871e0aab1dd96d3910f7ab420c0a898cfa3a6d22aeb62eb7fc5bc71",
+            "accepted": 1,
+            "at": "2026-11-13T20:48:15.474030+00:00"
+          }
+        ],
+        "native_performance_claimed": false
+      },
+      "next_package": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23"
+    },
+    {
+      "request_id": "native-after-2",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "kernel_version": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "kernel_handoff": null,
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/native-closed-loop/inference/e484c5c7369f9d9c3f9c/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/native-closed-loop/inference/e484c5c7369f9d9c3f9c/react/exports/4ec38384-dc2d-4d23-ab6f-1d9048045f41/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "2ad1542f31a3b2075e3436b97ebdc8535a367ffdf03e338f7e058dfe58f4a0b2",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "9d5ddff998a54bd81cbaa105ca22788e618eb1a296152a04fe7143e4a45b4cee",
+      "native": {
+        "success": true,
+        "evaluation": "210fe6931e4d101b9a92f382c4ab82bdece5e42efec2d7a945fd2ed4e5e6705e",
+        "mcp_segments": [
+          "30734a942b45c58f6ba64fae074c0a22e7c97b77b57ff055645d092c240b8758",
+          "f8e5f0cdfe8e7768f4a92970a94d961a0e564b4ed066da9986a86e5b300200bd"
+        ],
+        "mcp_events": 32,
+        "task_id": "07b42fd_2",
+        "scope": "appworld:07b42fd_2:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "learning": {
+        "completed": [],
+        "active": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "generation": 3,
+        "proposals_spent": 6,
+        "cycles_spent": 3,
+        "cases": {
+          "RESOLVED": 3
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "receipt": "1eb4fb28e871e0aab1dd96d3910f7ab420c0a898cfa3a6d22aeb62eb7fc5bc71",
+            "accepted": 1,
+            "at": "2026-11-13T20:48:15.474030+00:00"
+          }
+        ],
+        "native_performance_claimed": false
+      },
+      "next_package": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23"
+    },
+    {
+      "request_id": "native-after-3",
+      "episode": {
+        "status": "VERIFIED_SUCCESS",
+        "answer": "Requested update applied",
+        "steps": 2,
+        "tool_attempts": 1,
+        "compactions": 0,
+        "kernel_version": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "kernel_handoff": null,
+        "benchmark_result": null,
+        "run_directory": "<workspace>/runs/learning/native-closed-loop/inference/0686e96deef50549cb41/react",
+        "judge_packet": {
+          "path": "<workspace>/runs/learning/native-closed-loop/inference/0686e96deef50549cb41/react/exports/557b7c6b-1f76-4cd2-a162-0f9054772053/judge_packet.json",
+          "complete": true,
+          "problems": []
+        }
+      },
+      "judge": "ee4e2cd9065f893aa29d00cee08ad86aa5c498dbd9170aa6fdfdd5ff0a9bfb2a",
+      "task_state": "TRUE",
+      "recovered": false,
+      "repair_route": "PROGRAM_COMPARISON",
+      "repair_case": "5815408aedaba8e4bf13744ed988a80b4af6c9dae0b384122d6f5c4cae3981b0",
+      "native": {
+        "success": true,
+        "evaluation": "75cc94b0a110b4e4676dddaeeccf37c39fc46f26de50ec0a6edb47f3bb4aa32b",
+        "mcp_segments": [
+          "18ae36274cfbf1d13c75bd209961c482e66cc7105048c9a42f518af6e1220345",
+          "4738bd16c5e6374351217b8002cc8432e2e849050b17471adc846e3cdd31bdea"
+        ],
+        "mcp_events": 32,
+        "task_id": "07b42fd_3",
+        "scope": "appworld:07b42fd_3:spotify-following",
+        "native_inputs_unchanged": true
+      },
+      "package_used": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "learning": {
+        "completed": [],
+        "active": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "generation": 3,
+        "proposals_spent": 6,
+        "cycles_spent": 3,
+        "cases": {
+          "RESOLVED": 3
+        },
+        "decisions": [
+          {
+            "id": 1,
+            "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+            "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+            "receipt": "1eb4fb28e871e0aab1dd96d3910f7ab420c0a898cfa3a6d22aeb62eb7fc5bc71",
+            "accepted": 1,
+            "at": "2026-11-13T20:48:15.474030+00:00"
+          }
+        ],
+        "native_performance_claimed": false
+      },
+      "next_package": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23"
+    }
+  ],
+  "archive": {
+    "active": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+    "generation": 3,
+    "proposals_spent": 6,
+    "cycles_spent": 3,
+    "cases": {
+      "RESOLVED": 3
+    },
+    "decisions": [
+      {
+        "id": 1,
+        "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+        "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+        "receipt": "1eb4fb28e871e0aab1dd96d3910f7ab420c0a898cfa3a6d22aeb62eb7fc5bc71",
+        "accepted": 1,
+        "at": "2026-11-13T20:48:15.474030+00:00"
+      }
+    ],
+    "native_performance_claimed": false
+  },
+  "audit": {
+    "complete": true,
+    "event_head": "7e3b101acc33aafe9960e857e1f4a57537b5e7124af2ec89c8f1610c860e3585"
+  },
+  "demo_actor": null
+}

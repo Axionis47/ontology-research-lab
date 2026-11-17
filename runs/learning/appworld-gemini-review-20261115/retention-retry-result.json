@@ -1,0 +1,59 @@
+{
+  "request_id": "retained-retry:07b42fd_3",
+  "audit": {
+    "passed": true,
+    "native_success": true,
+    "native_checks": 5,
+    "model_calls": 0,
+    "kernel_calls": 2,
+    "handoffs": 0,
+    "goals_pinned": true,
+    "scripted_actor": false,
+    "trace_complete": true,
+    "event_head": "85dc7b04633948e85bbecbbe3f09105d3f7b40bf7acfcd66f1de09947e397c95",
+    "task_state": "TRUE",
+    "execution_stop": "VERIFIED_SUCCESS",
+    "steps": 2,
+    "tool_attempts": 1,
+    "compactions": 0,
+    "judge": "a356c384d6dc77a193d07fdd728a334f70f439263dc76a76916922e7f77ab1b4",
+    "run": "<workspace>/runs/learning/appworld-gemini-review-20261115/retention-retry/07b42fd_3/react",
+    "wire_receipts_valid": true,
+    "wire_receipts": []
+  },
+  "result": {
+    "request_id": "retained-retry:07b42fd_3",
+    "episode": {
+      "status": "VERIFIED_SUCCESS",
+      "answer": "Requested update applied",
+      "steps": 2,
+      "tool_attempts": 1,
+      "compactions": 0,
+      "kernel_version": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "kernel_handoff": null,
+      "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "benchmark_result": null,
+      "run_directory": "<workspace>/runs/learning/appworld-gemini-review-20261115/retention-retry/07b42fd_3/react",
+      "judge_packet": {
+        "path": "<workspace>/runs/learning/appworld-gemini-review-20261115/retention-retry/07b42fd_3/react/exports/438e68f3-94e3-46ef-80ee-223ffe2af6ce/judge_packet.json",
+        "complete": true,
+        "problems": []
+      }
+    },
+    "native": {
+      "success": true,
+      "evaluation": "ef6e6c17fe8af7ad84070853a1aceadf6f97a02b390f387c706a28296084bbad",
+      "mcp_segments": [
+        "be805debb587d1d369f8358773e0537feee8ed54d7f4492adb507cf55b7f2347",
+        "4f964b321983cae1bb7cf01c41bee4e41cbe8df898df3773b6f13677faf15f7b"
+      ],
+      "mcp_events": 32,
+      "task_id": "07b42fd_3",
+      "scope": "appworld:07b42fd_3:spotify-following",
+      "native_inputs_unchanged": true
+    },
+    "judge": "a356c384d6dc77a193d07fdd728a334f70f439263dc76a76916922e7f77ab1b4",
+    "task_state": "TRUE",
+    "package_used": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23"
+  }
+}

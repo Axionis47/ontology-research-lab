@@ -1,0 +1,284 @@
+[
+  {
+    "request_id": "raw:07b42fd_1",
+    "passed": false,
+    "native_success": false,
+    "native_checks": 5,
+    "model_calls": 3,
+    "kernel_calls": 0,
+    "handoffs": 0,
+    "goals_pinned": true,
+    "scripted_actor": false,
+    "trace_complete": true,
+    "event_head": "3a12285ede0ef810451d47f0ddfee66a5abadbde35865b1ebb247f0187541f47",
+    "task_state": "FALSE",
+    "execution_stop": "NO_PROGRESS",
+    "steps": 4,
+    "tool_attempts": 0,
+    "compactions": 0,
+    "judge": "4510ab93eaf0be9c466f9b797175aeacadc513e32d9d93c5d9f26427d2000087",
+    "run": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/87719c50632715bb5a33/react",
+    "wire_receipts_valid": true,
+    "wire_receipts": [
+      {
+        "event": 3,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1014,
+        "output_tokens": 40,
+        "duration_ms": 15511
+      },
+      {
+        "event": 8,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1098,
+        "output_tokens": 38,
+        "duration_ms": 6195
+      },
+      {
+        "event": 13,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1193,
+        "output_tokens": 34,
+        "duration_ms": 4050
+      }
+    ]
+  },
+  {
+    "request_id": "raw:07b42fd_2",
+    "passed": false,
+    "native_success": false,
+    "native_checks": 5,
+    "model_calls": 3,
+    "kernel_calls": 0,
+    "handoffs": 0,
+    "goals_pinned": true,
+    "scripted_actor": false,
+    "trace_complete": true,
+    "event_head": "dbf2c922aec86e78fc403669089e011d707e97786802ea6b6f034fbe0549614d",
+    "task_state": "FALSE",
+    "execution_stop": "NO_PROGRESS",
+    "steps": 4,
+    "tool_attempts": 0,
+    "compactions": 0,
+    "judge": "fd6285ad8df853b2f6c4a7ca84fee3d7dcd2621580bf188572b0781c9304b3f9",
+    "run": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/f81593e85934ad0cb3fb/react",
+    "wire_receipts_valid": true,
+    "wire_receipts": [
+      {
+        "event": 3,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1016,
+        "output_tokens": 40,
+        "duration_ms": 7400
+      },
+      {
+        "event": 8,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1104,
+        "output_tokens": 40,
+        "duration_ms": 5206
+      },
+      {
+        "event": 13,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1192,
+        "output_tokens": 34,
+        "duration_ms": 3592
+      }
+    ]
+  },
+  {
+    "request_id": "raw:07b42fd_3",
+    "passed": false,
+    "native_success": false,
+    "native_checks": 5,
+    "model_calls": 3,
+    "kernel_calls": 0,
+    "handoffs": 0,
+    "goals_pinned": true,
+    "scripted_actor": false,
+    "trace_complete": true,
+    "event_head": "53798b561766ef368ad7484ed4a8a8a370daea0f4e80e6fa35d81d1b40e428d8",
+    "task_state": "FALSE",
+    "execution_stop": "NO_PROGRESS",
+    "steps": 4,
+    "tool_attempts": 0,
+    "compactions": 0,
+    "judge": "3fb988e70c5836a3f6befa185588cf35d46f1ffbfaa3603955a4b3c3033e08ec",
+    "run": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/1106fde774ae283ba47b/react",
+    "wire_receipts_valid": true,
+    "wire_receipts": [
+      {
+        "event": 3,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1017,
+        "output_tokens": 41,
+        "duration_ms": 7147
+      },
+      {
+        "event": 8,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1104,
+        "output_tokens": 39,
+        "duration_ms": 3463
+      },
+      {
+        "event": 13,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1193,
+        "output_tokens": 35,
+        "duration_ms": 3748
+      }
+    ]
+  },
+  {
+    "request_id": "seed-recovery:07b42fd_1",
+    "passed": false,
+    "native_success": false,
+    "native_checks": 5,
+    "model_calls": 3,
+    "kernel_calls": 1,
+    "handoffs": 1,
+    "goals_pinned": true,
+    "scripted_actor": false,
+    "trace_complete": true,
+    "event_head": "1d671ce6f3c8aa6861130f1b973fca72050036b05bc2004d2ae8ac17a548c8c1",
+    "task_state": "FALSE",
+    "execution_stop": "NO_PROGRESS",
+    "steps": 5,
+    "tool_attempts": 0,
+    "compactions": 0,
+    "judge": "1fd84ee7c60129a0eed7d78a598ca44f97a4d3f80e886532c94ac39841c5182f",
+    "run": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/6c26cc077a02b4522024/react",
+    "wire_receipts_valid": true,
+    "wire_receipts": [
+      {
+        "event": 9,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1310,
+        "output_tokens": 41,
+        "duration_ms": 13074
+      },
+      {
+        "event": 14,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1399,
+        "output_tokens": 39,
+        "duration_ms": 4765
+      },
+      {
+        "event": 19,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1491,
+        "output_tokens": 35,
+        "duration_ms": 5682
+      }
+    ]
+  },
+  {
+    "request_id": "seed-recovery:07b42fd_2",
+    "passed": false,
+    "native_success": false,
+    "native_checks": 5,
+    "model_calls": 3,
+    "kernel_calls": 1,
+    "handoffs": 1,
+    "goals_pinned": true,
+    "scripted_actor": false,
+    "trace_complete": true,
+    "event_head": "3654446739b5a952612d962a258e7918f60cad147c05b24dc4df504ac3ddc1e4",
+    "task_state": "FALSE",
+    "execution_stop": "NO_PROGRESS",
+    "steps": 5,
+    "tool_attempts": 0,
+    "compactions": 0,
+    "judge": "832a0d794afb988cccf923145a94d5eae289231a6d6c41ac8b6adbc69b3b74b2",
+    "run": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/998f7a5ed748c9654619/react",
+    "wire_receipts_valid": true,
+    "wire_receipts": [
+      {
+        "event": 9,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1307,
+        "output_tokens": 41,
+        "duration_ms": 13471
+      },
+      {
+        "event": 14,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1396,
+        "output_tokens": 39,
+        "duration_ms": 5018
+      },
+      {
+        "event": 19,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1483,
+        "output_tokens": 35,
+        "duration_ms": 4667
+      }
+    ]
+  },
+  {
+    "request_id": "seed-recovery:07b42fd_3",
+    "passed": false,
+    "native_success": false,
+    "native_checks": 5,
+    "model_calls": 3,
+    "kernel_calls": 1,
+    "handoffs": 1,
+    "goals_pinned": true,
+    "scripted_actor": false,
+    "trace_complete": true,
+    "event_head": "839538c23f3ff12a22b04b5545cdc74e4b906948ad342932b14917fcfccdc079",
+    "task_state": "FALSE",
+    "execution_stop": "NO_PROGRESS",
+    "steps": 5,
+    "tool_attempts": 0,
+    "compactions": 0,
+    "judge": "1524ffd193c2d9d8be705f8efe1bc3133c13a9927b6a0c0c0f2ff3a85b392403",
+    "run": "<workspace>/runs/learning/appworld-gemini-review-20261115/native/inference/1e64167fa70f3a27e6dc/react",
+    "wire_receipts_valid": true,
+    "wire_receipts": [
+      {
+        "event": 9,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1314,
+        "output_tokens": 41,
+        "duration_ms": 15146
+      },
+      {
+        "event": 14,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1399,
+        "output_tokens": 39,
+        "duration_ms": 4448
+      },
+      {
+        "event": 19,
+        "valid": true,
+        "context_length": 8192,
+        "prompt_tokens": 1491,
+        "output_tokens": 35,
+        "duration_ms": 4647
+      }
+    ]
+  }
+]

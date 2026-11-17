@@ -1,0 +1,13 @@
+{
+  "complete": true,
+  "experiments": [
+    {
+      "experiment": "01-full-definitions",
+      "status": "MEASURED",
+      "passed": true,
+      "calls": 1,
+      "interface_calls": 0
+    }
+  ],
+  "appworld_runs": 0
+}

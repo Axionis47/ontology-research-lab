@@ -1,0 +1,512 @@
+[
+  {
+    "decision": 1,
+    "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+    "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+    "changed_functions": [
+      "direct"
+    ],
+    "before": {
+      "functions": {
+        "direct": {
+          "nodes": [
+            {
+              "op": "lookup_entities",
+              "type": "selector.entity_type"
+            },
+            {
+              "input": 0,
+              "op": "filter_property_categorical",
+              "where": "selector.where"
+            }
+          ],
+          "return": 1
+        },
+        "related": {
+          "nodes": [
+            {
+              "op": "lookup_entities",
+              "type": "selector.entity_type"
+            },
+            {
+              "input": 0,
+              "op": "filter_property_categorical",
+              "where": "selector.where"
+            },
+            {
+              "op": "lookup_entities",
+              "type": "selector.related.entity_type"
+            },
+            {
+              "input": 2,
+              "op": "filter_property_categorical",
+              "where": "selector.related.where"
+            }
+          ],
+          "return": 1
+        }
+      },
+      "version": 1
+    },
+    "after": {
+      "functions": {
+        "direct": {
+          "nodes": [
+            {
+              "op": "lookup_entities",
+              "type": "selector.entity_type"
+            },
+            {
+              "input": 0,
+              "op": "filter_property_categorical",
+              "where": "selector.where"
+            },
+            {
+              "input": 1,
+              "op": "filter_numeric",
+              "predicates": "selector.numeric"
+            }
+          ],
+          "return": 2
+        },
+        "related": {
+          "nodes": [
+            {
+              "op": "lookup_entities",
+              "type": "selector.entity_type"
+            },
+            {
+              "input": 0,
+              "op": "filter_property_categorical",
+              "where": "selector.where"
+            },
+            {
+              "op": "lookup_entities",
+              "type": "selector.related.entity_type"
+            },
+            {
+              "input": 2,
+              "op": "filter_property_categorical",
+              "where": "selector.related.where"
+            }
+          ],
+          "return": 1
+        }
+      },
+      "version": 1
+    },
+    "retained_cases": 2,
+    "fresh_challenges": 16,
+    "challenge_passed": 16,
+    "execution_gate": {
+      "candidate": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "fallback_enabled": false,
+      "fresh_worlds": true,
+      "parent": "995d9f3cc2846ec17c854f4e44cb3382129738744ffa45bfd97d348719da6dd1",
+      "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "rows": [
+        {
+          "case": "01082dbbe7fae5a3324301b361c655700dae9cd728744a43a89a90569ccaee63",
+          "judge": "db2a4d05c8da501e35cac56f83be3d2e1fb2c2f5e277ac00f862b413a15cf89e",
+          "state": "TRUE"
+        },
+        {
+          "case": "afffb439242dee75678d0cf8458e0237ffa754a325ec255d6a47b69bb0d73669",
+          "judge": "3b4ba3afa7ceba4a62939b425d4966033bc0f4f69e6803e74d5e574af579639f",
+          "state": "TRUE"
+        }
+      ],
+      "state": "TRUE",
+      "suite": {
+        "cases": [
+          {
+            "id": "01082dbbe7fae5a3324301b361c655700dae9cd728744a43a89a90569ccaee63",
+            "input_ref": "01082dbbe7fae5a3324301b361c655700dae9cd728744a43a89a90569ccaee63"
+          },
+          {
+            "id": "afffb439242dee75678d0cf8458e0237ffa754a325ec255d6a47b69bb0d73669",
+            "input_ref": "afffb439242dee75678d0cf8458e0237ffa754a325ec255d6a47b69bb0d73669"
+          }
+        ],
+        "generation": 2
+      }
+    },
+    "receipt": "7eacd832e44424c5ba4f09ddb72632b64d24da139c575bbfa80af81d48e600e9"
+  },
+  {
+    "decision": 2,
+    "parent": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+    "candidate": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+    "changed_functions": [
+      "related"
+    ],
+    "before": {
+      "functions": {
+        "direct": {
+          "nodes": [
+            {
+              "op": "lookup_entities",
+              "type": "selector.entity_type"
+            },
+            {
+              "input": 0,
+              "op": "filter_property_categorical",
+              "where": "selector.where"
+            },
+            {
+              "input": 1,
+              "op": "filter_numeric",
+              "predicates": "selector.numeric"
+            }
+          ],
+          "return": 2
+        },
+        "related": {
+          "nodes": [
+            {
+              "op": "lookup_entities",
+              "type": "selector.entity_type"
+            },
+            {
+              "input": 0,
+              "op": "filter_property_categorical",
+              "where": "selector.where"
+            },
+            {
+              "op": "lookup_entities",
+              "type": "selector.related.entity_type"
+            },
+            {
+              "input": 2,
+              "op": "filter_property_categorical",
+              "where": "selector.related.where"
+            }
+          ],
+          "return": 1
+        }
+      },
+      "version": 1
+    },
+    "after": {
+      "functions": {
+        "direct": {
+          "nodes": [
+            {
+              "op": "lookup_entities",
+              "type": "selector.entity_type"
+            },
+            {
+              "input": 0,
+              "op": "filter_property_categorical",
+              "where": "selector.where"
+            },
+            {
+              "input": 1,
+              "op": "filter_numeric",
+              "predicates": "selector.numeric"
+            }
+          ],
+          "return": 2
+        },
+        "related": {
+          "nodes": [
+            {
+              "op": "lookup_entities",
+              "type": "selector.entity_type"
+            },
+            {
+              "input": 0,
+              "op": "filter_property_categorical",
+              "where": "selector.where"
+            },
+            {
+              "op": "lookup_entities",
+              "type": "selector.related.entity_type"
+            },
+            {
+              "input": 2,
+              "op": "filter_property_categorical",
+              "where": "selector.related.where"
+            },
+            {
+              "anchors": 3,
+              "direction": "selector.related.direction",
+              "input": 1,
+              "op": "filter_relation_connected",
+              "relation": "selector.related.relation_type"
+            }
+          ],
+          "return": 4
+        }
+      },
+      "version": 1
+    },
+    "retained_cases": 4,
+    "fresh_challenges": 16,
+    "challenge_passed": 16,
+    "execution_gate": {
+      "candidate": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+      "fallback_enabled": false,
+      "fresh_worlds": true,
+      "parent": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+      "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "rows": [
+        {
+          "case": "01082dbbe7fae5a3324301b361c655700dae9cd728744a43a89a90569ccaee63",
+          "judge": "c4d4a9955b74d95eb5bfa51d64ca6d8b8c81b2647d940221db9da009c551cfcc",
+          "state": "TRUE"
+        },
+        {
+          "case": "1686118c4cd72b2a486a588cd9947dd5ac13fb5370432f8ec9a72f282f7dac0d",
+          "judge": "b40d48e22e353b51f716ecf3f973f4febafbe2da1c66b714d041cf9d49f76acc",
+          "state": "TRUE"
+        },
+        {
+          "case": "394c7d4a5d8a7d6df4261b5ef01c18d5f92eaec802c762a5adccced89b6e1bd8",
+          "judge": "31d530d4a436088abdd55125800de43ecb96f4994bff1e8e806b81c06443699e",
+          "state": "TRUE"
+        },
+        {
+          "case": "afffb439242dee75678d0cf8458e0237ffa754a325ec255d6a47b69bb0d73669",
+          "judge": "56cf5e4bc8e15a21f044f5d80364affe59b6ea341230cac048f3c22e14df798a",
+          "state": "TRUE"
+        }
+      ],
+      "state": "TRUE",
+      "suite": {
+        "cases": [
+          {
+            "id": "01082dbbe7fae5a3324301b361c655700dae9cd728744a43a89a90569ccaee63",
+            "input_ref": "01082dbbe7fae5a3324301b361c655700dae9cd728744a43a89a90569ccaee63"
+          },
+          {
+            "id": "1686118c4cd72b2a486a588cd9947dd5ac13fb5370432f8ec9a72f282f7dac0d",
+            "input_ref": "1686118c4cd72b2a486a588cd9947dd5ac13fb5370432f8ec9a72f282f7dac0d"
+          },
+          {
+            "id": "394c7d4a5d8a7d6df4261b5ef01c18d5f92eaec802c762a5adccced89b6e1bd8",
+            "input_ref": "394c7d4a5d8a7d6df4261b5ef01c18d5f92eaec802c762a5adccced89b6e1bd8"
+          },
+          {
+            "id": "afffb439242dee75678d0cf8458e0237ffa754a325ec255d6a47b69bb0d73669",
+            "input_ref": "afffb439242dee75678d0cf8458e0237ffa754a325ec255d6a47b69bb0d73669"
+          }
+        ],
+        "generation": 4
+      }
+    },
+    "receipt": "2f4cd5bc5d4c928cd630dc351a79050cba953749448841615c3a5e1f68e53ef1"
+  },
+  {
+    "decision": 3,
+    "parent": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+    "candidate": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+    "changed_functions": [
+      "related"
+    ],
+    "before": {
+      "functions": {
+        "direct": {
+          "nodes": [
+            {
+              "op": "lookup_entities",
+              "type": "selector.entity_type"
+            },
+            {
+              "input": 0,
+              "op": "filter_property_categorical",
+              "where": "selector.where"
+            },
+            {
+              "input": 1,
+              "op": "filter_numeric",
+              "predicates": "selector.numeric"
+            }
+          ],
+          "return": 2
+        },
+        "related": {
+          "nodes": [
+            {
+              "op": "lookup_entities",
+              "type": "selector.entity_type"
+            },
+            {
+              "input": 0,
+              "op": "filter_property_categorical",
+              "where": "selector.where"
+            },
+            {
+              "op": "lookup_entities",
+              "type": "selector.related.entity_type"
+            },
+            {
+              "input": 2,
+              "op": "filter_property_categorical",
+              "where": "selector.related.where"
+            },
+            {
+              "anchors": 3,
+              "direction": "selector.related.direction",
+              "input": 1,
+              "op": "filter_relation_connected",
+              "relation": "selector.related.relation_type"
+            }
+          ],
+          "return": 4
+        }
+      },
+      "version": 1
+    },
+    "after": {
+      "functions": {
+        "direct": {
+          "nodes": [
+            {
+              "op": "lookup_entities",
+              "type": "selector.entity_type"
+            },
+            {
+              "input": 0,
+              "op": "filter_property_categorical",
+              "where": "selector.where"
+            },
+            {
+              "input": 1,
+              "op": "filter_numeric",
+              "predicates": "selector.numeric"
+            }
+          ],
+          "return": 2
+        },
+        "related": {
+          "nodes": [
+            {
+              "op": "lookup_entities",
+              "type": "selector.entity_type"
+            },
+            {
+              "input": 0,
+              "op": "filter_property_categorical",
+              "where": "selector.where"
+            },
+            {
+              "op": "lookup_entities",
+              "type": "selector.related.entity_type"
+            },
+            {
+              "input": 2,
+              "op": "filter_property_categorical",
+              "where": "selector.related.where"
+            },
+            {
+              "anchors": 3,
+              "direction": "selector.related.direction",
+              "input": 1,
+              "op": "filter_relation_connected",
+              "relation": "selector.related.relation_type"
+            },
+            {
+              "input": 4,
+              "op": "filter_numeric",
+              "predicates": "selector.numeric"
+            }
+          ],
+          "return": 5
+        }
+      },
+      "version": 1
+    },
+    "retained_cases": 8,
+    "fresh_challenges": 16,
+    "challenge_passed": 16,
+    "execution_gate": {
+      "candidate": "b6fb51dfbe300eed1351c8535df8ee3c3529e5e107024def7961d529e72de4e0",
+      "fallback_enabled": false,
+      "fresh_worlds": true,
+      "parent": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+      "policy_version": "53799239a9cfeedcd2a3e1cea02981457dd51b985883499782de3c7456826cf3",
+      "rows": [
+        {
+          "case": "01082dbbe7fae5a3324301b361c655700dae9cd728744a43a89a90569ccaee63",
+          "judge": "7906565216332504225e3173c76309ab3cd6ec1ad02e9cf2ae30ecc4db9f727f",
+          "state": "TRUE"
+        },
+        {
+          "case": "07643dce8489c2dd5432c6280e16b9c93fba68c0dfb260d9377215d9100abfd1",
+          "judge": "2f77ade9bee71a3faaf8bf9afdb3be0e0be0c9fa0909e945dd0a44bf41a24773",
+          "state": "TRUE"
+        },
+        {
+          "case": "1686118c4cd72b2a486a588cd9947dd5ac13fb5370432f8ec9a72f282f7dac0d",
+          "judge": "ea4a4a1ec155a5e2d563b595163af566fe708f77479c78ba0503a0fa51f8331c",
+          "state": "TRUE"
+        },
+        {
+          "case": "23561b0c8d0fc621d67415382bd556dd4e2e04d27a20f6ed3be96e0b3d1f6355",
+          "judge": "7d633218a686dc3cdb0bb0a5e775e7d02e2738d193d60915dabe1c88263dd36b",
+          "state": "TRUE"
+        },
+        {
+          "case": "3803c4511d007e197680171ed78fdea8fb03aed6394952a7ecf9c0204ad752f1",
+          "judge": "c43d7295b7cd26477e12f08e30fadadeb3752ddb8c0d3c251b9e4afd4c0616e4",
+          "state": "TRUE"
+        },
+        {
+          "case": "394c7d4a5d8a7d6df4261b5ef01c18d5f92eaec802c762a5adccced89b6e1bd8",
+          "judge": "652a6450063ae8a2abb5bb12fc9a2684808e93d5785edf6c17dcb8d36a921e17",
+          "state": "TRUE"
+        },
+        {
+          "case": "412bbb5ebe1b236c61af765821f72a6fa89442b776630d08f577f1d0461e626f",
+          "judge": "6adc950606bdec1f6cdaab21dc664e9a2770270d8e3db0c64efe665ae43b4204",
+          "state": "TRUE"
+        },
+        {
+          "case": "afffb439242dee75678d0cf8458e0237ffa754a325ec255d6a47b69bb0d73669",
+          "judge": "15c1e17e4dee9176f17fe1f42ef3e0e0a45cc618501d6c5cec6ef2dc29ed00c9",
+          "state": "TRUE"
+        }
+      ],
+      "state": "TRUE",
+      "suite": {
+        "cases": [
+          {
+            "id": "01082dbbe7fae5a3324301b361c655700dae9cd728744a43a89a90569ccaee63",
+            "input_ref": "01082dbbe7fae5a3324301b361c655700dae9cd728744a43a89a90569ccaee63"
+          },
+          {
+            "id": "07643dce8489c2dd5432c6280e16b9c93fba68c0dfb260d9377215d9100abfd1",
+            "input_ref": "07643dce8489c2dd5432c6280e16b9c93fba68c0dfb260d9377215d9100abfd1"
+          },
+          {
+            "id": "1686118c4cd72b2a486a588cd9947dd5ac13fb5370432f8ec9a72f282f7dac0d",
+            "input_ref": "1686118c4cd72b2a486a588cd9947dd5ac13fb5370432f8ec9a72f282f7dac0d"
+          },
+          {
+            "id": "23561b0c8d0fc621d67415382bd556dd4e2e04d27a20f6ed3be96e0b3d1f6355",
+            "input_ref": "23561b0c8d0fc621d67415382bd556dd4e2e04d27a20f6ed3be96e0b3d1f6355"
+          },
+          {
+            "id": "3803c4511d007e197680171ed78fdea8fb03aed6394952a7ecf9c0204ad752f1",
+            "input_ref": "3803c4511d007e197680171ed78fdea8fb03aed6394952a7ecf9c0204ad752f1"
+          },
+          {
+            "id": "394c7d4a5d8a7d6df4261b5ef01c18d5f92eaec802c762a5adccced89b6e1bd8",
+            "input_ref": "394c7d4a5d8a7d6df4261b5ef01c18d5f92eaec802c762a5adccced89b6e1bd8"
+          },
+          {
+            "id": "412bbb5ebe1b236c61af765821f72a6fa89442b776630d08f577f1d0461e626f",
+            "input_ref": "412bbb5ebe1b236c61af765821f72a6fa89442b776630d08f577f1d0461e626f"
+          },
+          {
+            "id": "afffb439242dee75678d0cf8458e0237ffa754a325ec255d6a47b69bb0d73669",
+            "input_ref": "afffb439242dee75678d0cf8458e0237ffa754a325ec255d6a47b69bb0d73669"
+          }
+        ],
+        "generation": 8
+      }
+    },
+    "receipt": "852f497b60e7a6030892c7fcb1d1053f9137941f08e8fffc981392a22151674b"
+  }
+]

@@ -1,0 +1,43 @@
+{
+  "at": "2026-11-16",
+  "triples": [
+    [
+      "Maya",
+      "belongsTo",
+      "Atlas"
+    ],
+    [
+      "LoginService",
+      "belongsTo",
+      "Atlas"
+    ]
+  ],
+  "services": [
+    "LoginService"
+  ],
+  "scenarios": {
+    "membership_only": [],
+    "matching_assignment": [
+      {
+        "id": "A1",
+        "person": "Maya",
+        "service": "LoginService",
+        "role": "DeploymentApprover",
+        "environment": "Production",
+        "validFrom": "2026-11-01",
+        "validUntil": "2026-11-20"
+      }
+    ],
+    "wrong_environment": [
+      {
+        "id": "A2",
+        "person": "Maya",
+        "service": "LoginService",
+        "role": "DeploymentApprover",
+        "environment": "Staging",
+        "validFrom": "2026-11-01",
+        "validUntil": "2026-11-20"
+      }
+    ]
+  }
+}

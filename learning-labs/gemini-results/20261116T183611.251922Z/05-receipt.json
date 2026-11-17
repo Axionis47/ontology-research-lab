@@ -1,0 +1,119 @@
+{
+  "experiment": "05-traversal-inference",
+  "status": "MEASURED",
+  "prompt": "You are the participant in one small ontology lesson. Use only the supplied input. Do not use tools, access files, or change state. Return only one JSON object matching output_shape. No Markdown or explanation. Arrays of answers are unordered unless the instruction says otherwise.\n\n{\n  \"experiment\": \"05\",\n  \"title\": \"Connected is not authorized\",\n  \"terms\": {\n    \"traversal\": \"Following stored edges.\",\n    \"inference\": \"Drawing a conclusion under an explicit rule.\",\n    \"unknown\": \"The available evidence does not establish the conclusion.\"\n  },\n  \"instruction\": \"Approval requires a current DeploymentApprover assignment for LoginService in Production. Membership is not sufficient. Return SUPPORTED or UNKNOWN for each case.\",\n  \"input\": {\n    \"shared_facts\": [\n      [\n        \"Maya\",\n        \"belongsTo\",\n        \"Atlas\"\n      ],\n      [\n        \"LoginService\",\n        \"belongsTo\",\n        \"Atlas\"\n      ]\n    ],\n    \"cases\": {\n      \"A\": {\n        \"assignments\": []\n      },\n      \"B\": {\n        \"assignments\": [\n          {\n            \"person\": \"Maya\",\n            \"role\": \"DeploymentApprover\",\n            \"service\": \"LoginService\",\n            \"environment\": \"Production\",\n            \"current\": true\n          }\n        ]\n      }\n    }\n  },\n  \"output_shape\": {\n    \"A\": \"SUPPORTED or UNKNOWN\",\n    \"B\": \"SUPPORTED or UNKNOWN\"\n  }\n}\n",
+  "expected_held_out_of_prompt": {
+    "A": "UNKNOWN",
+    "B": "SUPPORTED"
+  },
+  "reported_models": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash"
+  ],
+  "passed": true,
+  "exit_code": 0,
+  "stderr_sha256": "0309ffcd9f9558b019117eab516a089bfe80be8c1a596be48e3794ecf695a953",
+  "cli_response": {
+    "session_id": "6cfb47aa-2bcc-4318-94b1-278d36c19131",
+    "response": "{\n  \"A\": \"UNKNOWN\",\n  \"B\": \"SUPPORTED\"\n}",
+    "stats": {
+      "models": {
+        "gemini-3.5-flash-lite": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 5776,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 1272,
+            "prompt": 1272,
+            "candidates": 31,
+            "total": 2093,
+            "cached": 0,
+            "thoughts": 790,
+            "tool": 0
+          },
+          "roles": {
+            "utility_router": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 5776,
+              "tokens": {
+                "input": 1272,
+                "prompt": 1272,
+                "candidates": 31,
+                "total": 2093,
+                "cached": 0,
+                "thoughts": 790,
+                "tool": 0
+              }
+            }
+          }
+        },
+        "gemini-3.8-flash": {
+          "api": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 3337,
+            "errorsByType": {}
+          },
+          "tokens": {
+            "input": 6214,
+            "prompt": 6214,
+            "candidates": 20,
+            "total": 6619,
+            "cached": 0,
+            "thoughts": 385,
+            "tool": 0
+          },
+          "roles": {
+            "main": {
+              "totalRequests": 1,
+              "totalErrors": 0,
+              "totalLatencyMs": 3337,
+              "tokens": {
+                "input": 6214,
+                "prompt": 6214,
+                "candidates": 20,
+                "total": 6619,
+                "cached": 0,
+                "thoughts": 385,
+                "tool": 0
+              }
+            }
+          }
+        }
+      },
+      "tools": {
+        "totalCalls": 0,
+        "totalSuccess": 0,
+        "totalFail": 0,
+        "totalDurationMs": 0,
+        "totalDecisions": {
+          "accept": 0,
+          "reject": 0,
+          "modify": 0,
+          "auto_accept": 0
+        },
+        "byName": {}
+      },
+      "files": {
+        "totalLinesAdded": 0,
+        "totalLinesRemoved": 0
+      }
+    }
+  },
+  "checks": {
+    "exact_keys": true,
+    "fields": {
+      "A": true,
+      "B": true
+    },
+    "passed": true
+  },
+  "answer": {
+    "A": "UNKNOWN",
+    "B": "SUPPORTED"
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "measured": {
+    "integrity": {
+      "complete": true,
+      "event_head": "18a77ca4b76d3df42ff26b1acea399b5216878d9982c640fb3555addd62da54f"
+    },
+    "protected_sources_match": true,
+    "active_package": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+    "accepted_decisions": 1,
+    "execution_gate_rows": [
+      {
+        "state": "TRUE",
+        "judge": "20c42bf4d89290e8c011576f151c8c0bfbbafc889ceba1922e4b4e787386c86b",
+        "receipt_keys": [
+          "coverage",
+          "event_head",
+          "execution_stop",
+          "final_check_fresh",
+          "findings",
+          "kernel_gap",
+          "limitations",
+          "native",
+          "recovered",
+          "repair_route",
+          "reward",
+          "run",
+          "task_state",
+          "version"
+        ]
+      },
+      {
+        "state": "TRUE",
+        "judge": "8a7ae62d865ea1bdd02b20d9f28b0d86261c04b3f3a7cd84e03ab18b7823a639",
+        "receipt_keys": [
+          "coverage",
+          "event_head",
+          "execution_stop",
+          "final_check_fresh",
+          "findings",
+          "kernel_gap",
+          "limitations",
+          "native",
+          "recovered",
+          "repair_route",
+          "reward",
+          "run",
+          "task_state",
+          "version"
+        ]
+      },
+      {
+        "state": "TRUE",
+        "judge": "0266bf22a460ee0dde74dbcd5f233ee7564a55148cdd31905ced5e9981217767",
+        "receipt_keys": [
+          "coverage",
+          "event_head",
+          "execution_stop",
+          "final_check_fresh",
+          "findings",
+          "kernel_gap",
+          "limitations",
+          "native",
+          "recovered",
+          "repair_route",
+          "reward",
+          "run",
+          "task_state",
+          "version"
+        ]
+      }
+    ]
+  },
+  "automatic": {
+    "integrity": {
+      "complete": true,
+      "event_head": "7c236791991a911b196540ffa6b60daf7de6e5b1c336dcb18c8eb391fd8d644f"
+    },
+    "protected_sources_match": true,
+    "active_package": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+    "accepted_decisions": 1,
+    "execution_gate_rows": [
+      {
+        "state": "TRUE",
+        "judge": "14a7967da005f94915ee21a3aef92c43f8e372a4bcb7251578de3e749ca15fca",
+        "receipt_keys": [
+          "coverage",
+          "event_head",
+          "execution_stop",
+          "final_check_fresh",
+          "findings",
+          "kernel_gap",
+          "limitations",
+          "native",
+          "recovered",
+          "repair_route",
+          "reward",
+          "run",
+          "task_state",
+          "version"
+        ]
+      }
+    ]
+  },
+  "cli_bundle_sha256": "334c2cb6b10d43b274a104ba55b9dafc75aaeebeadce8628b53a1556d818da26",
+  "cli_bundle_matches_final_correction": true
+}

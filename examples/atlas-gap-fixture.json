@@ -1,0 +1,40 @@
+{
+  "synthetic_example": true,
+  "context": {
+    "run_id": "demo-run-1",
+    "work_unit_id": "demo-work-1",
+    "requirement_id": "identify-atlas-leads",
+    "environment_id": "demo-workspace",
+    "scope_lease_id": "demo-scope-1",
+    "allowed_predicates": ["hasActiveLead"]
+  },
+  "ontology": {
+    "version": "3",
+    "shape": {
+      "id": "ProjectLeadShape",
+      "target_type": "Project",
+      "path": "hasActiveLead",
+      "max_count": 1
+    }
+  },
+  "mapping": {
+    "version": "1",
+    "source_field": "active_lead_ids",
+    "target_path": "hasActiveLead"
+  },
+  "evidence": {
+    "source_id": "synthetic-staffing-source",
+    "source_revision": "17",
+    "observed_at": "2026-11-12T14:00:00Z",
+    "acquisition": "synthetic-fixture",
+    "access": "granted",
+    "operation_status": "succeeded",
+    "scope_complete": true,
+    "query": "Active lead IDs for project:atlas at the declared observation time",
+    "record": {
+      "id": "project:atlas",
+      "type": "Project",
+      "active_lead_ids": ["person:maya", "person:noah"]
+    }
+  }
+}

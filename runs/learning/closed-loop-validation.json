@@ -1,0 +1,55 @@
+{
+  "tests": {
+    "passed": 90,
+    "command": "python3 -m unittest discover -s tests -v"
+  },
+  "model_weights_changed": false,
+  "recovery_actor": "explicit scripted reference",
+  "candidate_proposer": "bounded structural search",
+  "native_scenario": "07b42fd",
+  "native_application": "spotify",
+  "scope": "selective updates with typed properties, numeric clauses and an optional one-hop relationship",
+  "local": {
+    "result": "<workspace>/runs/learning/closed-loop-verified/inference-result.json",
+    "episodes": 7,
+    "tasks_passed": 7,
+    "recovered_kernel_gaps": 2,
+    "promotions": 2,
+    "replay_cases_per_promotion": [
+      3,
+      4
+    ],
+    "fresh_challenges_per_promotion": [
+      16,
+      16
+    ],
+    "regressions": [
+      [],
+      []
+    ],
+    "all_execution_replays_passed": true,
+    "active_package": "fdfa1a94130061a8ee56cc26c8bda49bc35f993eb3593e7296f84aa0173a58bc",
+    "source_revision_current": true,
+    "event_coverage_complete": true
+  },
+  "appworld": {
+    "result": "<workspace>/runs/learning/native-closed-loop/inference-result.json",
+    "episodes": 6,
+    "tasks_passed": 6,
+    "recovered_kernel_gaps": 1,
+    "promotions": 1,
+    "replay_cases_per_promotion": [
+      3
+    ],
+    "fresh_challenges_per_promotion": [
+      16
+    ],
+    "regressions": [
+      []
+    ],
+    "all_execution_replays_passed": true,
+    "active_package": "292f3a143f7dd477437c9554e7e7ca5ff27de4489501ae2bab2c84ab3309ec23",
+    "source_revision_current": true,
+    "event_coverage_complete": true
+  }
+}

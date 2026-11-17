@@ -1,0 +1,8 @@
+[
+  {"request_id":"native-bootstrap-1","adapter":"appworld","actor":"reference","root":".appworld","task_id":"07b42fd_1","raw":true,"learn":false},
+  {"request_id":"native-bootstrap-2","adapter":"appworld","actor":"reference","root":".appworld","task_id":"07b42fd_2","raw":true,"learn":false},
+  {"request_id":"native-bootstrap-3","adapter":"appworld","actor":"reference","root":".appworld","task_id":"07b42fd_3","raw":true,"learn":false},
+  {"request_id":"native-gap","adapter":"appworld","actor":"reference","root":".appworld","task_id":"07b42fd_1"},
+  {"request_id":"native-after-2","adapter":"appworld","actor":"reference","root":".appworld","task_id":"07b42fd_2"},
+  {"request_id":"native-after-3","adapter":"appworld","actor":"reference","root":".appworld","task_id":"07b42fd_3"}
+]

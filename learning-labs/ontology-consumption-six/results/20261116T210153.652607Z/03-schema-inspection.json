@@ -1,0 +1,122 @@
+{
+  "experiment": "03-schema-inspection",
+  "mode": "inspect",
+  "status": "NOT_RUN",
+  "initial_payload": {
+    "task": {
+      "service": "LoginService",
+      "environment": "Production",
+      "deployment_id": "d1",
+      "at": "2026-11-16"
+    },
+    "task_instruction": "Choose an eligible approver for this deployment using the pinned ontology.",
+    "facts": {
+      "revision": 1,
+      "source": "synthetic://service-catalog/snapshot-1",
+      "deployment": {
+        "id": "d1",
+        "author": "Maya",
+        "service": "LoginService"
+      },
+      "assignments": [
+        {
+          "id": "a-maya",
+          "person": "Maya",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-noah",
+          "person": "Noah",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-rin",
+          "person": "Rin",
+          "service": "LoginService",
+          "environment": "Staging",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-11-01",
+          "validUntil": "2026-12-01",
+          "active": true
+        },
+        {
+          "id": "a-tao",
+          "person": "Tao",
+          "service": "LoginService",
+          "environment": "Production",
+          "role": "DeploymentApprover",
+          "validFrom": "2026-10-01",
+          "validUntil": "2026-11-15",
+          "active": true
+        }
+      ]
+    },
+    "coverage": "All relevant fixture facts are present; date comparisons use YYYY-MM-DD.",
+    "ontology_version": "approval-ontology-v1",
+    "finish_shape": {
+      "type": "finish",
+      "person": "name or null",
+      "evidence_ids": [
+        "supporting record IDs"
+      ],
+      "ontology_version": "pinned version",
+      "graph_revision": "integer",
+      "rule_ids": [
+        "all applied eligibility rule IDs"
+      ]
+    },
+    "catalog": {
+      "Person": "type",
+      "Service": "type",
+      "Assignment": "type",
+      "Deployment": "type",
+      "heldBy": "relation",
+      "forService": "relation",
+      "eligibility": "rule_set",
+      "Invoice": "type",
+      "Warehouse": "type",
+      "Shipment": "type",
+      "Subscription": "type",
+      "Asset": "type",
+      "PurchaseOrder": "type",
+      "Payment": "type",
+      "Refund": "type",
+      "TaxRate": "type",
+      "Expense": "type",
+      "Supplier": "type",
+      "Inventory": "type"
+    },
+    "interfaces": {
+      "inspect_schema": {
+        "arguments": {
+          "names": "array of catalog names"
+        },
+        "returns": "Requested ontology definitions and their dependency closure; includes rule meanings when eligibility is requested."
+      }
+    },
+    "call_shape": {
+      "type": "call",
+      "name": "declared interface",
+      "arguments": {
+        "documented": "arguments"
+      }
+    },
+    "consumption_protocol": "Use the provided interface successfully at least once, then finish. One request per turn. These are JSON application requests, not CLI built-in tools."
+  },
+  "calls": [],
+  "history": [],
+  "passed": null,
+  "successful_interface_calls": 0,
+  "definition_names_exposed": [],
+  "reason": "TIMEOUT"
+}

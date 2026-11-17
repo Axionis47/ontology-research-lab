@@ -1,0 +1,386 @@
+{
+  "recorded_at": "2026-11-13T15:23:31.846544+00:00",
+  "runs": [
+    {
+      "run_directory": "runs/react/9d991d18-eee3-4253-b1b5-03c808f98495",
+      "started_at": "2026-11-13T15:04:04.219410+00:00",
+      "model": {
+        "benchmark": false,
+        "command_template": [
+          "/usr/local/bin/python3",
+          "<workspace>/react_runtime/fixtures.py",
+          "scripted",
+          "--long"
+        ],
+        "note": "Deterministic scripted fixture, not a model or benchmark result",
+        "provider": "scripted",
+        "resolved_model": null
+      },
+      "result": {
+        "answer": "proof-for-r1",
+        "benchmark_result": null,
+        "compactions": 4,
+        "run_directory": "<workspace>/runs/react/9d991d18-eee3-4253-b1b5-03c808f98495",
+        "status": "VERIFIED_SUCCESS",
+        "steps": 7,
+        "tool_attempts": 6
+      },
+      "audit_complete": true,
+      "audit_problems": [],
+      "event_head": "fe324bd40451db2a30863426321055bc066b861016052f51d05924a5e3245a33",
+      "judge_packet": "runs/react/9d991d18-eee3-4253-b1b5-03c808f98495/exports/766b8546-87ba-4b4b-a1c5-e7d6e3d91dc6/judge_packet.json",
+      "source_bundle_ref": {
+        "bytes": 4899,
+        "complete": true,
+        "id": "b1ee54f1-6657-4234-8006-8bb55e6f0eaa",
+        "kind": "metadata",
+        "path": "metadata/step-0000-b1ee54f1-6657-4234-8006-8bb55e6f0eaa.txt",
+        "sha256": "d60fc046d80b4d3b6bf8e761acf36024e7d17f2ce5d9622ddd255d85d1fb5140",
+        "step": 0
+      }
+    },
+    {
+      "run_directory": "runs/react/7ae93154-56ea-4787-af34-594c8ad03d5b",
+      "started_at": "2026-11-13T15:05:54.957428+00:00",
+      "model": {
+        "benchmark": false,
+        "cli_applied_options": [
+          "model",
+          "format=json",
+          "think=false"
+        ],
+        "cli_version": "ollama version is 0.40.5\nWarning: client version is 0.9.5",
+        "command_template": [
+          "/opt/homebrew/bin/ollama",
+          "run",
+          "qwen3:8b-q4_K_M",
+          "--format",
+          "json",
+          "--think=false",
+          "--nowordwrap"
+        ],
+        "note": "This CLI does not expose those HTTP generation settings; they are not claimed enforced.",
+        "provider": "ollama",
+        "requested_model": "qwen3:8b-q4_K_M",
+        "resolved_model": null,
+        "unapplied_http_only_settings": [
+          "num_ctx",
+          "num_predict",
+          "temperature"
+        ]
+      },
+      "result": {
+        "answer": null,
+        "benchmark_result": null,
+        "compactions": 0,
+        "run_directory": "<workspace>/runs/react/7ae93154-56ea-4787-af34-594c8ad03d5b",
+        "status": "BUDGET_EXHAUSTED",
+        "steps": 12,
+        "tool_attempts": 0
+      },
+      "audit_complete": true,
+      "audit_problems": [],
+      "event_head": "48353080e9abd612527899771fd96b249b5aed976bd5558c5f6d773444b3bfd8",
+      "judge_packet": "runs/react/7ae93154-56ea-4787-af34-594c8ad03d5b/exports/8cc35ffb-26e3-46f6-85c5-10e1a0e5dc4c/judge_packet.json",
+      "source_bundle_ref": {
+        "bytes": 5220,
+        "complete": true,
+        "id": "11cc1e40-b8c7-4179-9d47-db93653e0bc2",
+        "kind": "metadata",
+        "path": "metadata/step-0000-11cc1e40-b8c7-4179-9d47-db93653e0bc2.txt",
+        "sha256": "672eaea4fb81c18c9010fb6c7cb8e4ad50a47bdf94862b18ee0b2ad7ecf83f25",
+        "step": 0
+      }
+    },
+    {
+      "run_directory": "runs/react/ac131205-33e2-48bb-8a4d-61287100a9e8",
+      "started_at": "2026-11-13T15:10:43.655292+00:00",
+      "model": {
+        "benchmark": false,
+        "cli_applied_options": [
+          "model",
+          "format=json",
+          "think=false"
+        ],
+        "cli_version": "ollama version is 0.40.5\nWarning: client version is 0.9.5",
+        "command_template": [
+          "/opt/homebrew/bin/ollama",
+          "run",
+          "qwen3:8b-q4_K_M",
+          "--format",
+          "json",
+          "--think=false",
+          "--nowordwrap"
+        ],
+        "note": "This CLI does not expose those HTTP generation settings; they are not claimed enforced.",
+        "provider": "ollama",
+        "requested_model": "qwen3:8b-q4_K_M",
+        "resolved_model": null,
+        "unapplied_http_only_settings": [
+          "num_ctx",
+          "num_predict",
+          "temperature"
+        ]
+      },
+      "result": {
+        "answer": null,
+        "benchmark_result": null,
+        "compactions": 0,
+        "run_directory": "<workspace>/runs/react/ac131205-33e2-48bb-8a4d-61287100a9e8",
+        "status": "BUDGET_EXHAUSTED",
+        "steps": 12,
+        "tool_attempts": 0
+      },
+      "audit_complete": true,
+      "audit_problems": [],
+      "event_head": "2c37e4079f490556da240d82cceaab0ffd96ab0421b646dcbe744b4bc6b0d2a3",
+      "judge_packet": "runs/react/ac131205-33e2-48bb-8a4d-61287100a9e8/exports/9d2400f0-ca88-4d76-8d1e-3ae279fb7fa0/judge_packet.json",
+      "source_bundle_ref": {
+        "bytes": 5220,
+        "complete": true,
+        "id": "9fa97a94-e5a4-4697-b321-3f1c217bd45a",
+        "kind": "metadata",
+        "path": "metadata/step-0000-9fa97a94-e5a4-4697-b321-3f1c217bd45a.txt",
+        "sha256": "d529c2b47e7cdf1b319ad3a7ce2fbc907880f1daed2e49a3e170e126898bdf12",
+        "step": 0
+      }
+    },
+    {
+      "run_directory": "runs/react/51674c1f-4ec1-4ce7-a215-54de08693bfd",
+      "started_at": "2026-11-13T15:14:16.035972+00:00",
+      "model": {
+        "benchmark": false,
+        "cli_applied_options": [
+          "model",
+          "format=json",
+          "think=false"
+        ],
+        "cli_version": "ollama version is 0.40.5\nWarning: client version is 0.9.5",
+        "command_template": [
+          "/opt/homebrew/bin/ollama",
+          "run",
+          "qwen3:8b-q4_K_M",
+          "--format",
+          "json",
+          "--think=false",
+          "--nowordwrap"
+        ],
+        "note": "This CLI does not expose those HTTP generation settings; they are not claimed enforced.",
+        "provider": "ollama",
+        "requested_model": "qwen3:8b-q4_K_M",
+        "resolved_model": null,
+        "unapplied_http_only_settings": [
+          "num_ctx",
+          "num_predict",
+          "temperature"
+        ]
+      },
+      "result": {
+        "answer": null,
+        "benchmark_result": null,
+        "compactions": 0,
+        "run_directory": "<workspace>/runs/react/51674c1f-4ec1-4ce7-a215-54de08693bfd",
+        "status": "BUDGET_EXHAUSTED",
+        "steps": 4,
+        "tool_attempts": 2
+      },
+      "audit_complete": true,
+      "audit_problems": [],
+      "event_head": "e45d1036fc4f767d5d433ad461b09aa532b0597af46b3d7e1a654777d41565a1",
+      "judge_packet": "runs/react/51674c1f-4ec1-4ce7-a215-54de08693bfd/exports/f4566595-6b66-490c-b79f-11f2ecc88e2d/judge_packet.json",
+      "source_bundle_ref": {
+        "bytes": 5220,
+        "complete": true,
+        "id": "2bd43156-9c65-453b-b66e-623a30a28e77",
+        "kind": "metadata",
+        "path": "metadata/step-0000-2bd43156-9c65-453b-b66e-623a30a28e77.txt",
+        "sha256": "d3eac13fd5e431e42fcd5494f9ccf762922cc01d9b76d8733cca54b3e0e971fc",
+        "step": 0
+      }
+    },
+    {
+      "run_directory": "runs/react/246510a6-0f3a-4ed6-bfd1-6c5ae5cb2ba1",
+      "started_at": "2026-11-13T15:16:26.115227+00:00",
+      "model": {
+        "benchmark": false,
+        "cli_applied_options": [
+          "model",
+          "format=json",
+          "think=false"
+        ],
+        "cli_version": "ollama version is 0.40.5\nWarning: client version is 0.9.5",
+        "command_template": [
+          "/opt/homebrew/bin/ollama",
+          "run",
+          "qwen3:8b-q4_K_M",
+          "--format",
+          "json",
+          "--think=false",
+          "--nowordwrap"
+        ],
+        "note": "This CLI does not expose those HTTP generation settings; they are not claimed enforced.",
+        "provider": "ollama",
+        "requested_model": "qwen3:8b-q4_K_M",
+        "resolved_model": null,
+        "unapplied_http_only_settings": [
+          "num_ctx",
+          "num_predict",
+          "temperature"
+        ]
+      },
+      "result": {
+        "answer": "delivered",
+        "benchmark_result": null,
+        "compactions": 0,
+        "run_directory": "<workspace>/runs/react/246510a6-0f3a-4ed6-bfd1-6c5ae5cb2ba1",
+        "status": "VERIFIED_SUCCESS",
+        "steps": 4,
+        "tool_attempts": 2
+      },
+      "audit_complete": true,
+      "audit_problems": [],
+      "event_head": "3a00d608bf57d274e4b01a34a9da3d1dde00ff13e537f8eef65d6ae19e7534b6",
+      "judge_packet": "runs/react/246510a6-0f3a-4ed6-bfd1-6c5ae5cb2ba1/exports/717a9e2b-d1cc-412c-baa6-b0ac19542139/judge_packet.json",
+      "source_bundle_ref": {
+        "bytes": 5220,
+        "complete": true,
+        "id": "697eb843-231e-45c3-9337-f5127ca07600",
+        "kind": "metadata",
+        "path": "metadata/step-0000-697eb843-231e-45c3-9337-f5127ca07600.txt",
+        "sha256": "54ae56ffba83173343a51e86595b24786c48f86b16de71e71c4b9cac55ebba9f",
+        "step": 0
+      }
+    },
+    {
+      "run_directory": "runs/react/feda649c-b3a3-4072-9601-b80da489287f",
+      "started_at": "2026-11-13T15:17:50.671222+00:00",
+      "model": {
+        "benchmark": false,
+        "cli_applied_options": [
+          "model",
+          "format=json",
+          "think=false"
+        ],
+        "cli_version": "ollama version is 0.40.5\nWarning: client version is 0.9.5",
+        "command_template": [
+          "/opt/homebrew/bin/ollama",
+          "run",
+          "qwen3:8b-q4_K_M",
+          "--format",
+          "json",
+          "--think=false",
+          "--nowordwrap"
+        ],
+        "note": "This CLI does not expose those HTTP generation settings; they are not claimed enforced.",
+        "provider": "ollama",
+        "requested_model": "qwen3:8b-q4_K_M",
+        "resolved_model": null,
+        "unapplied_http_only_settings": [
+          "num_ctx",
+          "num_predict",
+          "temperature"
+        ]
+      },
+      "result": {
+        "answer": null,
+        "benchmark_result": null,
+        "compactions": 3,
+        "run_directory": "<workspace>/runs/react/feda649c-b3a3-4072-9601-b80da489287f",
+        "status": "BUDGET_EXHAUSTED",
+        "steps": 12,
+        "tool_attempts": 9
+      },
+      "audit_complete": true,
+      "audit_problems": [],
+      "event_head": "ee0e31a22cf28d4d54a2aa317d07a984c32e73a42d7ee206f94d35f84d224917",
+      "judge_packet": "runs/react/feda649c-b3a3-4072-9601-b80da489287f/exports/0b94db92-2da4-4fbc-860e-6dd5607a9c0a/judge_packet.json",
+      "source_bundle_ref": {
+        "bytes": 5219,
+        "complete": true,
+        "id": "2808f653-1dbc-4c33-9bbf-6be754a52d32",
+        "kind": "metadata",
+        "path": "metadata/step-0000-2808f653-1dbc-4c33-9bbf-6be754a52d32.txt",
+        "sha256": "52eb006f8e8f42bb3da896e2ede64d67089cae7f8fab8e0a3b9f482e03beb663",
+        "step": 0
+      }
+    },
+    {
+      "run_directory": "runs/react/44ffcc5d-f23f-41f5-8637-2fcd813a430e",
+      "started_at": "2026-11-13T15:17:51.190194+00:00",
+      "model": {
+        "benchmark": false,
+        "command_template": [
+          "/usr/local/bin/python3",
+          "<workspace>/react_runtime/fixtures.py",
+          "scripted",
+          "--long"
+        ],
+        "note": "Deterministic scripted fixture, not a model or benchmark result",
+        "provider": "scripted",
+        "resolved_model": null
+      },
+      "result": {
+        "answer": "proof-for-r1",
+        "benchmark_result": null,
+        "compactions": 4,
+        "run_directory": "<workspace>/runs/react/44ffcc5d-f23f-41f5-8637-2fcd813a430e",
+        "status": "VERIFIED_SUCCESS",
+        "steps": 7,
+        "tool_attempts": 6
+      },
+      "audit_complete": true,
+      "audit_problems": [],
+      "event_head": "318d1d6e9e9ce8b355d6a5842891ac68cc18f1374b7e91bdf1d4c9f58b7de40e",
+      "judge_packet": "runs/react/44ffcc5d-f23f-41f5-8637-2fcd813a430e/exports/b0d1eb23-45b3-4b50-9875-bab7552ad120/judge_packet.json",
+      "source_bundle_ref": {
+        "bytes": 5219,
+        "complete": true,
+        "id": "72c37d16-79ef-4a1c-a7d1-2c05614b98e5",
+        "kind": "metadata",
+        "path": "metadata/step-0000-72c37d16-79ef-4a1c-a7d1-2c05614b98e5.txt",
+        "sha256": "a40a399f358186a8df52fc79978032b6284b7af80ebc1ff7fea854b43354298d",
+        "step": 0
+      }
+    },
+    {
+      "run_directory": "runs/react/9f04939c-8901-46c9-b269-c97f61c3fb60",
+      "started_at": "2026-11-13T15:22:39.194578+00:00",
+      "model": {
+        "benchmark": false,
+        "command_template": [
+          "/usr/local/bin/python3",
+          "<workspace>/react_runtime/fixtures.py",
+          "scripted",
+          "--long"
+        ],
+        "note": "Deterministic scripted fixture, not a model or benchmark result",
+        "provider": "scripted",
+        "resolved_model": null
+      },
+      "result": {
+        "answer": "proof-for-r1",
+        "benchmark_result": null,
+        "compactions": 4,
+        "run_directory": "<workspace>/runs/react/9f04939c-8901-46c9-b269-c97f61c3fb60",
+        "status": "VERIFIED_SUCCESS",
+        "steps": 7,
+        "tool_attempts": 6
+      },
+      "audit_complete": true,
+      "audit_problems": [],
+      "event_head": "c82a82b78a7ab21c3728434bdafcbfc45448a6bbb21a9b4ebcfb333bdf1b1447",
+      "judge_packet": "runs/react/9f04939c-8901-46c9-b269-c97f61c3fb60/exports/621bca0c-68c6-40d1-b927-9016ab59cb07/judge_packet.json",
+      "source_bundle_ref": {
+        "bytes": 5219,
+        "complete": true,
+        "id": "6a8fc721-b70a-4f67-a15e-8ae1a5258877",
+        "kind": "metadata",
+        "path": "metadata/step-0000-6a8fc721-b70a-4f67-a15e-8ae1a5258877.txt",
+        "sha256": "bbcb545cfc2f8936b92c6dde7228ece18df9490962ebf06b66bd03abde06a6a8",
+        "step": 0
+      }
+    }
+  ],
+  "benchmark_score": null,
+  "interpretation": "Development fixtures, including failed attempts. Not a comparative benchmark or training result."
+}

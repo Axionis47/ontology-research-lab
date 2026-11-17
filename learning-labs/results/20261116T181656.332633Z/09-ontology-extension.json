@@ -1,0 +1,13 @@
+{
+  "project": "09-ontology-extension",
+  "exit_code": 0,
+  "json_result": true,
+  "passed": true,
+  "source_sha256": {
+    "run.py": "262a646c4ab7796c682702e6b706dcedc7564525197cbcb107760a1b9dcbba65",
+    "input.json": "49ca2b6f5cd9b28a59419679990397c34206bf7bc8ce665227699172b773b4b8",
+    "README.md": "81c923faf0b5547f531d91d089b08f45aa4823d4296194d2743546715b779f94"
+  },
+  "stdout": "{\n  \"experiment\": \"09\",\n  \"kind\": \"synthetic_deterministic_fixture\",\n  \"candidate_author\": \"assistant_teaching_fixture\",\n  \"model_calls\": 0,\n  \"input_sha256\": \"49ca2b6f5cd9b28a59419679990397c34206bf7bc8ce665227699172b773b4b8\",\n  \"original_fact\": {\n    \"subject\": \"Maya\",\n    \"predicate\": \"maintains\",\n    \"object\": \"LoginService\",\n    \"source\": \"fixture://record/1\"\n  },\n  \"migrated_record\": {\n    \"id\": \"migration-record-1\",\n    \"person\": \"Maya\",\n    \"service\": \"LoginService\",\n    \"environment\": null,\n    \"validUntil\": null,\n    \"derivedFrom\": \"fixture://record/1\",\n    \"status\": \"incomplete_migration_record\"\n  },\n  \"scoped_query_results\": {\n    \"Maya\": \"UNKNOWN\",\n    \"Noah\": \"TRUE\"\n  },\n  \"checks\": {\n    \"old_definitions_preserved\": true,\n    \"silent_meaning_change_rejected\": true,\n    \"legacy_query_preserved\": true,\n    \"unknown_environment_not_invented\": true,\n    \"unknown_expiry_not_invented\": true,\n    \"legacy_scope_remains_unknown\": true,\n    \"new_supported_scope_matches\": true,\n    \"original_evidence_preserved\": true\n  },\n  \"passed\": true\n}\n",
+  "stderr": ""
+}

@@ -1,0 +1,54 @@
+{
+  "functions": {
+    "direct": {
+      "nodes": [
+        {
+          "op": "lookup_entities",
+          "type": "selector.entity_type"
+        },
+        {
+          "input": 0,
+          "op": "filter_property_categorical",
+          "where": "selector.where"
+        },
+        {
+          "input": 1,
+          "op": "filter_numeric",
+          "predicates": "selector.numeric"
+        }
+      ],
+      "return": 2
+    },
+    "related": {
+      "nodes": [
+        {
+          "op": "lookup_entities",
+          "type": "selector.entity_type"
+        },
+        {
+          "input": 0,
+          "op": "filter_property_categorical",
+          "where": "selector.where"
+        },
+        {
+          "op": "lookup_entities",
+          "type": "selector.related.entity_type"
+        },
+        {
+          "input": 2,
+          "op": "filter_property_categorical",
+          "where": "selector.related.where"
+        },
+        {
+          "anchors": 3,
+          "direction": "selector.related.direction",
+          "input": 1,
+          "op": "filter_relation_connected",
+          "relation": "selector.related.relation_type"
+        }
+      ],
+      "return": 4
+    }
+  },
+  "version": 1
+}
