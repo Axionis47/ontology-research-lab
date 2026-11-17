@@ -1,5 +1,7 @@
 # 07: A proposed action is not an admitted action
 
+**Recorded Gemini experiment:** [Read the input, ordered steps, actual response, checker, and repair status](../../experiments/02-ontology-concepts/README.md#07-apply-an-action-precondition). The deterministic companion below is a separate execution.
+
 ## Point and terms
 
 A **precondition** is a condition required before execution. **Admission** decides whether the proposed call can proceed. A **postcondition** describes an expected result. An **effect** is a change to the environment.

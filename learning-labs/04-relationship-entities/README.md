@@ -1,5 +1,7 @@
 # 04: A relationship can have its own identity
 
+**Recorded Gemini experiment:** [Read the input, ordered steps, actual response, checker, and repair status](../../experiments/02-ontology-concepts/README.md#04-apply-scope-and-expiry-to-an-assignment). The deterministic companion below is a separate execution.
+
 **Claim:** an assignment entity preserves scope and time that a bare maintains edge omits.
 
 ## Terms

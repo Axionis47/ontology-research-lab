@@ -1,114 +1,233 @@
-# Demonstration: the AppWorld improvement loop
+# AppWorld report: failure, function repair, and successful later tasks
 
-[Presentation](../README.md)
+[All experiment reports](../README.md) · [Ten component experiments](../02-ontology-concepts/README.md)
 
-## Purpose
+**Recorded outcome:** The system repaired one reusable artist-selection function. A fresh automatic run began with a failed AppWorld task, obtained a Gemini diagnosis and a separate Gemini proposal, accepted the candidate after checks, and then completed three subsequent episodes successfully.
 
-Determine whether a failed task can produce a reusable function change.
-Determine whether that change helps later tasks.
+This report follows that automatic run first. The earlier run, including failed proposer calls and a manual validation retry, is documented afterward. Neither run changed model weights or added an ontology definition.
 
-**Evidence type:** Native AppWorld.
-**Result:** Three tasks failed before the change.
-All three passed after the change.
+## What the task meant
 
-## Starting conditions
+The first task was AppWorld task **07b42fd_1**:
 
-The task required the account to follow artists with a specified genre and minimum follower count.
+> Follow all the classical artists on Spotify that have at least 22 followers.
 
-| Task | Genre | Minimum followers |
-| --- | --- | ---: |
-| `07b42fd_1` | Classical | 22 |
-| `07b42fd_2` | EDM | 23 |
-| `07b42fd_3` | Reggae | 21 |
+The environment was AppWorld's simulated Spotify application. A fresh world restores the task's starting application state, so a later execution cannot pass merely because an earlier execution already followed the artists.
 
-The adapter obtained observations from each fresh AppWorld world.
-Each starting graph contained one account and 36 artists.
+The requirement has two conditions: the artist must have genre classical, and the follower count must be at least 22. The account must follow qualifying artists while preserving unrelated state.
 
-The original function applied the genre condition.
-It did not apply the follower-count condition.
+The trusted adapter read the public task and actual API observations. It created a graph with one Account and 36 Artist records, plus the observed following relationships. The initial account followed no artists in these cases. Each task had its own scope and graph revision.
 
-Qwen was the task actor.
-Gemini was the diagnostic judge.
-A separate Gemini call was the improvement proposer.
-The runtime controlled actions and candidate acceptance.
+The task binding separated what to select from what to do:
 
-## Run 1: what happened
+~~~text
+Select:
+  entity type = Artist
+  genre = classical
+  baseline-adjusted follower count >= 22
 
-| Step | Recorded action | Observed result | Logic |
-| --- | --- | --- | --- |
-| 1 | The adapter read the task's artists and following relations. | The runtime obtained a graph for that task's world. | Selection requires observations from the current world. |
-| 2 | The runtime applied the original function. | The proposed selection included artists below the required threshold. | The function applied only the genre condition. |
-| 3 | The runtime evaluated the proposed effects before dispatch. | The runtime rejected the plan and passed control to Qwen. | The plan would change records outside the permitted target set. |
-| 4 | Qwen attempted recovery. | Invalid discovery arguments prevented progress. All three baseline tasks failed. | A rejected tool request cannot produce the required action. |
-| 5 | Gemini received the recorded evidence. | Gemini identified a missing numeric filter and separate actor argument errors. | A function defect and an actor error require separate findings. |
-| 6 | A separate Gemini call proposed a candidate. | The candidate added the existing numeric-filter operator. | The selection must satisfy both task conditions. |
-| 7 | The runtime compared the parent and candidate. | The candidate passed the structural checks. Native validation produced two passes and one unknown result. | An incomplete native result cannot support activation. |
-| 8 | The runtime withheld activation. | The original program remained active. A later duplicate proposal was rejected. | A candidate needs complete passing evidence. |
-| 9 | A validation-only retry evaluated the stored candidate in fresh worlds. | All three native cases passed. The runtime activated the candidate. | The retry supplied the missing validation evidence. |
-| 10 | The runtime used the accepted function for subsequent tasks. | All three tasks passed all five official checks. | The function applied each task's own genre and threshold. |
-| 11 | The controller evaluated whether another function change was needed. | The controller returned `IDLE`. | The accepted function already handled the recorded cases. |
+Effect:
+  ensure the current Account follows each selected Artist
+~~~
 
-The retry did not reset proposal spending.
-The original unknown result remains in the records.
-The [validation receipt](../../runs/protocol/appworld-gemini-20261116/validation-retry.json) links the stored candidate to the retry.
+A follow itself increments the follower count. The adapter's baseline-adjusted property removes this account's own change from the selection value, preserving the original threshold meaning. Raw API observations remain recorded.
 
-## The function logic
+[Task bindings and graph summary](../../runs/protocol/appworld-gemini-20261116/representation.json)
 
-**Before the change:** Find artists. Apply the genre condition. Return the selected artists.
+## What the harness actually ran
 
-**After the change:** Find artists. Apply the genre condition. Apply the numeric condition. Return the selected artists.
+The harness is the controller around the models and application. It binds a task, records observations, executes a pinned program, handles failure, requests diagnosis and a proposal, evaluates that proposal, and controls activation.
 
-An artist must satisfy both conditions.
-The function obtains their values from the task binding.
-The candidate contains no fixed artist identifiers or task answers.
-The candidate does not change an ontology definition.
-
-The runtime performs the follow action.
-The adapter reads the resulting state.
-The completion checks compare that state with the original requirements.
-
-[Original and accepted functions](../../runs/protocol/appworld-gemini-20261116/accepted-program.json).
-
-## Run 2: automatic repeat from the original program
-
-This run used a new archive.
-It did not import the previously accepted program.
-
-| Step | Recorded action | Observed result | Logic |
-| --- | --- | --- | --- |
-| 1 | The controller ran task `_1` with the original function and Qwen recovery. | The task failed after three Qwen calls. | The original defects remained reproducible. |
-| 2 | Gemini diagnosed the saved evidence. | The diagnosis identified a supported function defect. | A proposal required a valid diagnosis. |
-| 3 | A separate Gemini call proposed the function change. | One proposer call returned the candidate. | The proposer had a bounded edit target. |
-| 4 | The runtime tested the candidate. | The retained native case and 16 structural challenges passed. | At this point, only task `_1` was in this archive's retained suite. |
-| 5 | The runtime activated the candidate. | Later episodes used the accepted version. | Activation applied only after the checks passed. |
-| 6 | The controller ran tasks `_2`, `_3`, and `_1`. | All three passed. Each passed all five official checks. | The same function used different task bindings. |
-| 7 | The controller evaluated further work. | Each subsequent episode needed no new patch. | The accepted function met the recorded requirements. |
-
-The repeat required no manual resume or validation retry.
-The successful subsequent episodes made no Qwen calls.
-
-## Result and limits
-
-| What the evidence supports | Limit |
+| Component | Actual responsibility in this run |
 | --- | --- |
-| A separate Gemini proposal produced a useful function change. | The model did not learn new weights. |
-| The runtime accepted the change after required checks. | Those checks cover the recorded cases and structural challenges. |
-| Later tasks reused the function successfully. | All tasks came from one previously exposed Spotify family. |
-| The fresh repeat completed automatically. | One repeat does not establish a general reliability rate. |
-| The corrected function avoided Qwen recovery on these tasks. | Qwen's argument errors remain unresolved. |
+| Trusted AppWorld adapter | Read the task and APIs, build the task graph, perform allowed effects, and read back state. |
+| Existing program | Select artist IDs by running a composition of implemented operators. |
+| Qwen actor | Attempt task recovery when the existing program could not safely complete the task. |
+| Gemini diagnostic call | Examine the failed episode and identify supported defects. |
+| Separate Gemini proposer call | Return one bounded candidate program change. |
+| Deterministic comparison and release controller | Test the candidate and decide whether it could become active. |
+| AppWorld official evaluator | Evaluate the final native task state. |
 
-Seven earlier proposer calls failed with `INVALID_STREAM`.
-Those calls remain recorded.
-The CLI required operational corrections before the clean repeat.
+Qwen used the configured **qwen3:8b-q4_K_M** model. Both Gemini calls reported **gemini-3.8-flash** as the main model and **gemini-3.5-flash-lite** as the utility router.
 
-## Original evidence
+The observed automatic sequence was:
 
-- [Run 1 task outcomes](../../runs/protocol/appworld-gemini-20261116/protocol-result.json).
-- [Run 1 episode records](../../runs/protocol/appworld-gemini-20261116/episodes.json).
-- [Run 2 starting conditions](../../runs/protocol/appworld-gemini-20261116/clean-replay/manifest.json).
-- [Run 2 diagnosis](../../runs/protocol/appworld-gemini-20261116/clean-replay/diagnosis.json).
-- [Run 2 proposer response](../../runs/protocol/appworld-gemini-20261116/clean-replay/proposer-calls.json).
-- [Run 2 acceptance checks](../../runs/protocol/appworld-gemini-20261116/clean-replay/acceptance.json).
-- [Run 2 final result](../../runs/protocol/appworld-gemini-20261116/clean-replay/result.json).
-- [Archive integrity and source checks](../../runs/protocol/appworld-gemini-20261116/final-audit.json).
-- [CLI corrections](../../MODEL_SETUP.md#working-cli-repair-november-16-2026).
+~~~text
+Bind first task and observe a fresh world
+  → run the original selection program
+  → reject its incorrect plan before dispatch
+  → let Qwen attempt recovery
+  → record failure
+  → Gemini diagnoses the evidence
+  → separate Gemini call proposes a function patch
+  → compare parent and candidate
+  → run structural checks and a fresh native validation
+  → activate the accepted candidate
+  → execute later tasks using the accepted program
+  → read back state and run official evaluation
+~~~
+
+The program runs first in this implementation. Qwen is invoked on handoff; the successful later episodes did not require Qwen.
+
+## 1. The original program dropped one task condition
+
+The original direct function had two operations:
+
+~~~text
+0. lookup_entities: obtain Artist records
+1. filter_property_categorical: keep genre=classical
+return result 1
+~~~
+
+The numeric condition was present in the task binding, but the function never evaluated it. This is a missing computation, not a missing follower-count observation.
+
+The seven classical artist records in the stored initial observation make the defect concrete:
+
+| Artist | Initial follower-count selection value | Should be selected for at least 22? |
+| --- | ---: | --- |
+| Zoe Mitchell | 16 | No |
+| Mia Sullivan | 16 | No |
+| Grace Harrison | 22 | Yes |
+| Oceanic Odyssey | 18 | No |
+| Carter Knight | 18 | No |
+| Evelyn Rose | 15 | No |
+| Felix Blackwood | 18 | No |
+
+The original function selected all seven because each matched the genre. Only Grace Harrison also matched the threshold. The source case is identified by hash **3858738db4833e6ac75b67e73a931e6cec8ecd9b47f1baf45fb8ee117ea28471** in the [representation record](../../runs/protocol/appworld-gemini-20261116/representation.json). The [diagnosis](../../runs/protocol/appworld-gemini-20261116/clean-replay/diagnosis.json) records the seven-versus-one defect and its evidence references.
+
+## 2. The runtime rejected the plan, and Qwen recovery failed
+
+Before dispatching follows, deterministic preflight evaluated the proposed change against the original task contract. Following six below-threshold artists would violate preservation of unrelated state, so the runtime rejected the plan before those effects occurred.
+
+It then handed the task to Qwen with the current evidence and original conditions. Qwen made three model calls but failed to produce valid tool-discovery arguments. The recorded errors included an empty strategy object and a limit of 100 where the schema maximum was 10.
+
+The episode ended with **NO_PROGRESS**, native success=false, and zero dispatched actor tool attempts. Observations had already been obtained by the trusted adapter; zero actor tool attempts does not mean zero API activity in task setup.
+
+**This task stayed failed.** Learning afterward did not retroactively turn the baseline episode into a success.
+
+[Baseline episode, trace audit, and learning result](../../runs/protocol/appworld-gemini-20261116/clean-replay/episodes.json)
+
+## 3. Gemini diagnosed two separate problems
+
+The diagnostic call received the original requirements, parent program, relevant observations, original model/tool evidence, and permitted evaluation feedback.
+
+It returned two supported findings:
+
+| Finding | Why it mattered | What happened to it |
+| --- | --- | --- |
+| The direct function omitted numeric filtering. | It selected artists outside the requested threshold. | Routed to the separate proposer. |
+| Qwen supplied invalid discovery arguments. | Recovery stalled after validation errors. | Recorded as unresolved. |
+
+The diagnosis was checked for valid evidence references. Gemini's opinion did not establish native success or authorize activation.
+
+[Original diagnostic assessment](../../runs/protocol/appworld-gemini-20261116/clean-replay/diagnosis.json)
+
+## 4. A separate Gemini call authored the exact function repair
+
+The proposer received the validated function finding and a bounded editable surface. It added one existing operator to the direct function and changed the return index to use that operator's result.
+
+**Before:**
+
+~~~json
+{
+  "nodes": [
+    {"op":"lookup_entities","type":"selector.entity_type"},
+    {"input":0,"op":"filter_property_categorical","where":"selector.where"}
+  ],
+  "return":1
+}
+~~~
+
+**After:**
+
+~~~json
+{
+  "nodes": [
+    {"op":"lookup_entities","type":"selector.entity_type"},
+    {"input":0,"op":"filter_property_categorical","where":"selector.where"},
+    {"input":1,"op":"filter_numeric","predicates":"selector.numeric"}
+  ],
+  "return":2
+}
+~~~
+
+The numeric-filter implementation already existed. The repair connected it into the function. Its predicates come from each task's selector, so the program can apply 22, 23, or 21 without hardcoding a task or artist.
+
+The related function stayed unchanged. No new class, property, API, evaluator rule, or model weight was introduced.
+
+The program format's version field remained 1. The content-addressed package identity changed from **995d9f3c…** to **292f3a14…**, allowing episodes to record exactly which program they used.
+
+[Original proposer response](../../runs/protocol/appworld-gemini-20261116/clean-replay/proposer-calls.json) · [Full parent and candidate programs](../../runs/protocol/appworld-gemini-20261116/accepted-program.json)
+
+## 5. The runtime tested the candidate before activating it
+
+At this point the fresh archive contained only the first task. The system had not yet run tasks _2 or _3 in this archive.
+
+| Check | Observed result | What it established |
+| --- | --- | --- |
+| Parent versus candidate on the retained case | Parent FALSE; candidate TRUE | The candidate fixed the reproduced selection failure. |
+| Preservation comparison | No recorded regression or lost requirement | Previously true checks on the retained case remained true. |
+| Generated structural challenges | 16/16 TRUE | The candidate handled the frozen variations tested by the local evaluator. These were synthetic checks. |
+| Fresh native execution of the retained case | TRUE, fallback disabled | The candidate completed the native task without Qwen rescuing it. |
+| Activation | Candidate became active | Subsequent episodes could use the accepted package. |
+
+The local comparison and the fresh native execution are separate checks. A passing simulation alone was insufficient for activation. The structural tests also do not count as sixteen AppWorld tasks.
+
+[Complete acceptance receipt](../../runs/protocol/appworld-gemini-20261116/clean-replay/acceptance.json)
+
+## 6. Later tasks used the repaired function and passed
+
+Each subsequent episode started in a fresh AppWorld world, rebuilt its graph from actual observations, and pinned the accepted program. The reusable function persisted; instance facts were obtained again.
+
+The program selected artist IDs, the executor issued the follow calls, the adapter read back the resulting state, and the official evaluator checked the native outcome.
+
+| Subsequent order | Task and requirement | Official outcome | Qwen calls | Further repair |
+| --- | --- | --- | ---: | --- |
+| 1 | 07b42fd_2: EDM, at least 23 followers | Passed, 5/5 checks | 0 | None; IDLE |
+| 2 | 07b42fd_3: Reggae, at least 21 followers | Passed, 5/5 checks | 0 | None; IDLE |
+| 3 | 07b42fd_1: Classical, at least 22 followers | Passed, 5/5 checks | 0 | None; IDLE |
+
+IDLE means the learning controller found no reproduced program failure requiring another proposal. It does not mean the unresolved Qwen error was repaired.
+
+The [final automatic-run record](../../runs/protocol/appworld-gemini-20261116/clean-replay/result.json) records one proposer call, three subsequent task passes, no manual resume, unchanged protected source hashes, and a passing archive-integrity check. [Episode-by-episode evidence](../../runs/protocol/appworld-gemini-20261116/clean-replay/episodes.json) retains the failed starting episode as well.
+
+## 7. What happened in the earlier run
+
+The automatic run above followed an earlier experiment with operational failures and an explicit validation retry. These histories must remain distinguishable.
+
+1. The earlier experiment collected three native baselines before learning. All failed, with ten total Qwen calls.
+2. Gemini diagnosed the function failure and the separate actor argument errors.
+3. Seven proposer calls failed with INVALID_STREAM while the CLI integration was being corrected. These were failed calls, not useful candidate proposals.
+4. A later candidate reached native validation. Two cases passed, but one result was UNKNOWN because an AppWorld session could not start. Activation was withheld.
+5. A duplicate proposal was rejected.
+6. An explicit validation-only retry tested the stored candidate in three fresh worlds. All passed, and the runtime activated it. Proposal spending was not reset.
+7. Three fresh follow-up episodes then passed all five official checks per task. The next learning check returned IDLE.
+
+| Task | Earlier baseline | Follow-up after validated repair |
+| --- | --- | --- |
+| 07b42fd_1 | Failed | Passed, 5/5 official checks |
+| 07b42fd_2 | Failed | Passed, 5/5 official checks |
+| 07b42fd_3 | Failed | Passed, 5/5 official checks |
+
+The later automatic run started with a new archive and the original seed, with no accepted program imported. It reproduced the diagnosis/proposal/acceptance sequence without the manual validation retry.
+
+[Earlier final result](../../runs/protocol/appworld-gemini-20261116/protocol-result.json) · [Earlier episode records](../../runs/protocol/appworld-gemini-20261116/episodes.json) · [Validation-only retry](../../runs/protocol/appworld-gemini-20261116/validation-retry.json) · [Automatic-run starting manifest](../../runs/protocol/appworld-gemini-20261116/clean-replay/manifest.json)
+
+## What was repaired, and what remains open
+
+| Item | Status and author |
+| --- | --- |
+| Missing numeric filter in the reusable direct function | Repaired by a separate Gemini proposer call, then accepted by deterministic and native checks. |
+| CLI authentication/request handling | Operational corrections documented in the setup record. These were not learned ontology repairs. |
+| Qwen's invalid discovery arguments | Unresolved. Later successful tasks avoided this recovery path. |
+| Ontology definitions | No definition change in this experiment. |
+| Storage-layer role-based access control | Not implemented or tested by this experiment. |
+| General task-conditioned ontology construction | Not demonstrated by the narrow adapter. |
+
+All three native tasks were previously exposed training variants of one Spotify family. Later-task success demonstrates reuse within that scope; it is not a held-out benchmark or a general transfer claim.
+
+This is not evidence that Gemini improved Qwen's reasoning. It improved an executable function that the runtime could use without invoking Qwen on these later tasks. The accepted composition also matched an older search-produced composition, but the current run retained a new Gemini-authored proposal and started without importing that prior program.
+
+The full native source data and runtime databases are local. The publication includes selected reports and receipts; some hashes in those receipts identify artifacts outside the published subset.
+
+[CLI correction history](../../MODEL_SETUP.md#working-cli-repair-november-16-2026) · [Measured-results history](../../docs/system/20-live-acceptance.md) · [Final audit of the earlier experiment](../../runs/protocol/appworld-gemini-20261116/final-audit.json)

@@ -1,5 +1,7 @@
 # 10: A changed meaning changes answers, so adoption needs a gate
 
+**Recorded Gemini experiment:** [Read the input, ordered steps, actual response, checker, and repair status](../../experiments/02-ontology-concepts/README.md#10-apply-versioned-meanings). The deterministic companion below is a separate execution.
+
 ## Question
 
 What happens when an ontology-backed action rule changes from project-wide approval to service-specific approval?
@@ -57,8 +59,8 @@ Pinning gives reproducible interpretation. It is not a guarantee that an old aut
 
 This executable teaches change control. It does **not** complete the native improvement experiment. The actual project assigns Qwen task execution, Gemini diagnosis, a separate Gemini proposer call, and deterministic acceptance based on fresh AppWorld worlds and its official evaluator.
 
-The current [connected inference notes](../../docs/system/19-connected-inference.md) describe a missing Gemini coordinator and default `GEMINI_DIAGNOSIS_REQUIRED` guard. The [measured results](../../docs/system/20-live-acceptance.md) retain a prior `UNSUPPORTED_CLIENT` Gemini failure. That is historical evidence, not a fresh availability probe by this lab. No alternate model is substituted here.
+The separate [native repair-loop report](../../experiments/01-improvement-loop/README.md) records the November 16, 2026 run that connected a failed Qwen episode, a Gemini diagnosis, a separate Gemini-authored function candidate, deterministic acceptance, and successful later AppWorld executions. The [measured-results history](../../docs/system/20-live-acceptance.md) also retains earlier unavailable-Gemini runs and operational failures. Those earlier failures do not describe the later successful run.
 
-To complete the native bridge, obtain a recorded real Qwen episode, give Gemini bounded original evidence for diagnosis, call Gemini separately for one candidate, and compare parent/candidate in fresh AppWorld worlds with the official evaluator and preservation gates. Retain missing results and rejected candidates. A fixture passing here cannot count as native task success, Gemini diagnosis success, or candidate promotion.
+This lesson did not perform that native sequence. Its candidates and release state are local teaching fixtures. Read the native report for what was actually repaired and what worked afterward; the two result sets must remain separate.
 
 The current native adapter is narrow. This deployment example is not claimed to be supported by that adapter. The domain package for an actual Spotify task must use its documented entities and actions instead.

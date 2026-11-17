@@ -1,5 +1,7 @@
 # 09: Extend the ontology without inventing observations
 
+**Recorded Gemini experiment:** [Read the input, ordered steps, actual response, checker, and repair status](../../experiments/02-ontology-concepts/README.md#09-convert-a-record-without-inventing-values). The deterministic companion below is a separate execution.
+
 ## Question
 
 When we add environment-specific, time-bounded assignments, what happens to old maintenance records?

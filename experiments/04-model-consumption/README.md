@@ -1,143 +1,145 @@
-# Demonstrations: model access to definitions and facts
+# Model-consumption reports: what each interface exposed and what the model did
 
-[Presentation](../README.md)
+[All experiment reports](../README.md) · [Complete native repair loop](../01-improvement-loop/README.md)
 
-These demonstrations explain existing model experiments.
-They do not add new test runs.
-All cases in this page are synthetic.
+These studies ask how a model receives definitions and facts, and how much computation an external function performs for it. They use synthetic approval tasks. They do not test storage-layer roles or deployment access.
 
-## Technical terms
+A fictional service is called LoginService. Staging labels a testing environment; Production labels a live environment. Here both are strings in test records. A DeploymentApprover assignment describes a person's approval responsibility for a service and environment. The model must answer from the supplied records.
 
-| Term | Meaning |
-| --- | --- |
-| Interface | A defined way to supply information or request an operation |
-| Citation | A reference to a source record that supports an answer |
-| Typed function | A function with defined input and output types |
-| Constraint service | An operation that evaluates a proposed answer against stated rules |
-| Rubric | The criteria that determine the test result |
+The studies below are separate runs. A later study's improved output is not evidence that an earlier model repaired itself. None of these interface comparisons activated a reusable program patch.
 
 ## A. Qwen used three interfaces
 
-**Purpose:** Compare three ways to give Qwen the same available facts.
+**Question:** Given the same definitions and available facts, does Qwen answer consistently when those facts arrive as sentences, structured records, or a local record-read result?
 
-**Starting conditions:** One case had a valid Production approval.
-Another case had only a Staging approval.
-The model was the configured `qwen3:8b-q4_K_M`.
+The task asked who had established authority to approve a Production deployment of LoginService. Both cases included Maya as a ProjectManager. That role alone did not satisfy the supplied DeploymentApprover rule.
 
-| Step | Recorded action | Observed result | Logic |
-| --- | --- | --- | --- |
-| 1 | The runner supplied the cases as text. | Qwen selected Noah in the valid case and returned unknown in the other case. | Staging approval did not satisfy the Production requirement. |
-| 2 | The runner supplied the cases as structured records. | Qwen returned the same correct decisions. | The format changed. The available facts and definitions did not change. |
-| 3 | The runner supplied a record-read interface. | Qwen requested records and then returned the correct decisions. | The interface added a read step before the answer. |
-| 4 | The checker evaluated the six answers. | All six passed. The run used eight model calls. | The checker required a correct answer and supporting references. |
+The second record differed in exactly the relevant environment field:
 
-**Result:** All three interfaces worked on both cases.
-The read interface required more calls and tokens.
+| Input case | Person | Role | Service | Environment | Current | Required answer |
+| --- | --- | --- | --- | --- | --- | --- |
+| Valid | Noah | DeploymentApprover | LoginService | Production | true | Noah |
+| Wrong environment | Noah | DeploymentApprover | LoginService | Staging | true | unknown |
 
-**Limit:** Two small cases do not establish a general accuracy advantage.
-This experiment compared access methods, not the presence or absence of an ontology.
+The answer unknown meant that these records did not establish a Production approver. It did not mean the application denied a request or that no such approver could exist elsewhere.
 
-**Evidence:** [Original results](../../learning-labs/RESULTS.md). [Model requests and responses](../../learning-labs/06-model-consumption/results/20261116T181817940419Z.json).
+**What happened:**
+
+1. The runner prepared each case as text. Qwen returned Noah for the valid case and unknown for the wrong-environment case.
+2. The runner prepared the same observations as structured records. Qwen returned the same two answers.
+3. In the third interface, the initial context supplied definitions and a read_records operation. Qwen requested records; the local runner returned the supplied records without selecting an answer; Qwen then answered.
+4. Python checked the returned answer and citations against that case's reference. A named approver had to cite the approval-assignment record e2.
+5. The runner recorded six trials across eight model calls: four direct-input calls and two two-call retrieval trials.
+
+| Interface | Valid-case answer | Wrong-environment answer | Model calls across both cases |
+| --- | --- | --- | ---: |
+| Text | Noah | unknown | 2 |
+| Structured records | Noah | unknown | 2 |
+| Tool-mediated records | Noah | unknown | 4 |
+
+**Result and repair status:** All six answers passed the bounded scorer. The configured model was qwen3:8b-q4_K_M. No candidate change, deployment action, or storage authorization test followed. The study compared serialization and access mechanics on two small examples; it did not demonstrate an ontology accuracy advantage.
+
+[Original inputs](../../learning-labs/06-model-consumption/inputs.json) · [Exact model requests, responses, and scores](../../learning-labs/06-model-consumption/results/20261116T181817940419Z.json) · [Token measurements](../../learning-labs/RESULTS.md)
 
 ## B. Gemini used five interfaces
 
-**Purpose:** Compare information access and token use on one approval task.
+**Question:** How do different ways of exposing one source world affect the answer, number of calls, and token usage?
 
-**Starting conditions:** Maya was the author.
-Rin had Staging scope.
-Tao's assignment had expired.
-Noah was eligible at graph revision 1.
-The source also contained 40 unrelated assignments.
+The source world held four task-relevant assignments plus forty unrelated assignments. Maya was the deployment author, Rin had Staging scope, Tao's assignment had expired, and Noah was eligible.
 
-The five interfaces were full text, structured records, a retrieved fragment, graph queries, and a typed function.
+The five interfaces were full text, structured records, a retrieved fragment, graph queries, and a typed function. They varied how much of the source world entered the prompt as well as how the model could request data.
 
-| Step | Recorded action | Observed result | Logic |
-| --- | --- | --- | --- |
-| 1 | The runner supplied each interface with its defined view or access operations. | Gemini used one to three CLI calls per interface. | Different access methods required different numbers of exchanges. |
-| 2 | Gemini returned the selected approver. | All five methods selected Noah. | Noah satisfied the supplied approval conditions at revision 1. |
-| 3 | The fixture revoked Noah's assignment. | Revision 2 had no eligible candidate. | The original evidence no longer supported the proposed action. |
-| 4 | The test applied each saved proposal through an unguarded fixture. | Each unguarded fixture selected Noah and violated the current rule. | A saved answer does not update itself when its source changes. |
-| 5 | The test applied each saved proposal through the runtime gate. | The gate rejected every stale proposal. | The gate evaluated current eligibility before action. |
+**What happened:**
 
-**Result:** Each method selected correctly from revision 1.
-The runtime gate blocked the later stale action.
-Token use differed across methods.
+1. The runner constructed the initial context for each interface.
+2. Full text, structured records, and the retrieved fragment each used one model call.
+3. Graph queries used three calls, with local query results returned between calls. The typed function used two calls, with its computed result returned between calls.
+4. Every method selected Noah from the original graph.
+5. After selection, the fixture revoked Noah's assignment and advanced the graph from revision 1 to revision 2.
+6. An unguarded local fixture reused each saved selection and violated the current eligibility rule.
+7. The shared runtime gate instead recomputed current eligibility and rejected every stale proposal. The model was not called again after rejection in this study.
 
-**Limit:** Gemini did not receive the revocation in another model call.
-This study did not measure model recovery after rejection.
-All effects occurred in local fixtures.
+**Result and repair status:** Correct initial selections and correctly blocked stale proposals. The gate was already implemented. No learned repair or model recovery occurred. A smaller initial context did not automatically produce a cheaper full interaction because extra calls repeated context and CLI overhead.
 
-**Evidence:** [Results, prompts, and token counts](../../learning-labs/protocol-comparison/RESULTS.md).
+[Results, exact contexts, calls, tokens, and gate outcomes](../../learning-labs/protocol-comparison/RESULTS.md)
 
 ## C. Gemini used six strategies on a simple task
 
-**Purpose:** Compare access to ontology definitions and domain computations.
+This comparison separated definition access from initial fact retrieval. Every strategy received the same four assignments and deployment facts at the start. The ontology, task, and six rules stayed fixed.
 
-**Starting conditions:** Every strategy received the same task and initial facts.
-Those facts included four assignments and the deployment record.
-The source ontology and six business rules were fixed.
-Noah was the valid selection.
+**Concrete rules:** the assignment must match the service, Production environment, DeploymentApprover role, active flag, and date interval. The person must also differ from the deployment author. Applying those conditions leaves Noah.
 
-| Strategy | Access provided |
-| --- | --- |
-| Full definitions | All 19 definitions entered the prompt. |
-| Retrieved definitions | Seven relevant definitions entered the prompt. |
-| Schema inspection | A catalog allowed the model to request definitions. |
-| Graph queries | The model could request graph results. |
-| Typed function | The model could request a domain computation. |
-| Constraint service | The model could submit a candidate for evaluation. |
+The ontology had nineteen definitions. Seven were relevant to this task. Retrieval selected those definitions and their dependencies exactly; it did not perform uncertain semantic search.
 
-| Step | Recorded action | Observed result | Logic |
-| --- | --- | --- | --- |
-| 1 | The runner varied the interface while retaining the task and initial facts. | Each method had the same business problem. | A format comparison requires a stable task and source data. |
-| 2 | Gemini returned its selection. | Every selected completed attempt returned Noah. | Noah satisfied the supplied rules. |
-| 3 | The checker evaluated the cited evidence. | Four methods passed. Retrieval and graph-query methods omitted required evidence. | A correct name and a complete explanation are different test results. |
-| 4 | The fixture revoked the approval. | The common gate blocked the old proposals. | The action required current support. |
+| Strategy | What entered context or ran | Observed completed-attempt result |
+| --- | --- | --- |
+| Full definitions | All nineteen definitions, plus the shared facts. | Noah; complete citations. |
+| Retrieved definitions | Seven definitions, plus the same facts. | Noah; required evidence citation omitted. |
+| Schema inspection | A catalog, followed by definitions Gemini requested. | Noah; complete citations; interface used. |
+| Graph queries | Relevant definitions and generic queries composed by Gemini. | Noah; required evidence citation omitted; interface used. |
+| Typed function | Relevant definitions and a function computing eligible candidates. | Noah; complete citations; interface used. |
+| Constraint service | Relevant definitions and checks of only candidates Gemini proposed. | Noah; complete citations; interface used. |
 
-**Result:** Candidate selection passed for all six methods.
-The complete answer-and-citation rubric passed for four methods.
+**What happened in the harness:**
 
-**Limit:** The report selected completed attempts from several runs.
-Two earlier timeouts remain recorded.
-The prompt did not explicitly name every citation identifier required by the checker.
-An omitted citation does not prove that Gemini ignored the related rule.
-The function and service interfaces also supplied computed evidence.
+1. It constructed each interface from the same task and facts, and recorded their hashes.
+2. For the four interface-based methods, Gemini returned a JSON operation request.
+3. Python dispatched only the method's supported operation, then added its result to the next model prompt.
+4. Gemini returned a person, version/revision, source IDs, and rule IDs.
+5. Python scored candidate selection and evidence completeness separately from interface use.
+6. The common execution gate checked the final proposal. It then checked that same proposal after revoking Noah's assignment.
 
-**Evidence:** [Results and attempt history](../../learning-labs/ontology-consumption-six/RESULTS.md).
+**Result and repair status:** All six selected Noah. Four met the complete citation rubric. The gate accepted each valid initial proposal and blocked each stale one. No new code or ontology was generated.
+
+Two earlier full-definition timeouts remain recorded. The report collects completed attempts from several runs. The citation prompt also did not explicitly enumerate every ID the checker required, so a missing citation cannot establish that the corresponding rule was ignored.
+
+[Actual results and attempt history](../../learning-labs/ontology-consumption-six/RESULTS.md) · [Definitions, rules, and reproduction](../../learning-labs/ontology-consumption-six/README.md)
 
 ## D. Gemini used six strategies on a complex task
 
-**Purpose:** Determine how the same six strategies handle rules about both individual people and pairs of people.
+**Question:** Can the same interfaces handle a decision that depends on several linked records and a rule about a pair of people?
 
-**Starting conditions:** Each method received the same 53 facts and ten rules.
-The task required an Operations approver and a Security approver.
-The valid pair was Vera and Tao.
-Vera's authority depended on a delegation.
-Uma was individually eligible but shared Tao's home team.
-The pair rule prohibited that combination.
+The new task required one Ops approver and one Security approver for a Production deployment in the EU at risk level 4. Each of the six strategies received the same 53 facts and ten rules.
 
-| Step | Recorded action | Observed result | Logic |
-| --- | --- | --- | --- |
-| 1 | The runner supplied the same task, facts, and ontology version to each strategy. | The methods differed in definition access and available operations. | The comparison retained the business requirements. |
-| 2 | In the constraint-service method, Gemini proposed Uma with Tao. | The service rejected that pair under rule R9. | Individual eligibility did not satisfy pair independence. |
-| 3 | Each method returned its final pair. | All six selected Vera for Operations and Tao for Security. | The final pair satisfied the supplied individual and pair rules. |
-| 4 | The checker evaluated evidence and required interface use. | Five methods passed overall. Graph-query mode failed its interface-use criterion. | That method returned an answer without using its required query interface. |
-| 5 | The fixture revoked Vera's delegation. | The common gate rejected the old proposals. | The original authority evidence no longer supported the action. |
+The function had to combine person, grant, delegation, certificate, service/project scope, denial, and team-membership records. The two selected people had to belong to different home teams and neither could be the deployment author.
 
-**Result:** All final pairs were correct.
-Five methods satisfied the full experiment protocol.
+The important candidates were:
 
-**Limit:** This was one exposed synthetic case.
-Definitions and domain functions were hand-authored.
-The test did not establish a general ranking of methods.
-The business gate and interface-use rubric applied different criteria.
+| Person | Role eligibility | Pair consequence |
+| --- | --- | --- |
+| Vera | Eligible for Ops through a valid delegation; Platform team | Can pair with Tao. |
+| Uma | Individually eligible for Ops; Identity team | Cannot pair with Tao because they share a home team. |
+| Tao | Eligible for Security; Identity team | Can pair with Vera. |
 
-**Evidence:** [Complex task results](../../learning-labs/ontology-consumption-complex/RESULTS.md).
+Other supplied people were excluded for specific reasons such as expiry, region, risk limits, authorship, or an explicit denial. The [input and design report](../../learning-labs/ontology-consumption-complex/README.md) lists every candidate condition.
 
-## E. Recovery after a graph change
+**What happened:**
 
-The combined study gave the rejection back to Gemini.
-Gemini then requested a new computation and returned no valid pair.
+1. The runner froze the task, facts, rules, scoring contract, and seeded method order.
+2. It scheduled one attempt per method, retaining failures rather than automatically rerunning bad answers.
+3. In the constraint-service method, Gemini proposed Uma and Tao. The checker returned a violation of R9, the different-team rule. Gemini's final answer selected Vera and Tao.
+4. All six final answers selected Vera and Tao with complete evidence.
+5. The graph-query method never requested a query. It answered from the facts already present in its prompt, so the experiment marked its interface-use protocol as failed.
+6. The runtime revoked Vera's delegation after final selection. Every old proposal was blocked. A copy claiming the new revision was also blocked because current eligibility was recomputed.
 
-The [graph-change demonstration](../03-runtime-graph/README.md#b-a-graph-change-invalidated-an-action) shows the five model calls in order.
-It also explains why a correct blocked result was not a completed approval.
+**Result and repair status:** Six correct final pairs; five complete protocol passes. The constraint-service interaction corrected a proposal within that task. It did not rewrite the checker or install a reusable repair. The skipped graph-query call remains a failed demonstration of that interface.
+
+[Answers, tokens, interface receipts, and gate results](../../learning-labs/ontology-consumption-complex/RESULTS.md)
+
+## E. What actually happened after a rejection was returned to the model
+
+The earlier studies tested old proposals after changing the fixture, but did not let the model respond to that change. A separate combined-interface study did.
+
+Its five model calls were: inspect definitions, compute valid pairs, propose Vera and Tao, recompute after the runtime's revocation rejection, and return no valid pair.
+
+The final result was RECOVERED_BLOCKED. The model correctly recognized that the changed graph no longer supported approval. No package changed and no deployment occurred.
+
+[Full recovery sequence and current-state computation](../03-runtime-graph/README.md#b-a-graph-change-invalidated-an-action)
+
+## What these comparisons do and do not measure
+
+The reports distinguish answer correctness, evidence completeness, actual interface use, runtime rejection, and post-rejection behavior. The functions and constraint services contain implemented business rules, so the comparisons also change where computation happens.
+
+The six-method studies gave all initial facts to every method. They did not demonstrate large-graph retrieval, storage permissions, a general cost ranking, or reliable performance across unseen tasks. None of these comparisons is the AppWorld improvement experiment.
+
+For a recorded reusable repair followed by successful later tasks, read the [full native harness loop](../01-improvement-loop/README.md).

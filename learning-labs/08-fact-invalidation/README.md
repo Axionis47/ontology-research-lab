@@ -1,5 +1,7 @@
 # 08: A fact changes, its dependent conclusions become stale
 
+**Recorded Gemini experiment:** [Read the input, ordered steps, actual response, checker, and repair status](../../experiments/02-ontology-concepts/README.md#08-mark-dependent-results-as-stale). The deterministic companion below is a separate execution.
+
 ## Question
 
 If an assignment is revoked after an agent prepares a plan, which conclusions must it recheck?

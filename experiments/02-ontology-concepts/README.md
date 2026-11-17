@@ -1,198 +1,377 @@
-# Demonstrations: ten ontology concepts
+# Ten ontology experiments, explained from input to result
 
-[Presentation](../README.md)
+[All experiment reports](../README.md) · [The complete AppWorld repair loop](../01-improvement-loop/README.md)
 
-## Shared starting conditions
+These ten lessons test individual building blocks. Each lesson supplied a small example to Gemini, received one JSON answer, and checked that answer in Python. They were not ten repair cycles. No failed lesson caused Gemini to rewrite an ontology or a function.
 
-Each lesson used a synthetic input.
-The runner sent one request to the installed Gemini CLI.
-The runner withheld the reference answer from that request.
-A deterministic checker evaluated the returned answer.
+Read the [AppWorld report](../01-improvement-loop/README.md) for the recorded sequence in which a task failed, Gemini diagnosed it, a separate Gemini call authored a function repair, and later tasks passed.
 
-The main model reported by the CLI was `gemini-3.8-flash`.
-The CLI also reported its `gemini-3.5-flash-lite` utility router.
-The CLI executed no tools.
+## Understand the example before reading the results
 
-**Result:** All ten lessons passed their reference checks.
-These lessons did not execute AppWorld tasks.
+Maya and Noah are fictional people. LoginService and BillingService are fictional software services. Atlas is a fictional project. These names are labels in supplied records.
 
-The tables describe submitted cases and returned answers.
-A model answer does not mean that the described action executed.
+Some lessons use a deployment example. A deployment means releasing software to an environment. **Staging** labels a testing environment; **Production** labels the live environment. In these lessons, both are strings in synthetic records. No real environment was contacted.
+
+A **role assignment** says that a person has a particular responsibility for a service, possibly limited to an environment and a date range. An **approval record** is separate evidence that a requested action has approval. Neither is a database permission automatically enforced by storing the record.
+
+An **ontology** defines what types, fields, relations, and rules mean. The **graph** contains particular people, services, and assignments. A **receipt** is a saved record of evidence or execution. A receipt in a synthetic input is manufactured test data; a model-run receipt records the actual request and response.
+
+## The harness that ran all ten
+
+Here, the harness is the Python program that prepares model inputs, invokes the model, checks its output, and saves evidence.
+
+1. The runner loaded a lesson's definitions, concrete input, instruction, and required JSON shape.
+2. It loaded the reference answer separately. That answer was withheld from the model prompt.
+3. It sent one request to the installed Gemini CLI. The configured model routing and login were retained. CLI tools were disabled.
+4. Gemini returned JSON. The runner parsed the response.
+5. Python compared the required keys, value types, and field values with the reference. Lists representing answer sets could vary in order; the positions inside a triple could not.
+6. For lesson 7 only, Python also evaluated the proposed calls against approval records and computed a local before/after deployment flag.
+7. The runner saved the exact submitted prompt, returned CLI envelope, parsed answer, model identities, and checks.
+
+The recorded November 16, 2026 run made ten lesson CLI invocations. Its reported main model was **gemini-3.8-flash**, with **gemini-3.5-flash-lite** as the utility router. All ten answers passed their reference checks. There were zero CLI tool calls.
+
+The numbered steps below reconstruct inputs, outputs, and checker behavior. They do not claim to expose the model's private reasoning. Existing standalone Python demonstrations and the earlier Qwen interface comparison are separate experiments.
 
 ## 01. Convert a statement to a triple
 
-**Purpose:** Determine whether Gemini can record a positive relation without inventing a relation from a denial.
+**Question:** Can the model turn an explicitly positive sentence into a structured relationship without turning a negative sentence into a positive relationship?
 
-**Starting conditions:** The input stated that Maya maintains LoginService. It also stated that Maya does not maintain BillingService.
+A triple has three ordered parts: subject, relation, object. Here, “Maya maintains LoginService” becomes Maya → maintains → LoginService.
 
-| Step | Recorded action | Observed result | Logic |
-| --- | --- | --- | --- |
-| 1 | The runner submitted both statements. | Gemini received the same allowed vocabulary for both statements. | Only an explicitly asserted positive relation could produce a positive triple. |
-| 2 | Gemini returned Maya → maintains → LoginService. | Gemini returned no positive triple for the BillingService statement. | A denial does not support a positive edge. |
-| 3 | The checker compared the answer with the reference. | The answer passed. | The entity order, relation, and negative case matched the reference. |
+**Starting input:**
 
-**Limit:** The test used two supplied statements. It did not test general extraction from documents.
+~~~text
+Positive sentence: Maya maintains LoginService.
+Negative sentence: Maya does not maintain BillingService.
+Allowed vocabulary: Maya, LoginService, BillingService, maintains
+~~~
 
-**Evidence:** [Input](../../learning-labs/01-triples/gemini-input.json). [Original response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/01-receipt.json).
+**What happened:**
+
+1. The runner sent both sentences and the allowed vocabulary in one prompt.
+2. Gemini returned a positive triple for LoginService.
+3. For the negative sentence, Gemini returned an empty positive-triple list.
+4. Python checked the names, relation, ordering, and empty negative-case result against the reference.
+
+**Recorded answer:**
+
+~~~json
+{"positive_triples":[["Maya","maintains","LoginService"]],"negative_sentence_positive_triples":[]}
+~~~
+
+**Result and repair status:** Passed. No repair or graph write occurred. This demonstrates the requested extraction on two sentences. It does not verify the sentences against an external source or implement a general document extractor.
+
+[Submitted input](../../learning-labs/01-triples/gemini-input.json) · [Response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/01-receipt.json)
 
 ## 02. Separate a graph update from an ontology update
 
-**Purpose:** Determine whether Gemini can distinguish a new record from a new definition.
+**Question:** Does observing a new person require changing the definition of a person?
 
-**Starting conditions:** The ontology already defined Person and Service. Update A added Noah as a Person. Update B added a TemporaryAssignment type with expiry.
+**Starting input:**
 
-| Step | Recorded action | Observed result | Logic |
-| --- | --- | --- | --- |
-| 1 | The runner submitted the definitions and updates. | Gemini received two different changes. | An existing type can describe a new instance. |
-| 2 | Gemini classified A as graph and B as ontology. | Both classifications matched the reference. | A adds a record. B adds a type and its meaning. |
-| 3 | The checker evaluated the classifications. | The answer passed. | Each change belonged to the correct category. |
+~~~text
+Existing types: Person, Service
+Existing relation: maintains connects Person to Service
 
-**Limit:** The model classified proposed changes. The test did not construct or install a new ontology.
+Update A: Observe that Noah is a Person.
+Update B: Add a TemporaryAssignment type with an expiry property.
+~~~
 
-**Evidence:** [Input](../../learning-labs/02-ontology-vs-facts/gemini-input.json). [Original response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/02-receipt.json).
+**What happened:**
+
+1. The runner supplied the existing vocabulary and both proposed changes.
+2. Gemini classified A as a graph update. Person already existed, so Noah could be represented as another instance of that type.
+3. Gemini classified B as an ontology update. TemporaryAssignment introduced a definition that was absent from the supplied vocabulary.
+4. Python checked both labels.
+
+**Recorded answer:**
+
+~~~json
+{"A":"graph","B":"ontology"}
+~~~
+
+**Result and repair status:** Passed. These were classifications. The harness did not insert Noah into a database or install TemporaryAssignment. No revised ontology was used by a later task.
+
+[Submitted input](../../learning-labs/02-ontology-vs-facts/gemini-input.json) · [Response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/02-receipt.json)
 
 ## 03. Separate valid structure from supporting evidence
 
-**Purpose:** Determine whether Gemini requires both valid structure and a supporting source record.
+**Question:** Should a correctly shaped claim be admitted when no source supports it?
 
-**Starting conditions:** The relation requires a Person as its subject and a Service as its object. The input supplied three candidate claims.
+The supplied rule said that maintains must connect a Person to a Service. Admission additionally required a source receipt that exactly matched the claim.
 
-| Step | Recorded action | Observed result | Logic |
-| --- | --- | --- | --- |
-| 1 | The runner supplied claim A with valid structure and no source receipt. | Gemini marked the structure valid and rejected admission. | Correct structure does not supply evidence. |
-| 2 | The runner supplied claim B with the subject and object reversed. | Gemini marked the structure invalid and rejected admission. | The relation's type requirements were not satisfied. |
-| 3 | The runner supplied claim C with valid structure and a matching receipt. | Gemini marked the structure valid and allowed admission. | Both required conditions were present. |
-| 4 | The checker evaluated all three classifications. | The answer passed. | Only claim C met both conditions. |
+**Starting input:**
 
-**Limit:** These were synthetic source receipts. The test did not establish truth from a real external source.
+| Case | Proposed claim | Source supplied |
+| --- | --- | --- |
+| A | Maya → maintains → LoginService | None |
+| B | LoginService → maintains → Maya | None |
+| C | Maya → maintains → LoginService | A matching synthetic receipt |
 
-**Evidence:** [Input](../../learning-labs/03-constraints-provenance/gemini-input.json). [Original response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/03-receipt.json).
+**What happened:**
+
+1. The prompt identified Maya as a Person and LoginService as a Service.
+2. Gemini marked A structurally valid, but marked it unadmitted because the receipt was missing.
+3. Gemini marked B structurally invalid: its subject was a Service and its object was a Person, reversing the required direction.
+4. Gemini marked C structurally valid and admitted because both requirements were supplied.
+5. Python checked all six boolean fields.
+
+**Recorded answer:**
+
+~~~json
+{"A":{"structure_valid":true,"admitted":false},"B":{"structure_valid":false,"admitted":false},"C":{"structure_valid":true,"admitted":true}}
+~~~
+
+**Result and repair status:** Passed. The word admitted is a classification in the returned answer. No production graph writer accepted a fact. No repair ran, and the synthetic receipt did not establish real-world truth.
+
+[Submitted input](../../learning-labs/03-constraints-provenance/gemini-input.json) · [Response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/03-receipt.json)
 
 ## 04. Apply scope and expiry to an assignment
 
-**Purpose:** Determine whether Gemini applies the environment and validity interval of an assignment.
+**Question:** Can one assignment support responsibility in a different environment or after it expires?
 
-**Starting conditions:** Maya had a Maintainer assignment for LoginService in Staging. The assignment started on November 1 and expired on November 20, 2026.
+A bare statement that Maya maintains LoginService omits where and when that responsibility applies. This lesson supplied those qualifiers explicitly.
 
-| Step | Recorded action | Observed result | Logic |
-| --- | --- | --- | --- |
-| 1 | The runner asked about Staging on November 16. | Gemini returned Maya. | The environment and date matched the assignment. |
-| 2 | The runner asked about Production on November 16. | Gemini returned an empty list. | A Staging assignment does not establish Production responsibility. |
-| 3 | The runner asked about Staging on November 20. | Gemini returned an empty list. | The end date was exclusive. The assignment was no longer valid. |
-| 4 | The checker evaluated the three answers. | The answer passed. | Each result matched the stated scope and date rule. |
+**Starting record:**
 
-**Limit:** An empty list meant no supporting assignment in the supplied input. It did not prove a global absence.
+~~~text
+person: Maya
+service: LoginService
+role: Maintainer
+environment: Staging
+validFrom: 2026-11-01
+validUntil: 2026-11-20
+~~~
 
-**Evidence:** [Input](../../learning-labs/04-relationship-entities/gemini-input.json). [Original response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/04-receipt.json).
+The rule included the start date and excluded the end date: validFrom <= query date < validUntil.
+
+**What happened:**
+
+1. Query A asked for Staging on November 16. The environment matched and the date fell inside the interval. Gemini returned Maya.
+2. Query B asked for Production on November 16. The record said Staging, so Gemini returned an empty list.
+3. Query C asked for Staging on November 20. That was the excluded end date, so Gemini returned an empty list.
+4. Python checked the three lists.
+
+**Recorded answer:**
+
+~~~json
+{"A":["Maya"],"B":[],"C":[]}
+~~~
+
+**Result and repair status:** Passed. Empty means no qualifying assignment was supplied. The test did not revoke a real person's access, enforce database roles, or repair a policy.
+
+[Submitted input](../../learning-labs/04-relationship-entities/gemini-input.json) · [Response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/04-receipt.json)
 
 ## 05. Separate graph connectivity from authority
 
-**Purpose:** Determine whether Gemini requires an approval rule and matching evidence.
+**Question:** Does sharing a project establish that someone may approve a deployment?
 
-**Starting conditions:** Maya and LoginService both belonged to Atlas. Approval required a current DeploymentApprover assignment for LoginService in Production.
+**Starting facts:**
 
-| Step | Recorded action | Observed result | Logic |
-| --- | --- | --- | --- |
-| 1 | The runner supplied case A without an approver assignment. | Gemini returned UNKNOWN. | Shared membership did not satisfy the approval rule. |
-| 2 | The runner supplied case B with a matching current assignment. | Gemini returned SUPPORTED. | The required role, service, environment, and current status were present. |
-| 3 | The checker compared both answers with the reference. | The answer passed. | The model did not treat a graph path as permission. |
+~~~text
+Maya → belongsTo → Atlas
+LoginService → belongsTo → Atlas
+~~~
 
-**Limit:** The input supplied the rule and facts. The test did not discover authority rules automatically.
+Those records connect Maya to LoginService through Atlas. The separately supplied approval rule required a current DeploymentApprover assignment for LoginService in Production.
 
-**Evidence:** [Input](../../learning-labs/05-traversal-inference/gemini-input.json). [Original response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/05-receipt.json).
+**What happened:**
+
+1. Case A supplied the shared-project facts and no assignments.
+2. Gemini returned UNKNOWN for A. Project membership supplied no matching approval-role assignment.
+3. Case B added Maya's assignment with role DeploymentApprover, service LoginService, environment Production, and current=true.
+4. Gemini returned SUPPORTED for B.
+5. Python checked both labels.
+
+**Recorded answer:**
+
+~~~json
+{"A":"UNKNOWN","B":"SUPPORTED"}
+~~~
+
+**Result and repair status:** Passed. The changed input supplied new authority evidence; no ontology or function was repaired. SUPPORTED is an answer about the fixture. It did not grant a storage credential or execute a deployment.
+
+[Submitted input](../../learning-labs/05-traversal-inference/gemini-input.json) · [Response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/05-receipt.json)
 
 ## 06. Request a missing value
 
-**Purpose:** Determine whether Gemini selects the documented read operation for a missing fact.
+**Question:** When the owner is unknown, does the model request a read rather than inventing or changing the owner?
 
-**Starting conditions:** The owner of LoginService was unknown. The input described get_service and set_owner.
+**Starting input:**
 
-| Step | Recorded action | Observed result | Logic |
-| --- | --- | --- | --- |
-| 1 | The runner requested the service owner. | Gemini received an unknown value and two tool contracts. | The missing value required evidence acquisition. |
-| 2 | Gemini returned a get_service request for LoginService. | The request used the required service identifier. | A read could obtain the owner. A write would change the owner. |
-| 3 | The checker evaluated the request. | The request passed. No external tool executed. | A valid proposal is different from a completed read. |
+~~~text
+Known record: LoginService has owner=UNKNOWN
+Task: Identify the owner of LoginService.
 
-**Limit:** This lesson measured request selection. It did not retrieve or verify the owner.
+get_service(service_id): returns service_id and owner
+set_owner(service_id, person_id): changes the owner
+~~~
 
-**Evidence:** [Input](../../learning-labs/06-model-consumption/gemini-input.json). [Original response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/06-receipt.json).
+These are tool contracts: descriptions of operation names, arguments, and results.
+
+**What happened:**
+
+1. The runner supplied the missing value and both contracts.
+2. Gemini returned a get_service request using LoginService as the service_id.
+3. Python compared the operation name and arguments with the reference.
+4. The harness stopped after checking the proposal. It never called get_service, so no owner value was obtained.
+
+**Recorded answer:**
+
+~~~json
+{"name":"get_service","arguments":{"service_id":"LoginService"}}
+~~~
+
+**Result and repair status:** Passed request-selection test. The underlying question about the owner remained unanswered. No repair ran. The [separate Qwen comparison](../04-model-consumption/README.md#a-qwen-used-three-interfaces) used different inputs and actual local record-return steps; its results must not be attributed to this Gemini lesson.
+
+[Submitted input](../../learning-labs/06-model-consumption/gemini-input.json) · [Response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/06-receipt.json)
 
 ## 07. Apply an action precondition
 
-**Purpose:** Determine whether runtime checks control an action independently of the model's proposal.
+**Question:** Can Python stop an unsupported action even when the model requests it?
 
-**Starting conditions:** Both cases requested deployment of LoginService to Production. Case A had no approval. Case B had matching current approval with a source receipt.
+Both cases asked to deploy LoginService to Production. Case A supplied no approval. Case B supplied an approval with service=LoginService, environment=Production, current=true, and source=receipt1.
 
-| Step | Recorded action | Observed result | Logic |
+**What happened:**
+
+1. The prompt explicitly asked Gemini to produce the deploy request for both cases. This was intentional; the experiment was testing the external check.
+2. Gemini returned the same operation and arguments for A and B.
+3. Python checked that each proposal had exactly the expected shape.
+4. Python separately checked the approval's presence, current flag, source, service, and environment.
+5. It computed the local deployment flag shown below. No deployment API was called.
+
+**Recorded model answer:**
+
+~~~json
+{"A":{"name":"deploy","arguments":{"service":"LoginService","environment":"Production"}},"B":{"name":"deploy","arguments":{"service":"LoginService","environment":"Production"}}}
+~~~
+
+**Recorded Python result:**
+
+| Case | Before | Gate decision | After |
 | --- | --- | --- | --- |
-| 1 | Gemini returned the requested deploy call for each case. | Both proposals had the same action and arguments. | The model's proposal did not determine permission. |
-| 2 | The local runtime evaluated case A. | The local deployed value remained false. | The required approval was absent. |
-| 3 | The local runtime evaluated case B. | The local deployed value became true. | The supplied approval satisfied the precondition. |
-| 4 | The checker evaluated the proposals and local outcomes. | The lesson passed. | The gate allowed only the supported case. |
+| A: approval missing | deployed=false | Deny | deployed=false |
+| B: matching approval supplied | deployed=false | Allow | deployed=true |
 
-**Limit:** The effect was a local test value. No real service deployment occurred.
+**Result and repair status:** Passed. The gate was already implemented before the experiment. The run did not discover or repair it. The effect was a boolean in a local fixture, not storage-layer access enforcement or a real service deployment.
 
-**Evidence:** [Input](../../learning-labs/07-runtime-enforcement/gemini-input.json). [Original response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/07-receipt.json).
+[Submitted input](../../learning-labs/07-runtime-enforcement/gemini-input.json) · [Response and gate outcomes](../../learning-labs/gemini-results/20261116T183611.251922Z/07-receipt.json) · [Checker implementation](../../learning-labs/gemini_experiments.py)
 
 ## 08. Mark dependent results as stale
 
-**Purpose:** Determine whether Gemini identifies results that depend on a revoked fact.
+**Question:** When one supporting fact changes, which recorded conclusions need to be checked again?
 
-**Starting conditions:** Decision8 depended on assignment17. Plan3 depended on decision8. A display name depended on a separate profile.
+A dependency means that one result used another result as support.
 
-| Step | Recorded action | Observed result | Logic |
-| --- | --- | --- | --- |
-| 1 | The runner supplied assignment17 at revision 2 with active status false. | The previous assignment support no longer applied. | A changed source can invalidate dependent results. |
-| 2 | Gemini marked decision8 and plan3 as stale. | Gemini left the unrelated display name unchanged. | The dependency path reached both results but did not reach the display name. |
-| 3 | Gemini returned false for execution of plan3. | The checker accepted the answer. | A plan based on revoked support must not execute. |
+**Starting input:**
 
-**Limit:** The input supplied all dependencies. The test did not discover missing or hidden dependencies.
+~~~text
+decision8 depends on assignment17
+plan3 depends on decision8
+display_name depends on profile1
 
-**Evidence:** [Input](../../learning-labs/08-fact-invalidation/gemini-input.json). [Original response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/08-receipt.json).
+Change supplied:
+  assignment17 revision: 1 → 2
+  assignment17 active_after: false
+~~~
+
+**What happened:**
+
+1. The prompt supplied the revocation and all dependency links.
+2. Gemini returned decision8 as stale because it depended directly on assignment17.
+3. It also returned plan3 because the dependency continued through decision8.
+4. It omitted display_name, whose dependency led to profile1.
+5. It returned execute_plan3=false. Python checked the stale-node set and boolean.
+
+**Recorded answer:**
+
+~~~json
+{"stale_nodes":["decision8","plan3"],"execute_plan3":false}
+~~~
+
+**Result and repair status:** Passed classification test. Gemini did not watch a live data source or update a stored plan. No function was repaired and no later execution was measured here. The [separate recovery report](../03-runtime-graph/README.md#b-a-graph-change-invalidated-an-action) shows the later experiment that actually returned rejection feedback to Gemini and requested a new computation.
+
+[Submitted input](../../learning-labs/08-fact-invalidation/gemini-input.json) · [Response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/08-receipt.json)
 
 ## 09. Convert a record without inventing values
 
-**Purpose:** Determine whether Gemini preserves known values during a proposed representation change.
+**Question:** If a new record format adds fields, what values can be carried over from the old evidence?
 
-**Starting conditions:** The old record contained Maya, LoginService, and receipt1. The new record shape also required environment and expiry fields.
+**Starting input:**
 
-| Step | Recorded action | Observed result | Logic |
-| --- | --- | --- | --- |
-| 1 | The runner supplied the old record and new shape. | No source value supported environment or expiry. | A new field does not create a fact. |
-| 2 | Gemini preserved Maya, LoginService, and receipt1. | Gemini returned null for environment and expiry. | Known values remained unchanged. Unsupported values remained unknown. |
-| 3 | The checker evaluated the proposed record. | The answer passed. | The conversion preserved evidence and did not invent defaults. |
+~~~text
+Old record:
+  person=Maya, service=LoginService, source=receipt1
 
-**Limit:** Gemini proposed a record. The test did not install an ontology extension or migrate a live database.
+New shape requires:
+  person, service, environment, validUntil, source
+~~~
 
-**Evidence:** [Input](../../learning-labs/09-ontology-extension/gemini-input.json). [Original response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/09-receipt.json).
+A migration is a conversion between representations. Here, null means the source did not establish a value.
+
+**What happened:**
+
+1. The runner supplied the old record and new shape.
+2. Gemini copied person, service, and source.
+3. It returned null for environment and validUntil, because neither appeared in the supplied evidence.
+4. Python checked every value and required that no extra fields appear.
+
+**Recorded answer:**
+
+~~~json
+{"person":"Maya","service":"LoginService","environment":null,"validUntil":null,"source":"receipt1"}
+~~~
+
+**Result and repair status:** Passed. This was a proposed converted record. No live database migration or ontology extension was installed. There was no post-migration task run. Filling the new fields would require additional evidence.
+
+[Submitted input](../../learning-labs/09-ontology-extension/gemini-input.json) · [Response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/09-receipt.json)
 
 ## 10. Apply versioned meanings
 
-**Purpose:** Determine whether Gemini applies each rule version and retains the active episode's version.
+**Question:** What happens when the same evidence is evaluated under two different rules?
 
-**Starting conditions:** Version 1 allowed project or service approval. Version 2 required service approval. The available approval covered only the project.
+An episode is one task execution. A pinned version is the rule package that execution is bound to use.
 
-| Step | Recorded action | Observed result | Logic |
-| --- | --- | --- | --- |
-| 1 | Gemini evaluated the approval under version 1. | Gemini returned permitted. | Version 1 accepted project approval. |
-| 2 | Gemini evaluated the same approval under version 2. | Gemini returned not permitted. | Version 2 required service-specific approval. |
-| 3 | Gemini selected versions for the two episodes. | The active episode kept version 1. A new episode used the externally accepted version 2. | The active episode retained its pinned version. |
-| 4 | The checker evaluated all four fields. | The answer passed. | The result matched the supplied rules and version policy. |
+**Starting input:**
 
-**Limit:** The input assumed external acceptance of version 2. The experiment did not perform package promotion or test emergency revocation.
+~~~text
+v1: Project approval OR service approval permits deployment.
+v2: Only service-specific approval permits deployment.
 
-**Evidence:** [Input](../../learning-labs/10-semantic-version-change/gemini-input.json). [Original response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/10-receipt.json).
+Available approval: project only
+Existing episode: pinned to v1
+Version already accepted for new episodes: v2
+~~~
 
-## Shared limits
+**What happened:**
 
-These are exposed teaching cases.
-The definitions and rules were supplied.
-Ten correct answers do not establish general model reliability.
-The suite did not construct ten complete domain ontologies.
-The suite did not promote an ontology change.
+1. Gemini evaluated the project-only approval under v1 and returned true.
+2. It evaluated that same approval under v2 and returned false.
+3. It returned v1 for the existing episode and v2 for a new episode, following the supplied version policy.
+4. Python checked all four fields.
 
-[Suite result](../../learning-labs/gemini-results/20261116T183611.251922Z/summary.json).
-[Original report](../../learning-labs/GEMINI-RESULTS.md).
-[Deterministic companion results](../../learning-labs/RESULTS.md).
+**Recorded answer:**
 
-The separate [model-access demonstrations](../04-model-consumption/README.md) compare different interfaces.
+~~~json
+{"v1_permits":true,"v2_permits":false,"active_episode_version":"v1","new_episode_version":"v2"}
+~~~
+
+**Result and repair status:** Passed interpretation test. The prompt assumed that v2 had already been accepted. This run did not propose, test, promote, or execute a new package. The separate deterministic companion simulates candidate comparison; the [native AppWorld report](../01-improvement-loop/README.md) records a real model-authored function proposal and subsequent executions.
+
+[Submitted input](../../learning-labs/10-semantic-version-change/gemini-input.json) · [Response and checks](../../learning-labs/gemini-results/20261116T183611.251922Z/10-receipt.json)
+
+## What the ten results establish
+
+All ten returned the expected answers on these supplied examples. The harness tested extraction, classification, rule application, request selection, and one local execution gate. It did not measure ten autonomous repair loops, storage RBAC, general ontology construction, or AppWorld performance.
+
+The exact user prompts and original CLI responses are in the linked receipts. The CLI's own hidden context is not fully captured. Correct outputs on these small, exposed examples do not establish general reliability or an advantage over a no-ontology baseline.
+
+To recheck the scorer without new model calls:
+
+~~~sh
+python3 -m unittest discover -s learning-labs -p test_gemini_experiments.py
+~~~
+
+The [runner instructions](../../learning-labs/GEMINI-START-HERE.md) explain how to prepare prompts or run new model trials. A new run gets its own evidence directory; it must not replace the original measurements.
+
+[Suite result](../../learning-labs/gemini-results/20261116T183611.251922Z/summary.json) · [Model-run report](../../learning-labs/GEMINI-RESULTS.md) · [Deterministic companion results](../../learning-labs/RESULTS.md)

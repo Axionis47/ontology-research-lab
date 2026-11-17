@@ -1,82 +1,59 @@
-# Experiment demonstrations
+# Experiment reports: what ran, what changed, and what worked afterward
 
-These pages explain recorded experiments.
-The format uses short sentences and fixed technical terms.
-The format follows principles from [ASD-STE100](https://www.asd-ste100.org/STE_faq.html).
-A full STE dictionary review has not been completed.
+Start with the [complete AppWorld repair-loop report](01-improvement-loop/README.md). It follows one recorded run from the original task through failure, diagnosis, the exact candidate change, validation, activation, and later task results.
 
-## Main result
+The native result was a repair to one reusable artist-selection function: it originally applied a genre condition but omitted the follower-count threshold. A separate Gemini proposer call added the missing numeric-filter operation. The runtime tested and accepted the candidate. Three later episodes passed all five official AppWorld checks each.
 
-The AppWorld loop improved one reusable function.
-Before the change, none of the three tasks passed.
-After the change, all three tasks passed.
-A separate run repeated the automatic loop.
+The [ten ontology experiments](02-ontology-concepts/README.md) explain individual concepts using small supplied examples. Their report now shows the concrete input, ordered operations, actual answer, checker, and repair status for every lesson. They did not each run a repair cycle.
 
-The result applies to one Spotify task family.
-It does not establish automatic construction of new ontologies.
+## Choose the report by the question you want answered
 
-## Read the demonstrations in this order
-
-| Part | Demonstration | What it explains |
+| Your question | Report | Kind of result |
 | --- | --- | --- |
-| 1 | [Ten ontology concepts](02-ontology-concepts/README.md) | Types, facts, evidence, rules, actions, and versions |
-| 2 | [Model access to definitions and facts](04-model-consumption/README.md) | What each model received and how the test evaluated its answer |
-| 2 | [Graph observations and changes](03-runtime-graph/README.md) | How observations entered the graph and how a changed fact affected an action |
-| 3 | [AppWorld improvement loop](01-improvement-loop/README.md) | How a failed task led to a tested function change |
+| What failed, what exactly was repaired, and what worked later? | [Full AppWorld harness loop](01-improvement-loop/README.md) | Native execution, Gemini-authored function change, measured later reuse |
+| What happened in each of the ten small experiments? | [Ten experiments, step by step](02-ontology-concepts/README.md) | Ten model answers and deterministic checks; no automatic repair |
+| How did text, definitions, queries, and functions reach the model? | [Model-consumption comparisons](04-model-consumption/README.md) | Interface-use, answer, evidence, and token measurements |
+| How did source observations become graph facts, and what happened after a fact changed? | [Graph ingestion and recovery](03-runtime-graph/README.md) | Native observation flow plus a separate synthetic recovery run |
+| Where are earlier failures and retained experiments? | [Evidence inventory](INVENTORY.md) | Historical records, including failed and unavailable runs |
 
-These parts organize existing work.
-They do not represent new experiments.
+The native tasks ran in AppWorld's simulated applications through its APIs and official evaluator. The teaching examples used fictional people and services. Neither category is a claim that a real Spotify account or production deployment was changed.
 
-## Format for each demonstration
+## How to read a run
 
-1. State the purpose.
-2. State the starting conditions.
-3. Show the actions in order.
-4. State the result of each action.
-5. State the rule that explains each decision.
-6. State the final result.
-7. State the limits.
-8. Link the original evidence.
+A **harness** is the program around the model: it supplies inputs, invokes the model, runs allowed operations, records evidence, and checks outcomes. The harness may implement an improvement loop, but a model call followed by a checker is not by itself an improvement loop.
 
-The action column describes recorded behavior.
-The logic column explains the applicable rule.
-It does not claim access to a model's internal reasoning.
+For a repair claim, follow all of these links in the evidence:
 
-## Technical terms
+~~~text
+Original task and initial state
+  → original program or actor attempt
+  → recorded failure
+  → diagnosis tied to original evidence
+  → separately authored candidate
+  → parent/candidate comparison and preservation checks
+  → fresh execution result
+  → acceptance or rejection
+  → later task outcome using the accepted version
+~~~
 
-| Term | Meaning in these reports |
-| --- | --- |
-| Ontology | Definitions of types, properties, relations, and applicable rules |
-| Graph | Concrete records and relations expressed with those definitions |
-| Observation | Data returned by a source operation |
-| Evidence | A stored record that supports a stated result |
-| Runtime | Software that controls execution, records results, and applies required checks |
-| Adapter | Software that connects the runtime to an application's APIs |
-| Function | A reusable computation with defined inputs and outputs |
-| Candidate | A proposed change that has not yet passed the acceptance checks |
-| Revision | An identifier for a recorded graph state |
-| Pinned version | The version that an episode must continue to use |
-| Episode | One task execution with its own recorded state and actions |
-| Synthetic case | A constructed test example |
-| Native AppWorld task | A task executed in AppWorld and evaluated by its official evaluator |
+For a component test, the report ends at its actual stopping point. If the model only proposed a read, it does not say that the read executed. If a local boolean changed, it does not say that a real service deployed. If no candidate was authored, it says that no repair occurred.
 
-## Read the scores correctly
+A passing answer, a passing evidence check, a valid tool call, a successful application action, and an accepted repair are separate results. The reports identify which one was measured.
 
-A correct model answer is one result.
-A complete evidence citation is a separate result.
-Correct interface use is another result.
-A blocked action can show correct control while the task remains unfinished.
+## Where the building blocks sit
 
-Synthetic cases do not count as native AppWorld tasks.
-Repeated runs do not create new independent task families.
+| Building block | Role in the recorded system | Boundary |
+| --- | --- | --- |
+| Ontology and contracts | Define types, properties, relation meanings, and permitted operation shapes. | A stored role definition does not grant database access. |
+| Task binding | Supplies this task's genre, threshold, scope, and required effect. | The actor cannot relax the goal. |
+| Knowledge graph | Holds observations from the current world, with provenance and revisions. | New tasks need fresh instance facts. |
+| Reusable functions | Compute selections from the graph and task parameters. | The native repair changed one such function. |
+| Executor and readback | Dispatch operations and observe resulting state. | A model proposal alone produces no effect. |
+| Storage | Local SQLite indexes and saved JSON artifacts retain traces, packages, and results. | The current implementation does not provide full storage-layer RBAC. |
+| Evaluation and release control | Check outcomes, preserve required behavior, and activate a measured improvement. | Gemini cannot accept its own candidate. |
 
-## Other recorded experiments
+Qwen is the native task actor. Gemini has separate diagnostic and proposer calls. In the ten teaching experiments, Gemini was explicitly the experimental participant; those trials did not replace Qwen's assigned native role.
 
-The [full inventory](INVENTORY.md) includes earlier successes, failures, and component tests.
-Each entry links to recorded evidence.
-Original source reports and receipts remain unchanged.
+The [project agreement](../AGENTS.md) defines these responsibilities. The [implementation notes](../docs/system/19-connected-inference.md) and [native result history](../docs/system/20-live-acceptance.md) describe the current narrow adapter and its limits.
 
-The [project agreement](../AGENTS.md) defines the model roles.
-Qwen executes tasks.
-Gemini diagnoses failures and proposes changes through separate calls.
-The runtime decides whether a candidate can become active.
+The reports reconstruct saved runs. Documentation edits do not create new model calls, native task outcomes, or repaired capabilities. Original responses, failed attempts, and acceptance records remain the evidence.

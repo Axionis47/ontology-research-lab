@@ -1,5 +1,7 @@
 # 05: Connected does not mean authorized
 
+**Recorded Gemini experiment:** [Read the input, ordered steps, actual response, checker, and repair status](../../experiments/02-ontology-concepts/README.md#05-separate-graph-connectivity-from-authority). The deterministic companion below is a separate execution.
+
 **Claim:** traversal discovers paths; a supported decision needs the right predicates and a rule.
 
 ## Terms

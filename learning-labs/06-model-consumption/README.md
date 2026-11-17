@@ -1,5 +1,7 @@
 # 06: What does the model actually consume?
 
+**Recorded Gemini experiment:** [Read the input, ordered steps, actual response, checker, and repair status](../../experiments/02-ontology-concepts/README.md#06-request-a-missing-value). The deterministic companion below is a separate execution.
+
 ## Point and new terms
 
 An **interface** is the information and operations exposed to a model. A **tool call** is a structured proposal, not an executed action. **Grounding** connects an answer to observations. The model consumes tokens, including descriptions of ontology definitions. It does not automatically execute RDF inference.

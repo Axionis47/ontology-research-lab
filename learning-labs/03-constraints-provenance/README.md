@@ -1,5 +1,7 @@
 # 03: Well typed does not mean supported
 
+**Recorded Gemini experiment:** [Read the input, ordered steps, actual response, checker, and repair status](../../experiments/02-ontology-concepts/README.md#03-separate-valid-structure-from-supporting-evidence). The deterministic companion below is a separate execution.
+
 **Claim:** structural validation and evidence admission answer different questions.
 
 ## Terms

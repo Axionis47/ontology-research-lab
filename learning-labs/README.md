@@ -1,5 +1,7 @@
 # Ten ontology micro-experiments
 
+**Read the [ten experiments step by step](../experiments/02-ontology-concepts/README.md), then the [complete native repair loop](../experiments/01-improvement-loop/README.md).** The first explains component checks; the second shows a failed task, a measured function repair, and successful later executions.
+
 [All project experiments](../experiments/README.md) collects these ten lessons, the AppWorld improvement loop, the later consumption comparisons, and graph population/runtime work.
 
 **Latest: [ten Gemini CLI experiments](GEMINI-START-HERE.md).** Each lesson now has a Gemini prompt, input, held-out reference answer and independent checker. Use `python3 learning-labs/gemini_experiments.py --live` to run them with the CLI's configured model and login. The commands below retain the original deterministic companion demonstrations.

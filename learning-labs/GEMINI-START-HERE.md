@@ -1,5 +1,7 @@
 # Ten small experiments with Gemini CLI
 
+**Read the [ten experiments step by step](../experiments/02-ontology-concepts/README.md), then the [complete native repair loop](../experiments/01-improvement-loop/README.md).** The first explains component checks; the second shows a failed task, a measured function repair, and successful later executions.
+
 **Executed: all ten passed. [Read the exact answers and original receipts](GEMINI-RESULTS.md).**
 
 **Next comparison: [same task across five interfaces](protocol-comparison/RESULTS.md).** Actual context payloads, token counts and stale-action gate outcomes are shown side by side.

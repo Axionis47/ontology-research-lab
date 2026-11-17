@@ -1,5 +1,7 @@
 # 02: Definitions are different from facts
 
+**Recorded Gemini experiment:** [Read the input, ordered steps, actual response, checker, and repair status](../../experiments/02-ontology-concepts/README.md#02-separate-a-graph-update-from-an-ontology-update). The deterministic companion below is a separate execution.
+
 **Claim:** observing another instance changes the graph without requiring a new ontology.
 
 ## Terms

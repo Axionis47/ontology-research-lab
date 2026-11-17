@@ -1,30 +1,44 @@
-# Ontology experiments
+# Ontology experiments and the repair loop
 
-This repository contains experiment code, demonstrations, and recorded evidence.
-The reports show what happened, the decision rules, and the limits of each result.
+**[Start with the complete repair-loop report](experiments/01-improvement-loop/README.md).** It shows the original task, observations, failure, separate Gemini diagnosis and proposal, exact before-and-after function, acceptance checks, and successful later tasks.
 
-**[Start with the demonstrations](experiments/README.md).**
+The native experiment repaired one reusable artist-selection function. The original function selected by genre but omitted the requested follower-count threshold. Gemini added an existing numeric-filter operator in a separate proposer call. After validation and activation, three subsequent AppWorld episodes passed all five official checks each.
 
-## Main results
-
-| Experiment | Recorded result | Limit |
-| --- | --- | --- |
-| AppWorld improvement loop | Three tasks failed before a function correction. All three passed afterward. A fresh automatic repeat also passed. | One exposed Spotify task family |
-| Ten ontology concept tests | All ten Gemini responses passed their reference checks. | Synthetic teaching cases |
-| Model access comparisons | Different interfaces produced correct answers, with some citation and interface-use failures. | Small, supplied tasks and facts |
-| Graph-change recovery | The runtime blocked a stale proposal. Gemini recomputed and found no valid action. | Synthetic case; the approval task remained blocked |
+The [ten step-by-step reports](experiments/02-ontology-concepts/README.md) explain smaller component experiments. Every lesson gives the concrete input, ordered operations, actual answer, checker result, and repair status. Those ten lessons did not each perform an improvement cycle.
 
 ## Read the reports
 
-1. Read the [ten concept demonstrations](experiments/02-ontology-concepts/README.md).
-2. Read the [model-access comparisons](experiments/04-model-consumption/README.md).
-3. Read the [graph observations and changes](experiments/03-runtime-graph/README.md).
-4. Read the [native improvement loop](experiments/01-improvement-loop/README.md).
-5. Use the [full inventory](experiments/INVENTORY.md) to inspect earlier successes and failures.
+| What you want to understand | Report |
+| --- | --- |
+| What failed, what was repaired, and what worked afterward | [Complete native harness loop](experiments/01-improvement-loop/README.md) |
+| What happened in each of the ten lessons | [Ten experiments from input to result](experiments/02-ontology-concepts/README.md) |
+| How the model consumed definitions and facts | [Interface comparisons](experiments/04-model-consumption/README.md) |
+| How observations entered the graph and how stale results were handled | [Graph ingestion and recovery](experiments/03-runtime-graph/README.md) |
+| How the pieces fit and which results are separate | [Report index](experiments/README.md) |
+| Earlier successes, failures, and unavailable runs | [Evidence inventory](experiments/INVENTORY.md) |
 
-Each demonstration gives starting conditions, recorded steps, results, logic, limits, and evidence links.
-The prose uses an ASD-STE100-style format.
-A full STE dictionary review has not been completed.
+A harness is the program around the model that supplies inputs, runs allowed operations, records evidence, checks outcomes, and manages any repair cycle. An answer check, an executed action, a recovered task, and an accepted reusable repair are different outcomes.
+
+## The six ontology-consumption methods
+
+Within each six-method comparison, the task, initial facts, source ontology, and rules stayed fixed.
+
+| Method | What the model received or requested |
+| --- | --- |
+| Full definitions | The entire ontology in the prompt. |
+| Retrieved definitions | Relevant definitions and their exact dependencies. |
+| Schema inspection | A catalog and an interface to request definitions. |
+| Graph queries | Definitions and generic queries/traversals composed by the model. |
+| Typed functions | Domain operations computing valid candidates. |
+| Constraint service | Checks of candidates proposed by the model. |
+
+In the single-approver comparison, all six selected Noah; four passed the complete citation rubric. In the harder comparison with 53 facts and ten rules, all six selected Vera and Tao with complete evidence; five passed the full protocol. The graph-query run answered without calling its interface, so it did not demonstrate that consumption method.
+
+A separate recovery run returned revocation feedback to Gemini. It recomputed against the updated graph and correctly returned no valid pair. The outcome was RECOVERED_BLOCKED, with no external deployment and no package repair.
+
+The reports link exact submitted prompts, responses, interface results, versions, graph revisions, citations, and token measurements. Failed citations, skipped interfaces, earlier timeouts, and native validation failures remain recorded.
+
+These studies used synthetic supplied facts, exact dependency retrieval, and hand-written domain functions. They do not establish a reliable ranking at scale. The native Spotify improvement has its own AppWorld outcomes and role-labelled Gemini diagnosis/proposal evidence.
 
 ## Repository contents
 
@@ -57,8 +71,7 @@ It does not contain raw native MCP session transcripts.
 
 The export replaces local workspace and home paths with placeholders.
 It replaces email addresses in selected JSON evidence with a placeholder.
-The [publication manifest](publication-manifest.json) records original and published file hashes.
-It lists the changes for each copied file.
+The [publication manifest](publication-manifest.json) records the original export and its file hashes. Later documentation revisions are recorded in Git history; the initial manifest remains a historical export record.
 Original evidence hashes inside reports remain unchanged.
 These hashes identify the local originals, not modified publication copies.
 

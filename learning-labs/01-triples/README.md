@@ -1,5 +1,7 @@
 # 01: A sentence becomes a triple
 
+**Recorded Gemini experiment:** [Read the input, ordered steps, actual response, checker, and repair status](../../experiments/02-ontology-concepts/README.md#01-convert-a-statement-to-a-triple). The deterministic companion below is a separate execution.
+
 **Claim:** explicit subject/predicate/object structure permits exact lookup without asking a language model.
 
 ## Terms
